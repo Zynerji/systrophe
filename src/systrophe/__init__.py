@@ -60,4 +60,4 @@ __all__ = [
     "proper_energy_density",
     "total_energy_per_unit_length",
 ]
-__version__ = "0.3.0"
+__version__ = "0.3.1"

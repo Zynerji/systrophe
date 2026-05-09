@@ -5,6 +5,17 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-05-09
+
+### Added
+- `systrophe.spacetimes.godel` — Goedel rotating-dust universe (Goedel
+  1949). First additional CTC spacetime in the new
+  `systrophe.spacetimes` subpackage. Provides metric components,
+  exact CTC threshold radius `r_CTC = arcsinh(1) = ln(1 + sqrt(2))`,
+  and dust/Lambda diagnostics. Establishes the architectural
+  pattern for multi-spacetime CTC analysis (Phase 1b of the roadmap).
+- 10 new tests in `test_godel.py`. Total: 111 tests.
+
 ## [0.3.0] - 2026-05-09
 
 ### Added
