@@ -191,11 +191,16 @@ Case II (critical)   & $a = 1/2$ & logarithmic, $F$-zero at $r = e R$ \\
 \end{tabular}
 \end{center}
 
-\subsection{Analytic Case III closed forms}
+\subsection{Analytic closed forms in all three Bonnor regimes}
 \label{sec:caseiii}
 
-For the supercritical exterior, the closed forms of all three
-non-trivial metric components are
+The reduced ODE $S\,S_{uu} - (S_u)^2 + c^2 R^2 = 0$ (where
+$F(r) = (r/R)\,S(u)$, $u = \ln(r/R)$) admits exact closed-form
+solutions in each Bonnor regime. We list them all; the package
+implements each explicitly.
+
+\paragraph{Case III (supercritical, $a > 1/2$, oscillatory).}
+With $\alpha = \sqrt{4 a^2 - 1}$ and $\gamma = \pi - \arctan\alpha$,
 \begin{align}
 F(r) &= \tfrac{r}{R}\,\dfrac{\sin(\alpha u + \gamma)}{\sin\gamma}, \\[4pt]
 K(r) &= \tfrac{r}{\alpha}\!\left[ \tfrac{\alpha^2 - 1}{2}
@@ -204,10 +209,34 @@ L(r) &= \tfrac{r R \sin\gamma}{\alpha^2}\!\left[
         Q \sin(\alpha u + \gamma) + \alpha (\alpha^2 - 1)
         \cos(\alpha u + \gamma) \right],
 \end{align}
-where $Q = \alpha^2 - (\alpha^2 - 1)^2 / 4$ and
-$\gamma = \pi - \arctan\alpha$. The constraint
-$F L + K^2 = r^2$ holds identically; this has been verified to machine
-precision in the package's test suite for $a = 0.7$ to $a = 1.5$.
+with $Q = \alpha^2 - (\alpha^2 - 1)^2/4$. $F$-zeros at
+$u_n = (n\pi - \gamma)/\alpha$ for $n = 1, 2, \ldots$.
+
+\paragraph{Case I (subcritical, $a < 1/2$, hyperbolic).}
+With $\beta = \sqrt{1 - 4 a^2}$ and the auxiliary functions
+$S_\pm(u) = \cosh(\beta u) \pm \sinh(\beta u)/\beta$,
+\begin{align}
+F(r) &= \tfrac{r}{R}\,S_-(u), \\
+K(r) &= a\,r\,S_+(u), \\
+L(r) &= \tfrac{r\,R\,(1 - a^2 S_+(u)^2)}{S_-(u)}.
+\end{align}
+A unique $F$-zero exists at $u = \tanh^{-1}(\beta) / \beta$.
+
+\paragraph{Case II (critical, $a = 1/2$, logarithmic).}
+\begin{align}
+F(r) &= \tfrac{r}{R}\,(1 - u), \\
+K(r) &= \tfrac{r}{2}\,(1 + u), \\
+L(r) &= \tfrac{r R}{4}\,(3 + u).
+\end{align}
+A single $F$-zero at $u = 1$, i.e., $r = e R$.
+
+\paragraph{Common properties.}
+In all three regimes the matching conditions $F(R) = 1$, $F'(R) = 0$,
+$K(R) = \omega R^2$, $L(R) = R^2(1 - a^2)$ are satisfied identically,
+and the Weyl constraint $F L + K^2 = r^2$ holds analytically. The
+package's test suite verifies the constraint to machine precision in
+each regime, and the analytic forms are validated against the basic
+numerical integrator within its accurate range.
 
 \subsection{The Tipler sinusoid}
 
@@ -514,11 +543,18 @@ This path is exact (machine precision in $F$, $K$, $L$ on the native
 grid; constraint $FL + K^2 = r^2$ verified to $10^{-12}$). $F$-zeros
 are computed in closed form,
 $r_n = R \exp((n\pi - \gamma)/\alpha)$ for $n = 1, 2, \ldots$
-\item \textbf{Critical} ($a = 1/2$): the basic numerical integrator,
-which has only one $F$-zero (at $r = e R$) and is well-conditioned.
-\item \textbf{Subcritical} ($a < 1/2$): the basic numerical integrator
-on the well-conditioned post-zero hyperbolic regime.
+\item \textbf{Critical} ($a = 1/2$): the analytic logarithmic closed
+forms of Section~\ref{sec:caseiii}: $F(r) = (r/R)(1 - u)$ has its
+unique $F$-zero at $r = e R$.
+\item \textbf{Subcritical} ($a < 1/2$): the analytic hyperbolic
+closed forms of Section~\ref{sec:caseiii}: $F = (r/R) S_-(u)$ with
+$S_-$ vanishing at $u = \tanh^{-1}(\beta)/\beta$.
 \end{itemize}
+
+The basic numerical Lewis--Papapetrou integrator
+(\texttt{integrate\_lp\_exterior}) is retained for users who want a
+non-analytic verification path (it covers all regimes); the robust
+solver bypasses it entirely in favour of the analytic forms above.
 
 The dispatcher returns a uniform
 \texttt{LPRobustSolution} dataclass exposing $r$, $F$, $K$, $L$, $h$,
@@ -748,9 +784,15 @@ methods.
 positive-separation requirement, type check, large-separation limit,
 $y$-reflection symmetry, $x$-reflection symmetry under cylinder swap, 2D
 CTC map.
+\item \textbf{Subcritical / critical analytic} ($8$ tests in
+\texttt{test\_lewis\_papapetrou.py}): boundary continuity for $F$, $K$,
+$L$ at $r = R$ in both regimes; critical $F$-zero at $r = e R$; closed
+forms $K(r) = (r/2)(1 + u)$ and $L(r) = (r R/4)(3 + u)$; constraint
+$F L + K^2 = r^2$ to machine precision; analytic-vs-numerical
+agreement in the well-conditioned region.
 \end{itemize}
 
-All $81$ tests pass.
+All $89$ tests pass.
 
 \section{Limitations and open questions}
 

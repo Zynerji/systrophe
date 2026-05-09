@@ -5,6 +5,31 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-05-09
+
+### Added
+- **Analytic closed forms for all three Bonnor regimes** in
+  `vanstockum.py`. Previously only the supercritical (Case III)
+  sinusoidal forms were available; now `analytic_exterior_F`, `_K`,
+  `_L` automatically dispatch by regime:
+  - **Supercritical** (`a > 1/2`): trigonometric (Tipler sinusoid).
+  - **Critical** (`a = 1/2`): logarithmic, `F = (r/R)(1 − u)`,
+    `K = (r/2)(1 + u)`, `L = (rR/4)(3 + u)`.
+  - **Subcritical** (`a < 1/2`): hyperbolic via `S± = cosh(βu) ±
+    sinh(βu)/β`, `F = (r/R) S₋`, `K = ar S₊`, `L = rR(1 − a²S₊²)/S₋`.
+- `regime` property on `VanStockumInterior` returning the Bonnor
+  classification label.
+- `lp_robust.integrate_lp_robust` now uses analytic forms in **all
+  regimes** (no numerical fallback by default), giving machine-precision
+  output throughout. Subcritical and critical `F`-zeros are computed in
+  closed form.
+- 8 new tests in `test_lewis_papapetrou.py` covering subcritical and
+  critical boundary continuity, closed-form K/L expressions, and
+  constraint `FL + K² = r²` to machine precision.
+
+### Test count
+- 89 tests across 11 files; previously 81.
+
 ## [0.2.0] - 2026-05-09
 
 ### Added

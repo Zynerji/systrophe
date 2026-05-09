@@ -138,3 +138,87 @@ def test_L_continuity_at_R():
     vs = VanStockumInterior(omega=omega, R=R)
     expected = R * R * (1.0 - (omega * R) ** 2)
     assert vs.analytic_exterior_L(R) == pytest.approx(expected, abs=1e-10)
+
+
+def test_subcritical_analytic_continuity_at_R():
+    """Subcritical analytic F(R)=1, F'(R)=0, K(R)=omega R^2, L(R)=R^2(1-a^2)."""
+    omega, R = 0.3, 1.0
+    vs = VanStockumInterior(omega=omega, R=R)
+    assert vs.regime == "subcritical"
+    assert vs.analytic_exterior_F(R) == pytest.approx(1.0, abs=1e-10)
+    assert vs.analytic_exterior_K(R) == pytest.approx(omega * R * R, abs=1e-10)
+    expected_L = R * R * (1.0 - (omega * R) ** 2)
+    assert vs.analytic_exterior_L(R) == pytest.approx(expected_L, abs=1e-10)
+
+
+def test_critical_analytic_continuity_at_R():
+    """Critical (a = 1/2) F(R)=1, F'(R)=0, K(R)=omega R^2, L(R)=3R^2/4."""
+    omega, R = 0.5, 1.0
+    vs = VanStockumInterior(omega=omega, R=R)
+    assert vs.regime == "critical"
+    assert vs.analytic_exterior_F(R) == pytest.approx(1.0, abs=1e-10)
+    assert vs.analytic_exterior_K(R) == pytest.approx(omega * R * R, abs=1e-10)
+    assert vs.analytic_exterior_L(R) == pytest.approx(3.0 * R * R / 4.0, abs=1e-10)
+
+
+def test_critical_F_zero_at_e_R_analytically():
+    """Critical: F = (r/R)(1 - ln(r/R)) = 0 -> r = e R exactly."""
+    vs = VanStockumInterior(omega=0.5, R=1.0)
+    assert vs.analytic_exterior_F(np.e) == pytest.approx(0.0, abs=1e-12)
+
+
+def test_critical_K_simple_form():
+    """Critical K(r) = (r/2)(1 + ln(r/R)) — closed form (a = 1/2)."""
+    # a = omega R = 1/2 requires omega R = 1/2; with R=1 use omega=0.5.
+    omega, R = 0.5, 1.0
+    vs = VanStockumInterior(omega=omega, R=R)
+    for r in [1.0, 1.5, 2.0, np.e]:
+        expected = (r / 2.0) * (1.0 + np.log(r / R))
+        assert vs.analytic_exterior_K(r) == pytest.approx(expected, abs=1e-12)
+
+
+def test_critical_L_simple_form():
+    """Critical L(r) = (r R / 4)(3 + ln(r/R)) — closed form."""
+    omega, R = 0.5, 1.0
+    vs = VanStockumInterior(omega=omega, R=R)
+    for r in [1.0, 1.5, 2.0, np.e, 5.0]:
+        expected = (r * R / 4.0) * (3.0 + np.log(r / R))
+        assert vs.analytic_exterior_L(r) == pytest.approx(expected, abs=1e-12)
+
+
+def test_subcritical_constraint_FL_plus_K2():
+    """F L + K^2 = r^2 holds identically for the subcritical analytic forms."""
+    vs = VanStockumInterior(omega=0.3, R=1.0)
+    r = np.linspace(1.05, 3.5, 50)  # before F-zero at ~3.95
+    F = vs.analytic_exterior_F(r)
+    K = vs.analytic_exterior_K(r)
+    L = vs.analytic_exterior_L(r)
+    np.testing.assert_allclose(F * L + K * K, r * r, rtol=1e-12, atol=1e-12)
+
+
+def test_critical_constraint_FL_plus_K2():
+    """F L + K^2 = r^2 holds identically for the critical analytic forms."""
+    vs = VanStockumInterior(omega=0.5, R=1.0)
+    r = np.linspace(1.05, 2.5, 50)  # before F-zero at e
+    F = vs.analytic_exterior_F(r)
+    K = vs.analytic_exterior_K(r)
+    L = vs.analytic_exterior_L(r)
+    np.testing.assert_allclose(F * L + K * K, r * r, rtol=1e-12, atol=1e-12)
+
+
+def test_subcritical_analytic_matches_numerical():
+    """Subcritical analytic agrees with the numerical integrator well before F=0.
+
+    The numerical K is computed via the twist quadrature with a 1/F^2
+    integrand; near the F=0 surface this loses precision. We test in the
+    well-conditioned region r <= 0.6 * F-zero radius.
+    """
+    omega, R = 0.3, 1.0
+    vs = VanStockumInterior(omega=omega, R=R)
+    sol = integrate_lp_exterior(omega_dust=omega, R=R, r_max=2.0, n_samples=2001)
+    F_ana = vs.analytic_exterior_F(sol.r)
+    K_ana = vs.analytic_exterior_K(sol.r)
+    L_ana = vs.analytic_exterior_L(sol.r)
+    np.testing.assert_allclose(sol.F, F_ana, rtol=1e-6, atol=1e-7)
+    np.testing.assert_allclose(sol.K, K_ana, rtol=1e-5, atol=1e-6)
+    np.testing.assert_allclose(sol.L, L_ana, rtol=1e-5, atol=1e-5)

@@ -50,4 +50,4 @@ __all__ = [
     "integrate_lp_robust",
     "OffAxisPair",
 ]
-__version__ = "0.2.0"
+__version__ = "0.2.1"

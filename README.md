@@ -7,7 +7,7 @@
 [![Tests](https://github.com/Zynerji/systrophe/actions/workflows/tests.yml/badge.svg)](https://github.com/Zynerji/systrophe/actions/workflows/tests.yml)
 [![Python ≥ 3.10](https://img.shields.io/badge/python-%E2%89%A5%203.10-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 81 passing](https://img.shields.io/badge/tests-81%20passing-brightgreen.svg)](#tests)
+[![Tests: 89 passing](https://img.shields.io/badge/tests-89%20passing-brightgreen.svg)](#tests)
 [![Whitepaper](https://img.shields.io/badge/whitepaper-PDF-informational.svg)](paper/systrophe_time_travel.pdf)
 [![Version 0.2.0](https://img.shields.io/badge/version-0.2.0-blue.svg)](pyproject.toml)
 
@@ -115,14 +115,27 @@ Runs the full numerical experiment from the whitepaper: identifies CTC bands, sw
 α = √(4 a² − 1).
 ```
 
-**Closed forms.** With `γ = π − arctan α`:
+**Closed forms** (all three Bonnor regimes).
 
+*Supercritical* (`a > 1/2`): with `γ = π − arctan α`,
 ```
 F(r) = (r/R) · sin(α u + γ) / sin γ
 K(r) = (r/α)  · [ ((α² − 1)/2) sin(α u + γ) − α cos(α u + γ) ]
 L(r) = (r R sin γ / α²) · [ Q sin(α u + γ) + α(α² − 1) cos(α u + γ) ]
 ```
-with `Q = α² − (α² − 1)² / 4`. The constraint `F·L + K² = r²` holds identically; verified to machine precision in the test suite.
+with `Q = α² − (α² − 1)² / 4`.
+
+*Critical* (`a = 1/2`):
+```
+F(r) = (r/R)(1 − u)        K(r) = (r/2)(1 + u)        L(r) = (rR/4)(3 + u)
+```
+
+*Subcritical* (`a < 1/2`): with `β = √(1 − 4a²)` and `S± = cosh(βu) ± sinh(βu)/β`,
+```
+F(r) = (r/R) S₋(u)         K(r) = a r S₊(u)           L(r) = rR(1 − a²S₊²)/S₋
+```
+
+The constraint `F·L + K² = r²` holds identically in every regime; verified to machine precision in the test suite.
 
 **Pair superposition.** For matched `α`, the joint envelope is a single sinusoid whose amplitude and phase come from the phasor sum
 

@@ -105,67 +105,96 @@ class VanStockumInterior:
         g = self.metric(r)
         return g[0, 0] * g[2, 2] - g[0, 2] * g[2, 0]
 
-    def analytic_exterior_F(self, r: float | np.ndarray) -> np.ndarray:
-        """Analytic Case III exterior F(r) = (r/R) sin(alpha u + gamma)/sin gamma.
+    @property
+    def regime(self) -> str:
+        """Bonnor exterior regime label: 'subcritical', 'critical', or 'supercritical'."""
+        if self.a > 0.5 + 1e-12:
+            return "supercritical"
+        if self.a > 0.5 - 1e-9:
+            return "critical"
+        return "subcritical"
 
-        u = ln(r/R), alpha = sqrt(4 a^2 - 1), gamma = pi - arctan(alpha).
-        Defined for the supercritical case a > 1/2 only.
+    def analytic_exterior_F(self, r: float | np.ndarray) -> np.ndarray:
+        """Analytic exterior F(r) = -g_{tt}(r) in any Bonnor regime.
+
+        Dispatches by regime:
+
+        - **Supercritical** (a > 1/2):  F(r) = (r/R) sin(alpha u + gamma)/sin gamma
+            with alpha = sqrt(4a^2 - 1), gamma = pi - arctan(alpha).
+        - **Critical** (a = 1/2):  F(r) = (r/R) (1 - u).
+        - **Subcritical** (a < 1/2):  F(r) = (r/R) [cosh(beta u) - sinh(beta u)/beta]
+            with beta = sqrt(1 - 4a^2).
         """
-        if not self.is_supercritical():
-            raise ValueError("Analytic Case III form requires a > 1/2")
-        alpha = self.alpha
-        gamma = np.pi - np.arctan(alpha)
-        u = np.log(np.asarray(r, dtype=float) / self.R)
-        return (np.asarray(r, dtype=float) / self.R) * np.sin(alpha * u + gamma) / np.sin(gamma)
+        r_arr = np.asarray(r, dtype=float)
+        u = np.log(r_arr / self.R)
+        regime = self.regime
+        if regime == "supercritical":
+            alpha = self.alpha
+            gamma = np.pi - np.arctan(alpha)
+            return (r_arr / self.R) * np.sin(alpha * u + gamma) / np.sin(gamma)
+        if regime == "critical":
+            return (r_arr / self.R) * (1.0 - u)
+        # subcritical
+        beta = float(np.sqrt(1.0 - 4.0 * self.a * self.a))
+        return (r_arr / self.R) * (np.cosh(beta * u) - np.sinh(beta * u) / beta)
 
     def analytic_exterior_K(self, r: float | np.ndarray) -> np.ndarray:
-        """Analytic Case III exterior K(r) = g_{t phi}(r).
+        """Analytic exterior K(r) = g_{t phi}(r) in any Bonnor regime.
 
-        Derived from F(r) and the twist quadrature ω_metric'(r) = c r/F^2,
-        with c = 2 omega and ω_metric(R) = omega R^2:
+        Dispatches by regime:
 
-            K(r) = (r / alpha) * [ ((alpha^2 - 1)/2) sin(alpha u + gamma)
-                                  - alpha cos(alpha u + gamma) ]
+        - **Supercritical**:  K(r) = (r/alpha)[((alpha^2-1)/2)sin(.) - alpha cos(.)].
+        - **Critical**:  K(r) = (r/2)(1 + u).
+        - **Subcritical**:  K(r) = a r [cosh(beta u) + sinh(beta u)/beta].
         """
-        if not self.is_supercritical():
-            raise ValueError("Analytic Case III form requires a > 1/2")
-        alpha = self.alpha
-        gamma = np.pi - np.arctan(alpha)
         r_arr = np.asarray(r, dtype=float)
         u = np.log(r_arr / self.R)
-        theta = alpha * u + gamma
-        return (r_arr / alpha) * (
-            ((alpha * alpha - 1) / 2.0) * np.sin(theta) - alpha * np.cos(theta)
-        )
+        regime = self.regime
+        if regime == "supercritical":
+            alpha = self.alpha
+            gamma = np.pi - np.arctan(alpha)
+            theta = alpha * u + gamma
+            return (r_arr / alpha) * (
+                ((alpha * alpha - 1.0) / 2.0) * np.sin(theta) - alpha * np.cos(theta)
+            )
+        if regime == "critical":
+            return (r_arr / 2.0) * (1.0 + u)
+        # subcritical
+        beta = float(np.sqrt(1.0 - 4.0 * self.a * self.a))
+        return self.a * r_arr * (np.cosh(beta * u) + np.sinh(beta * u) / beta)
 
     def analytic_exterior_L(self, r: float | np.ndarray) -> np.ndarray:
-        """Analytic Case III exterior L(r) = g_{phi phi}(r) (CTC-relevant).
+        """Analytic exterior L(r) = g_{phi phi}(r) in any Bonnor regime.
 
-        Derived from L = (r^2 - K^2) / F:
+        Dispatches by regime:
 
-            L(r) = (r R sin(gamma) / alpha^2)
-                   * [ Q sin(alpha u + gamma) + alpha (alpha^2 - 1) cos(alpha u + gamma) ]
-
-        with Q = alpha^2 - (alpha^2 - 1)^2 / 4. Equivalent log-periodic form:
-
-            L(r) = r * A_L * cos(alpha u + delta_L)
-            A_L = (R sin(gamma) / alpha^2) * sqrt(Q^2 + alpha^2 (alpha^2 - 1)^2)
-            delta_L = gamma - arctan2(Q, alpha (alpha^2 - 1))
-
-        L < 0 marks CTC bands; this is the strict closed-timelike-curve diagnostic.
+        - **Supercritical**:  L(r) = (r R sin gamma / alpha^2) [ Q sin(.)
+            + alpha (alpha^2-1) cos(.) ],  Q = alpha^2 - (alpha^2-1)^2/4.
+        - **Critical**:  L(r) = (r R / 4) (3 + u).
+        - **Subcritical**:  L(r) = r R (1 - a^2 S_+(u)^2) / S_-(u),
+            where S_+- = cosh(beta u) +/- sinh(beta u)/beta.
+            Equivalently L = (r^2 - K^2)/F; the constraint FL+K^2 = r^2
+            holds identically.
         """
-        if not self.is_supercritical():
-            raise ValueError("Analytic Case III form requires a > 1/2")
-        alpha = self.alpha
-        gamma = np.pi - np.arctan(alpha)
         r_arr = np.asarray(r, dtype=float)
         u = np.log(r_arr / self.R)
-        theta = alpha * u + gamma
-        Q = alpha * alpha - ((alpha * alpha - 1.0) ** 2) / 4.0
-        return (
-            (r_arr * self.R * np.sin(gamma) / (alpha * alpha))
-            * (Q * np.sin(theta) + alpha * (alpha * alpha - 1.0) * np.cos(theta))
-        )
+        regime = self.regime
+        if regime == "supercritical":
+            alpha = self.alpha
+            gamma = np.pi - np.arctan(alpha)
+            theta = alpha * u + gamma
+            Q = alpha * alpha - ((alpha * alpha - 1.0) ** 2) / 4.0
+            return (
+                (r_arr * self.R * np.sin(gamma) / (alpha * alpha))
+                * (Q * np.sin(theta) + alpha * (alpha * alpha - 1.0) * np.cos(theta))
+            )
+        if regime == "critical":
+            return (r_arr * self.R / 4.0) * (3.0 + u)
+        # subcritical: hyperbolic closed form
+        beta = float(np.sqrt(1.0 - 4.0 * self.a * self.a))
+        S_plus = np.cosh(beta * u) + np.sinh(beta * u) / beta
+        S_minus = np.cosh(beta * u) - np.sinh(beta * u) / beta
+        return r_arr * self.R * (1.0 - self.a * self.a * S_plus * S_plus) / S_minus
 
     def tipler_sinusoid_L(self):
         """TiplerSinusoid matched to the analytic g_{phi phi}(r) (CTC-relevant).

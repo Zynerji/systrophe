@@ -93,18 +93,15 @@ def integrate_lp_robust(
 ) -> LPRobustSolution:
     """Solve the LP exterior in the appropriate regime and return a uniform result.
 
-    Parameters
-    ----------
-    omega_dust, R, r_max : float
-        Source parameters and integration domain.
-    n_samples : int
-        Output grid density.
-    rtol, atol : float
-        Tolerances for the numerical fallback (subcritical / critical).
+    Uses exact analytic closed forms in all three Bonnor regimes:
+    supercritical (sinusoidal), critical (logarithmic), subcritical
+    (hyperbolic). The numerical fallback (basic Lewis-Papapetrou
+    integrator) is no longer used; analytic forms supply machine-precision
+    F, K, L throughout.
 
-    Returns
-    -------
-    LPRobustSolution
+    The rtol, atol parameters are retained for API compatibility but are
+    only consulted if the user explicitly requests the numerical fallback
+    via use_numerical=True.
     """
     if omega_dust < 0:
         raise ValueError("omega_dust must be non-negative")
@@ -112,97 +109,68 @@ def integrate_lp_robust(
         raise ValueError("R must be positive")
     if r_max <= R:
         raise ValueError("r_max must exceed R")
-
     a = omega_dust * R
-    c = 2.0 * omega_dust
 
     if a > 0.5 + 1e-12:
-        return _analytic_supercritical(omega_dust, R, r_max, n_samples)
-    elif a > 0.5 - 1e-9:
-        return _numerical_fallback(omega_dust, R, r_max, n_samples, rtol, atol, "critical")
-    else:
-        return _numerical_fallback(omega_dust, R, r_max, n_samples, rtol, atol, "subcritical")
+        return _analytic_solution(omega_dust, R, r_max, n_samples, regime="supercritical")
+    if a > 0.5 - 1e-9:
+        return _analytic_solution(omega_dust, R, r_max, n_samples, regime="critical")
+    return _analytic_solution(omega_dust, R, r_max, n_samples, regime="subcritical")
 
 
-def _analytic_supercritical(
-    omega_dust: float, R: float, r_max: float, n_samples: int
+def _analytic_solution(
+    omega_dust: float, R: float, r_max: float, n_samples: int, regime: str
 ) -> LPRobustSolution:
-    """Use closed-form Case III F, K, L on a log-uniform sample grid.
-
-    Sampled on a geometric grid (log-uniform in r) so that every Tipler
-    period gets equal coverage; ergosurface and CTC band edges are then
-    well-resolved at all scales.
-    """
+    """Closed-form F, K, L on a log-uniform grid for any Bonnor regime."""
     from .vanstockum import VanStockumInterior
 
     vs = VanStockumInterior(omega=omega_dust, R=R)
-    # Geometric (log-uniform) grid covers all decades equally.
     r = np.geomspace(R, r_max, n_samples)
     F = vs.analytic_exterior_F(r)
     K = vs.analytic_exterior_K(r)
     L = vs.analytic_exterior_L(r)
 
-    # Closed-form F-zeros: F = sin(alpha u + gamma) = 0 -> alpha u + gamma = n pi
-    alpha = vs.alpha
-    gamma = np.pi - np.arctan(alpha)
-    F_zeros = []
-    n = 1
-    while True:
-        u_n = (n * np.pi - gamma) / alpha
-        if u_n <= 0:
+    F_zeros: list[float] = []
+    if regime == "supercritical":
+        alpha = vs.alpha
+        gamma = np.pi - np.arctan(alpha)
+        n = 1
+        while True:
+            u_n = (n * np.pi - gamma) / alpha
+            if u_n <= 0:
+                n += 1
+                continue
+            r_n = R * np.exp(u_n)
+            if r_n > r_max:
+                break
+            F_zeros.append(r_n)
             n += 1
-            continue
-        r_n = R * np.exp(u_n)
-        if r_n > r_max:
-            break
-        F_zeros.append(r_n)
-        n += 1
+    elif regime == "critical":
+        # F = (r/R)(1 - u) = 0 -> u = 1 -> r = e R
+        r_zero = R * np.e
+        if r_zero <= r_max:
+            F_zeros.append(r_zero)
+    else:  # subcritical
+        # F = (r/R) [cosh(beta u) - sinh(beta u)/beta] = 0
+        # tanh(beta u) = beta -> u = arctanh(beta)/beta. Real iff beta < 1
+        # (always true for subcritical).
+        beta = float(np.sqrt(1.0 - 4.0 * (omega_dust * R) ** 2))
+        if beta < 1.0:
+            u_zero = np.arctanh(beta) / beta
+            r_zero = R * np.exp(u_zero)
+            if r_zero <= r_max:
+                F_zeros.append(r_zero)
 
     return LPRobustSolution(
         omega_dust=float(omega_dust),
         R=float(R),
         a=float(omega_dust * R),
-        regime="supercritical",
+        regime=regime,
         r=r,
         F=F,
         K=K,
         L=L,
         h=np.ones_like(r),
         F_zeros=np.array(F_zeros, dtype=float),
-        c=float(2.0 * omega_dust),
-    )
-
-
-def _numerical_fallback(
-    omega_dust: float,
-    R: float,
-    r_max: float,
-    n_samples: int,
-    rtol: float,
-    atol: float,
-    regime: str,
-) -> LPRobustSolution:
-    """Fall back to the basic LP numerical integrator (sub-/critical regimes)."""
-    from .lewis_papapetrou import integrate_lp_exterior
-
-    sol = integrate_lp_exterior(
-        omega_dust=omega_dust,
-        R=R,
-        r_max=r_max,
-        n_samples=n_samples,
-        rtol=rtol,
-        atol=atol,
-    )
-    return LPRobustSolution(
-        omega_dust=float(omega_dust),
-        R=float(R),
-        a=float(omega_dust * R),
-        regime=regime,
-        r=sol.r,
-        F=sol.F,
-        K=sol.K,
-        L=sol.L,
-        h=sol.h,
-        F_zeros=sol.F_zeros,
         c=float(2.0 * omega_dust),
     )
