@@ -1,20 +1,17 @@
-"""Tests for the Dinos bridge (cylindrical-Kerr correspondence + Z3 mode match)."""
+"""Tests for the Dinos bridge (cylindrical-Kerr correspondence + Z3 mode match).
 
-import importlib.util
+Skipped automatically if the optional Dinos-DKN package is not importable.
+Set the environment variable SYSTROPHE_DINOS_PATH to the directory
+containing the `dinos` package, or pip-install Dinos, to enable.
+"""
+
+import os
+import sys
 
 import numpy as np
 import pytest
 
 from systrophe.vanstockum import VanStockumInterior
-
-# Skip the entire module if dinos is not importable (z3 missing, etc.)
-_DINOS_AVAILABLE = importlib.util.find_spec("z3") is not None
-if not _DINOS_AVAILABLE:
-    pytest.skip("z3-solver not installed; Dinos imports unavailable", allow_module_level=True)
-
-# Probe dinos availability (caller may set SYSTROPHE_DINOS_PATH or have dinos on PYTHONPATH).
-import os
-import sys
 
 _dinos_path = os.environ.get("SYSTROPHE_DINOS_PATH")
 if _dinos_path:
@@ -23,7 +20,8 @@ try:
     import dinos  # noqa: F401
 except Exception:
     pytest.skip(
-        "Dinos package not importable; set SYSTROPHE_DINOS_PATH or install dinos to enable bridge tests",
+        "Dinos-DKN not importable; set SYSTROPHE_DINOS_PATH or install dinos "
+        "to enable bridge tests",
         allow_module_level=True,
     )
 
