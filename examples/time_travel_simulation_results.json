@@ -1,0 +1,258 @@
+{
+  "single_cylinder": {
+    "omega": 1.0,
+    "R": 1.0,
+    "a": 1.0,
+    "alpha": 1.7320508075688772,
+    "log_period": 3.6275987284684357,
+    "r_period_multiplier": 37.62236654531715,
+    "n_ctc_bands": 2,
+    "bands": [
+      {
+        "index": 1,
+        "r_inner": 1.001,
+        "r_outer": 6.13370740623298,
+        "log_span": 1.8127998639006049,
+        "r_min_L": 3.3517799920547047,
+        "L_min": -3.350800946041789,
+        "F_at_min": -3.3527581808883378,
+        "K_at_min": -0.0019572348465474298,
+        "omega_lower_spacelike": -1.00087629223781,
+        "omega_upper_spacelike": 0.9997080731295641
+      },
+      {
+        "index": 2,
+        "r_inner": 37.622366545317824,
+        "r_outer": 200.0,
+        "log_span": 1.670718638079583,
+        "r_min_L": 126.11817677811962,
+        "L_min": -126.06503819369688,
+        "F_at_min": -126.1712482791288,
+        "K_at_min": -0.10621008543189155,
+        "omega_lower_spacelike": -1.0012640195262528,
+        "omega_upper_spacelike": 0.9995790149134955
+      }
+    ]
+  },
+  "backward_orbits": [
+    {
+      "target_dt": -0.1,
+      "Omega": -62.83185307179586,
+      "is_timelike": true,
+      "dtau_per_rev": 11.499927475478215,
+      "total_coord_advance_10rev": -1.0,
+      "total_proper_advance_10rev": 114.99927475478215
+    },
+    {
+      "target_dt": -0.5,
+      "Omega": -12.566370614359172,
+      "is_timelike": true,
+      "dtau_per_rev": 11.464459509390798,
+      "total_coord_advance_10rev": -5.0,
+      "total_proper_advance_10rev": 114.64459509390798
+    },
+    {
+      "target_dt": -1.0,
+      "Omega": -6.283185307179586,
+      "is_timelike": true,
+      "dtau_per_rev": 11.353720339059102,
+      "total_coord_advance_10rev": -10.0,
+      "total_proper_advance_10rev": 113.53720339059102
+    },
+    {
+      "target_dt": -2.0,
+      "Omega": -3.141592653589793,
+      "is_timelike": true,
+      "dtau_per_rev": 10.900646570568107,
+      "total_coord_advance_10rev": -20.0,
+      "total_proper_advance_10rev": 109.00646570568107
+    },
+    {
+      "target_dt": -5.0,
+      "Omega": -1.2566370614359172,
+      "is_timelike": true,
+      "dtau_per_rev": 6.952869036764606,
+      "total_coord_advance_10rev": -50.0,
+      "total_proper_advance_10rev": 69.52869036764606
+    }
+  ],
+  "near_instantaneous": {
+    "Omega": 100.0,
+    "is_timelike": true,
+    "dt_per_rev": 0.06283185307179587,
+    "dtau_per_rev": 11.50098379569535
+  },
+  "pair_offset_sweep": {
+    "omega": 1.5,
+    "R": 1.0,
+    "rows": [
+      {
+        "offset": 0.0,
+        "n_bands": 2,
+        "log_measure": 1.8362213748479381
+      },
+      {
+        "offset": 0.2617993877991494,
+        "n_bands": 2,
+        "log_measure": 1.8362213748497336
+      },
+      {
+        "offset": 0.5235987755982988,
+        "n_bands": 2,
+        "log_measure": 1.836221374845381
+      },
+      {
+        "offset": 0.7853981633974483,
+        "n_bands": 2,
+        "log_measure": 1.836221374846319
+      },
+      {
+        "offset": 1.0471975511965976,
+        "n_bands": 2,
+        "log_measure": 1.7926222899753699
+      },
+      {
+        "offset": 1.308996938995747,
+        "n_bands": 2,
+        "log_measure": 1.7463422593696016
+      },
+      {
+        "offset": 1.5707963267948966,
+        "n_bands": 2,
+        "log_measure": 1.700062228755621
+      },
+      {
+        "offset": 1.832595714594046,
+        "n_bands": 2,
+        "log_measure": 1.653782198163543
+      },
+      {
+        "offset": 2.0943951023931953,
+        "n_bands": 2,
+        "log_measure": 1.6075021675520536
+      },
+      {
+        "offset": 2.356194490192345,
+        "n_bands": 2,
+        "log_measure": 1.5612221369471921
+      },
+      {
+        "offset": 2.617993877991494,
+        "n_bands": 2,
+        "log_measure": 1.5149421063670503
+      },
+      {
+        "offset": 2.8797932657906435,
+        "n_bands": 2,
+        "log_measure": 1.4686620757390665
+      },
+      {
+        "offset": 3.141592653589793,
+        "n_bands": 0,
+        "log_measure": 0.0
+      },
+      {
+        "offset": 3.4033920413889422,
+        "n_bands": 2,
+        "log_measure": 1.5708400948515755
+      },
+      {
+        "offset": 3.665191429188092,
+        "n_bands": 2,
+        "log_measure": 1.6171201254616137
+      },
+      {
+        "offset": 3.926990816987241,
+        "n_bands": 2,
+        "log_measure": 1.663400156075331
+      },
+      {
+        "offset": 4.1887902047863905,
+        "n_bands": 2,
+        "log_measure": 1.7096801866805187
+      },
+      {
+        "offset": 4.45058959258554,
+        "n_bands": 2,
+        "log_measure": 1.755960217285701
+      },
+      {
+        "offset": 4.71238898038469,
+        "n_bands": 2,
+        "log_measure": 1.8022402478929274
+      },
+      {
+        "offset": 4.974188368183839,
+        "n_bands": 2,
+        "log_measure": 1.8362213748450462
+      },
+      {
+        "offset": 5.235987755982988,
+        "n_bands": 2,
+        "log_measure": 1.8362213748471028
+      },
+      {
+        "offset": 5.497787143782138,
+        "n_bands": 2,
+        "log_measure": 1.8362213748499139
+      },
+      {
+        "offset": 5.759586531581287,
+        "n_bands": 2,
+        "log_measure": 1.836221374843654
+      },
+      {
+        "offset": 6.021385919380436,
+        "n_bands": 2,
+        "log_measure": 1.8362213748485092
+      },
+      {
+        "offset": 6.283185307179586,
+        "n_bands": 2,
+        "log_measure": 1.8362213748479381
+      }
+    ]
+  },
+  "pair_tuned_first_band": [
+    {
+      "offset": 0.0,
+      "r_inner": 1.05,
+      "r_outer": 2.498803062016955,
+      "log_span": 0.8670216778620664
+    },
+    {
+      "offset": 0.5235987755982988,
+      "r_inner": 1.05,
+      "r_outer": 2.2778950225938517,
+      "log_span": 0.7744616166478906
+    },
+    {
+      "offset": 1.0471975511965976,
+      "r_inner": 1.05,
+      "r_outer": 2.0765164781655847,
+      "log_span": 0.6819015554358312
+    },
+    {
+      "offset": 1.5707963267948966,
+      "r_inner": 1.05,
+      "r_outer": 1.8929409131007209,
+      "log_span": 0.5893414942059584
+    },
+    {
+      "offset": 2.0943951023931953,
+      "r_inner": 1.05,
+      "r_outer": 1.7255944454564436,
+      "log_span": 0.4967814330125661
+    },
+    {
+      "offset": 2.617993877991494,
+      "r_inner": 1.05,
+      "r_outer": 1.5730423329867305,
+      "log_span": 0.4042213718056932
+    },
+    {
+      "offset": 3.141592653589793,
+      "r_inner": null
+    }
+  ]
+}
