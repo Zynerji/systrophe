@@ -9,6 +9,7 @@ cylinders sharing an axis, whose joint exterior contains a log-periodic
 from .vanstockum import VanStockumInterior, vanstockum_interior_metric
 from .sinusoid import TiplerSinusoid, fit_log_periodic
 from .pair import SystrophePair
+from .array import SystropheArray
 from .ctc import find_ctc_intervals, has_ctc
 from .lewis_papapetrou import LPSolution, integrate_lp_exterior
 from .geodesic import (
@@ -39,6 +40,7 @@ __all__ = [
     "TiplerSinusoid",
     "fit_log_periodic",
     "SystrophePair",
+    "SystropheArray",
     "find_ctc_intervals",
     "has_ctc",
     "LPSolution",
@@ -60,4 +62,4 @@ __all__ = [
     "proper_energy_density",
     "total_energy_per_unit_length",
 ]
-__version__ = "0.3.2"
+__version__ = "0.4.0"
