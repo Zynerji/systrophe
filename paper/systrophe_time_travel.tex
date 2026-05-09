@@ -976,6 +976,62 @@ The package and this paper's results are reproducible end-to-end from
 the simulation script \texttt{examples/time\_travel\_simulation.py}
 and the figure generator \texttt{paper/generate\_figures.py}.
 
+\section{The CTC zoo: framework integration}
+\label{sec:zoo}
+
+Beyond the Tipler / van Stockum cylinder pair that motivated the
+package, the same infrastructure (CTC band detector, circular orbit
+class, geodesic integrator) hosts other analytically tractable CTC
+spacetimes. The \texttt{systrophe.spacetimes} subpackage provides
+matched implementations.
+
+\paragraph{G\"odel rotating-dust universe (G\"odel 1949).}
+The simplest exact CTC spacetime: a homogeneous rotating dust cosmology
+with negative cosmological constant, in which CTCs pass through every
+point. In cylindrical-type coordinates,
+\begin{equation}
+ds^2 = a^2\!\left[ -\bigl(dt + \sqrt{2}\,\sinh^2 r\,d\phi\bigr)^2
+                  + dr^2 + dz^2 + \sinh^2 r\,\cosh^2 r\,d\phi^2 \right],
+\end{equation}
+with dust density $\rho = 1/(8\pi a^2)$ and $\Lambda = -1/(2 a^2)$.
+The CTC threshold is at $r = \mathrm{arcsinh}(1) = \ln(1 + \sqrt 2)
+\approx 0.8814$ (in units of $a$): for $r > r_{CTC}$ the
+$\phi$-circumference $g_{\phi\phi}$ becomes negative.
+
+\paragraph{Gott pair (Gott 1991).}
+Two parallel cosmic strings of mass per unit length $\mu$, passing each
+other with relative velocity $v$ in the COM frame. Each string carries
+a conical defect angle $8\pi\mu$. CTCs encircling \emph{both}
+strings exist iff
+\begin{equation}
+\gamma v > \tan(4\pi\mu),
+\end{equation}
+equivalently $v > \sin(4\pi\mu)$ at the threshold. The package
+implements this for sub-extremal $\mu < 1/8$ (deficit $< \pi$),
+exposing the threshold velocity, the Lorentz factor, and a margin
+$\gamma v - \tan(4\pi\mu)$.
+
+\paragraph{Comparison.}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Spacetime & CTC source & Threshold \\
+\midrule
+Tipler / van Stockum & rotating dust cylinder & $a > 1/2$ (exterior) \\
+G\"odel              & global rotation $+ \Lambda$ & $r > \mathrm{arcsinh}(1) \approx 0.881$ \\
+Gott pair            & moving cosmic strings & $\gamma v > \tan(4\pi\mu)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All three share a common diagnostic --- the sign of the relevant
+azimuthal metric component --- and use the same
+\texttt{find\_ctc\_intervals} / \texttt{has\_local\_ctc} interface.
+The unified framework makes side-by-side comparison and parameter
+sweeps trivial; the example script
+\texttt{examples/ctc\_zoo.py} reproduces this section's numbers.
+
 \section{Historical note}
 \label{sec:historical}
 
