@@ -12,5 +12,12 @@ Planned (see ROADMAP.md):
 """
 
 from .godel import GodelUniverse, godel_ctc_radius
+from .gott import GottPair, gott_critical_velocity, gott_critical_mu
 
-__all__ = ["GodelUniverse", "godel_ctc_radius"]
+__all__ = [
+    "GodelUniverse",
+    "godel_ctc_radius",
+    "GottPair",
+    "gott_critical_velocity",
+    "gott_critical_mu",
+]

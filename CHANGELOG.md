@@ -5,6 +5,17 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2] - 2026-05-09
+
+### Added
+- `systrophe.spacetimes.gott` — Gott pair (Gott 1991, PRL 66, 1126):
+  symmetric pair of moving cosmic strings producing CTCs encircling
+  both. Implements the standard threshold `gamma * v > tan(4 pi mu)`,
+  exposes critical velocity `v_crit = sin(4 pi mu)` and critical mass
+  `mu_crit = arcsin(v) / (4 pi)`. Sub-extremal cosmic strings only
+  (`mu < 1/8`).
+- 11 new tests in `test_gott.py`. Total: 122 tests.
+
 ## [0.3.1] - 2026-05-09
 
 ### Added
