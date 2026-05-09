@@ -188,6 +188,53 @@ def fig_off_axis_ctc_map():
     return out
 
 
+def fig_spacetime_worldline():
+    """3D-projected spacetime worldline of a closed timelike curve.
+
+    A particle on a constant-r CTC orbit traces a helix in (x, y, t) space.
+    For Omega < 0 the helix has negative dt/dphi, so as the particle
+    sweeps through phi it advances in proper time but moves backwards in
+    coordinate time. The orbit closes back on itself in spacetime after
+    the appropriate number of revolutions.
+    """
+    from systrophe import VanStockumInterior, find_single_cylinder_windows, harness_time_loop
+
+    vs = VanStockumInterior(omega=1.0, R=1.0)
+    w = find_single_cylinder_windows(vs, r_min=1.001, r_max=10.0)[0]
+    target_dt = -1.0
+    res = harness_time_loop(w, target_dt_per_rev=target_dt, n_revolutions=4)
+
+    Omega = res["Omega"]
+    r0 = res["r"]
+    n_revs = 4
+    n_pts = 2000
+    phi = np.linspace(0.0, 2.0 * np.pi * n_revs, n_pts)
+    t = phi / Omega
+    x = r0 * np.cos(phi)
+    y = r0 * np.sin(phi)
+
+    fig = plt.figure(figsize=(7, 5))
+    ax = fig.add_subplot(111, projection="3d")
+    ax.plot(x, y, t, color="C5", lw=1.6)
+    ax.scatter([x[0]], [y[0]], [t[0]], color="green", s=40, label="start")
+    ax.scatter([x[-1]], [y[-1]], [t[-1]], color="red", s=40, label="end (4 revs)")
+    # Mark cylinder axis
+    ax.plot([0, 0], [0, 0], [t.min(), t.max()], color="0.5", lw=0.8, ls=":")
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    ax.set_zlabel("t (coord)")
+    ax.set_title(
+        rf"Time-travel worldline: $r = {r0:.2f}$, $\Omega = {Omega:.2f}$, "
+        rf"$\Delta t / \mathrm{{rev}} = {target_dt}$"
+    )
+    ax.legend(loc="upper left", fontsize=9)
+    fig.tight_layout()
+    out = FIG_DIR / "spacetime_worldline.pdf"
+    fig.savefig(out)
+    plt.close(fig)
+    return out
+
+
 def fig_lp_robust_demo():
     """Demonstrate machine-precision agreement of the robust solver at high a."""
     from systrophe.lp_robust import integrate_lp_robust
@@ -219,6 +266,7 @@ def main():
         fig_time_travel_balance(),
         fig_off_axis_ctc_map(),
         fig_lp_robust_demo(),
+        fig_spacetime_worldline(),
     ]
     for f in figs:
         print(f"  wrote {f}")

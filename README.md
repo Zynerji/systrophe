@@ -4,6 +4,7 @@
 
 **A co-rotating Tipler-cylinder pair as a tunable time-travel harness.**
 
+[![Tests](https://github.com/Zynerji/systrophe/actions/workflows/tests.yml/badge.svg)](https://github.com/Zynerji/systrophe/actions/workflows/tests.yml)
 [![Python ≥ 3.10](https://img.shields.io/badge/python-%E2%89%A5%203.10-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Tests: 81 passing](https://img.shields.io/badge/tests-81%20passing-brightgreen.svg)](#tests)
