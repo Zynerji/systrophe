@@ -26,6 +26,12 @@ from .time_machine import (
 )
 from .lp_robust import LPRobustSolution, integrate_lp_robust
 from .off_axis import OffAxisPair
+from .energy_conditions import (
+    EnergyConditionReport,
+    energy_condition_report,
+    proper_energy_density,
+    total_energy_per_unit_length,
+)
 
 __all__ = [
     "VanStockumInterior",
@@ -49,5 +55,9 @@ __all__ = [
     "LPRobustSolution",
     "integrate_lp_robust",
     "OffAxisPair",
+    "EnergyConditionReport",
+    "energy_condition_report",
+    "proper_energy_density",
+    "total_energy_per_unit_length",
 ]
-__version__ = "0.2.1"
+__version__ = "0.3.0"

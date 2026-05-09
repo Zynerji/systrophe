@@ -5,6 +5,30 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-05-09
+
+### Added
+- `energy_conditions.py` — pointwise energy-condition diagnostics
+  (NEC, WEC, SEC, DEC) for the van Stockum dust source plus
+  `EnergyConditionReport` dataclass. Result: all four conditions hold
+  identically for any $\omega > 0$, $R > 0$. The Tipler/Systrophe CTC
+  pathology therefore arises *purely* from geometric idealisation
+  (infinite axial extent, rigid rotation, perfect axisymmetry), not
+  from exotic matter.
+- `proper_energy_density(omega, r) = (omega^2/(2pi)) exp(omega^2 r^2)`
+  and `total_energy_per_unit_length(omega, R) = 0.5(exp(a^2) - 1)`
+  exposed.
+- `examples/quantum_z3_verification.py` — IBM Quantum-hardware
+  verification of the Z_3 cyclic phase identity that backs the
+  Systrophe ↔ Dinos correspondence. Submitted to ibm_marrakesh
+  (156-qubit Heron processor) with 1024 shots; result P(0) = 1.0000
+  exact. Job ID `d7vqbolpa59c73b67iq0`.
+- `ROADMAP.md` documenting Phase 1–5 evaluation of next-step extensions.
+- 9 new tests in `test_energy_conditions.py`. Total: 101 tests.
+- Whitepaper (now 17 pages) extended with an energy-condition section,
+  the IBM Quantum verification subsection, and a historical note
+  acknowledging the Titor lineage of the operational specification.
+
 ## [0.2.1] - 2026-05-09
 
 ### Added

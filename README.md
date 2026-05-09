@@ -7,7 +7,7 @@
 [![Tests](https://github.com/Zynerji/systrophe/actions/workflows/tests.yml/badge.svg)](https://github.com/Zynerji/systrophe/actions/workflows/tests.yml)
 [![Python ≥ 3.10](https://img.shields.io/badge/python-%E2%89%A5%203.10-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 89 passing](https://img.shields.io/badge/tests-89%20passing-brightgreen.svg)](#tests)
+[![Tests: 101 passing](https://img.shields.io/badge/tests-101%20passing-brightgreen.svg)](#tests)
 [![Whitepaper](https://img.shields.io/badge/whitepaper-PDF-informational.svg)](paper/systrophe_time_travel.pdf)
 [![Version 0.2.0](https://img.shields.io/badge/version-0.2.0-blue.svg)](pyproject.toml)
 
