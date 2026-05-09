@@ -107,12 +107,45 @@ class VanStockumInterior:
 
     @property
     def regime(self) -> str:
-        """Bonnor exterior regime label: 'subcritical', 'critical', or 'supercritical'."""
+        """Bonnor exterior regime label: 'subcritical', 'critical', or 'supercritical'.
+
+        Classifies the *exterior* (vacuum) at the threshold a = 1/2.
+        For the *interior* CTC classification at a = 1, see `interior_regime`.
+        """
         if self.a > 0.5 + 1e-12:
             return "supercritical"
         if self.a > 0.5 - 1e-9:
             return "critical"
         return "subcritical"
+
+    @property
+    def interior_regime(self) -> str:
+        """Interior regime label based on the dust-region CTC threshold (a = 1).
+
+        - 'subcritical' (a < 1): no CTCs inside the dust column.
+        - 'critical'    (a = 1): L(R) = 0 (null phi-curve at the boundary).
+        - 'supercritical' (a > 1): CTC shell at 1/omega < r <= R inside the dust.
+
+        This is independent of the *exterior* (Bonnor) regime; the
+        exterior is supercritical for a > 1/2, while the interior only
+        becomes pathological for a > 1.
+        """
+        if self.a > 1.0 + 1e-12:
+            return "supercritical"
+        if self.a > 1.0 - 1e-9:
+            return "critical"
+        return "subcritical"
+
+    @property
+    def interior_ctc_shell_inner_radius(self) -> float | None:
+        """For interior-supercritical (a > 1), the inner radius 1/omega of the CTC shell.
+
+        Returns None if the interior is sub-/critical (no CTC shell).
+        The shell occupies r in (1/omega, R].
+        """
+        if self.a > 1.0 + 1e-12:
+            return float(1.0 / self.omega)
+        return None
 
     def analytic_exterior_F(self, r: float | np.ndarray) -> np.ndarray:
         """Analytic exterior F(r) = -g_{tt}(r) in any Bonnor regime.

@@ -63,6 +63,31 @@ def test_metric_rejects_exterior_radius():
         vs.metric(2.0)
 
 
+def test_interior_regime_labels():
+    """interior_regime classifies based on a vs 1.0 (dust CTC threshold)."""
+    assert VanStockumInterior(omega=0.3, R=1.0).interior_regime == "subcritical"
+    assert VanStockumInterior(omega=0.9, R=1.0).interior_regime == "subcritical"
+    assert VanStockumInterior(omega=1.0, R=1.0).interior_regime == "critical"
+    assert VanStockumInterior(omega=1.5, R=1.0).interior_regime == "supercritical"
+
+
+def test_interior_ctc_shell_inner_radius():
+    """Inner radius of the interior CTC shell is 1/omega for a > 1."""
+    vs_super = VanStockumInterior(omega=2.0, R=1.0)  # a = 2
+    assert vs_super.interior_ctc_shell_inner_radius == pytest.approx(0.5)
+    vs_sub = VanStockumInterior(omega=0.5, R=1.0)
+    assert vs_sub.interior_ctc_shell_inner_radius is None
+    vs_crit = VanStockumInterior(omega=1.0, R=1.0)
+    assert vs_crit.interior_ctc_shell_inner_radius is None
+
+
+def test_exterior_regime_labels():
+    """regime classifies based on a vs 1/2 (Bonnor exterior threshold)."""
+    assert VanStockumInterior(omega=0.3, R=1.0).regime == "subcritical"
+    assert VanStockumInterior(omega=0.5, R=1.0).regime == "critical"
+    assert VanStockumInterior(omega=0.7, R=1.0).regime == "supercritical"
+
+
 def test_functional_form_matches_class():
     """Functional helper agrees with class metric on interior."""
     omega = 0.6
