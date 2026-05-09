@@ -236,19 +236,28 @@ def fig_spacetime_worldline():
 
 
 def fig_lp_robust_demo():
-    """Demonstrate machine-precision agreement of the robust solver at high a."""
+    """Demonstrate machine-precision agreement of the robust solver across regimes."""
     from systrophe.lp_robust import integrate_lp_robust
 
-    fig, ax = plt.subplots(figsize=(6, 3.6))
-    for omega, color in [(0.7, "C0"), (1.0, "C1"), (1.5, "C2"), (2.5, "C3")]:
+    fig, ax = plt.subplots(figsize=(6.5, 3.8))
+    cases = [
+        (0.2, "C0", "subcritical"),
+        (0.4, "C1", "subcritical"),
+        (0.5, "C2", "critical"),
+        (0.8, "C3", "supercritical"),
+        (1.5, "C4", "supercritical"),
+    ]
+    for omega, color, regime in cases:
         sol = integrate_lp_robust(omega_dust=omega, R=1.0, r_max=20.0, n_samples=2001)
         u = np.log(sol.r / sol.R)
-        ax.plot(u, sol.F, color=color, lw=1.0, label=rf"$a = {omega:.1f}$")
+        ax.plot(u, sol.F, color=color, lw=1.1, label=rf"$a = {omega:.1f}$ ({regime})")
     ax.axhline(0, color="0.5", lw=0.6)
     ax.set_xlabel(r"$\ln(r / R)$")
     ax.set_ylabel(r"$F(r)$")
-    ax.set_title(r"Regime-dispatching robust solver: machine precision at any $a$")
-    ax.legend(loc="lower left", fontsize=9)
+    ax.set_title(
+        r"Regime-dispatching solver across all three Bonnor cases"
+    )
+    ax.legend(loc="lower left", fontsize=8.5)
     ax.set_yscale("symlog", linthresh=1.0)
     fig.tight_layout()
     out = FIG_DIR / "lp_robust_demo.pdf"
