@@ -104,6 +104,33 @@ def test_ctc_map_2d_returns_grid():
     assert m["is_ctc"].any()
 
 
+def test_integrate_test_particle_returns_arrays():
+    """integrate_test_particle returns t, x, y, tau arrays of consistent shape."""
+    cyl = VanStockumInterior(omega=1.0, R=1.0)
+    pair = OffAxisPair(cyl1=cyl, cyl2=cyl, separation=4.0)
+    out = pair.integrate_test_particle(
+        x0=10.0, y0=0.0, vx0=0.0, vy0=0.0, t_max=0.5, n_samples=51
+    )
+    assert out["t"].shape == (51,)
+    assert out["x"].shape == (51,)
+    assert out["y"].shape == (51,)
+    assert out["tau"].shape == (51,)
+    # tau should be non-decreasing
+    assert np.all(np.diff(out["tau"]) >= -1e-12)
+
+
+def test_integrate_test_particle_initial_conditions():
+    cyl = VanStockumInterior(omega=1.0, R=1.0)
+    pair = OffAxisPair(cyl1=cyl, cyl2=cyl, separation=4.0)
+    out = pair.integrate_test_particle(
+        x0=10.0, y0=2.0, vx0=0.5, vy0=0.0, t_max=0.1, n_samples=11
+    )
+    assert out["x"][0] == pytest.approx(10.0)
+    assert out["y"][0] == pytest.approx(2.0)
+    assert out["t"][0] == pytest.approx(0.0)
+    assert out["tau"][0] == pytest.approx(0.0)
+
+
 def test_has_local_ctc_returns_bool():
     cyl = VanStockumInterior(omega=1.0, R=1.0)
     pair = OffAxisPair(cyl1=cyl, cyl2=cyl, separation=3.0)

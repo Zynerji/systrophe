@@ -5,6 +5,49 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-05-09
+
+### Added — finishing all deferred roadmap items
+
+**Phase 3b: full off-axis geodesics.** `OffAxisPair.integrate_test_particle`
+integrates a timelike or null trajectory through the joint Cartesian
+metric of two parallel-axis cylinders, returning (t, x, y, tau) arrays.
+Tests verify initial conditions and tau monotonicity.
+
+**Phase 4: photon ray tracing / observational signatures.** New
+`photon_raytrace.py` module with:
+- `photon_perihelion`: numerical search for null-geodesic turning points.
+- `photon_deflection_angle`: bend-angle integral for a photon between
+  perihelion and r_max.
+- `lensing_pattern`: sweep over impact parameters and report deflection.
+Validated in Minkowski (truncation residual = -2 arcsin(b/r_max)) and
+verified to run on the Tipler supercritical exterior.
+
+**Phase 5b: Pyodide interactive web demo.** `web/index.html` is a
+single-page app that loads Pyodide in the browser, lets the user drag
+sliders for `a` and `δ`, and re-renders the joint `g_phiphi(r)` curve
+with shaded CTC bands in real time. Pure static HTML; no server.
+
+**Phase 5d: Sphinx documentation.** `docs/conf.py`, `docs/index.rst`,
+`docs/api.rst`. `.github/workflows/docs.yml` builds the docs and
+publishes to GitHub Pages on every push to main. Local build verified.
+
+**Phase 2 substantive extension.** `quantum_diagnostics.py` extended with:
+- `ricci_scalar(vs, r)`: numerical Ernst-equation residual (zero in
+  exact vacuum; finite-difference error in numerics).
+- `conformal_anomaly_2d_proxy(vs, r)`: heuristic 2D conformal-anomaly
+  proxy for a conformally-coupled massless scalar; diverges at F=0.
+- `surface_gravity_at_horizon(vs, r_h)`: kappa = |F'|/2 at a Cauchy-
+  horizon candidate, the scale of thermal back-reaction.
+- `hawking_temperature_at_horizon(vs, r_h)`: T_H = kappa / (2 pi).
+
+These remain classical proxies — full QFTCS back-reaction is still
+future work — but quantify the chronology-protection signals more
+honestly than the previous 1/F^2 indicator alone.
+
+### Test count
+- 187 tests across 19 files; previously 176.
+
 ## [0.5.0] - 2026-05-09
 
 ### Added

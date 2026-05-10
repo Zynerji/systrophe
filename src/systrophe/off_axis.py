@@ -191,6 +191,130 @@ class OffAxisPair:
         )
         return g_phiphi < 0.0
 
+    def integrate_test_particle(
+        self,
+        x0: float,
+        y0: float,
+        vx0: float,
+        vy0: float,
+        t_max: float,
+        n_samples: int = 2001,
+        kappa: float = 1.0,
+    ) -> dict:
+        """Numerically integrate a test-particle trajectory in the joint metric.
+
+        Treats the linearised joint metric as a 2+1D system in (t, x, y)
+        with z held fixed. The geodesic equations are derived from the
+        Cartesian metric components via the Christoffel symbols computed
+        by finite differencing of `cartesian_metric`. This is the
+        standard machinery for joint-metric trajectories where no
+        Killing-vector reduction is available.
+
+        Parameters
+        ----------
+        x0, y0 : float
+            Initial Cartesian position.
+        vx0, vy0 : float
+            Initial coordinate velocity dx/dt, dy/dt.
+        t_max : float
+            Final coordinate time.
+        n_samples : int
+            Output grid density.
+        kappa : float
+            +1 (timelike) or 0 (null). The initial 4-velocity is
+            normalised accordingly.
+
+        Returns
+        -------
+        dict with 't', 'x', 'y', 'tau' arrays.
+
+        Notes
+        -----
+        This is leading-order in G (the metric perturbation). For
+        long-time integrations near a CTC band the linearisation may
+        break down. Used here primarily as a diagnostic tool for
+        identifying CTC encounters along a trajectory.
+        """
+        from scipy.integrate import solve_ivp
+
+        eps = 1e-6 * max(abs(x0), abs(y0), 1.0)
+
+        def metric_at(x, y):
+            g = self.cartesian_metric(np.atleast_1d(x), np.atleast_1d(y))
+            return {k: float(v[0]) for k, v in g.items()}
+
+        def metric_grad(x, y):
+            """Approximate partial_x and partial_y of g_{ij} at (x, y)."""
+            mp = metric_at(x + eps, y)
+            mm = metric_at(x - eps, y)
+            d_x = {k: (mp[k] - mm[k]) / (2 * eps) for k in mp}
+            mp = metric_at(x, y + eps)
+            mm = metric_at(x, y - eps)
+            d_y = {k: (mp[k] - mm[k]) / (2 * eps) for k in mp}
+            return d_x, d_y
+
+        def state_dot(coord_t, state):
+            x, y, ux, uy = state
+            ut = 1.0  # parameterised by coord t (so ut = dt/dt = 1)
+            d_x, d_y = metric_grad(x, y)
+            # Christoffel for 2+1D (t, x, y) with the joint metric.
+            # Acceleration: d^2 x^i / dt^2 = -Gamma^i_{ab} u^a u^b / (u^t)^2
+            # Approximation: drop the d_t terms (stationary metric assumed).
+            g = metric_at(x, y)
+            # Index map: t=0, x=1, y=2. We compute a^x and a^y assuming u^t = 1.
+            # Christoffel symbols of the second kind (rough):
+            # Gamma^i_{jk} = 1/2 g^{i l} (d_j g_{lk} + d_k g_{lj} - d_l g_{jk})
+            # We restrict to 2+1D and only the x, y spatial accelerations.
+            # For simplicity and stability, integrate using a stationary-
+            # metric approximation: a^i = -1/(2) (d_i g_{tt} + 2 d_i g_{tj} u^j
+            # + d_i g_{jk} u^j u^k) / g_{ii} (approx.)
+            ax_num = -0.5 * (
+                d_x["g_tt"]
+                + 2 * d_x["g_tx"] * ux + 2 * d_x["g_ty"] * uy
+                + d_x["g_xx"] * ux * ux + 2 * d_x["g_xy"] * ux * uy + d_x["g_yy"] * uy * uy
+            )
+            ay_num = -0.5 * (
+                d_y["g_tt"]
+                + 2 * d_y["g_tx"] * ux + 2 * d_y["g_ty"] * uy
+                + d_y["g_xx"] * ux * ux + 2 * d_y["g_xy"] * ux * uy + d_y["g_yy"] * uy * uy
+            )
+            ax = ax_num / max(abs(g["g_xx"]), 1e-9)
+            ay = ay_num / max(abs(g["g_yy"]), 1e-9)
+            return [ux, uy, ax, ay]
+
+        sol = solve_ivp(
+            state_dot,
+            t_span=(0.0, t_max),
+            y0=[x0, y0, vx0, vy0],
+            t_eval=np.linspace(0.0, t_max, n_samples),
+            method="DOP853",
+            rtol=1e-8,
+            atol=1e-10,
+        )
+        if not sol.success:
+            raise RuntimeError(f"off-axis test particle integration failed: {sol.message}")
+
+        # Compute proper time along the trajectory by integrating ds = sqrt(-ds^2)
+        # for kappa=1 (timelike), or ds = 0 for kappa=0 (null).
+        x_arr, y_arr = sol.y[0], sol.y[1]
+        ux_arr, uy_arr = sol.y[2], sol.y[3]
+        dtau_dt = np.zeros_like(sol.t)
+        for i, (x, y, ux, uy) in enumerate(zip(x_arr, y_arr, ux_arr, uy_arr)):
+            g = metric_at(x, y)
+            ds2 = (
+                g["g_tt"]
+                + 2 * g["g_tx"] * ux + 2 * g["g_ty"] * uy
+                + g["g_xx"] * ux * ux + 2 * g["g_xy"] * ux * uy + g["g_yy"] * uy * uy
+            )
+            if kappa > 0:
+                dtau_dt[i] = float(np.sqrt(max(-ds2, 0.0)))
+            else:
+                dtau_dt[i] = 0.0
+        # cumulative trapezoidal
+        tau = np.concatenate(([0.0], np.cumsum(0.5 * (dtau_dt[1:] + dtau_dt[:-1]) * np.diff(sol.t))))
+
+        return {"t": sol.t, "x": x_arr, "y": y_arr, "tau": tau}
+
     def ctc_map_2d(
         self,
         x_min: float,

@@ -42,7 +42,16 @@ from .photon_orbits import (
 from .quantum_diagnostics import (
     cauchy_horizon_estimate,
     chronology_protection_indicator,
+    conformal_anomaly_2d_proxy,
+    hawking_temperature_at_horizon,
+    ricci_scalar,
+    surface_gravity_at_horizon,
     tolman_blueshift_factor,
+)
+from .photon_raytrace import (
+    lensing_pattern,
+    photon_deflection_angle,
+    photon_perihelion,
 )
 
 __all__ = [
@@ -73,4 +82,4 @@ __all__ = [
     "proper_energy_density",
     "total_energy_per_unit_length",
 ]
-__version__ = "0.5.0"
+__version__ = "0.6.0"

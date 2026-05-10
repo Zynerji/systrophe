@@ -9,6 +9,10 @@ dist/
 .venv/
 .env
 
+# Sphinx build output
+docs/_build/
+docs/_autosummary/
+
 # LaTeX byproducts (keep .tex and .pdf, ignore everything else)
 *.aux
 *.log

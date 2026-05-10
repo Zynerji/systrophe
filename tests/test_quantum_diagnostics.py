@@ -48,6 +48,41 @@ def test_cauchy_horizon_subcritical_rejected():
         cauchy_horizon_estimate(vs)
 
 
+def test_ricci_residual_small_in_vacuum_exterior():
+    """The vacuum Ernst residual F(F''+F'/r) - (F'^2 - c^2) is zero analytically;
+    numerical residual is finite-difference error only."""
+    from systrophe.quantum_diagnostics import ricci_scalar
+
+    vs = VanStockumInterior(omega=1.0, R=1.0)
+    r = np.array([1.5, 2.0, 3.0])
+    residual = ricci_scalar(vs, r)
+    assert np.all(np.abs(residual) < 1e-3)
+
+
+def test_conformal_anomaly_proxy_finite_in_well_conditioned_region():
+    from systrophe.quantum_diagnostics import conformal_anomaly_2d_proxy
+
+    vs = VanStockumInterior(omega=1.0, R=1.0)
+    r = np.array([1.2, 1.5, 1.7])  # before first F-zero
+    proxy = conformal_anomaly_2d_proxy(vs, r)
+    assert np.all(np.isfinite(proxy))
+
+
+def test_surface_gravity_at_horizon():
+    """Surface gravity kappa = |F'|/2 at a Cauchy horizon."""
+    from systrophe.quantum_diagnostics import (
+        cauchy_horizon_estimate, hawking_temperature_at_horizon, surface_gravity_at_horizon
+    )
+
+    vs = VanStockumInterior(omega=1.0, R=1.0)
+    horizons = cauchy_horizon_estimate(vs)
+    assert horizons.size >= 1
+    kappa = surface_gravity_at_horizon(vs, float(horizons[0]))
+    assert kappa > 0
+    T_H = hawking_temperature_at_horizon(vs, float(horizons[0]))
+    assert T_H == pytest.approx(kappa / (2 * np.pi))
+
+
 def test_cauchy_horizon_log_uniform_spacing():
     """Adjacent Cauchy horizon radii are separated by exp(pi / alpha) (half a Tipler period)."""
     vs = VanStockumInterior(omega=1.5, R=1.0)

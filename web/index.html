@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Systrophe — interactive CTC explorer</title>
+<style>
+body { font-family: system-ui, sans-serif; max-width: 880px; margin: 2em auto; padding: 0 1em; line-height: 1.5; }
+h1, h2 { font-weight: 600; }
+.controls { background: #f6f8fa; padding: 1em; border-radius: 8px; margin: 1em 0; }
+.row { display: flex; align-items: center; gap: 1em; margin: 0.5em 0; }
+.row label { min-width: 12ch; font-family: monospace; }
+input[type=range] { flex: 1; }
+.value { min-width: 6ch; text-align: right; font-family: monospace; }
+canvas { border: 1px solid #ddd; }
+pre { background: #f6f8fa; padding: 1em; border-radius: 8px; overflow-x: auto; }
+.status { color: #666; font-style: italic; }
+.error { color: #c00; }
+</style>
+</head>
+<body>
+<h1>Systrophe — interactive CTC explorer</h1>
+<p>
+  Drag the sliders to set rotation parameter <code>a = ωR</code> and pair phase
+  offset <code>δ</code>. The plot shows <code>g<sub>φφ</sub>(r)</code> for the
+  joint exterior of two co-rotating Tipler cylinders; CTC bands are where the
+  curve dips below zero (red shading).
+</p>
+<p class="status" id="status">Loading Pyodide…</p>
+
+<div class="controls">
+  <div class="row">
+    <label>a = ωR:</label>
+    <input id="a" type="range" min="0.6" max="3.0" step="0.05" value="1.5" />
+    <span class="value" id="a_val">1.50</span>
+  </div>
+  <div class="row">
+    <label>δ (rad):</label>
+    <input id="delta" type="range" min="0" max="6.28" step="0.05" value="0" />
+    <span class="value" id="delta_val">0.00</span>
+  </div>
+</div>
+<canvas id="plot" width="800" height="400"></canvas>
+<pre id="results">--</pre>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.27.1/full/pyodide.js"></script>
+<script>
+async function main() {
+  const status = document.getElementById("status");
+  status.textContent = "Loading Pyodide…";
+  const pyodide = await loadPyodide();
+  status.textContent = "Loading numpy…";
+  await pyodide.loadPackage(["numpy"]);
+  status.textContent = "Loading systrophe from PyPI…";
+  // Once PyPI release is published, this becomes:
+  //   await pyodide.loadPackage("micropip");
+  //   await pyodide.runPythonAsync("import micropip; await micropip.install('systrophe')");
+  // Until then we inline a minimal compute kernel:
+  await pyodide.runPythonAsync(`
+import numpy as np
+
+def tipler_L(r, a, R, A_amp, delta):
+    """Generic Tipler-sinusoid L envelope."""
+    alpha = np.sqrt(4*a*a - 1)
+    gamma = np.pi - np.arctan(alpha)
+    Q = alpha*alpha - ((alpha*alpha - 1)**2)/4.0
+    u = np.log(r / R)
+    theta = alpha*u + gamma
+    return (r * R * np.sin(gamma) / (alpha*alpha)) * (
+        Q * np.sin(theta) + alpha*(alpha*alpha - 1)*np.cos(theta)
+    ) * A_amp
+
+def pair_L(r, a, R, delta):
+    """Sum of two Tipler-L sinusoids: cyl 1 at phase 0, cyl 2 at phase delta."""
+    return tipler_L(r, a, R, 1.0, 0.0) + tipler_L(r * np.exp(-delta / np.sqrt(4*a*a - 1)),
+                                                  a, R, 1.0, 0.0)
+
+def compute(a, delta):
+    R = 1.0
+    rs = np.geomspace(1.05, 50.0, 800)
+    L1 = tipler_L(rs, a, R, 1.0, 0.0)
+    # Phase-offset second cylinder: shift the log-radial argument by delta/alpha
+    alpha = np.sqrt(4*a*a - 1)
+    rs_shifted = rs * np.exp(-delta / alpha)
+    L2 = tipler_L(rs_shifted, a, R, 1.0, 0.0)
+    L_pair = L1 + L2
+    return rs, L_pair, alpha
+  `);
+  status.textContent = "Ready.";
+
+  const canvas = document.getElementById("plot");
+  const ctx = canvas.getContext("2d");
+
+  function redraw() {
+    const a = parseFloat(document.getElementById("a").value);
+    const delta = parseFloat(document.getElementById("delta").value);
+    document.getElementById("a_val").textContent = a.toFixed(2);
+    document.getElementById("delta_val").textContent = delta.toFixed(2);
+
+    const computeResult = pyodide.runPython(`compute(${a}, ${delta})`);
+    const [rs_proxy, L_proxy, alpha_val] = computeResult.toJs();
+    const rs = Array.from(rs_proxy);
+    const L = Array.from(L_proxy);
+
+    // Draw
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    const xMin = Math.log(rs[0]), xMax = Math.log(rs[rs.length - 1]);
+    let yMin = Infinity, yMax = -Infinity;
+    for (const v of L) { if (v < yMin) yMin = v; if (v > yMax) yMax = v; }
+    const yRange = Math.max(yMax, -yMin) * 1.2;
+    yMin = -yRange; yMax = yRange;
+
+    function xPx(r) { return ((Math.log(r) - xMin) / (xMax - xMin)) * (W - 60) + 50; }
+    function yPx(v) { return H - 30 - ((v - yMin) / (yMax - yMin)) * (H - 60); }
+
+    // Zero line
+    ctx.strokeStyle = "#aaa"; ctx.lineWidth = 0.7;
+    ctx.beginPath();
+    ctx.moveTo(50, yPx(0));
+    ctx.lineTo(W - 10, yPx(0));
+    ctx.stroke();
+
+    // CTC bands shaded
+    ctx.fillStyle = "rgba(220, 60, 60, 0.18)";
+    let inBand = false, bandStart = 0;
+    for (let i = 0; i < rs.length; i++) {
+      if (L[i] < 0 && !inBand) { inBand = true; bandStart = rs[i]; }
+      if (L[i] >= 0 && inBand) {
+        ctx.fillRect(xPx(bandStart), 30, xPx(rs[i]) - xPx(bandStart), H - 60);
+        inBand = false;
+      }
+    }
+    if (inBand) {
+      ctx.fillRect(xPx(bandStart), 30, xPx(rs[rs.length - 1]) - xPx(bandStart), H - 60);
+    }
+
+    // Curve
+    ctx.strokeStyle = "#0066cc"; ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    for (let i = 0; i < rs.length; i++) {
+      const x = xPx(rs[i]); const y = yPx(L[i]);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Axis labels
+    ctx.fillStyle = "#000"; ctx.font = "12px sans-serif";
+    ctx.fillText("ln(r/R)", W - 60, H - 6);
+    ctx.fillText("L(r)", 8, 20);
+
+    // Status
+    let n_bands = 0; let inb = false;
+    for (const v of L) { if (v < 0 && !inb) { n_bands++; inb = true; } if (v >= 0) inb = false; }
+    document.getElementById("results").textContent =
+      "alpha (log-frequency) = " + alpha_val.toFixed(4) +
+      "\nlog-period 2pi/alpha = " + (2 * Math.PI / alpha_val).toFixed(4) +
+      "\nCTC bands visible: " + n_bands;
+  }
+
+  document.getElementById("a").addEventListener("input", redraw);
+  document.getElementById("delta").addEventListener("input", redraw);
+  redraw();
+}
+
+main().catch(e => {
+  document.getElementById("status").textContent = "Error: " + e.message;
+  document.getElementById("status").className = "status error";
+});
+</script>
+</body>
+</html>
