@@ -13,6 +13,9 @@ Planned (see ROADMAP.md):
 
 from .godel import GodelUniverse, godel_ctc_radius
 from .gott import GottPair, gott_critical_velocity, gott_critical_mu
+from .kerr import KerrSpacetime
+from .line_singularity import LineSingularity
+from .cosmic_string import CosmicString
 
 __all__ = [
     "GodelUniverse",
@@ -20,4 +23,7 @@ __all__ = [
     "GottPair",
     "gott_critical_velocity",
     "gott_critical_mu",
+    "KerrSpacetime",
+    "LineSingularity",
+    "CosmicString",
 ]

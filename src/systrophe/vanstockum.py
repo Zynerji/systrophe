@@ -137,6 +137,59 @@ class VanStockumInterior:
         return "subcritical"
 
     @property
+    def mass_per_unit_length(self) -> float:
+        """Total energy per unit z-length integrated over the dust column.
+
+        rho(r) = (omega^2 / (2 pi)) exp(omega^2 r^2),
+        integral_0^R rho * 2 pi r dr = (1/2)(exp(a^2) - 1)  (c = G = 1 units).
+
+        This identifies the van Stockum source with an effective "cosmic-string-
+        like" line carrying mass per unit length M = (1/2)(exp(a^2) - 1).
+        """
+        return 0.5 * (float(np.exp(self.a * self.a)) - 1.0)
+
+    @property
+    def angular_momentum_per_unit_length(self) -> float:
+        """Total z-component of angular momentum per unit z-length.
+
+        J = integral_0^R rho(r) * (omega r^2) * 2 pi r dr
+          = omega * integral_0^R r^3 * omega^2 * exp(omega^2 r^2) dr
+          = omega * [ (omega^2 R^2 - 1) exp(omega^2 R^2) + 1 ] / 2 / omega^2
+          = (1/(2 omega)) * [ (a^2 - 1) exp(a^2) + 1 ].
+
+        At a = 1 this gives J = 1 / (2 omega); identifying the source's angular
+        momentum on a singular axis in the R -> 0 limit at fixed J.
+        """
+        a2 = self.a * self.a
+        return float(((a2 - 1.0) * np.exp(a2) + 1.0) / (2.0 * self.omega))
+
+    def as_line_singularity_summary(self) -> dict:
+        """Reinterpret the dust column as a singular axis source.
+
+        In the limit R -> 0 with M and J held fixed, the van Stockum dust
+        cylinder degenerates to an idealised rotating string-like
+        singularity on the z-axis. The exterior Lewis-Papapetrou metric is
+        unchanged in this limit (Birkhoff-style: only the twist constant
+        c = 2 omega and the matching values F(R) = 1, F'(R) = 0 enter).
+
+        Returns a dict with the line-singularity invariants.
+        """
+        return {
+            "mass_per_unit_length_M": self.mass_per_unit_length,
+            "angular_momentum_per_unit_length_J": self.angular_momentum_per_unit_length,
+            "twist_constant_c": 2.0 * self.omega,
+            "deficit_signature_a": self.a,
+            "exterior_regime": self.regime,
+            "comment": (
+                "In the R -> 0 singular limit at fixed M, J, c, the same "
+                "Lewis-Papapetrou exterior is sourced by a singular axis. "
+                "Two such singular axes parallel to z reproduce the "
+                "Systrophe pair as a co-rotating analog of the Gott "
+                "cosmic-string pair (with rotation replacing translation)."
+            ),
+        }
+
+    @property
     def interior_ctc_shell_inner_radius(self) -> float | None:
         """For interior-supercritical (a > 1), the inner radius 1/omega of the CTC shell.
 

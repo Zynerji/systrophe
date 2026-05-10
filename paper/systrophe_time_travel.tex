@@ -901,9 +901,45 @@ value $\rho(0) = \omega^2 / (2\pi)$, exponential growth, finite total
 energy per unit length $\tfrac{1}{2}(e^{a^2} - 1)$, and verification
 that NEC, WEC, SEC, DEC all hold for $a \in \{0.1, 0.5, 1.0, 1.5, 2.5\}$
 including the interior-supercritical regime $a > 1$.
+\item \textbf{G\"odel universe} ($10$ tests): CTC threshold formula,
+metric components at $r = 0$, sign change of $g_{\phi\phi}$ at the
+threshold, dust density and cosmological constant identities,
+proper-circumference vanishing at threshold.
+\item \textbf{Gott pair} ($11$ tests): construction validators,
+$\alpha = 4\pi\mu$ deficit relations, Lorentz factor, threshold
+$v_{\rm crit} = \sin(4\pi\mu)$, threshold $\gamma_{\rm crit}$, exact
+boundary condition $\gamma v = \tan(\alpha)$, below/above threshold
+behaviour, inverse map, zero-velocity regularity.
+\item \textbf{Kerr spacetime} ($10$ tests): horizon formulas, sub/over-
+extremal/extremal cases, Schwarzschild limit (no CTCs), no CTC for
+$r > 0$, equatorial CTC interval $(r_{\rm CTC}, 0)$, threshold solving
+the cubic $r^3 + a^2 r + 2 M a^2 = 0$, finite metric components.
+\item \textbf{N-cylinder array} ($12$ tests): construction validators,
+single-cylinder reduction, aligned-pair amplitude doubling,
+$N = 3$ and $N = 4$ uniform-phase comb extinction, no CTC bands at
+extinction, phasor collapse aligned/orthogonal cases, mismatched-$\alpha$
+collapse refusal, length-mismatch validator, $N \ge 2$ requirement.
+\item \textbf{Photon orbits} ($7$ tests): Minkowski $\Omega_\pm = \pm 1/r$
+recovery, degeneracy at $L = 0$, impact parameter recovery,
+null-geodesic integration sanity, consistency between
+\texttt{null\_circular\_omega} and \texttt{timelike\_omega\_bounds}.
+\item \textbf{Singularity reinterpretations} ($17$ tests):
+LineSingularity validators, exterior identity with van Stockum to
+machine precision, twist-constant matching, regime label, M $\to$
+$\omega$ inversion, mass per unit length formula, summary dict
+contents; CosmicString validators, conical factor, deficit angle, no
+local CTC, Vilenkin $g_{\phi\phi}$ positivity,
+\texttt{compose\_with\_gott} producing a GottPair, mass-mismatch
+rejection, type check; Kerr ring singularity at the origin equator;
+three-reinterpretation pair structure consistency.
+\item \textbf{Quantum diagnostics} ($6$ tests): Tolman blueshift unity at
+$F = 1$ and divergence at $F = 0$, $1/F^2$ chronology indicator
+ordering, Cauchy horizon enumeration in supercritical Tipler,
+subcritical rejection, log-uniform spacing of horizons by
+$\exp(\pi/\alpha)$.
 \end{itemize}
 
-All $101$ tests pass.
+All $176$ tests pass.
 
 \section{Limitations and open questions}
 
@@ -1031,6 +1067,104 @@ azimuthal metric component --- and use the same
 The unified framework makes side-by-side comparison and parameter
 sweeps trivial; the example script
 \texttt{examples/ctc\_zoo.py} reproduces this section's numbers.
+
+\section{Singularity reinterpretations}
+\label{sec:singularities}
+
+The van Stockum dust column is one of an *equivalence class* of sources
+producing the same Lewis--Papapetrou exterior. The exterior is fixed
+by four matching numbers at $r = R$: $F(R) = 1$, $F'(R) = 0$,
+$c = 2\omega$, $\omega_{\rm metric}(R) = \omega R^2$. Any source
+giving these matchings produces the same vacuum exterior. The package
+exposes three concrete reinterpretations, each appropriate for a
+distinct physical context.
+
+\subsection{(1) Rotating line singularity (Lewis 1932 / Tipler 1974)}
+
+In the limit $R \to 0$ at fixed mass per unit length $M$ and angular
+momentum per unit length $J$, the dust column degenerates to a singular
+axis carrying $(M, J)$. The exterior is unchanged. The
+\texttt{LineSingularity} class implements this directly: takes
+$(\omega, R_{\rm match})$ as a regulated representation, exposes
+$F$, $K$, $L$, and the invariants $M = \tfrac{1}{2}(e^{a^2} - 1)$,
+$J = \tfrac{1}{2\omega}\bigl[(a^2 - 1) e^{a^2} + 1\bigr]$.
+
+This is the natural reinterpretation of "two top-spin, dual-positive
+singularities": a pair of parallel rotating singular axes, whose joint
+exterior is the off-set Tipler sinusoid of Section~\ref{sec:tuning}.
+The \texttt{VanStockumInterior.as\_line\_singularity\_summary()}
+method returns the singularity-perspective invariants of any
+existing dust cylinder.
+
+\subsection{(2) Non-rotating cosmic string (Vilenkin 1981)}
+
+A purely \emph{static} version of the line singularity: no rotation,
+just mass per unit length $\mu$, producing a conical exterior with
+deficit angle $8\pi G\mu$. Implemented as the
+\texttt{CosmicString} class. A single static cosmic string has no CTCs.
+
+The cosmic-string interpretation provides the building block for the
+Gott pair (Section~\ref{sec:zoo}): two cosmic strings in relative
+motion at $v > \sin(4\pi\mu)$ produce CTCs. The
+\texttt{CosmicString.compose\_with\_gott(other, v)} convenience
+constructs the pair and returns a \texttt{GottPair} object.
+
+\subsection{(3) Kerr ring singularity (Kerr 1963)}
+
+In four dimensions, the rotating singular line generalises to a
+\emph{rotating ring} at $r = 0$, $\theta = \pi/2$ in Boyer--Lindquist
+coordinates. Implemented as \texttt{KerrSpacetime}. The Kerr ring
+produces CTCs in its analytic-maximal extension to negative $r$, in
+the equatorial interval $r_{\rm CTC} < r < 0$ where $r_{\rm CTC}$ is
+the largest negative root of $r^3 + a^2 r + 2 M a^2 = 0$. For
+sub-extremal Kerr ($a < M$) the CTC region is hidden behind the inner
+horizon at $r_- = M - \sqrt{M^2 - a^2}$; for over-extremal Kerr
+($a > M$, naked singularity) it is exposed.
+
+\subsection{Unifying picture}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Reinterpretation & Object & Pair construction \\
+\midrule
+Rotating line   & singular axis with $(M, J)$ & two parallel axes (Systroph\=e) \\
+Cosmic string   & singular axis with $\mu$, no rotation & two strings, relative motion (Gott) \\
+Kerr ring       & rotating ring in 4D ($r = 0$, $\theta = \pi/2$) & two Kerr black holes (binary, NR) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Each row admits "two top-spin, dual-positive" pairings (with
+appropriate qualifications): the rotating-line pair is the literal
+Titor specification implemented in this package; the cosmic-string
+pair gives the Gott time machine; the Kerr-ring pair is the binary
+black-hole problem (out of scope here, requiring numerical
+relativity). All three share the same diagnostic: $g_{\phi\phi} < 0$
+(or its appropriate generalisation in 4D) marks CTC bands.
+
+\section{Photon orbits in the Tipler exterior}
+\label{sec:photons}
+
+The same circular-orbit machinery used for time-travel (massive)
+particles applies to massless photons by replacing the timelike
+normalisation $g_{\mu\nu} u^\mu u^\nu = -1$ with $= 0$. The two null
+circular angular velocities at radius $r$ are exactly the boundaries
+of the timelike-orbit sector,
+\begin{equation}
+\Omega_\pm = \frac{-K \pm r}{L},
+\end{equation}
+i.e., the photon orbits sit on the boundary of CTC formation. Photon
+turning points (null radial geodesics with conserved $E$, $\ell$) are
+at radii where the impact parameter $b = \ell / E$ satisfies
+\begin{equation}
+b_\pm = \frac{K \pm r}{F}.
+\end{equation}
+These are exposed via \texttt{systrophe.photon\_orbits.null\_circular\_omega}
+and \texttt{null\_impact\_parameters}, both reducing to the standard
+Minkowski values $\Omega_\pm = \pm 1/r$ and $b_\pm = \pm r$ in the
+asymptotic limit. For the Tipler supercritical exterior, both quantities
+inherit the log-periodic oscillation of the underlying $F$, $K$, $L$.
 
 \section{Historical note}
 \label{sec:historical}

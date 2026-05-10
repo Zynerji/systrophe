@@ -33,6 +33,17 @@ from .energy_conditions import (
     proper_energy_density,
     total_energy_per_unit_length,
 )
+from .photon_orbits import (
+    integrate_null_geodesic,
+    null_circular_omega,
+    null_impact_parameters,
+    vanstockum_photon_omega,
+)
+from .quantum_diagnostics import (
+    cauchy_horizon_estimate,
+    chronology_protection_indicator,
+    tolman_blueshift_factor,
+)
 
 __all__ = [
     "VanStockumInterior",
@@ -62,4 +73,4 @@ __all__ = [
     "proper_energy_density",
     "total_energy_per_unit_length",
 ]
-__version__ = "0.4.0"
+__version__ = "0.5.0"

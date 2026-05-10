@@ -5,6 +5,48 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-05-09
+
+### Added
+- **Photon orbits / null geodesics** (`photon_orbits.py`): null circular
+  Omega_+- = (-K +- r)/L, photon impact parameters b_+- = (K +- r)/F,
+  null-geodesic integrator (kappa = 0 mode of `integrate_geodesic`),
+  van Stockum-specific photon Omega utility. 7 tests.
+- **Kerr inner-region CTCs** (`spacetimes/kerr.py`): Boyer-Lindquist
+  metric components, sub/super/extremal classification, equatorial
+  CTC threshold solving the cubic r^3 + a^2 r + 2 M a^2 = 0, CTC
+  region (r_CTC, 0). 10 tests.
+- **Three singularity reinterpretations** of the van Stockum source:
+  - `LineSingularity` (rotating axis with M, J): exterior identical
+    to van Stockum.
+  - `CosmicString` (Vilenkin static line): conical defect, no CTCs;
+    `compose_with_gott` constructs a Gott pair from two of them.
+  - `KerrSpacetime` (4D rotating ring): the analytic continuation of
+    Kerr to negative r contains CTCs.
+  - 17 tests covering all three.
+- **Quantum-diagnostic stub** (`quantum_diagnostics.py`): Tolman
+  blueshift, 1/F^2 chronology indicator, closed-form Cauchy horizon
+  enumeration. Documented as classical pre-quantum; full QFTCS
+  back-reaction left to future work. 6 tests.
+- **PyPI publish workflow** (`.github/workflows/publish.yml`):
+  tag-triggered Trusted-Publishing release pipeline. No tokens stored.
+- **Tutorial Jupyter notebook** (`examples/tutorial.ipynb`): end-to-end
+  walk through every public API.
+- **VanStockumInterior.mass_per_unit_length** and
+  **angular_momentum_per_unit_length** properties + 
+  **as_line_singularity_summary()** method connecting the dust
+  interpretation to the line-singularity reinterpretation.
+
+### Changed
+- Whitepaper extended to 20 pages with sections on:
+  - Photon orbits in the Tipler exterior
+  - The three singularity reinterpretations
+  - The CTC zoo with Kerr ring
+  - Quantum-diagnostic test verdicts
+
+### Test count
+- 176 tests across 17 files; previously 134.
+
 ## [0.4.0] - 2026-05-09
 
 ### Added
