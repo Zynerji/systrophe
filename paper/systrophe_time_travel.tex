@@ -947,9 +947,14 @@ initial conditions reproduced.
 residual is small in vacuum, conformal anomaly proxy is finite away
 from $F = 0$, surface gravity $\kappa = \tfrac{1}{2}\lvert F'\rvert$
 at Cauchy horizons.
+\item \textbf{Dirac module} ($9$ tests): Clifford algebra in
+$(-,+,+,+)$ signature, gamma-index validation, tetrad reproduces flat
+cylindrical Minkowski and van Stockum interior, tetrad
+orthonormality, radial Dirac system runs, solver runs in Minkowski,
+van Stockum specialisation requires supercritical input.
 \end{itemize}
 
-All $187$ tests pass.
+All $196$ tests pass.
 
 \section{Limitations and open questions}
 
@@ -1175,6 +1180,52 @@ and \texttt{null\_impact\_parameters}, both reducing to the standard
 Minkowski values $\Omega_\pm = \pm 1/r$ and $b_\pm = \pm r$ in the
 asymptotic limit. For the Tipler supercritical exterior, both quantities
 inherit the log-periodic oscillation of the underlying $F$, $K$, $L$.
+
+\section{Dirac field on the Lewis-Papapetrou background}
+\label{sec:dirac}
+
+The Dinos bridge of Section~\ref{sec:dinos} maps Systroph\=e to a
+Dirac--Kerr--Newman framework only at the level of discrete-mode
+correspondences. As a first-class object, the Dirac field on the
+Tipler exterior is provided by the \texttt{systrophe.dirac} module:
+
+\begin{itemize}[leftmargin=*]
+\item \texttt{LewisPapapetrouTetrad}: an orthonormal tetrad
+  $e^a{}_\mu$ on the LP metric. With $g_{\mu\nu} = \eta_{ab}\,
+  e^a{}_\mu e^b{}_\nu$ and signature $(-,+,+,+)$, the tetrad is
+  uniquely determined (up to rotations) by the metric components and
+  the constraint $FL + K^2 = r^2$:
+  \begin{align}
+  e^0{}_t &= \sqrt{F}, & e^0{}_\phi &= -K/\sqrt{F},\\
+  e^1{}_r &= \sqrt{h}, & e^2{}_\phi &= \sqrt{L + K^2/F} = r/\sqrt{F},\\
+  e^3{}_z &= \sqrt{h}.
+  \end{align}
+\item \texttt{gamma\_matrix(a)}: flat-space gamma matrices in a
+  signature-$(-,+,+,+)$ Weyl-style representation, satisfying
+  $\{\gamma^a, \gamma^b\} = 2 \eta^{ab} \mathbb{1}_4$.
+\item \texttt{radial\_dirac\_system}: assembles the radial Dirac ODE
+  system for the upper-/lower-component two-spinor reduction of
+  $\psi(t, r, \phi, z) = e^{-i E t}\,e^{i m \phi}\,e^{i k z}\, R(r)$
+  on the LP background.
+\item \texttt{solve\_radial\_dirac}: numerical integrator for the
+  radial system, returning the complex-valued spinor amplitudes
+  $R_1(r), R_2(r)$ on a chosen grid.
+\item \texttt{vanstockum\_dirac\_system}: convenience specialisation
+  to the supercritical Tipler exterior using the analytic Case III
+  closed forms.
+\end{itemize}
+
+The tetrad is verified to reproduce the metric to machine precision
+in test cases including flat cylindrical Minkowski and the van
+Stockum interior; the gamma matrices are verified to satisfy the
+Clifford algebra in the chosen signature. The radial system runs and
+produces finite output on representative inputs.
+
+The full physical content --- spectrum of bound states, Dirac sea
+structure near the chronology horizon, particle creation rates, and
+the connection to the Dinos electron resonance --- requires further
+investigation specific to each application; this module supplies the
+mathematical primitives.
 
 \section{Historical note}
 \label{sec:historical}

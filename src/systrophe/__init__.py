@@ -53,6 +53,13 @@ from .photon_raytrace import (
     photon_deflection_angle,
     photon_perihelion,
 )
+from .dirac import (
+    LewisPapapetrouTetrad,
+    gamma_matrix,
+    radial_dirac_system,
+    solve_radial_dirac,
+    vanstockum_dirac_system,
+)
 
 __all__ = [
     "VanStockumInterior",
@@ -82,4 +89,4 @@ __all__ = [
     "proper_energy_density",
     "total_energy_per_unit_length",
 ]
-__version__ = "0.6.0"
+__version__ = "0.7.0"

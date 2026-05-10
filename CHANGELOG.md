@@ -5,6 +5,34 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2026-05-09
+
+### Added
+- **Dirac field on the Lewis-Papapetrou background** (`dirac.py`).
+  - `LewisPapapetrouTetrad`: orthonormal tetrad e^a_mu in
+    (-, +, +, +) signature with `e^2_phi = sqrt(L + K^2/F) =
+    r/sqrt(F)` from the Weyl constraint. Reproduces the metric to
+    machine precision in tests.
+  - `gamma_matrix(a)`: flat-space gamma matrices in a Weyl-style
+    representation appropriate for (-, +, +, +) signature, satisfying
+    `{gamma^a, gamma^b} = 2 eta^{ab}`.
+  - `radial_dirac_system`: assembles the radial ODE for the
+    upper/lower-component two-spinor reduction with given (E, m, k,
+    mass).
+  - `solve_radial_dirac`: numerical integrator over a chosen
+    [r_min, r_max] interval.
+  - `vanstockum_dirac_system`: convenience specialisation to the
+    Tipler exterior using the analytic Case III closed forms.
+- 9 new tests for tetrad orthonormality, Clifford algebra, and
+  integrator runs. Total: 196 tests.
+- Whitepaper extended to 21 pages with a Dirac-on-LP section.
+
+### Notes
+This is the natural Dirac entry point that the Δῖνος bridge previously
+only touched at the level of discrete-mode correspondences. Full
+spectrum, bound-state analysis, and the connection to QFTCS
+back-reaction at the Cauchy horizon remain future work.
+
 ## [0.6.0] - 2026-05-09
 
 ### Added — finishing all deferred roadmap items
