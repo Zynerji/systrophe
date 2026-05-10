@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Systrophe — full WebGL visualizer</title>
+<style>
+:root {
+  --bg: #0a0a14;
+  --panel: #1a1a2a;
+  --accent: #5eb1ff;
+  --accent2: #ff6677;
+  --text: #e0e0f0;
+  --dim: #888;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--text); font-family: system-ui, sans-serif;
+  height: 100vh; overflow: hidden; display: flex; flex-direction: column;
+}
+header {
+  padding: 0.7em 1.5em; background: var(--panel); border-bottom: 1px solid #333;
+}
+header h1 { font-size: 1.2em; font-weight: 600; }
+header h1 small { color: var(--dim); font-size: 0.8em; font-weight: 400; margin-left: 0.5em; }
+nav {
+  display: flex; gap: 0; background: var(--panel); border-bottom: 1px solid #333;
+  overflow-x: auto;
+}
+nav button {
+  background: none; color: var(--text); border: none; padding: 0.6em 1.2em;
+  cursor: pointer; font-size: 0.9em; border-bottom: 2px solid transparent;
+  white-space: nowrap; font-family: inherit;
+}
+nav button:hover { background: rgba(255, 255, 255, 0.05); }
+nav button.active { border-bottom-color: var(--accent); color: var(--accent); }
+main {
+  flex: 1; display: flex; min-height: 0;
+}
+#canvas-container { flex: 1; position: relative; }
+canvas { display: block; }
+#side {
+  width: 320px; padding: 1em; background: var(--panel);
+  border-left: 1px solid #333; overflow-y: auto;
+}
+#side h2 { font-size: 1em; margin-bottom: 0.6em; color: var(--accent); }
+#side p { font-size: 0.85em; color: var(--dim); margin-bottom: 0.8em; line-height: 1.4; }
+.control { margin-bottom: 0.8em; }
+.control label {
+  display: flex; justify-content: space-between; font-family: monospace;
+  font-size: 0.8em; margin-bottom: 0.2em;
+}
+.control input[type=range] { width: 100%; }
+.results { background: rgba(0, 0, 0, 0.3); padding: 0.6em; border-radius: 4px;
+  font-family: monospace; font-size: 0.78em; line-height: 1.5; white-space: pre-wrap; }
+#tooltip { position: absolute; pointer-events: none;
+  background: rgba(0, 0, 0, 0.8); color: white; padding: 0.4em 0.6em;
+  border-radius: 4px; font-size: 0.75em; font-family: monospace; display: none; }
+.formula { background: rgba(94, 177, 255, 0.08); padding: 0.4em 0.6em;
+  border-left: 2px solid var(--accent); font-family: monospace; font-size: 0.8em;
+  margin: 0.4em 0; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Systrophe<small>WebGL visualizer · two-cylinder Tipler / van Stockum / Gödel / Gott / Kerr</small></h1>
+</header>
+<nav id="nav">
+  <button data-view="single">1. Single Tipler cylinder</button>
+  <button data-view="pair">2. Off-set pair</button>
+  <button data-view="array">3. N-cylinder array</button>
+  <button data-view="offaxis">4. Off-axis pair (2D map)</button>
+  <button data-view="worldline">5. Spacetime worldline</button>
+  <button data-view="zoo">6. CTC zoo</button>
+  <button data-view="anomaly">7. Curvature / trace anomaly</button>
+  <button data-view="unified">8. Unified picture</button>
+</nav>
+<main>
+  <div id="canvas-container"></div>
+  <aside id="side">
+    <h2 id="title">Loading…</h2>
+    <p id="desc"></p>
+    <div id="controls"></div>
+    <div class="results" id="results"></div>
+  </aside>
+  <div id="tooltip"></div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.158/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.158/examples/js/controls/OrbitControls.js"></script>
+
+<script>
+// =========================================================================
+//  Mathematical kernel: ports of the relevant Systrophe formulas
+// =========================================================================
+
+const TWO_PI = 2 * Math.PI;
+
+// Tipler analytic Case III closed forms
+function tiplerF(r, omega, R) {
+  const a = omega * R;
+  const alpha = Math.sqrt(4*a*a - 1);
+  const gamma = Math.PI - Math.atan(alpha);
+  const u = Math.log(r / R);
+  return (r / R) * Math.sin(alpha * u + gamma) / Math.sin(gamma);
+}
+function tiplerK(r, omega, R) {
+  const a = omega * R;
+  const alpha = Math.sqrt(4*a*a - 1);
+  const gamma = Math.PI - Math.atan(alpha);
+  const u = Math.log(r / R);
+  const theta = alpha * u + gamma;
+  return (r / alpha) * (((alpha*alpha - 1) / 2) * Math.sin(theta) - alpha * Math.cos(theta));
+}
+function tiplerL(r, omega, R) {
+  const a = omega * R;
+  const alpha = Math.sqrt(4*a*a - 1);
+  const gamma = Math.PI - Math.atan(alpha);
+  const Q = alpha*alpha - Math.pow(alpha*alpha - 1, 2) / 4;
+  const u = Math.log(r / R);
+  const theta = alpha * u + gamma;
+  return (r * R * Math.sin(gamma) / (alpha*alpha)) *
+         (Q * Math.sin(theta) + alpha * (alpha*alpha - 1) * Math.cos(theta));
+}
+function tiplerAlpha(omega, R) { return Math.sqrt(4*(omega*R)*(omega*R) - 1); }
+
+// CTC bands of a function L(r) on a grid
+function ctcBands(L_fn, rMin, rMax, n=2000) {
+  const bands = [];
+  const dr = (rMax - rMin) / n;
+  let inBand = false, bandStart = 0;
+  for (let i = 0; i <= n; i++) {
+    const r = rMin + i * dr;
+    const v = L_fn(r);
+    if (v < 0 && !inBand) { inBand = true; bandStart = r; }
+    if (v >= 0 && inBand) { bands.push([bandStart, r]); inBand = false; }
+  }
+  if (inBand) bands.push([bandStart, rMax]);
+  return bands;
+}
+
+// Goedel CTC: L(r) = a^2 sinh^2(r) (1 - sinh^2(r))
+function goedelL(r, a) {
+  const s = Math.sinh(r); return a*a * s*s * (1 - s*s);
+}
+function goedelCTCRadius() { return Math.asinh(1); }
+
+// Gott CTC condition: gamma * v > tan(4*pi*mu)
+function gottHasCTC(mu, v) {
+  const gamma = 1 / Math.sqrt(1 - v*v);
+  return gamma * v > Math.tan(4 * Math.PI * mu);
+}
+
+// Kerr equatorial g_phiphi: r^2 + a^2 + 2 M a^2 / r (theta=pi/2, sin=1)
+function kerrGphiphiEquatorial(r, M, a) { return r*r + a*a + 2*M*a*a / r; }
+
+// =========================================================================
+//  Three.js scaffolding
+// =========================================================================
+
+const container = document.getElementById('canvas-container');
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(container.clientWidth, container.clientHeight);
+container.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0a14);
+let camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.01, 1000);
+camera.position.set(8, 5, 8);
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+
+window.addEventListener('resize', () => {
+  camera.aspect = container.clientWidth / container.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(container.clientWidth, container.clientHeight);
+});
+
+let animationFrame = null;
+let currentView = null;
+const sceneObjects = [];
+
+function clearScene() {
+  for (const o of sceneObjects) {
+    scene.remove(o);
+    if (o.geometry) o.geometry.dispose();
+    if (o.material) {
+      if (Array.isArray(o.material)) o.material.forEach(m => m.dispose());
+      else o.material.dispose();
+    }
+  }
+  sceneObjects.length = 0;
+}
+function addObject(obj) { scene.add(obj); sceneObjects.push(obj); return obj; }
+
+// Lights
+scene.add(new THREE.AmbientLight(0x404060, 1.0));
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+dirLight.position.set(5, 10, 7);
+scene.add(dirLight);
+
+// =========================================================================
+//  View renderers: each builds a 3D scene + side-panel content
+// =========================================================================
+
+function setupSidePanel(title, desc, controlsHtml) {
+  document.getElementById('title').textContent = title;
+  document.getElementById('desc').innerHTML = desc;
+  document.getElementById('controls').innerHTML = controlsHtml;
+}
+
+// 1. Single Tipler cylinder ----------------------------------------------
+const VIEWS = {
+  single: {
+    title: '1. Single Tipler cylinder',
+    desc: 'Supercritical van Stockum cylinder with rotation parameter a = ωR > 1/2. The exterior is a log-periodic Tipler sinusoid. Red bands are radii where g_φφ < 0 (closed timelike curves).',
+    controls: `
+      <div class="control"><label>ω (rotation): <span id="om_v">1.00</span></label>
+        <input id="om" type="range" min="0.6" max="3.0" step="0.05" value="1.0"/></div>
+      <div class="control"><label>R (radius): <span id="rr_v">1.00</span></label>
+        <input id="rr" type="range" min="0.5" max="2.0" step="0.05" value="1.0"/></div>
+    `,
+    setup() {
+      const update = () => {
+        const omega = +document.getElementById('om').value;
+        const R = +document.getElementById('rr').value;
+        document.getElementById('om_v').textContent = omega.toFixed(2);
+        document.getElementById('rr_v').textContent = R.toFixed(2);
+        clearScene();
+
+        // The cylinder source
+        const cylGeom = new THREE.CylinderGeometry(R, R, 6, 64, 1, true);
+        const cylMat = new THREE.MeshStandardMaterial({ color: 0x5eb1ff, transparent: true, opacity: 0.4, side: THREE.DoubleSide });
+        addObject(new THREE.Mesh(cylGeom, cylMat));
+
+        // Rotational arrow inside
+        const arrowGroup = new THREE.Group();
+        for (let k = 0; k < 8; k++) {
+          const angle = k * TWO_PI / 8;
+          const arr = new THREE.ArrowHelper(
+            new THREE.Vector3(-Math.sin(angle), 0, Math.cos(angle)),
+            new THREE.Vector3(R * 0.5 * Math.cos(angle), 0, R * 0.5 * Math.sin(angle)),
+            0.3, 0xffaa00, 0.1, 0.07
+          );
+          arrowGroup.add(arr);
+        }
+        addObject(arrowGroup);
+
+        // CTC bands (shaded annular regions in y=0 plane)
+        const bands = ctcBands(r => tiplerL(r, omega, R), 1.001 * R, 8 * R, 3000);
+        for (const [r1, r2] of bands) {
+          const ringGeom = new THREE.RingGeometry(r1, r2, 64, 1);
+          const ringMat = new THREE.MeshBasicMaterial({ color: 0xff3355, transparent: true, opacity: 0.3, side: THREE.DoubleSide });
+          const ring = new THREE.Mesh(ringGeom, ringMat);
+          ring.rotation.x = -Math.PI / 2;
+          addObject(ring);
+        }
+
+        // L(r) curve as a 3D plot above the y=0 plane
+        const points = [];
+        const r0 = R * 1.001;
+        const r1 = R * 8;
+        const N = 800;
+        for (let i = 0; i < N; i++) {
+          const r = r0 + (r1 - r0) * i / (N - 1);
+          const L = tiplerL(r, omega, R);
+          // plot at (x = r, z = 0, y = scaled L)
+          points.push(new THREE.Vector3(r, Math.tanh(L * 0.3) * 2 + 4, 0));
+        }
+        const lineGeom = new THREE.BufferGeometry().setFromPoints(points);
+        addObject(new THREE.Line(lineGeom, new THREE.LineBasicMaterial({ color: 0xff6677, linewidth: 2 })));
+
+        // Axis line at L=0
+        const axisGeom = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(r0, 4, 0), new THREE.Vector3(r1, 4, 0),
+        ]);
+        addObject(new THREE.Line(axisGeom, new THREE.LineBasicMaterial({ color: 0x666666 })));
+
+        const alpha = tiplerAlpha(omega, R);
+        document.getElementById('results').textContent =
+          `a = ωR = ${(omega*R).toFixed(3)}\n` +
+          `α = √(4a²−1) = ${alpha.toFixed(4)}\n` +
+          `log-period 2π/α = ${(TWO_PI/alpha).toFixed(4)}\n` +
+          `r-period multiplier exp(2π/α) = ${Math.exp(TWO_PI/alpha).toFixed(2)}\n` +
+          `# CTC bands in r ∈ [R, 8R]: ${bands.length}\n` +
+          (bands.length ? `first band: r ∈ [${bands[0][0].toFixed(3)}, ${bands[0][1].toFixed(3)}]` : '');
+      };
+      ['om', 'rr'].forEach(id => document.getElementById(id).addEventListener('input', update));
+      update();
+    }
+  },
+
+  pair: {
+    title: '2. Off-set Tipler-sinusoid pair',
+    desc: 'Two co-axial co-rotating cylinders. The relative phase offset δ = δ₂ − δ₁ continuously tunes the joint CTC band positions; at δ = π the bands are <strong>extinguished</strong> by anti-phase cancellation.',
+    controls: `
+      <div class="control"><label>ω (both): <span id="om_v">1.50</span></label>
+        <input id="om" type="range" min="0.6" max="2.5" step="0.05" value="1.5"/></div>
+      <div class="control"><label>δ (radians): <span id="d_v">0.00</span></label>
+        <input id="d" type="range" min="0" max="6.28" step="0.05" value="0"/></div>
+    `,
+    setup() {
+      const update = () => {
+        const omega = +document.getElementById('om').value;
+        const delta = +document.getElementById('d').value;
+        document.getElementById('om_v').textContent = omega.toFixed(2);
+        document.getElementById('d_v').textContent = delta.toFixed(2);
+        const R = 1.0;
+        clearScene();
+
+        // Two overlapping cylinders (visually offset for clarity)
+        for (let s = 0; s < 2; s++) {
+          const cylGeom = new THREE.CylinderGeometry(R, R, 6, 32, 1, true);
+          const cylMat = new THREE.MeshStandardMaterial({ color: s === 0 ? 0x5eb1ff : 0xffaa66, transparent: true, opacity: 0.35, side: THREE.DoubleSide });
+          const m = new THREE.Mesh(cylGeom, cylMat);
+          m.position.x = s * 0.05;  // tiny offset for visual layering
+          addObject(m);
+        }
+
+        // Pair L_pair(r) computation: L_1(r) + L_2(r-shifted-in-phase)
+        const alpha = tiplerAlpha(omega, R);
+        const L_pair_fn = r => {
+          const u_shift = -delta / alpha;
+          return tiplerL(r, omega, R) + tiplerL(r * Math.exp(u_shift), omega, R);
+        };
+        const bands = ctcBands(L_pair_fn, R * 1.001, R * 8, 3000);
+        for (const [r1, r2] of bands) {
+          const ringGeom = new THREE.RingGeometry(r1, r2, 64, 1);
+          const ringMat = new THREE.MeshBasicMaterial({ color: 0xff3355, transparent: true, opacity: 0.35, side: THREE.DoubleSide });
+          const ring = new THREE.Mesh(ringGeom, ringMat);
+          ring.rotation.x = -Math.PI / 2;
+          addObject(ring);
+        }
+
+        // Two L curves overlaid + sum
+        for (let plot = 0; plot < 3; plot++) {
+          const fn = plot === 0 ? r => tiplerL(r, omega, R)
+                  : plot === 1 ? r => tiplerL(r * Math.exp(-delta/alpha), omega, R)
+                  : L_pair_fn;
+          const color = plot === 0 ? 0x5eb1ff : plot === 1 ? 0xffaa66 : 0xff3355;
+          const points = [];
+          for (let i = 0; i < 800; i++) {
+            const r = R * 1.001 + (R * 8 - R * 1.001) * i / 799;
+            const v = fn(r);
+            points.push(new THREE.Vector3(r, Math.tanh(v * 0.1) * 2 + 4, 0));
+          }
+          const g = new THREE.BufferGeometry().setFromPoints(points);
+          addObject(new THREE.Line(g, new THREE.LineBasicMaterial({ color, linewidth: plot === 2 ? 3 : 1.5 })));
+        }
+
+        document.getElementById('results').textContent =
+          `α = ${alpha.toFixed(4)}\n` +
+          `δ = ${delta.toFixed(4)} (anti-phase at π = 3.142)\n` +
+          `# CTC bands: ${bands.length}\n` +
+          `total log-measure: ${bands.reduce((s,[a,b]) => s + Math.log(b/a), 0).toFixed(4)}\n` +
+          (Math.abs(delta - Math.PI) < 0.05 ? '⚠ Near anti-phase — CTC extinction' : '');
+      };
+      ['om', 'd'].forEach(id => document.getElementById(id).addEventListener('input', update));
+      update();
+    }
+  },
+
+  array: {
+    title: '3. N-cylinder phased array',
+    desc: 'N co-axial cylinders with phases δᵢ = 2πi/N (uniform comb). Phasor sum = geometric sum of N-th roots of unity = 0 → joint exterior identically zero. <strong>N-fold topological off-switch.</strong>',
+    controls: `
+      <div class="control"><label>ω: <span id="om_v">1.50</span></label>
+        <input id="om" type="range" min="0.7" max="2.5" step="0.05" value="1.5"/></div>
+      <div class="control"><label>N: <span id="N_v">3</span></label>
+        <input id="N" type="range" min="2" max="8" step="1" value="3"/></div>
+      <div class="control"><label>Mode: <span id="mode_v">comb</span></label>
+        <input id="mode" type="range" min="0" max="1" step="0.01" value="1"/></div>
+      <p style="font-size:0.75em;color:#888;">Mode slider: 0 = all aligned (constructive), 1 = uniform comb (extinction).</p>
+    `,
+    setup() {
+      const update = () => {
+        const omega = +document.getElementById('om').value;
+        const N = +document.getElementById('N').value;
+        const mode = +document.getElementById('mode').value;
+        document.getElementById('om_v').textContent = omega.toFixed(2);
+        document.getElementById('N_v').textContent = N;
+        document.getElementById('mode_v').textContent = mode.toFixed(2);
+        const R = 1.0;
+        clearScene();
+
+        // Render N cylinders in a circular arrangement
+        const cylGroup = new THREE.Group();
+        for (let k = 0; k < N; k++) {
+          const angle = k * TWO_PI / N;
+          const cylGeom = new THREE.CylinderGeometry(0.4, 0.4, 4, 24, 1, true);
+          const cylMat = new THREE.MeshStandardMaterial({
+            color: new THREE.Color().setHSL(k / N, 0.7, 0.6),
+            transparent: true, opacity: 0.6, side: THREE.DoubleSide
+          });
+          const m = new THREE.Mesh(cylGeom, cylMat);
+          m.position.set(2 * Math.cos(angle), 0, 2 * Math.sin(angle));
+          cylGroup.add(m);
+        }
+        addObject(cylGroup);
+
+        // Compute joint L
+        const alpha = tiplerAlpha(omega, R);
+        const L_pair_fn = r => {
+          let total = 0;
+          for (let k = 0; k < N; k++) {
+            const delta_k = mode * (TWO_PI * k / N);
+            const u_shift = -delta_k / alpha;
+            total += tiplerL(r * Math.exp(u_shift), omega, R);
+          }
+          return total;
+        };
+        const bands = ctcBands(L_pair_fn, R * 1.001, R * 12, 4000);
+        for (const [r1, r2] of bands) {
+          const ringGeom = new THREE.RingGeometry(r1, r2, 64, 1);
+          const ringMat = new THREE.MeshBasicMaterial({ color: 0xff3355, transparent: true, opacity: 0.3, side: THREE.DoubleSide });
+          const ring = new THREE.Mesh(ringGeom, ringMat);
+          ring.rotation.x = -Math.PI / 2;
+          addObject(ring);
+        }
+
+        document.getElementById('results').textContent =
+          `N = ${N}, mode = ${mode.toFixed(2)}\n` +
+          `# CTC bands: ${bands.length}\n` +
+          (bands.length === 0 ? '✓ Topological extinction (uniform-phase comb)\n' : '') +
+          `Total log-measure: ${bands.reduce((s,[a,b]) => s + Math.log(b/a), 0).toFixed(4)}`;
+      };
+      ['om', 'N', 'mode'].forEach(id => document.getElementById(id).addEventListener('input', update));
+      update();
+    }
+  },
+
+  offaxis: {
+    title: '4. Off-axis pair (2D CTC map)',
+    desc: 'Two parallel-axis cylinders separated by distance d. The colour map shows the joint g_φφ(x,y) in the linearised approximation. Red = CTC region (g_φφ < 0).',
+    controls: `
+      <div class="control"><label>ω: <span id="om_v">1.00</span></label>
+        <input id="om" type="range" min="0.7" max="2.0" step="0.05" value="1.0"/></div>
+      <div class="control"><label>separation d: <span id="d_v">4.00</span></label>
+        <input id="d" type="range" min="2" max="8" step="0.1" value="4"/></div>
+    `,
+    setup() {
+      const update = () => {
+        const omega = +document.getElementById('om').value;
+        const d = +document.getElementById('d').value;
+        document.getElementById('om_v').textContent = omega.toFixed(2);
+        document.getElementById('d_v').textContent = d.toFixed(2);
+        const R = 1.0;
+        clearScene();
+
+        // Build a heat-map plane in the y=0 plane sampling g_phiphi
+        const N = 80;
+        const xMin = -3, xMax = d + 3, yMin = -4, yMax = 4;
+        const planeGeom = new THREE.PlaneGeometry(xMax - xMin, yMax - yMin, N - 1, N - 1);
+        const colors = new Float32Array(N * N * 3);
+        for (let j = 0; j < N; j++) {
+          for (let i = 0; i < N; i++) {
+            const x = xMin + (xMax - xMin) * i / (N - 1);
+            const y = yMin + (yMax - yMin) * j / (N - 1);
+            const r1 = Math.sqrt(x*x + y*y) + 1e-3;
+            const r2 = Math.sqrt((x-d)**2 + y*y) + 1e-3;
+            // Clamp to outside cylinder cores
+            const r1c = Math.max(r1, R * 1.05);
+            const r2c = Math.max(r2, R * 1.05);
+            // Sum of L_i for two cylinders at their respective distances
+            const L_total = tiplerL(r1c, omega, R) + tiplerL(r2c, omega, R);
+            const t = Math.tanh(L_total * 0.05);
+            const idx = 3 * (j * N + i);
+            if (t < 0) {
+              colors[idx + 0] = 1.0; colors[idx + 1] = 0.2; colors[idx + 2] = 0.3;  // red
+            } else {
+              colors[idx + 0] = 0.2; colors[idx + 1] = 0.4; colors[idx + 2] = 1.0 - 0.5 * t;  // blue
+            }
+          }
+        }
+        planeGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        const planeMat = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide });
+        const plane = new THREE.Mesh(planeGeom, planeMat);
+        plane.rotation.x = -Math.PI / 2;
+        plane.position.set((xMin + xMax) / 2, 0, (yMin + yMax) / 2);
+        addObject(plane);
+
+        // Two cylinder axis markers
+        for (const ax of [[0, 0], [d, 0]]) {
+          const cylGeom = new THREE.CylinderGeometry(0.2, 0.2, 5, 16, 1);
+          const cylMat = new THREE.MeshStandardMaterial({ color: 0x88ccff });
+          const m = new THREE.Mesh(cylGeom, cylMat);
+          m.position.set(ax[0], 0, ax[1]);
+          addObject(m);
+        }
+
+        document.getElementById('results').textContent =
+          `Red: g_φφ < 0 (CTC region)\nBlue: g_φφ > 0 (regular)\n\nseparation d = ${d.toFixed(2)} R\nω = ${omega.toFixed(2)}`;
+      };
+      ['om', 'd'].forEach(id => document.getElementById(id).addEventListener('input', update));
+      update();
+    }
+  },
+
+  worldline: {
+    title: '5. Spacetime worldline of a backward-time orbit',
+    desc: 'A particle at constant r in a CTC band traces a helix in (x, y, t) space. Negative angular velocity Ω → coordinate time descends as φ advances → particle visits its own past while proper time advances normally.',
+    controls: `
+      <div class="control"><label>r (orbit radius): <span id="rr_v">3.35</span></label>
+        <input id="rr" type="range" min="2" max="5" step="0.05" value="3.35"/></div>
+      <div class="control"><label>Ω (angular vel): <span id="om_v">-6.28</span></label>
+        <input id="om" type="range" min="-15" max="-1.1" step="0.1" value="-6.28"/></div>
+      <div class="control"><label># revolutions: <span id="rev_v">4</span></label>
+        <input id="rev" type="range" min="1" max="10" step="1" value="4"/></div>
+    `,
+    setup() {
+      const update = () => {
+        const rOrbit = +document.getElementById('rr').value;
+        const Omega = +document.getElementById('om').value;
+        const Nrev = +document.getElementById('rev').value;
+        document.getElementById('rr_v').textContent = rOrbit.toFixed(2);
+        document.getElementById('om_v').textContent = Omega.toFixed(2);
+        document.getElementById('rev_v').textContent = Nrev;
+        clearScene();
+
+        // Worldline as helix
+        const points = [];
+        const N = 600;
+        const colors = [];
+        for (let i = 0; i < N; i++) {
+          const phi = TWO_PI * Nrev * i / (N - 1);
+          const t = phi / Omega;  // negative -> descends
+          const x = rOrbit * Math.cos(phi);
+          const z = rOrbit * Math.sin(phi);
+          points.push(new THREE.Vector3(x, t * 0.5 + 3, z));
+          // Gradient color from start (green) to end (red)
+          const c = new THREE.Color().setHSL(0.3 - 0.3 * (i / (N - 1)), 0.8, 0.5);
+          colors.push(c.r, c.g, c.b);
+        }
+        const g = new THREE.BufferGeometry().setFromPoints(points);
+        g.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+        const mat = new THREE.LineBasicMaterial({ vertexColors: true, linewidth: 2 });
+        addObject(new THREE.Line(g, mat));
+
+        // Cylinder axis (dotted z-line)
+        const axisGeom = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(0, -10, 0), new THREE.Vector3(0, 10, 0),
+        ]);
+        const axisMat = new THREE.LineDashedMaterial({ color: 0x666666, dashSize: 0.3, gapSize: 0.2 });
+        const axisLine = new THREE.Line(axisGeom, axisMat);
+        axisLine.computeLineDistances();
+        addObject(axisLine);
+
+        // Endpoint markers
+        const startSphere = new THREE.Mesh(
+          new THREE.SphereGeometry(0.15, 16, 16),
+          new THREE.MeshStandardMaterial({ color: 0x33ff66 })
+        );
+        startSphere.position.copy(points[0]);
+        addObject(startSphere);
+        const endSphere = new THREE.Mesh(
+          new THREE.SphereGeometry(0.15, 16, 16),
+          new THREE.MeshStandardMaterial({ color: 0xff3355 })
+        );
+        endSphere.position.copy(points[points.length - 1]);
+        addObject(endSphere);
+
+        // Compute proper time per rev
+        // Δτ ≈ √(F − 2KΩ − LΩ²) · |Δt| at r ≈ rOrbit. Using approximate values for a=1 cyl:
+        const omega = 1.0, R = 1.0;
+        const F = tiplerF(rOrbit, omega, R);
+        const K = tiplerK(rOrbit, omega, R);
+        const L = tiplerL(rOrbit, omega, R);
+        const ds2_factor = F - 2*K*Omega - L*Omega*Omega;
+        const dt = TWO_PI / Omega;
+        const dtau = ds2_factor > 0 ? Math.sqrt(ds2_factor) * Math.abs(dt) : NaN;
+
+        document.getElementById('results').textContent =
+          `r = ${rOrbit.toFixed(2)}, Ω = ${Omega.toFixed(2)}\n` +
+          `Δt per revolution = 2π/Ω = ${dt.toFixed(4)}\n` +
+          `Δτ per revolution = ${isNaN(dtau) ? 'spacelike orbit' : dtau.toFixed(4)}\n` +
+          `# revolutions: ${Nrev}\n` +
+          `Total Δt = ${(Nrev * dt).toFixed(2)}\n` +
+          `Total Δτ = ${isNaN(dtau) ? 'N/A' : (Nrev * dtau).toFixed(2)}`;
+      };
+      ['rr', 'om', 'rev'].forEach(id => document.getElementById(id).addEventListener('input', update));
+      update();
+    }
+  },
+
+  zoo: {
+    title: '6. CTC zoo: Tipler · Gödel · Gott · Kerr',
+    desc: 'Four canonical analytic CTC spacetimes side by side. Each has a different mechanism: cylindrical rotation (Tipler), global rotation+Λ (Gödel), moving cosmic strings (Gott), rotating ring singularity in 4D (Kerr).',
+    controls: `<p style="font-size:0.85em;color:#888;">Static comparison view. Each tile's CTC threshold is labeled.</p>`,
+    setup() {
+      clearScene();
+      // Four cubes, each labelled
+      const labels = [
+        ['Tipler', 'a > 1/2', 0x5eb1ff, -3, 0],
+        ['Gödel', 'r > arcsinh(1)\n≈ 0.881', 0xff6677, 3, 0],
+        ['Gott', 'γv > tan(4πμ)', 0x88ff66, -3, -3],
+        ['Kerr', 'r ∈ (r_CTC, 0)\nin neg-r ext.', 0xffaa66, 3, -3],
+      ];
+      for (const [name, threshold, color, x, z] of labels) {
+        const geom = new THREE.BoxGeometry(2, 2, 2);
+        const mat = new THREE.MeshStandardMaterial({ color, transparent: true, opacity: 0.7 });
+        const m = new THREE.Mesh(geom, mat);
+        m.position.set(x, 1, z);
+        addObject(m);
+      }
+      document.getElementById('results').textContent =
+        'Tipler        ω·R > 1/2          (cylindrical rotation)\n' +
+        'Gödel         r > arcsinh(1)     (global rotation + Λ)\n' +
+        'Gott pair     γv > tan(4πμ)      (moving cosmic strings)\n' +
+        'Kerr          r ∈ (r_CTC, 0)     (rotating ring sing.)\n';
+    }
+  },
+
+  anomaly: {
+    title: '7. Curvature & trace anomaly',
+    desc: 'The conformal-anomaly trace ⟨T^μ_μ⟩ for a massless conformal scalar diverges at Cauchy horizons (F = 0) of the Tipler exterior. Plot shows the qualitative 1/F² indicator.',
+    controls: `
+      <div class="control"><label>ω: <span id="om_v">1.00</span></label>
+        <input id="om" type="range" min="0.6" max="2.5" step="0.05" value="1.0"/></div>
+    `,
+    setup() {
+      const update = () => {
+        const omega = +document.getElementById('om').value;
+        document.getElementById('om_v').textContent = omega.toFixed(2);
+        const R = 1.0;
+        clearScene();
+
+        // Curve: log(1 + 1/F^2) along r
+        const points = [];
+        for (let i = 0; i < 800; i++) {
+          const r = R * 1.001 + (R * 8 - R * 1.001) * i / 799;
+          const F = tiplerF(r, omega, R);
+          const indicator = Math.log(1 + 1 / (F * F));
+          points.push(new THREE.Vector3(r, indicator * 0.5, 0));
+        }
+        const g = new THREE.BufferGeometry().setFromPoints(points);
+        addObject(new THREE.Line(g, new THREE.LineBasicMaterial({ color: 0xffaa66, linewidth: 2 })));
+
+        // Mark Cauchy horizons (F-zeros)
+        const alpha = tiplerAlpha(omega, R);
+        const gamma = Math.PI - Math.atan(alpha);
+        for (let n = 1; n < 4; n++) {
+          const u_n = (n * Math.PI - gamma) / alpha;
+          if (u_n <= 0) continue;
+          const r_n = R * Math.exp(u_n);
+          if (r_n > 8 * R) break;
+          const sphereGeom = new THREE.SphereGeometry(0.15, 16, 16);
+          const sphereMat = new THREE.MeshStandardMaterial({ color: 0xff3355 });
+          const m = new THREE.Mesh(sphereGeom, sphereMat);
+          m.position.set(r_n, 0, 0);
+          addObject(m);
+        }
+
+        document.getElementById('results').textContent =
+          `α = ${alpha.toFixed(4)}\n` +
+          `Cauchy horizon spacing exp(π/α) = ${Math.exp(Math.PI/alpha).toFixed(2)}\n\n` +
+          `Red dots: F = 0 surfaces.\n` +
+          `Indicator log(1 + 1/F²) → ∞ there.\n` +
+          `This is the chronology-protection signature: ⟨T_μν⟩ diverges at Cauchy horizons.`;
+      };
+      document.getElementById('om').addEventListener('input', update);
+      update();
+    }
+  },
+
+  unified: {
+    title: '8. Unified picture',
+    desc: 'The full Systrophe construction: two co-rotating cylindrical singularities (top-spin, dual-positive) producing an off-set Tipler sinusoid; CTC bands as red ergo-shells; closed worldline of a particle traversing one band; Cauchy-horizon markers; the chronology-protection trace anomaly. <strong>Animate via the spacetime-time slider.</strong>',
+    controls: `
+      <div class="control"><label>animation t: <span id="t_v">0.00</span></label>
+        <input id="t" type="range" min="0" max="6.28" step="0.02" value="0"/></div>
+      <div class="control"><label>δ (offset): <span id="d_v">0.00</span></label>
+        <input id="d" type="range" min="0" max="6.28" step="0.05" value="0"/></div>
+      <p style="font-size:0.85em;color:#888;">The pair, the CTC bands, the worldline, the Cauchy horizons, and the trace anomaly together. Spin the camera with mouse drag.</p>
+    `,
+    setup() {
+      const update = () => {
+        const tAnim = +document.getElementById('t').value;
+        const delta = +document.getElementById('d').value;
+        document.getElementById('t_v').textContent = tAnim.toFixed(2);
+        document.getElementById('d_v').textContent = delta.toFixed(2);
+        const omega = 1.0, R = 1.0;
+        clearScene();
+
+        // Two cylinders (visualized as separate but co-axial, with z-axis spread)
+        for (let s = 0; s < 2; s++) {
+          const cylGeom = new THREE.CylinderGeometry(R * 0.7, R * 0.7, 4, 32, 1, true);
+          const cylMat = new THREE.MeshStandardMaterial({
+            color: s === 0 ? 0x5eb1ff : 0xffaa66,
+            transparent: true, opacity: 0.5, side: THREE.DoubleSide
+          });
+          const m = new THREE.Mesh(cylGeom, cylMat);
+          m.position.y = s === 0 ? -2 : 2;
+          m.rotation.y = (s === 0 ? 1 : -1) * tAnim * 0.5;  // animate rotation
+          addObject(m);
+        }
+
+        // Joint CTC bands
+        const alpha = tiplerAlpha(omega, R);
+        const L_pair = r => tiplerL(r, omega, R) + tiplerL(r * Math.exp(-delta/alpha), omega, R);
+        const bands = ctcBands(L_pair, R * 1.001, R * 8, 3000);
+        for (const [r1, r2] of bands) {
+          const ringGeom = new THREE.RingGeometry(r1, r2, 64, 1);
+          const ringMat = new THREE.MeshBasicMaterial({ color: 0xff3355, transparent: true, opacity: 0.25, side: THREE.DoubleSide });
+          const ring = new THREE.Mesh(ringGeom, ringMat);
+          ring.rotation.x = -Math.PI / 2;
+          addObject(ring);
+        }
+
+        // Cauchy horizon spheres at F=0
+        const gamma = Math.PI - Math.atan(alpha);
+        for (let n = 1; n < 3; n++) {
+          const r_n = R * Math.exp((n * Math.PI - gamma) / alpha);
+          if (r_n > 8) break;
+          const sphereGeom = new THREE.TorusGeometry(r_n, 0.04, 8, 64);
+          const sphereMat = new THREE.MeshBasicMaterial({ color: 0xff8800 });
+          const torus = new THREE.Mesh(sphereGeom, sphereMat);
+          torus.rotation.x = -Math.PI / 2;
+          addObject(torus);
+        }
+
+        // Animated particle on a CTC orbit (inside band 1 if it exists)
+        if (bands.length > 0) {
+          const r_orb = (bands[0][0] + bands[0][1]) / 2;
+          // Animate phi advance with tAnim
+          const phi = tAnim * 2;
+          const x = r_orb * Math.cos(phi);
+          const z = r_orb * Math.sin(phi);
+          const sphere = new THREE.Mesh(
+            new THREE.SphereGeometry(0.18, 16, 16),
+            new THREE.MeshStandardMaterial({ color: 0xffff66, emissive: 0xffaa00, emissiveIntensity: 0.5 })
+          );
+          sphere.position.set(x, -tAnim * 0.4 + 1, z);
+          addObject(sphere);
+
+          // Trail
+          const trailPts = [];
+          for (let i = 0; i < 100; i++) {
+            const t_i = (i / 99) * tAnim;
+            const phi_i = t_i * 2;
+            trailPts.push(new THREE.Vector3(
+              r_orb * Math.cos(phi_i),
+              -t_i * 0.4 + 1,
+              r_orb * Math.sin(phi_i)
+            ));
+          }
+          const trailGeom = new THREE.BufferGeometry().setFromPoints(trailPts);
+          addObject(new THREE.Line(trailGeom, new THREE.LineBasicMaterial({ color: 0xffff66 })));
+        }
+
+        document.getElementById('results').textContent =
+          `Off-set δ = ${delta.toFixed(2)}\n` +
+          `# CTC bands: ${bands.length}\n` +
+          (bands.length ? `band 1: r ∈ [${bands[0][0].toFixed(3)}, ${bands[0][1].toFixed(3)}]\n` : '') +
+          `\nThe particle (yellow) follows a CTC orbit inside the first band, descending in coord-time t while spiralling forward in proper time τ. Orange tori = Cauchy horizons (F = 0).`;
+      };
+      ['t', 'd'].forEach(id => document.getElementById(id).addEventListener('input', update));
+      update();
+    }
+  },
+};
+
+// =========================================================================
+//  Tab switching + animation loop
+// =========================================================================
+
+function switchView(name) {
+  if (currentView === name) return;
+  currentView = name;
+  for (const btn of document.querySelectorAll('nav button'))
+    btn.classList.toggle('active', btn.dataset.view === name);
+  const v = VIEWS[name];
+  setupSidePanel(v.title, v.desc, v.controls);
+  v.setup();
+  // Reset camera per view
+  if (name === 'worldline' || name === 'unified') {
+    camera.position.set(8, 8, 10);
+  } else if (name === 'offaxis' || name === 'zoo') {
+    camera.position.set(0, 12, 8);
+  } else {
+    camera.position.set(8, 5, 8);
+  }
+  controls.target.set(0, 0, 0);
+  controls.update();
+}
+for (const btn of document.querySelectorAll('nav button')) {
+  btn.addEventListener('click', () => switchView(btn.dataset.view));
+}
+
+function animate() {
+  animationFrame = requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+
+switchView('single');
+</script>
+</body>
+</html>

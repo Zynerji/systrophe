@@ -969,9 +969,15 @@ from horizon, anomaly trace $= R/(24\pi)$ to machine precision,
 $\langle T_{tt} \rangle$ proxy $= -R/(96\pi)$, horizon stress-energy
 returns dict with power-law fit, anomaly modest near cylinder boundary
 for mildly supercritical $a$.
+\item \textbf{4D point-splitting} ($12$ tests): metric tensor and
+inverse, Christoffel symmetry in lower indices, Riemann antisymmetry,
+finite vacuum residual under leading-$h$, finite Ricci scalar,
+finite Kretschmann, trace anomaly $= K/(2880\pi^2)$, $a_2(x) = K/180$,
+mass validation, $\langle\phi^2\rangle$ decreasing with $m$, effective
+action density.
 \end{itemize}
 
-All $219$ tests pass.
+All $231$ tests pass.
 
 \section{Limitations and open questions}
 
@@ -1324,6 +1330,61 @@ and a Cauchy-horizon power-law fit
 \texttt{stress\_energy\_at\_horizon(vs, r\_h)} returning the inferred
 exponent $p$ in $\langle T \rangle \sim \epsilon^p$ as the horizon is
 approached.
+
+\subsection{Full 4D point-splitting (\texttt{point\_splitting.py})}
+\label{sec:4d-point-splitting}
+
+The 4D conformal anomaly trace for a massless conformally-coupled
+scalar field on a vacuum spacetime is exactly
+\begin{equation}
+\langle T^\mu_{~\mu} \rangle_{\rm ren}
+= \frac{R_{\mu\nu\rho\sigma} R^{\mu\nu\rho\sigma}}{2880\,\pi^2}
+= \frac{K_{\rm Kretschmann}}{2880\,\pi^2}
+\end{equation}
+(Christensen 1976; Birrell--Davies 1982). For non-vacuum, additional
+terms involving $R_{\mu\nu} R^{\mu\nu}$, $R^2$, and $\Box R$ appear;
+in vacuum these vanish.
+
+The \texttt{point\_splitting.py} module computes this *fully numerically*
+on the Lewis-Papapetrou background by central-differencing the
+analytic Case III metric components to assemble the Christoffel
+symbols, the Riemann tensor $R^\mu_{~\nu\rho\sigma}$ in coordinate
+basis, the Ricci tensor (which is verified to be small modulo finite-
+difference and the leading-order $h = 1$ approximation), the Ricci
+scalar, and the Kretschmann invariant.
+
+In addition to the trace anomaly, the module exposes:
+\begin{itemize}[leftmargin=*]
+\item \texttt{kretschmann\_scalar(vs, r)}: $K = R_{\mu\nu\rho\sigma}
+R^{\mu\nu\rho\sigma}$.
+\item \texttt{dewitt\_a2\_coefficient(vs, r)}: heat-kernel coefficient
+$a_2(x) = K / 180$ in vacuum.
+\item \texttt{phi\_squared\_largemass\_expansion(vs, r, mass)}: leading
+large-mass expansion $\langle \phi^2 \rangle_{\rm ren} \approx
+a_2(x) / (16\pi^2 m^2)$.
+\item \texttt{effective\_action\_volume\_density(vs, r)}: $a_2 /
+(32\pi^2)$, the one-loop effective Lagrangian density.
+\end{itemize}
+
+The off-diagonal components of $\langle T_{\mu\nu} \rangle_{\rm ren}$
+require a further ingredient (mode-sum or coincidence-limit
+point-splitting of $\partial_\mu \partial_{\nu'} G_{\rm ren}(x, x')$);
+the trace alone is exact in 4D vacuum, and the dimensional dependence
+through $a_2(x)$ makes the qualitative chronology-protection signal
+manifest: $K_{\rm Kretschmann}$ inherits the log-periodic structure
+of the underlying metric and grows toward each Cauchy horizon.
+
+\subsection{WebGL visualiser}
+
+A complete in-browser visualiser \texttt{web/visualiser.html} renders
+all eight headline concepts in interactive Three.js scenes: the single
+Tipler exterior, the off-set pair, the N-cylinder array (with
+topological extinction), the off-axis 2D CTC map, the 3D spacetime
+worldline of a backward-time orbit, the CTC zoo (Tipler, G\"odel,
+Gott, Kerr), the curvature / trace-anomaly diagnostic, and a unified
+animated picture of the full Systroph\=e construction. No server is
+required; the page loads Three.js from a CDN and computes all metric
+quantities client-side via direct ports of the Python kernels.
 
 \subsection{Honest scope for this section}
 

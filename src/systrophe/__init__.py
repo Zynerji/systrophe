@@ -83,6 +83,16 @@ from .qftcs_backreaction import (
     stress_energy_at_horizon,
     vacuum_energy_density_proxy,
 )
+from .point_splitting import (
+    dewitt_a2_coefficient,
+    effective_action_volume_density,
+    kretschmann_scalar,
+    phi_squared_largemass_expansion,
+    ricci_scalar as ricci_scalar_4d,
+    riemann_tensor,
+    trace_anomaly_4d_exact,
+    vacuum_residual,
+)
 
 __all__ = [
     "VanStockumInterior",
@@ -112,4 +122,4 @@ __all__ = [
     "proper_energy_density",
     "total_energy_per_unit_length",
 ]
-__version__ = "0.8.0"
+__version__ = "0.9.0"

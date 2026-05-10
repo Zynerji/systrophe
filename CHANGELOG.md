@@ -5,6 +5,54 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.0] - 2026-05-09
+
+### Added
+
+**Full 4D point-splitting renormalisation** (`point_splitting.py`):
+- Numerical Christoffel symbols, Riemann tensor, Ricci tensor, Ricci
+  scalar, and Kretschmann scalar via central differencing of the
+  analytic Case III metric components.
+- `kretschmann_scalar(vs, r)`: K = R_{μνρσ} R^{μνρσ}.
+- `trace_anomaly_4d_exact(vs, r)`: ⟨T^μ_μ⟩_ren = K / (2880 π²),
+  *exact* in 4D vacuum for a massless conformally-coupled scalar.
+- `dewitt_a2_coefficient(vs, r)`: a_2(x) = K / 180 (heat-kernel).
+- `phi_squared_largemass_expansion(vs, r, mass)`: leading large-mass
+  ⟨φ²⟩_ren ≈ a_2(x) / (16 π² m²).
+- `effective_action_volume_density(vs, r)`: a_2 / (32 π²), one-loop
+  effective Lagrangian density.
+
+**WebGL visualiser** (`web/visualizer.html`):
+- Single-page in-browser visualiser with Three.js (CDN), no server.
+- Eight tabs covering every concept implemented in the package:
+  1. Single Tipler cylinder with rotation arrows + L(r) plot + CTC bands.
+  2. Off-set pair with constructive/destructive interference and the
+     anti-phase off-switch demo.
+  3. N-cylinder phased array showing topological extinction at uniform
+     phase comb (N = 2 to 8).
+  4. Off-axis pair 2D heat map with red CTC region and blue regular.
+  5. Spacetime worldline of a backward-time orbit (interactive helix).
+  6. CTC zoo: Tipler / Gödel / Gott / Kerr side by side with thresholds.
+  7. Curvature & trace-anomaly diagnostic with Cauchy-horizon markers.
+  8. Unified animated picture combining the pair, CTC bands, Cauchy
+     horizons, and a particle traversing a CTC orbit.
+- All math runs client-side in JavaScript (ports of the Systrophe Python
+  kernels: tiplerF/K/L, ctcBands, godelL, gottHasCTC, kerrGphiphiEquatorial).
+
+### Test count
+- 231 tests across 25 modules; previously 219.
+
+### Whitepaper
+- Extended to 23 pages with subsections on the full 4D point-splitting
+  module and the WebGL visualiser.
+
+### Notes
+This completes the 4D point-splitting work that the v0.8.0 release left
+as honest future work. The trace anomaly is now computable to high
+numerical precision on the LP background; the off-trace components of
+⟨T_μν⟩ remain a separate research project (mode-sum at finite m, full
+Hadamard renormalisation).
+
 ## [0.8.0] - 2026-05-09
 
 ### Added — completing all genuinely deferred QFTCS items

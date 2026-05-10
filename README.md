@@ -7,9 +7,9 @@
 [![Tests](https://github.com/Zynerji/systrophe/actions/workflows/tests.yml/badge.svg)](https://github.com/Zynerji/systrophe/actions/workflows/tests.yml)
 [![Python ≥ 3.10](https://img.shields.io/badge/python-%E2%89%A5%203.10-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 219 passing](https://img.shields.io/badge/tests-219%20passing-brightgreen.svg)](#tests)
+[![Tests: 231 passing](https://img.shields.io/badge/tests-231%20passing-brightgreen.svg)](#tests)
 [![Whitepaper](https://img.shields.io/badge/whitepaper-PDF-informational.svg)](paper/systrophe_time_travel.pdf)
-[![Version 0.8.0](https://img.shields.io/badge/version-0.8.0-blue.svg)](pyproject.toml)
+[![Version 0.9.0](https://img.shields.io/badge/version-0.9.0-blue.svg)](pyproject.toml)
 
 *Systrophē* (Greek **Συστροφή**, "twisting-together"): the joint exterior of two co-rotating, dual-positive-mass van Stockum dust cylinders, whose log-periodic Tipler sinusoids superpose with a tunable relative phase offset.
 
