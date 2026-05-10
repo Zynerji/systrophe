@@ -60,6 +60,29 @@ from .dirac import (
     solve_radial_dirac,
     vanstockum_dirac_system,
 )
+from .dirac_spectrum import (
+    boundary_functional,
+    find_bound_states,
+    vanstockum_bound_states,
+)
+from .dirac_sea import (
+    chronology_horizon_pressure_divergence_rate,
+    density_of_states_radial,
+    dirac_sea_pressure_proxy,
+    local_energy,
+)
+from .particle_creation import (
+    bose_einstein,
+    fermi_dirac,
+    particle_creation_spectrum_at_horizon,
+    total_emission_power_proxy,
+)
+from .qftcs_backreaction import (
+    conformal_anomaly_trace,
+    radial_temporal_ricci_scalar,
+    stress_energy_at_horizon,
+    vacuum_energy_density_proxy,
+)
 
 __all__ = [
     "VanStockumInterior",
@@ -89,4 +112,4 @@ __all__ = [
     "proper_energy_density",
     "total_energy_per_unit_length",
 ]
-__version__ = "0.7.0"
+__version__ = "0.8.0"

@@ -952,9 +952,26 @@ $(-,+,+,+)$ signature, gamma-index validation, tetrad reproduces flat
 cylindrical Minkowski and van Stockum interior, tetrad
 orthonormality, radial Dirac system runs, solver runs in Minkowski,
 van Stockum specialisation requires supercritical input.
+\item \textbf{Dirac spectrum} ($5$ tests): boundary functional finite,
+\texttt{find\_bound\_states} returns array, supercritical input, refusal
+of subcritical, continuity in $E$.
+\item \textbf{Dirac sea} ($6$ tests): Tolman energy unity at $F = 1$ and
+divergent at $F = 0$, density of states zero at threshold and positive
+above, pressure proxy diverges at Cauchy horizon, divergence rate
+$\approx 2$.
+\item \textbf{Particle creation} ($7$ tests): T-positivity validators,
+Fermi-Dirac bounded by $1$, Bose-Einstein divergent at $\omega \to 0$,
+high-$\omega$ thermal suppression, horizon spectrum produces positive
+sub-unity occupations, statistics validation, finite total-emission
+power proxy.
+\item \textbf{QFTCS back-reaction} ($5$ tests): $R_{2d}$ finite away
+from horizon, anomaly trace $= R/(24\pi)$ to machine precision,
+$\langle T_{tt} \rangle$ proxy $= -R/(96\pi)$, horizon stress-energy
+returns dict with power-law fit, anomaly modest near cylinder boundary
+for mildly supercritical $a$.
 \end{itemize}
 
-All $196$ tests pass.
+All $219$ tests pass.
 
 \section{Limitations and open questions}
 
@@ -1226,6 +1243,112 @@ structure near the chronology horizon, particle creation rates, and
 the connection to the Dinos electron resonance --- requires further
 investigation specific to each application; this module supplies the
 mathematical primitives.
+
+\section{Spectrum, Dirac sea, particle creation, and back-reaction}
+\label{sec:qftcs}
+
+The Dirac infrastructure of Section~\ref{sec:dirac} feeds into four
+substantive QFTCS-adjacent calculations. Each module is exposed in
+\texttt{systrophe} and verified by tests; all are honestly identified
+as leading-order classical-on-quantum approximations of the full
+Schwinger--DeWitt / Hadamard programme.
+
+\subsection{Spectrum and bound states}
+
+\texttt{systrophe.dirac\_spectrum} implements a shooting method for
+the radial Dirac eigenvalue problem. Given a confining boundary
+condition (Dirichlet at $r = R$ and at $r = r_{\max}$), the radial
+spinor satisfies a discrete spectrum of energies. The boundary
+functional
+\begin{equation}
+\mathcal{F}(E) = \lvert R_1(r_{\max}) \rvert^2 + \lvert R_2(r_{\max}) \rvert^2
+\end{equation}
+is integrated for trial $E$ and refined to local minima via
+\texttt{scipy.optimize.minimize\_scalar}. The convenience function
+\texttt{vanstockum\_bound\_states(vs, m, k, mass, ...)} specialises to
+the Tipler exterior with $r_{\max} = (\text{factor}) \cdot R$.
+
+\subsection{Dirac sea structure near the chronology horizon}
+
+\texttt{systrophe.dirac\_sea} computes the Tolman-shifted local energy
+$E_{\rm local}(r) = E_\infty / \sqrt{F(r)}$ and the leading-order
+radial level density
+\begin{equation}
+\rho(F) = \frac{1}{\pi}\sqrt{\frac{E_\infty^2}{F} - m^2 - (m_\phi^2 + k^2)},
+\end{equation}
+which diverges as $F \to 0$. The Dirac-sea pressure proxy
+$P_{\rm proxy}(r) = 1/F(r)^2$ scales as $1/(r - r_h)^2$ near a Cauchy
+horizon, and tests verify the divergence rate $p \approx 2$ via
+finite-difference fitting.
+
+\subsection{Particle-creation rates at Cauchy horizons}
+
+For each $F$-zero $r_h$, the surface gravity is $\kappa = \tfrac{1}{2}
+\lvert F'(r_h) \rvert$ and the associated Hawking temperature
+$T_H = \kappa / (2\pi)$. The thermal occupation spectrum is
+\begin{equation}
+n_\omega = \frac{1}{e^{\omega / T_H} \pm 1}
+\quad\text{(boson / fermion)},
+\end{equation}
+implemented in \texttt{systrophe.particle\_creation} as
+\texttt{bose\_einstein}, \texttt{fermi\_dirac}, and the per-horizon
+\texttt{particle\_creation\_spectrum\_at\_horizon}. The total emission
+power proxy integrates $\omega \, n_\omega$ up to a chosen cutoff
+$\omega_{\max}$.
+
+The standard Hawking calculation assumes asymptotic flatness, which the
+Tipler exterior lacks. The implemented thermal spectrum is therefore
+the locally-stationary-frame thermal occupation at the candidate
+horizon's analog of the future event horizon, and is correct as a
+leading-order signal of horizon-driven particle creation; the
+"emitted to infinity" interpretation is heuristic for this background.
+
+\subsection{QFTCS back-reaction: 2D conformal anomaly}
+
+In two dimensions, the renormalised stress-energy of a free
+conformally-coupled scalar field has trace anomaly
+\begin{equation}
+\langle T^\mu_{~\mu} \rangle_{\rm ren} = \frac{R}{24\pi},
+\end{equation}
+where $R$ is the 2D Ricci scalar (Davies--Fulling--Unruh 1976;
+Christensen 1976). \texttt{systrophe.qftcs\_backreaction} computes
+the 2D Ricci scalar of the radial-temporal slice of the Tipler metric
+\begin{equation}
+ds^2_{(t,r)} = -F(r) dt^2 + h(r) dr^2,
+\quad
+R_{2d} = -\frac{F''}{F} + \frac{(F')^2}{2 F^2}
+\end{equation}
+(taking $h = 1$ at leading order), and exposes the conformal-anomaly
+trace, the vacuum-energy proxy $\langle T_{tt} \rangle = -R/(96\pi)$,
+and a Cauchy-horizon power-law fit
+\texttt{stress\_energy\_at\_horizon(vs, r\_h)} returning the inferred
+exponent $p$ in $\langle T \rangle \sim \epsilon^p$ as the horizon is
+approached.
+
+\subsection{Honest scope for this section}
+
+These four modules supply the leading-order QFTCS diagnostics that the
+chronology-protection conjecture would predict to diverge near a
+Cauchy horizon:
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Bound-state spectrum} discretises in a confining
+geometry; the Tipler exterior on its own (unbounded oscillating $r$)
+has continuum modes.
+\item \textbf{Dirac-sea pressure proxy} diverges as $1/F^2$, with
+verified rate exponent $p \approx 2$.
+\item \textbf{Hawking-like thermal spectrum} at each Cauchy horizon
+is well-defined and tested, with the asymptotic-flatness caveat
+documented.
+\item \textbf{2D conformal-anomaly back-reaction} is exact in 2D and a
+leading-order proxy in 4D; tests verify the anomaly relation
+$\langle T^\mu_{~\mu} \rangle = R / (24\pi)$ to machine precision.
+\end{itemize}
+
+A genuine 4D Hadamard / point-splitting calculation requires a more
+substantial QFTCS infrastructure (mode sums, vacuum-state choice,
+covariant counter-terms) and is out of scope for this package; the
+infrastructure here is the natural starting point for that programme.
 
 \section{Historical note}
 \label{sec:historical}

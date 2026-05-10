@@ -5,6 +5,58 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2026-05-09
+
+### Added — completing all genuinely deferred QFTCS items
+
+**Spectrum and bound states** (`dirac_spectrum.py`):
+- `boundary_functional`: integrates the radial Dirac with seed at r_min,
+  reports the functional at r_max for use as a shooting target.
+- `find_bound_states`: sweeps E and refines local minima via
+  scipy.optimize.minimize_scalar.
+- `vanstockum_bound_states`: convenience wrapper using the analytic
+  Case III closed forms with Dirichlet BCs at r=R and r_max.
+
+**Dirac sea structure** (`dirac_sea.py`):
+- `local_energy`: Tolman-shifted local energy E_local = E_infty / sqrt(F).
+- `density_of_states_radial`: leading-order radial Dirac level density,
+  diverging as 1/sqrt(F) near Cauchy horizons.
+- `dirac_sea_pressure_proxy`: 1/F^2 vacuum-pressure proxy.
+- `chronology_horizon_pressure_divergence_rate`: numerical
+  power-law fit confirming p ~ 2 near each F-zero.
+
+**Particle creation rates** (`particle_creation.py`):
+- `bose_einstein`, `fermi_dirac` thermal occupation functions.
+- `particle_creation_spectrum_at_horizon`: full thermal spectrum at a
+  Cauchy horizon with Hawking temperature T_H = kappa / (2 pi).
+- `total_emission_power_proxy`: integrated emission power proxy.
+
+**QFTCS back-reaction (2D conformal anomaly)** (`qftcs_backreaction.py`):
+- `radial_temporal_ricci_scalar`: 2D Ricci scalar of the (t, r) slice
+  of the Tipler metric.
+- `conformal_anomaly_trace`: <T^mu_mu>_ren = R/(24 pi) for a massless
+  conformally coupled scalar (exact in 2D).
+- `vacuum_energy_density_proxy`: <T_tt> = -R/(96 pi) Polyakov action
+  vacuum energy.
+- `stress_energy_at_horizon`: numerical power-law fit of the
+  divergence rate as r approaches a Cauchy horizon.
+
+### Test count
+- 219 tests across 24 modules; previously 196.
+
+### Whitepaper
+- Extended to 22 pages with a "Spectrum, Dirac sea, particle creation,
+  and back-reaction" section detailing all four new modules and their
+  honest scope (leading-order classical-on-quantum approximations).
+
+### Notes
+This completes the items previously identified as "genuinely deferred
+research items" in v0.7.0. The implementations are leading-order
+classical-on-quantum approximations of the full Schwinger-DeWitt /
+Hadamard programme; a 4D point-splitting renormalisation remains
+the natural next research step but the infrastructure for it is now
+in place.
+
 ## [0.7.0] - 2026-05-09
 
 ### Added
