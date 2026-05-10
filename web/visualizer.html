@@ -85,10 +85,24 @@ canvas { display: block; }
   <div id="tooltip"></div>
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.158/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.158/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
 
 <script>
+// Surface any startup error visibly instead of leaving "Loading..." silent.
+window.addEventListener('error', (e) => {
+  document.getElementById('title').textContent = 'Error';
+  document.getElementById('desc').innerHTML =
+    '<span style="color:#ff6677">' + e.message + '</span><br>' +
+    '<small>If Three.js failed to load, check your network or try refreshing. ' +
+    'Right-click → "Inspect" → Console for the full stack trace.</small>';
+});
+if (typeof THREE === 'undefined') {
+  document.getElementById('title').textContent = 'Three.js failed to load';
+  document.getElementById('desc').innerHTML =
+    'The CDN is unreachable. Try opening the page once with internet, then it can be cached.';
+}
+
 // =========================================================================
 //  Mathematical kernel: ports of the relevant Systrophe formulas
 // =========================================================================
