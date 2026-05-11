@@ -1,0 +1,22 @@
+{
+  "haar_cycle_distribution": {
+    "1": 659,
+    "2": 175,
+    "3": 58,
+    "4": 3,
+    "5": 0,
+    "-1": 105
+  },
+  "clifford_cycle_distribution": {
+    "1": 327,
+    "2": 394,
+    "3": 144,
+    "4": 103,
+    "5": 0,
+    "-1": 0
+  },
+  "period2_mean_arg_lam2": 2.4468173551997427,
+  "period1_mean_arg_lam2": 0.0,
+  "period2_mean_amp": 0.43478025640470197,
+  "period1_mean_amp": 0.20726553530049827
+}

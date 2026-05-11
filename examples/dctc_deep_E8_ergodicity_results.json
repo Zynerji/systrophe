@@ -1,0 +1,10 @@
+{
+  "n_channels": 200,
+  "n_init_per_channel": 30,
+  "haar_unique_fraction": 1.0,
+  "clifford_unique_fraction": 0.18,
+  "haar_mean_n_limits": 1.0,
+  "clifford_mean_n_limits": 24.78,
+  "haar_max_n_limits": 1,
+  "clifford_max_n_limits": 30
+}
