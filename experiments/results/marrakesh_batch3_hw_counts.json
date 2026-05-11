@@ -1,0 +1,42 @@
+[
+  {
+    "label": "pagecurve_k1",
+    "isa_depth": 39,
+    "counts": {
+      "0": 5929,
+      "1": 2263
+    }
+  },
+  {
+    "label": "pagecurve_k2",
+    "isa_depth": 74,
+    "counts": {
+      "0": 4913,
+      "1": 3279
+    }
+  },
+  {
+    "label": "pagecurve_k3",
+    "isa_depth": 107,
+    "counts": {
+      "1": 3748,
+      "0": 4444
+    }
+  },
+  {
+    "label": "pagecurve_k4",
+    "isa_depth": 141,
+    "counts": {
+      "1": 3419,
+      "0": 4773
+    }
+  },
+  {
+    "label": "pagecurve_k5",
+    "isa_depth": 189,
+    "counts": {
+      "0": 5311,
+      "1": 2881
+    }
+  }
+]
