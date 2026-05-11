@@ -142,6 +142,20 @@ def lambda_2_of_hamming_graph(
     return float(eigs[1] if len(eigs) > 1 else 0.0)
 
 
+def _rank_thermometer_address(
+    column_values: np.ndarray, point_index: int, bits_per_comp: int,
+) -> np.ndarray:
+    """For a single component's values across the scan, produce a
+    thermometer-coded address for the requested point's rank.
+    """
+    ranks = np.argsort(np.argsort(column_values))  # [0, n-1]
+    n = max(len(column_values) - 1, 1)
+    bin_idx = int(ranks[point_index] / n * bits_per_comp)
+    bits = np.zeros(bits_per_comp, dtype=int)
+    bits[:bin_idx] = 1
+    return bits
+
+
 def scan_novelty(
     parameter_values: np.ndarray,
     output_fn,
@@ -149,6 +163,7 @@ def scan_novelty(
     radii: tuple[int, ...] = (4, 8, 12, 16),
     sharp_threshold: float = 0.5,
     parameter_label: str = "parameter",
+    data_adaptive: bool = True,
 ) -> NoveltyScanResult:
     """Run the novelty catcher on a parametric output.
 
@@ -160,23 +175,68 @@ def scan_novelty(
         is hashed to an address.
     n_bits : bit-width of each address
     radii : Hamming radii to scan
-    sharp_threshold : |λ₂ jump| flag threshold
+    sharp_threshold : sharp-feature detection threshold
     parameter_label : axis name for output records
+    data_adaptive : if True (default), use rank-thermometer-encoded
+        addresses for real-array outputs, computed globally across all
+        parameter points. This removes false "uniform" verdicts from
+        outputs that span many decades or get clipped at boundaries.
+        Set to False to use the original per-output binning.
     """
     p_arr = np.asarray(parameter_values, dtype=float)
+
+    # First pass: collect raw outputs
+    raw_outputs = [output_fn(float(p)) for p in p_arr]
+
+    # Determine output type: dict (counts) vs real array
+    all_dicts = all(isinstance(r, dict) for r in raw_outputs)
+    all_arrays = all(not isinstance(r, dict) for r in raw_outputs)
+
     addresses = []
-    for p in p_arr:
-        result = output_fn(float(p))
-        if isinstance(result, dict):  # counts dict
-            addr = bitstring_counts_to_address(result, n_bits=n_bits)
-        else:
-            arr = np.asarray(result, dtype=float).ravel()
-            # If looks like a probability vector (sum ~ 1, all positive)
-            if np.all(arr >= 0) and abs(arr.sum() - 1.0) < 1e-6:
-                addr = probability_vector_to_address(arr, n_bits=n_bits)
+    if data_adaptive and all_arrays:
+        # Stack outputs into a (n_params, n_components) matrix
+        arrs = [np.asarray(r, dtype=float).ravel() for r in raw_outputs]
+        n_comp = max((len(a) for a in arrs), default=1)
+        padded = np.zeros((len(arrs), n_comp))
+        for i, a in enumerate(arrs):
+            # Replace non-finite with median for ranking
+            finite_a = np.where(np.isfinite(a), a, np.nan)
+            padded[i, :len(a)] = finite_a
+        # Replace columns of NaNs with zeros
+        for c in range(n_comp):
+            col = padded[:, c]
+            mask = np.isnan(col)
+            if mask.any():
+                if (~mask).any():
+                    median = float(np.median(col[~mask]))
+                else:
+                    median = 0.0
+                padded[mask, c] = median
+        bits_per_comp = max(1, n_bits // max(n_comp, 1))
+        for i in range(len(p_arr)):
+            parts = []
+            for c in range(n_comp):
+                parts.append(_rank_thermometer_address(
+                    padded[:, c], i, bits_per_comp
+                ))
+            addr = np.concatenate(parts)
+            if len(addr) < n_bits:
+                addr = np.pad(addr, (0, n_bits - len(addr)))
             else:
-                addr = real_array_to_address(arr, n_bits=n_bits)
-        addresses.append(addr)
+                addr = addr[:n_bits]
+            addresses.append(addr)
+    else:
+        # Original per-output binning
+        for r in raw_outputs:
+            if isinstance(r, dict):
+                addr = bitstring_counts_to_address(r, n_bits=n_bits)
+            else:
+                arr = np.asarray(r, dtype=float).ravel()
+                if np.all(arr >= 0) and abs(arr.sum() - 1.0) < 1e-6:
+                    addr = probability_vector_to_address(arr, n_bits=n_bits)
+                else:
+                    addr = real_array_to_address(arr, n_bits=n_bits)
+            addresses.append(addr)
     addresses_arr = np.stack(addresses)
     n = len(addresses)
     hd = np.zeros((n, n), dtype=int)
@@ -189,10 +249,13 @@ def scan_novelty(
     for r in radii:
         lambda_2_map[int(r)] = lambda_2_of_hamming_graph(addresses, radius=r)
 
-    # Sharp-feature detection: a sharp feature is when the Hamming
-    # distance between successive addresses is anomalously large relative
-    # to the typical step size in the scan. This is the address-space
-    # analog of a discontinuity / phase transition.
+    # Sharp-feature detection: a step is sharp if it is a "qualitative"
+    # outlier --- both statistically (MAD) and in absolute terms (a
+    # significant fraction of the maximum address Hamming distance,
+    # which is n_bits). This is conservative; some real but subtle
+    # features (rank permutations of magnitude similar to bin width)
+    # will be filtered, in exchange for very few false positives from
+    # bin-boundary or evenly-spaced artifacts.
     sharp = []
     if n >= 3:
         successive_distances = np.array([
@@ -201,16 +264,22 @@ def scan_novelty(
         ])
         if len(successive_distances) > 0:
             median_step = float(np.median(successive_distances))
-            scale = max(median_step, 1.0)
+            mad = float(np.median(np.abs(successive_distances - median_step)))
+            # Absolute floor = 25% of n_bits (or 4, whichever larger),
+            # ensures only qualitatively large excursions count when MAD ~ 0.
+            absolute_floor = max(int(0.25 * n_bits), 4)
+            outlier_floor = max(3 * mad, float(absolute_floor))
             for k in range(1, n):
-                step = successive_distances[k - 1]
-                if step > scale * (1.0 + sharp_threshold) and step > median_step + 2:
+                step = int(successive_distances[k - 1])
+                excess = step - median_step
+                if step >= absolute_floor and excess >= outlier_floor:
                     sharp.append({
                         "between_indices": [int(k - 1), int(k)],
                         "parameter_value": float(p_arr[k]),
-                        "hamming_step": int(step),
+                        "hamming_step": step,
                         "median_step": median_step,
-                        "ratio_to_median": float(step / scale),
+                        "mad": mad,
+                        "excess_over_median": float(excess),
                     })
 
     # Verdict precedence: uniform > novel_structure > smooth.

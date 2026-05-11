@@ -71,12 +71,17 @@ def test_scan_novelty_returns_NoveltyScanResult():
     assert isinstance(result, NoveltyScanResult)
 
 
-def test_scan_novelty_uniform_detected():
-    """All outputs identical -> 'uniform' verdict."""
+def test_scan_novelty_uniform_detected_non_adaptive():
+    """All outputs identical with data_adaptive=False -> 'uniform' verdict.
+
+    Note: with data_adaptive=True (default), rank-thermometer encoding
+    will assign distinct addresses even to identical values, so we test
+    the legacy path explicitly here.
+    """
     def f(p):
         return np.array([0.5, 0.5])
     params = np.linspace(0.0, 1.0, 4)
-    result = scan_novelty(params, f, n_bits=4)
+    result = scan_novelty(params, f, n_bits=4, data_adaptive=False)
     assert result.verdict == "uniform"
 
 
