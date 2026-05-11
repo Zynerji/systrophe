@@ -116,3 +116,55 @@ def test_diagnostics_for_pure_state():
     d = density_matrix_diagnostics(rho)
     assert d["purity"] == pytest.approx(1.0, abs=1e-12)
     assert d["max_eig"] == pytest.approx(1.0, abs=1e-12)
+
+
+# ----- Spectral oracle ------------------------------------------------
+
+def test_channel_superoperator_shape():
+    from systrophe.d_ctc import channel_superoperator
+    dim_cr, dim_ctc = 2, 3
+    U = np.eye(dim_cr * dim_ctc, dtype=complex)
+    sigma_cr = maximally_mixed_state(dim_cr)
+    M = channel_superoperator(U, sigma_cr, dim_cr)
+    assert M.shape == (dim_ctc ** 2, dim_ctc ** 2)
+
+
+def test_channel_superoperator_identity_has_lambda1_one():
+    """For U = identity, the channel is the identity map, lambda_1 = 1."""
+    from systrophe.d_ctc import channel_superoperator
+    dim_cr, dim_ctc = 2, 3
+    U = np.eye(dim_cr * dim_ctc, dtype=complex)
+    sigma_cr = maximally_mixed_state(dim_cr)
+    M = channel_superoperator(U, sigma_cr, dim_cr)
+    eigs = np.sort(np.abs(np.linalg.eigvals(M)))[::-1]
+    assert eigs[0] == pytest.approx(1.0, abs=1e-9)
+
+
+def test_predict_convergence_via_spectrum_returns_dict():
+    from systrophe.d_ctc import predict_convergence_via_spectrum
+    dim_cr = 2
+    U = z3_ctc_unitary(dim_cr=dim_cr, phase=0.3)
+    sigma_cr = maximally_mixed_state(dim_cr)
+    result = predict_convergence_via_spectrum(U, sigma_cr, dim_cr=dim_cr)
+    assert "lambda_1" in result
+    assert "lambda_2" in result
+    assert "iter_predicted_tol" in result
+    assert "mixing_rate" in result
+    # lambda_1 always ~ 1 for CPTP
+    assert result["lambda_1"] == pytest.approx(1.0, abs=1e-6)
+
+
+def test_spectral_prediction_finite_for_typical_channel():
+    """Pick a random unitary; prediction should be finite & positive."""
+    from systrophe.d_ctc import predict_convergence_via_spectrum
+    rng = np.random.default_rng(42)
+    dim_cr, dim_ctc = 2, 3
+    dim_total = dim_cr * dim_ctc
+    A = rng.standard_normal((dim_total, dim_total)) + 1j * rng.standard_normal((dim_total, dim_total))
+    U, _ = np.linalg.qr(A)
+    sigma_cr = np.zeros((dim_cr, dim_cr), dtype=complex)
+    sigma_cr[0, 0] = 1.0
+    result = predict_convergence_via_spectrum(U, sigma_cr, dim_cr=dim_cr)
+    assert np.isfinite(result["iter_predicted_tol"])
+    assert result["iter_predicted_tol"] > 0
+    assert 0.0 <= result["lambda_2"] <= 1.0

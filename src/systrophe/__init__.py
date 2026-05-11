@@ -221,9 +221,11 @@ from .adm_export import (
 )
 from .d_ctc import (
     apply_channel,
+    channel_superoperator,
     dctc_fixed_point,
     density_matrix_diagnostics,
     maximally_mixed_state,
+    predict_convergence_via_spectrum,
     verify_fixed_point,
     z3_ctc_unitary,
 )

@@ -182,3 +182,73 @@ def density_matrix_diagnostics(rho: np.ndarray) -> dict:
         "max_eig": float(np.max(eig.real)),
         "purity": float(np.real(np.trace(rho @ rho))),
     }
+
+
+def channel_superoperator(
+    U: np.ndarray,
+    sigma_cr: np.ndarray,
+    dim_cr: int,
+) -> np.ndarray:
+    """Build the D-CTC channel E: rho_CTC -> Tr_CR[U(sigma_CR (x) rho)U^dag]
+    as a (dim_CTC^2 x dim_CTC^2) matrix in column-stacked basis.
+
+    Used by `predict_convergence_via_spectrum` to compute the
+    channel's spectral gap.
+    """
+    dim_total = U.shape[0]
+    if dim_total % dim_cr != 0:
+        raise ValueError("dim_total must be a multiple of dim_cr")
+    dim_ctc = dim_total // dim_cr
+    if sigma_cr.shape != (dim_cr, dim_cr):
+        raise ValueError(f"sigma_cr shape {sigma_cr.shape} != ({dim_cr},{dim_cr})")
+    d2 = dim_ctc * dim_ctc
+    M = np.zeros((d2, d2), dtype=complex)
+    for k in range(d2):
+        i, j = divmod(k, dim_ctc)
+        rho_basis = np.zeros((dim_ctc, dim_ctc), dtype=complex)
+        rho_basis[i, j] = 1.0
+        joint = np.kron(sigma_cr, rho_basis)
+        out = U @ joint @ U.conj().T
+        out_resh = out.reshape((dim_cr, dim_ctc, dim_cr, dim_ctc))
+        result = np.einsum("aiaj->ij", out_resh)
+        M[:, k] = result.reshape(d2)
+    return M
+
+
+def predict_convergence_via_spectrum(
+    U: np.ndarray, sigma_cr: np.ndarray, dim_cr: int, tol: float = 1e-10
+) -> dict:
+    """Spectral oracle for D-CTC iteration count.
+
+    Builds the channel superoperator E and computes |lambda_2(E)|,
+    the second-largest-magnitude eigenvalue. Predicts iteration count
+    via the textbook mixing-time formula
+
+        iter_predicted = -log(tol) / -log|lambda_2|.
+
+    Empirically: Pearson r ~ 0.99 against actual iteration count
+    from `dctc_fixed_point`, with log-log slope ~ 0.92 (Phase D study,
+    2000 Haar samples; see docs/DCTC_DEEP.md).
+
+    Returns dict with:
+      - lambda_1               : principal eigenvalue magnitude (should be 1)
+      - lambda_2               : spectral gap = second-largest
+      - iter_predicted_tol     : convergence prediction for this tol
+      - mixing_rate            : 1 - |lambda_2| (rough relaxation rate)
+    """
+    M = channel_superoperator(U, sigma_cr, dim_cr)
+    eigs_abs = np.sort(np.abs(np.linalg.eigvals(M)))[::-1]
+    l1 = float(eigs_abs[0])
+    l2 = float(eigs_abs[1]) if len(eigs_abs) > 1 else 0.0
+    if l2 >= 1.0 - 1e-15:
+        iter_predicted = float("inf")
+    elif l2 <= 1e-15:
+        iter_predicted = 1.0
+    else:
+        iter_predicted = float(-np.log(tol) / -np.log(l2))
+    return {
+        "lambda_1": l1,
+        "lambda_2": l2,
+        "iter_predicted_tol": iter_predicted,
+        "mixing_rate": 1.0 - l2,
+    }
