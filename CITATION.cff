@@ -1,0 +1,47 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite both whitepapers."
+title: "Systrophe: A co-rotating Tipler-cylinder pair as a tunable time-travel harness, with QFT-on-CTC extensions"
+authors:
+  - family-names: "Knopp"
+    given-names: "Christian"
+    email: "cknopp@gmail.com"
+version: "0.14.0"
+date-released: "2026-05-10"
+license: MIT
+repository-code: "https://github.com/Zynerji/systrophe"
+url: "https://github.com/Zynerji/systrophe"
+keywords:
+  - "general relativity"
+  - "closed timelike curves"
+  - "Tipler cylinder"
+  - "van Stockum"
+  - "Lewis-Papapetrou"
+  - "quantum field theory in curved spacetime"
+  - "Hadamard renormalisation"
+  - "anomaly inflow"
+  - "Casimir effect"
+  - "acoustic analog gravity"
+  - "Deutsch CTC"
+preferred-citation:
+  type: software
+  title: "Systrophe"
+  authors:
+    - family-names: "Knopp"
+      given-names: "Christian"
+  year: 2026
+  url: "https://github.com/Zynerji/systrophe"
+references:
+  - type: article
+    title: "Systrophe: A co-rotating Tipler-cylinder pair as a tunable time-travel harness"
+    authors:
+      - family-names: "Knopp"
+        given-names: "Christian"
+    year: 2026
+    url: "https://github.com/Zynerji/systrophe/blob/main/paper/systrophe_time_travel.pdf"
+  - type: article
+    title: "Systrophe II: Quantum field theory on a Tipler-pair background"
+    authors:
+      - family-names: "Knopp"
+        given-names: "Christian"
+    year: 2026
+    url: "https://github.com/Zynerji/systrophe/blob/main/paper/systrophe_qft_on_ctc.pdf"

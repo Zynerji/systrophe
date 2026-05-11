@@ -269,4 +269,4 @@ __all__ = [
     "z3_cover_mode_density",
     "z3_cover_regularised_zeta_sum",
 ]
-__version__ = "0.14.0"
+__version__ = "0.14.1"

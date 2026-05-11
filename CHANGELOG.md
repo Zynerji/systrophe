@@ -5,6 +5,20 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.14.1] - 2026-05-10
+
+- `examples/quantum_layer_walkthrough.py`: end-to-end demonstration
+  of all v0.14 modules with JSON output. Runs in ~3 seconds. Confirms:
+  Z_3 anomaly closure (sum_eta = 1.1e-16), acoustic = gravitational
+  T_H (rel diff 0), δ ≈ π extinction minimum, D-CTC fixed-point
+  convergence in 1 iteration.
+- `CITATION.cff`: standard citation file with both whitepapers
+  referenced. Christian Knopp as author.
+- `docs/ARXIV_SUBMISSION.md`: submission plan for Whitepaper II
+  including: gr-qc primary + quant-ph cross-list, candidate
+  endorsers (Visser, Lobo, Weinfurtner), final abstract (193 words),
+  MSC/PACS codes, pre-submission checklist, post-acceptance steps.
+
 ## [0.14.0] - 2026-05-10
 
 ### Avenues 1-5 + cross-disciplinary infrastructure (49 new tests)
