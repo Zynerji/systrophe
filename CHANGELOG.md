@@ -5,6 +5,39 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.17.0] - 2026-05-11
+
+### D-CTC complete: 30+ phases, paper, encoding-dependent chronology coupling
+
+Completes the D-CTC deep exploration program. 33 phase entries
+(A through AM-counter), 6 follow-on commits since v0.16.0, plus a
+final 5-page synthesis paper.
+
+New post-v0.16.0 phases:
+- O: full eigenvalue spectrum -- Clifford BIMODAL in [0,0.1] U [0.9,1.0]
+- Q, R, S: level statistics, ergodicity (100%), Lyapunov
+- T: U-block conditioning -- Clifford ~10^12 (structurally degenerate)
+- U, V, X: operator Schmidt, distance to I, distance to Clifford
+       -- none distinguish high-purity samples
+- Y: Bell-state entanglement: Clifford fully disentangles, Haar partial
+- Z: trajectory -- Clifford channels produce PERIOD-2 LIMIT CYCLES
+- AA: distribution detail (slight bimodality)
+- AG: coherent information proxy (Clifford more disentangling)
+- AH: code-state capacity (33% of Clifford have leading eig > 0.99)
+- AJ: LP-physics-derived channels -- pure (1.0) but quiet (amp 0.18)
+- AK: acoustic-analog BdG -- pure but quiet (amp 0.00)
+- AM: chronology-protection x D-CTC: independence in abstract encoding
+- AM-ext: 4 abstract constructions confirm independence
+- AM-counter: 4 physical constructions -- 1/4 shows CP signature
+
+Paper: paper/dctc_amplification.pdf (5 pages)
+
+Headline implications synthesized in docs/DCTC_FINDINGS.md and
+docs/DCTC_CHRONOLOGY_PROTECTION.md. Three encoding regimes:
+ABSTRACT (Clifford/Floquet): AW speedup survives chronology
+DIRECT-CTC (matrix ~ L_pair): inherits chronology
+LP-HAMILTONIAN: pure but muted
+
 ## [0.16.0] - 2026-05-11
 
 ### D-CTC amplification: Aaronson-Watrous PSPACE signature confirmed
