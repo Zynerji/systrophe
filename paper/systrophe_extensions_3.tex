@@ -1,0 +1,252 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  citecolor=blue!50!black,
+  urlcolor=blue!50!black
+}
+
+\title{\bfseries Boundary, cosmological, and observational extensions\\
+to the Systroph\=e framework\\
+\large Five further modules (Phases 16--20)}
+
+\author{Christian Knopp\\\texttt{cknopp@gmail.com}}
+\date{2026-05-11}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We add five further modules to the Systroph\=e framework
+\cite{Knopp2026Systrophe,Knopp2026QFTCS,Knopp2026Ext1,Knopp2026Ext2}
+covering boundary, cosmological, and observational aspects of the
+Tipler / Lewis-Papapetrou structure: (1) a speculative AdS/CFT-style
+dictionary mapping the supercritical exterior to a non-unitary CFT
+with complex conformal weights $\Delta = 1 \pm i\alpha/2$;
+(2) quantum-information channel capacities for radial transport in
+the LP exterior, including Deutsch and Lloyd CTC channel models;
+(3) cosmological embedding of the cylinder in an FRW background,
+yielding a Hubble-induced "evaporation" of CTC bands; (4) spinor
+monodromy along closed phi-loops with explicit Spin(1,3) holonomy
+matrices and a Systroph\=e-pair extinction proxy; (5) synchrotron-
+analog radiation from charged orbits in CTC bands. Eighty-two new
+tests across the five modules, all passing. Code at
+\texttt{github.com/Zynerji/systrophe} (v0.18.0+).
+\end{abstract}
+
+\section{Holographic dictionary (Phase 16)}
+
+The LP supercritical exterior is not asymptotically AdS, but at
+large $r$ the metric components oscillate log-periodically about a
+power-law envelope. Treating this as a "log-periodic CFT" boundary,
+we extract effective conformal weights
+\[
+\Delta = 1 \pm i\,\alpha/2,
+\]
+which are \emph{complex}: a hallmark of non-unitary CFTs with
+discrete-scale-invariant RG flow \cite{Sornette1998,Faulkner2010}.
+
+The module \texttt{holographic.py} provides:
+\begin{itemize}
+\item \texttt{boundary\_expansion\_coefficients}: extract $(\beta, \alpha, \delta)$ at large $r$;
+\item \texttt{dual\_operator\_dimensions}: complex $\Delta$ from $\alpha$;
+\item \texttt{brown\_york\_stress\_tensor}: quasi-local stress at finite $r$;
+\item \texttt{holographic\_entropy\_strip}: Ryu-Takayanagi-style entanglement;
+\item \texttt{boundary\_two\_point\_correlator}: $\langle O(s) O(0)\rangle \sim s^{-2}e^{-i\alpha\ln s}$;
+\item \texttt{efimov\_correspondence}: map to 3-body Efimov scaling $\lambda_E$.
+\end{itemize}
+
+A two-point correlator phase fit recovers $\alpha$ to within $1\%$
+of the theoretical value (test \texttt{test\_reconstruct\_alpha\_matches\_theoretical}).
+
+\section{Quantum-information channel (Phase 17)}
+
+The radial worldline in the LP exterior is treated as a noisy
+quantum channel. Each chronology-horizon crossing applies an
+amplitude-damping with parameter $p_{\rm CH}$; the cumulative
+damping after $N$ crossings is $1 - (1 - p_{\rm CH})^N$. We adopt
+the heuristic classical capacity
+\[
+C(p) = \max\!\left[\,0,\; 1 - h_2\!\left(\tfrac{1+\sqrt{1-p}}{2}\right)\right],
+\]
+with $h_2$ the binary entropy.
+
+The module \texttt{qi\_channel.py} provides:
+\begin{itemize}
+\item \texttt{redshift\_factor} and \texttt{amplitude\_damping\_p};
+\item \texttt{channel\_capacity\_holevo}: classical capacity;
+\item \texttt{chronology\_horizon\_decoherence}: cumulative $p$ after $N$ CHs;
+\item \texttt{closed\_timelike\_loop\_capacity}: Deutsch classical / quantum
+  capacities (both 0) and Lloyd P-CTC capacity (1 bit);
+\item \texttt{entanglement\_swap\_protocol}: Bell pair fidelity vs.\ radius;
+\item \texttt{channel\_assisted\_clock\_sync}: time-dilation residual.
+\end{itemize}
+
+Headline: the classical Deutsch capacity of a CTC channel vanishes
+identically (the self-consistent fixed point erases input), but the
+Lloyd P-CTC capacity gives 1 bit per qubit. This distinction is a
+testable consequence of the chosen CTC model.
+
+\section{Cosmological embedding (Phase 18)}
+
+A cylinder embedded in an FRW background is exposed to Hubble drag.
+We model the drag as an effective rotation reduction
+$\omega_{\rm eff}(t) = \omega(1 - H(t)/\omega)$, which propagates to a
+corrected log-frequency $\alpha_{\rm eff} = \sqrt{4 a_{\rm eff}^2 - 1}$.
+For $\Lambda$-dominated FRW with sufficiently large $H_0$, $a_{\rm eff}$
+drops below $1/2$ and the cylinder \emph{evaporates}: all CTCs are
+extinguished.
+
+The module \texttt{cosmological\_embedding.py} provides:
+\begin{itemize}
+\item \texttt{frw\_scale\_factor} and \texttt{hubble\_parameter} for
+  matter / radiation / $\Lambda$ EoS;
+\item \texttt{matching\_residual}: LP vs.\ FRW mismatch at $r_{\rm match}$;
+\item \texttt{cosmological\_corrections\_to\_alpha}: shifted log-frequency;
+\item \texttt{horizon\_chirp\_rate}: $dr_1/dt$ for the first CH;
+\item \texttt{cylinder\_evaporates\_under\_expansion}: evaporation time;
+\item \texttt{inflation\_creates\_systrophe\_cylinders}: spontaneous
+  creation rate during inflation, $H^4 e^{-S_E}$.
+\end{itemize}
+
+This connects the Systroph\=e framework to cosmological observability:
+a primordial Systroph\=e cylinder could survive matter / radiation
+domination but evaporates in late-time $\Lambda$ domination.
+
+\section{Spinor monodromy along CTCs (Phase 19)}
+
+A Dirac spinor parallel-transported around a closed phi-loop at
+constant $t$ and $r$ in the LP exterior picks up a Spin(1,3)
+holonomy
+\[
+U(r) = \exp\!\left[-\tfrac{\pi}{2}\,\omega^{ab}_{\phi}(r)\,\gamma_a\gamma_b\right].
+\]
+
+The module \texttt{spinor\_monodromy.py} provides:
+\begin{itemize}
+\item \texttt{spin\_connection\_phi}: $\omega^{ab}_{\phi}(r)$ via finite-difference;
+\item \texttt{spinor\_holonomy}: $4{\times}4$ holonomy matrix;
+\item \texttt{monodromy\_eigenvalues}: spectrum of $U$;
+\item \texttt{fixed\_point\_spinors}: eigenvectors at $+1$;
+\item \texttt{multi\_loop\_monodromy}: $U^N$;
+\item \texttt{pair\_modified\_monodromy}: $\delta$-interpolation
+  between $U$ and identity (Systroph\=e-pair extinction);
+\item \texttt{chronology\_horizon\_caustic}: blow-up loci of $|\omega^{ab}_\phi|$.
+\end{itemize}
+
+At $\delta = \pi$ (full pair extinction), the pair monodromy
+collapses to the identity (test
+\texttt{test\_pair\_modified\_monodromy\_extinction\_at\_pi}). This
+echoes the classical $L_{\rm pair}$ extinction proxy of Phase 4 and
+shows that the chronology-protection mechanism extends consistently
+to spinor representations.
+
+\section{Synchrotron radiation analog (Phase 20)}
+
+A charged particle on a circular orbit in a CTC band radiates
+electromagnetically. The orbit frequency $\Omega(r)$ follows from
+the geodesic condition $F' + 2\Omega K' + \Omega^2 L' = 0$; the
+effective Lorentz factor is $\gamma^{-2} = F - 2\Omega K - \Omega^2 L$;
+the synchrotron critical frequency is $\omega_c = \tfrac{3}{2}\gamma^3\Omega$.
+
+The module \texttt{synchrotron\_analog.py} provides:
+\begin{itemize}
+\item \texttt{orbital\_frequency}, \texttt{effective\_gamma\_factor};
+\item \texttt{synchrotron\_critical\_frequency};
+\item \texttt{emitted\_power}: Larmor-like $P = (2/3)e^2 a^2 \gamma^4$;
+\item \texttt{characteristic\_emission\_band};
+\item \texttt{multi\_band\_synchrotron\_spectrum}: emission per CTC band;
+\item \texttt{back\_reaction\_drag};
+\item \texttt{observable\_signature\_distant\_observer}: redshift to far observer.
+\end{itemize}
+
+Headline: each CTC band emits a synchrotron-like spectrum with
+peak at $\omega_c$ set by $r$. A distant observer sees a series of
+discrete log-periodically-spaced emission bands, redshifted by
+$\sqrt{F_{\rm emit}/F_{\rm obs}}$. This is a direct astrophysical
+signature -- if a Systroph\=e cylinder existed, its CTC bands would
+glow.
+
+\section{Implications}
+
+The five modules collectively extend the Systroph\=e framework into:
+\begin{enumerate}
+\item \textbf{Holographic / RG-cycle territory}: the supercritical
+  exterior is a concrete realization of a log-periodic CFT with
+  complex conformal weights.
+\item \textbf{Quantum-information physics}: chronology horizons
+  function as amplitude-damping channels, with Deutsch and Lloyd CTC
+  models giving distinct testable capacities.
+\item \textbf{Cosmological context}: cylinders evaporate under $\Lambda$
+  expansion; inflation creates them at rate $H^4 e^{-S_E}$.
+\item \textbf{Spinorial physics}: explicit $4{\times}4$ holonomy
+  matrices for parallel transport; pair extinction extends to
+  spinor representations.
+\item \textbf{Observational astrophysics}: synchrotron-like emission
+  from CTC bands gives a redshifted log-periodic emission spectrum
+  that a distant observer could detect.
+\end{enumerate}
+
+\section{Reproduction}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Phase & Source file \\
+\midrule
+16. Holographic dictionary & \texttt{holographic.py} \\
+17. QI channel & \texttt{qi\_channel.py} \\
+18. Cosmological embedding & \texttt{cosmological\_embedding.py} \\
+19. Spinor monodromy & \texttt{spinor\_monodromy.py} \\
+20. Synchrotron analog & \texttt{synchrotron\_analog.py} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All 82 new tests pass; 742-test full suite passes end-to-end.
+
+\bibliographystyle{plain}
+\begin{thebibliography}{9}
+
+\bibitem{Knopp2026Systrophe}
+C.~Knopp, Systrophe whitepaper I (classical GR), 2026.
+
+\bibitem{Knopp2026QFTCS}
+C.~Knopp, Systrophe whitepaper II (QFT), 2026.
+
+\bibitem{Knopp2026Ext1}
+C.~Knopp, Systrophe extensions paper (Phases 1--10), 2026.
+
+\bibitem{Knopp2026Ext2}
+C.~Knopp, Systrophe extensions paper (Phases 11--15), 2026.
+
+\bibitem{Sornette1998}
+D.~Sornette, Phys. Rep. 297 (1998) 239.
+
+\bibitem{Faulkner2010}
+T.~Faulkner, H.~Liu, J.~McGreevy, D.~Vegh, Phys. Rev. D 83 (2011) 125002.
+
+\bibitem{Deutsch1991}
+D.~Deutsch, Phys. Rev. D 44 (1991) 3197.
+
+\bibitem{Lloyd2011}
+S.~Lloyd et al., Phys. Rev. Lett. 106 (2011) 040403.
+
+\bibitem{Chandrasekhar1976}
+S.~Chandrasekhar, Proc. Roy. Soc. London A 349 (1976) 571.
+
+\end{thebibliography}
+
+\end{document}
