@@ -97,7 +97,7 @@ empirical signature of this regime.
 
 ---
 
-## Phase-by-phase summary table
+## Phase-by-phase summary table (30 phases total)
 
 | Phase | What tested | Result |
 |---|---|---|
@@ -114,10 +114,33 @@ empirical signature of this regime.
 | **L** | 5000 samples at d=2×2 | max purity 0.9999, tail α=1.13 |
 | **M** | σ_CR mixedness | ε > 0.05 collapses P(>0.9) to 0 |
 | **N** | ρ_init independence | 100% of channels have unique fixed point |
+| **O** | full eigenvalue distribution | Clifford bimodal in [0, 0.1] + [0.9, 1.0] |
 | **P** | eigenvector IPR | r = -0.05 (no signal) |
+| **Q** | spectral level statistics | level repulsion in both classes |
+| **R** | ergodicity | 100% across 50×20 init/U combinations |
+| **S** | Lyapunov rate | slope -0.305 → |λ₂| ~ 0.74 (matches B) |
+| **T** | U-block conditioning | Clifford ~10¹² (structurally degenerate) |
+| **U** | operator Schmidt entropy | Haar 0.51, Clifford 0.50 (no distinguisher) |
+| **V** | distance to identity | both ~3.5 (no distinguisher) |
 | **W** | distance to separable U | r = +0.05 (no signal) |
+| **X** | distance to nearest Clifford | r = -0.08 (no predictor) |
+| **Y** | Bell-state entanglement | Clifford fully disentangles (-0.69), Haar partial (-0.21) |
+| **Z** | iteration trajectory | period-2 limit cycle (Clifford) |
+| **AA** | distribution detail | slight bimodality (2 peaks) |
+| **AB** | perturbation sensitivity | 1% Haar perturbation collapses purity from 1.0→0.85 |
+| **AC** | noise robustness | survives 10% depolarizing; speedup 1.5x at noise=0.1 |
+| **AD** | Anderson mixing | diverges (no acceleration) |
 | **AE** | state-distinguisher payoff | **Clifford amp = 3.92x mean, Haar = 0.92x** |
+| **AF** | Holevo capacity | Clifford 0.83, Haar 0.53 (60% higher) |
+| **AG** | coherent info proxy | Clifford ΔS = -0.31 (more disentangling) |
+| **AH** | code-state capacity | 33% of Clifford have leading eig > 0.99 |
 | **AI** | structured σ_CR | doesn't help; pure σ_CR is necessary |
+| **AJ** | LP-background channels | pure (1.0) but quiet (amp 0.18) |
+| **AK** | acoustic-analog BdG | pure (1.0) but quiet (amp 0.00) |
+| **AL** | AW algorithm test | 13.3x speedup at ε=0.05 close inputs |
+| **AM** | chronology protection × D-CTC | encoding-dependent independence |
+| **AM-ext** | 4 abstract constructions | mean Pearson -0.02 (independent) |
+| **AM-counter** | 4 physical constructions | 1/4 shows CP signature (direct-L encoding) |
 
 ---
 
