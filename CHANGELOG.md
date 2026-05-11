@@ -5,6 +5,96 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.0] - 2026-05-10
+
+### Eight new modules integrating Bucket A + Bucket C of the Grok 14
+###   not-testable claims, with Bucket B documented as interpretation.
+
+#### Bucket C (yet-unverified, given mathematical scaffolding)
+
+- `tipler_fractal.py` --- DSI/fractal extension of the Tipler sinusoid.
+  - Pure Tipler sinusoid: zero set is a geometric progression with ratio
+    `exp(pi / alpha)`, box-counting dimension 0. Not a fractal *by itself*.
+  - `CascadeDSI` multi-cylinder cascade: cascading alpha-scales produce
+    non-trivial box-counting dimension (>0.3 in test case).
+  - Verdict: Grok's "fractal" handwave has real content for the
+    multi-source cascade, not for the base case.
+  - 14 tests, all pass.
+
+- `anomaly_inflow.py` --- Callan-Harvey Z_3 anomaly inflow.
+  - APS eta-invariant `eta(alpha) = 1 - 2 alpha` for the angular Dirac
+    operator with twist alpha.
+  - Z_3 branch etas at gamma_eff = 0: `(0, 1/3, -1/3)`. Sum vanishes ---
+    closed cover is anomaly-cancelled (verified).
+  - For nonzero gamma_eff, the sum breaks; Chern-Simons coefficient
+    `1/(24 pi^2)` times bulk flux closes the residual exactly.
+  - Verdict: Grok's "Z_3 anomaly inflow" is real and constructible.
+  - 19 tests, all pass.
+
+- `horned_torus.py` --- regular + inverted horn variants.
+  - Both modes: `h(z) > 0`, so the r-CTC bands are *unchanged* in
+    location. Grok's "horn protects chronology" is *falsified*.
+  - What does change: CTC traversal proper-area integral
+    `int_{L<0} sqrt|L_h| dr dz`. Regular horn (pinch) shortens it;
+    inverted horn (bulge) lengthens it. The inverted horn was added at
+    user request.
+  - Topology classes: `thinned_T2`, `fattened_T2`, `flat_T2`,
+    `pinch_h_min_0` (true topology change at h_min = 0).
+  - 16 tests, all pass.
+
+#### Bucket A (research-grade infrastructure)
+
+- `hadamard_offtrace.py` --- full off-trace <T_{mu nu}>_ren tensor on
+  the LP background.
+  - Local closed form
+    `<T_{mu nu}>_ren = (1 / 2880 pi^2) R_{mu rho sigma tau} R_nu^{rho sigma tau}`.
+  - Trace recovers the conformal anomaly exactly: trace = K / (2880 pi^2).
+  - Trace + traceless decomposition exposed via `trace_decomposition`.
+  - Caveat: state-dependent corrections (Boulware vs Hartle-Hawking)
+    require external input; documented.
+  - 10 tests, all pass.
+
+- `newton_kantorovich.py` --- 1-D and N-D Newton-Kantorovich solver
+  with Picard comparison.
+  - Quadratic convergence verified on smooth test problems
+    (`is_convergence_rate_quadratic`).
+  - Picard iteration `picard_iteration_1d` provided for comparison.
+  - Direct demonstration that Grok's "constant-step" iteration was
+    linear (Picard), not quadratic (NK).
+  - 11 tests, all pass.
+
+- `floquet_mobius.py` --- joint Floquet on (time-circle x Z_3 branch).
+  - Z_3 hopping matrix, cycle-shift operator, joint static Hamiltonian.
+  - Floquet propagator via Trotter-Suzuki; quasi-energies in Brillouin
+    zone.
+  - Z_3 cyclic-permutation symmetry of spectrum verified.
+  - Static-limit check, drive-modifies-spectrum check.
+  - 13 tests, all pass.
+
+- `acoustic_metric.py` --- Unruh acoustic-metric mapping.
+  - Identification: c^2 - v^2 = F. Chronology horizon F = 0 coincides
+    with acoustic horizon.
+  - Acoustic Hawking temperature equals gravitational Hawking T at the
+    LP horizon (rel diff < 1e-12).
+  - CTC region <==> supersonic flow (verified on many samples).
+  - 11 tests, all pass.
+
+- `casimir_throat.py` --- Brown-Maclay <T_{mu nu}> at a Casimir cavity.
+  - Flat-space `T = -(pi^2 / 720 d^4) diag(1, 1, 1, -3)`.
+  - Trace = 0 (conformal invariance).
+  - LP evaluation with curvature-correction scale K * d^4.
+  - Connection to topological Z_3 throat coefficient via casimir.py.
+  - 15 tests, all pass.
+
+#### Bucket B (ansatz documentation)
+
+- `docs/INTERPRETATIONS.md` --- the 6 ansatz-level claims that need
+  external input (cavity geometry, gauge field, vacuum-selection
+  criterion, wormhole gluing map, etc.). Each claim is documented with
+  what would need to be specified to promote it to math.
+
+Total: 109 new tests across 8 new modules; full suite remains green.
+
 ## [0.12.0] - 2026-05-10
 
 ### Casimir / Z_3-cover mode sums (integrates verified updates.txt math)

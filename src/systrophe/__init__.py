@@ -110,6 +110,84 @@ from .casimir import (
     z3_cover_mode_density,
     z3_cover_regularised_zeta_sum,
 )
+from .tipler_fractal import (
+    CascadeDSI,
+    base_tipler_sinusoid_is_dsi,
+    box_count_log_dimension,
+    cascade_box_dimension,
+    ctc_band_log_widths,
+    dsi_extension_from_sinusoid,
+    dsi_rescaling_factor,
+    verify_geometric_progression,
+    zero_geometric_ratio,
+)
+from .anomaly_inflow import (
+    AXIAL_ANOMALY_COEFFICIENT,
+    axial_anomaly_density,
+    callan_harvey_bulk_inflow,
+    callan_harvey_consistency,
+    chern_simons_5form_coefficient,
+    dirac_eta_invariant,
+    index_density_2form,
+    z3_anomaly_inflow_balance,
+    z3_branch_etas,
+    z3_branch_twists,
+    z3_total_eta,
+)
+from .horned_torus import (
+    HornedTorus,
+    compare_horn_modes,
+    horn_circumference_at_z,
+    inverted_horn_profile,
+    regular_horn_profile,
+)
+from .hadamard_offtrace import (
+    energy_density_in_static_frame,
+    hadamard_offtrace_T,
+    hadamard_T_diagonal_components,
+    hadamard_T_trace,
+    hadamard_T_traceless_part,
+    riemann_squared_tensor,
+    trace_decomposition,
+)
+from .newton_kantorovich import (
+    NKResult,
+    is_convergence_rate_quadratic,
+    newton_kantorovich_1d,
+    newton_kantorovich_nd,
+    picard_iteration_1d,
+)
+from .floquet_mobius import (
+    FloquetMobiusResult,
+    analyze_floquet_mobius,
+    brillouin_zone_wrap,
+    floquet_propagator,
+    joint_floquet_spectrum,
+    joint_static_hamiltonian,
+    static_limit_check,
+    z3_cycle_shift,
+    z3_hopping_matrix,
+    z3_symmetry_check,
+)
+from .acoustic_metric import (
+    acoustic_hawking_temperature,
+    acoustic_horizon_radius,
+    acoustic_line_element_at_radius,
+    acoustic_metric_components,
+    acoustic_surface_gravity,
+    compare_acoustic_vs_gravitational_T_H,
+    ctc_region_is_supersonic,
+)
+from .casimir_throat import (
+    brown_maclay_T_minkowski,
+    brown_maclay_at_lp_point,
+    brown_maclay_energy_density,
+    brown_maclay_normal_pressure,
+    brown_maclay_trace,
+    compare_throat_to_brown_maclay,
+    topological_throat_coefficient,
+    transverse_pressure,
+)
 
 __all__ = [
     "VanStockumInterior",
@@ -152,4 +230,4 @@ __all__ = [
     "z3_cover_mode_density",
     "z3_cover_regularised_zeta_sum",
 ]
-__version__ = "0.12.0"
+__version__ = "0.13.0"
