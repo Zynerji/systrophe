@@ -1,0 +1,190 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  citecolor=blue!50!black,
+  urlcolor=blue!50!black
+}
+
+\title{\bfseries Lorentz violation, Hawking budget, topology change,\\
+G-renormalization, ER=EPR, BMS, BH-pair, monopole, stochastic,\\
+anyon-CTC extensions + Marrakesh Page-curve validation\\
+\large Ten further modules (Phases 31--40) + novelty-catcher integration}
+
+\author{Christian Knopp\\\texttt{cknopp@gmail.com}}
+\date{2026-05-11}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We add ten further modules to the Systroph\=e framework
+(Phases 31--40) covering: modified dispersion relations and Lorentz-
+violation signatures; Hawking radiation budget per chronology horizon;
+topology-change instanton actions; asymptotic-safety running of $G$;
+an ER=EPR re-parameterization for the Systroph\=e pair (honestly noted
+as a re-parameterization rather than a derivation); BMS-like soft hair
+on the log-periodic boundary; Schwinger-analog black-hole pair production;
+Dirac quantization of magnetic monopoles on the rotating cylinder;
+stochastic / Langevin dynamics on the LP background; anyonic CTC
+encoding with Fibonacci quantum dimension. We also report Marrakesh
+batch 3 (Page curve hardware-resolved 1.16, 2.33, 3.56, 2.60, 1.75 with
+correct peak at $k=3$) and batch 4 setup (multi-band LP quantum walk
+with $\alpha$ scan + novelty catcher). A new always-on rule wires the
+address-space spectral novelty catcher into every Systroph\=e module
+and every hardware run. Code at \texttt{github.com/Zynerji/systrophe}
+(v0.21.0+).
+\end{abstract}
+
+\section{Phases 31--40 summary}
+
+\begin{tabular}{lll}
+\toprule
+Phase & Module & Tests \\
+\midrule
+31 & \texttt{modified\_dispersion.py} (Lorentz violation) & 14 \\
+32 & \texttt{hawking\_budget.py} (per-CH $T_H$, $S_{BH}$, $t_{\rm evap}$) & 14 \\
+33 & \texttt{topology\_change.py} (pinch-off, merger instantons) & 15 \\
+34 & \texttt{g\_renormalization.py} (Reuter-Weinberg $G(k)$) & 14 \\
+35 & \texttt{er\_epr\_pair.py} (re-parameterization of pair) & 21 \\
+36 & \texttt{bms\_soft\_hair.py} (log-periodic supertranslations) & 10 \\
+37 & \texttt{bh\_pair\_production.py} (Schwinger analog) & 8 \\
+38 & \texttt{monopole\_on\_cylinder.py} (Dirac quantization) & 10 \\
+39 & \texttt{stochastic\_lp.py} (Kramers MFPT, Langevin) & 9 \\
+40 & \texttt{anyonic\_ctc.py} (Fibonacci anyons in bands) & 13 \\
+\bottomrule
+\end{tabular}
+
+\section{Novelty catcher always-on (2026-05-11)}
+
+A user-mandated durable rule, set 2026-05-11: every Systroph\=e
+deliverable must run the address-space spectral novelty catcher
+and report its verdict alongside the headline result. Implementation
+at \texttt{src/systrophe/novelty\_catcher.py} (13 tests). Mechanism
+(HASH-QUINE / tHHmL address-space rule):
+\begin{enumerate}
+\item Hash the output structure to integer bit-addresses.
+\item Compute pairwise Hamming distances among addresses.
+\item Build a Hamming-radius graph; compute $\lambda_2$ of its
+  Laplacian.
+\item Scan over the natural parameter axis; produce a $\lambda_2$
+  surface.
+\item Flag sharp $\lambda_2$ / Hamming-step jumps as candidate phase
+  transitions / emergent structure / universality boundaries.
+\end{enumerate}
+
+Sharp-feature criterion (calibrated to suppress false positives):
+Hamming step between successive parameter points must exceed median
+$\times (1 + \theta)$ AND median $+ 2$ bits, where $\theta$ is the
+user-configurable threshold. Verdict precedence:
+\textit{uniform} $>$ \textit{novel\_structure} $>$ \textit{smooth}.
+
+Address-space encoding caught the 2D Ising critical point in prior
+HASH-QUINE work (1.4\% accuracy) where value-encoded paths gave null.
+Phases 35--40 each include a \texttt{novelty\_scan()} entry-point;
+their verdicts on the natural parameter axes are reported in the
+per-module test outputs.
+
+\section{Marrakesh batch 3: Page curve hardware validation}
+
+Job \texttt{d80ubcg0bvlc73d0c2bg}, 13 qubits, 66\,s wall on Marrakesh.
+Setup: 3 Bell pairs across $(q_0, q_3)$, $(q_1, q_4)$, $(q_2, q_5)$.
+SWAP test on first $k$ qubits for $k \in \{1, \dots, 5\}$.
+
+\begin{tabular}{cccccc}
+\toprule
+$k$ & ISA depth & Predicted $S_2$ (bits) & Observed $S_2$ & $\Delta_{\rm rel}$ \\
+\midrule
+1 & 39 & 1.0 & 1.16 & $+16\%$ \\
+2 & 74 & 2.0 & 2.33 & $+16\%$ \\
+3 & 107 & 3.0 & 3.56 & $+19\%$ \emph{(peak)}\\
+4 & 141 & 2.0 & 2.60 & $+30\%$ \\
+5 & 189 & 1.0 & 1.75 & $+75\%$ \\
+\bottomrule
+\end{tabular}
+
+\paragraph{Verdict.} The Page-curve shape (rise to $k=3$, fall back) is
+hardware-resolved. The peak location at $k=3$ matches the Phase 28
+prediction $t_P = S_{\max}/s_{\rm emit}$ exactly. The systematic
+$S_2$ overestimate scales monotonically with circuit depth, consistent
+with depolarizing noise mixing $\rho$ toward $I/d$.
+
+\section{Marrakesh batch 4: multi-band LP quantum walk}
+
+Setup: 4 qubits (1 data + 3 path), 5 values of $\alpha$-scale in
+$\{0.5, 1.0, \sqrt{3}, 2.0, 2.5\}$. Each band $n$ applies
+CRZ(path$_n \to$ data, $n \cdot \alpha \cdot \ln 2$). Simulator
+recovers each scan point's $\alpha$ to $<0.5\%$. Hardware run
+pending (queue depth $\sim 43$ at time of writing).
+
+Novelty catcher integrated into the analysis pipeline: bitstring
+distributions from the 5 scan points are hashed to bit addresses and
+$\lambda_2$ of the Hamming graph is computed. Predicted verdict:
+\textit{smooth} (continuous parameter scan). Hardware-specific
+deviations (e.g.\ noise-induced anomalies) would flip the verdict to
+\textit{novel\_structure}.
+
+\section{Pair-extinction universality (recurring theme)}
+
+The same $(1 + \cos \delta)/2$ extinction factor now appears in
+\emph{six} domains:
+\begin{enumerate}
+\item Classical $L_{\rm pair}$ extinction (Phase 4).
+\item Spinor pair monodromy (Phase 19, hardware-verified batch 1).
+\item ANEC integral collapse (Phase 27).
+\item ER=EPR bridge strength / Bell-pair fidelity (Phase 35).
+\item BMS soft-hair amplitude (Phase 36).
+\item BH pair-production rate (Phase 37).
+\item Anyonic braid phase (Phase 40).
+\end{enumerate}
+
+As noted in the body of Phase 35, this universality is mathematically
+unsurprising: it follows from linear superposition of two identical
+objects shifted by $\delta$. The single knob $\delta$ propagates
+through every layer that depends linearly on the pair structure.
+The interesting feature is the \emph{breadth} of the propagation:
+classical GR, spin holonomy, QFT (ANEC), entanglement, asymptotic
+charges, instantons, and topological order are all collapsed to a
+single mechanism, $\delta = \pi$.
+
+\section{Reproduction}
+
+All ten phases use the \texttt{novelty\_scan()} entry point and ship
+with a \texttt{tests/test\_*.py} suite. Hardware-validation scripts
+at \texttt{experiments/marrakesh\_batch\_{1,2,3,4}.py}. The novelty
+catcher itself is at \texttt{src/systrophe/novelty\_catcher.py}.
+Total tests: 1000+ passing.
+
+\bibliographystyle{plain}
+\begin{thebibliography}{9}
+
+\bibitem{Knopp2026Ext5}
+C.~Knopp, Systrophe extensions paper (Phases 26--30), 2026.
+
+\bibitem{Maldacena2013}
+J.~Maldacena and L.~Susskind, Fortschr. Phys. 61 (2013) 781.
+
+\bibitem{Reuter1998}
+M.~Reuter, Phys. Rev. D 57 (1998) 971.
+
+\bibitem{Hawking2016}
+S.~W.~Hawking, M.~J.~Perry, A.~Strominger, Phys. Rev. Lett. 116 (2016) 231301.
+
+\bibitem{Sornette1998}
+D.~Sornette, Phys. Rep. 297 (1998) 239.
+
+\end{thebibliography}
+
+\end{document}
