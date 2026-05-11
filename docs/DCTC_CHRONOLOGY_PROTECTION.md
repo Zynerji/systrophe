@@ -78,10 +78,40 @@ result is robust to chronology protection.
   the two extremes.
 - The Pearson correlations are computed over only 25 grid points.
 
+## Robustness across U(δ) constructions (Phase AM-extended)
+
+To test whether the independence finding survives different
+parametrisations, Phase AM-ext repeats the sweep with four
+physically-motivated U(δ) constructions:
+
+| Construction | What it represents | Peak structure | Pearson(phys, amp) |
+|---|---|---|---|
+| **A (Tipler-coupling)** | original | bimodal at 0, π | +0.20 |
+| **B (linear interpolation)** | smooth U_a → U_b path | nearly flat; slight peak at π | **−0.60** |
+| **C (anomaly-flow generator)** | Z_3 cycle + branch-energy flow | unimodal at 0 | +0.29 |
+| **D (Floquet propagator)** | periodic drive | degenerate (zero amp everywhere) | +0.04 |
+
+Mean Pearson across constructions: **−0.02** (essentially uncorrelated).
+
+**Key observation**: In none of the four constructions does D-CTC
+amplification track physical CTC content. In particular:
+
+- Construction A: at δ = π (chronology-protected), amp = 0.307 (peak)
+- Construction B: at δ = π, amp = 0.182 (peak)
+- Construction C: at δ = π, amp = 0.000 (BUT structure is unimodal,
+  not driven by chronology protection)
+- Construction D: trivially zero
+
+The independence is **robust** in the sense that no construction
+exhibits the predicted chronology-protection signature (amp → 0 at
+δ = π specifically for chronology-protection reasons, not generic
+degeneracy).
+
 ## Reproduction
 
 ```bash
-python examples/dctc_deep_phase_am.py
+python examples/dctc_deep_phase_am.py            # original
+python examples/dctc_deep_phase_am_extended.py   # 4-construction comparison
 ```
 
-Writes results to `examples/dctc_deep_phase_am_results.json`.
+Results in `examples/dctc_deep_phase_am*_results.json`.
