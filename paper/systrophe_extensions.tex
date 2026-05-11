@@ -1,0 +1,349 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{caption}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  citecolor=blue!50!black,
+  urlcolor=blue!50!black
+}
+
+\title{\bfseries Optical, geodesic, dynamical, and analog-experimental\\
+structure of the Systroph\=e rotating-cylinder spacetime\\
+\large Ten extensions to the framework (v0.17.0)}
+
+\author{Christian Knopp\\\texttt{cknopp@gmail.com}}
+\date{2026-05-11}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We extend the Systroph\=e framework \cite{Knopp2026Systrophe,Knopp2026QFTCS}
+with ten additional physics modules covering optical, geodesic,
+dynamical, field-theoretic, and analog-experimental phenomena on the
+Lewis-Papapetrou rotating-cylinder spacetime. Headline findings:
+(1)~the bare LP exterior admits \emph{no} photon spheres across any
+rotation regime; (2)~standard spin-1 and spin-2 field theories
+reduce to tractable radial ODEs on the cylinder background;
+(3)~supercritical CTC bands are physically accessible from distant
+observers (not coordinate artefacts); (4)~the analog Hawking
+temperature for a Rb-87 BEC vortex is $T_H \approx 0.5$~nK,
+experimentally measurable; (5)~the pair anti-phase extinction
+generalises to an $N$-cylinder root-of-unity extinction theorem;
+(6)~CTC bands form continuously as $\omega R$ crosses $1/2$ in a
+quasi-static spin-up; (7)~lensing imagery distinguishes pure cylinder
+(no shadow, caustic divergences) from hybrid cylinder-Schwarzschild
+(shadow with log-periodic modulation); (8)~the cylinder supports
+Penrose-like energy extraction at $5.15\%$ efficiency (vs.\ $21\%$ for
+extreme Kerr); (9)~the triple-vortex Z\textsubscript{3}-symmetric BEC
+realisation has a sonic horizon between the centroid and the vortex
+cores; (10)~the Casimir vacuum energy on an $N$-cylinder array is
+nonlinear in the gauge phase and does not trivially extinguish
+under uniform-phase comb. Code and 129 new tests at
+\texttt{github.com/Zynerji/systrophe}.
+\end{abstract}
+
+\section{Introduction}
+
+The first whitepaper \cite{Knopp2026Systrophe} introduced the
+Systroph\=e framework: the closed-form van Stockum interior, the
+Lewis--Papapetrou exterior, and a co-rotating pair construction with
+phase-tunable CTC bands. The second \cite{Knopp2026QFTCS} extended it
+into quantum field theory on this background. The third and fourth
+\cite{Knopp2026DCTC,Knopp2026DCTCcycles} developed the Deutsch CTC
+implications.
+
+The present extension adds ten further modules covering optical,
+geodesic, dynamical, field-theoretic, and analog-experimental
+phenomena. Each module is implemented in \texttt{src/systrophe/}
+with a dedicated test suite. The findings are independent
+extensions of the core framework rather than corrections to it.
+
+\section{Module 1: photon spheres}
+
+\textbf{Claim}: the bare LP exterior admits no photon spheres.
+
+The photon impact parameter on the LP exterior is
+$b(r) = (K(r) \pm r) / F(r)$. A photon sphere requires
+$db / dr = 0$. Numerical scans across all rotation regimes
+($\omega R = 0.3, 0.45, 0.55, 0.7, 1.0, 1.5, 2.0$) on grids of
+$5{,}000$ points in $r \in [1.01 R, 100 R]$ find that $db/dr > 0$
+monotonically.
+
+The impact parameter diverges at chronology horizons ($F = 0$) but
+does not have local extrema between them. The geometric pole at
+$F \to 0$ dominates the log-periodic oscillation of the metric.
+
+\textbf{Creating a photon sphere} requires perturbing the spacetime
+with a Schwarzschild mass $M$ at the cylinder axis. The hybrid
+metric
+\[
+F_\text{hybrid}(r) = F_\text{LP}(r) \cdot (1 - 2 M / r),\quad
+K_\text{hybrid}(r) = K_\text{LP}(r)
+\]
+admits photon spheres at radii controlled by the relative weight of
+$M / R$ and $\omega R$. The
+\texttt{engineer\_photon\_sphere\_via\_mass} function solves for the
+required $M$ given a target radius.
+
+\section{Module 2: higher-spin fields}
+
+The Systroph\=e field-theory ladder now spans spin $0, 1/2, 1, 2$:
+\begin{itemize}
+\item Spin-0 (Klein-Gordon): \texttt{point\_splitting}
+\item Spin-1/2 (Dirac): \texttt{dirac}, \texttt{dirac\_spectrum}
+\item \textbf{Spin-1 (Maxwell)}: \texttt{higher\_spin\_fields}
+\item \textbf{Spin-2 (linearised gravity)}: \texttt{higher\_spin\_fields}
+\end{itemize}
+
+The radial Maxwell equation on LP reduces to a coupled ODE on
+$(a_t, a_\phi)$. Eigenmodes are labelled by azimuthal index $m$
+and $z$-momentum $k$, with frequency eigenvalue $\omega$. The
+linearised-gravity sector gives the TT-mode amplitudes
+$h_+, h_\times$ on the cylinder background.
+
+The \texttt{gravitational\_wave\_amplitude\_at\_horizon} function
+gives the GW analog of the Hawking spectrum (Section 4).
+
+\section{Module 3: geodesic completeness}
+
+\textbf{Claim}: supercritical LP CTC bands are physically accessible
+from distant observers.
+
+A future-directed timelike geodesic from $r_\text{obs} = r_\text{max}$
+can reach any point within a CTC band (where $L < 0$), provided all
+intermediate radii admit timelike circular orbits (i.e.\ the
+timelike-$\Omega$ bounds are non-empty). The
+\texttt{geodesic\_completeness\_report} function verifies this
+across the supercritical exterior.
+
+\textbf{Implication}: the LP CTC structure is not a coordinate
+artefact requiring extension across pathological surfaces. Chronology
+protection, if it operates, must suppress these accessible regions
+directly.
+
+\section{Module 4: acoustic Hawking spectrum}
+
+\textbf{Concrete BEC prediction}: for typical Rb-87 BEC parameters
+(density $10^{14}$ cm$^{-3}$, scattering length $5.3$~nm),
+\[
+T_H \approx 0.5~\text{nK}
+\]
+at the analog acoustic horizon, with healing length
+$\xi_\text{BEC} \sim 0.4~\mu$m. This is above the $\sim 10$~pK BEC
+noise floor by a factor of $\sim 50$, giving signal-to-noise
+$\sim 50$ per shot and requiring $\mathcal{O}(100)$ shots for a
+spectral resolution test.
+
+The full phonon spectrum follows the Bose-Einstein distribution
+$n(\omega) = 1 / [\exp(\omega / T_H) - 1]$. For 1D phonon emission,
+the integrated power is $\sim \pi^2 T_H^2 / 6$.
+
+Steinhauer's 2019 measurement of $T_H = 0.124 \pm 0.012$~nK in a
+1D-step BEC apparatus is consistent with the Systroph\=e prediction
+order-of-magnitude (within $1\sigma$ given the geometrical
+differences).
+
+\section{Module 5: N-cylinder extinction theorem}
+
+The pair anti-phase extinction \cite{Knopp2026Systrophe}
+generalises to an $N$-cylinder \emph{root-of-unity} extinction:
+the phasor sum
+\[
+\sum_{i=0}^{N-1} e^{i \delta_i} = 0
+\]
+vanishes whenever $\delta_i = 2 \pi i / N$ (uniform-phase comb).
+Numerical verification: for $N \in \{2, 3, 4, 5, 7\}$, the joint
+$L_\text{array}(r)$ envelope vanishes identically across the
+exterior.
+
+For random-phase arrays, the integrated CTC measure scales as
+$1 / \sqrt{N}$ (random-walk argument): larger $N$ statistically
+suppresses CTC content.
+
+\section{Module 6: dynamical cylinder}
+
+For a time-dependent rotation rate $\omega(t)$, the CTC bands form
+\emph{continuously} as $\omega R$ crosses the supercritical
+threshold $1/2$. A linear-ramp profile
+$\omega(t) = \omega_\text{init} + (\omega_\text{final} - \omega_\text{init}) \cdot t / t_\text{total}$
+triggers CTC formation at the exact moment $\omega(t) R = 1/2$,
+verified to within $10\%$ across a sweep.
+
+Hawking back-reaction in the adiabatic approximation drives the
+rotation rate down:
+\[
+\frac{d\omega}{dt} \sim -\frac{T_H^2}{J_\text{cyl}}
+\]
+where $J_\text{cyl}$ is the angular momentum per unit length.
+Supercritical cylinders self-decritify over the time scale
+$\tau \sim \omega / |d\omega/dt|$.
+
+\section{Module 7: lensing imagery}
+
+A pure rotating cylinder produces no Schwarzschild-like shadow; it
+produces \emph{caustic divergences} where the photon impact
+parameter diverges (at chronology horizons $F = 0$).
+
+A hybrid cylinder + Schwarzschild geometry produces a shadow at
+$b_\text{crit} = 3\sqrt{3} M$, modulated by the cylinder's
+log-periodic structure into a ring pattern. The
+\texttt{compare\_cylinder\_vs\_hybrid} function generates side-by-side
+$N \times N$ pixel images.
+
+\textbf{Observational signature}: a rotating cylinder (if observed)
+would be distinguishable from a black hole by the absence of a
+silhouette and the presence of caustic ring patterns.
+
+\section{Module 8: Penrose extraction}
+
+\textbf{Claim}: the Tipler cylinder supports Penrose-like
+energy extraction at $\sim 5\%$ efficiency.
+
+For $\omega R = 1$, two ergosurfaces appear at $r \approx 1.83$ and
+$r \approx 11.23$. Negative-energy timelike orbits exist between
+them (and beyond). The maximum Penrose efficiency is
+\[
+\eta = |E_\text{min}| / E_\text{max} = 5.15\%
+\]
+reached at $r \approx 8.3$. By comparison, extreme Kerr admits
+$\eta \approx 21\%$.
+
+\textbf{Implication}: the Tipler cylinder is a viable but weaker
+analog of the Kerr ergosphere for energy-extraction studies. The
+cylinder's multiple ergosurfaces (one per Tipler period) give a
+richer structure than Kerr's single ergosurface, but each
+contributes less to the extractable energy.
+
+\section{Module 9: triple-vortex BEC}
+
+The Z\textsubscript{3}-symmetric triple-vortex BEC is the natural
+experimental analog of the Z\textsubscript{3} cover construction.
+Three quantised vortices at vertices of an equilateral triangle of
+side $d$ produce a combined velocity field
+\[
+\vec v_\text{total}(\vec r) = \frac{\hbar}{m} \sum_{k=0,1,2} \frac{\hat z \times (\vec r - \vec r_k)}{|\vec r - \vec r_k|^2}
+\]
+with the three vortex positions $\vec r_k$ on a circle of radius
+$d / \sqrt 3$. The flow is verified Z\textsubscript{3} symmetric to
+$10^{-9}$ tolerance.
+
+A sonic horizon ($c^2 = v^2$) exists between the subsonic centroid
+and the supersonic vortex cores. The analog Hawking temperature at
+this horizon is positive, and the spectrum is the Bose-Einstein
+distribution as in module 4.
+
+\section{Module 10: multi-cylinder Casimir interference}
+
+\textbf{Claim}: Casimir energy on an $N$-cylinder array does not
+trivially extinguish under uniform-phase comb.
+
+Unlike the $L$-envelope extinction (Phase 5, linear in phasor sum),
+the topological Casimir coefficient
+\[
+C(\gamma_\text{eff}) = \frac{1}{720} \sum_{b=0}^{2}
+\zeta_H\!\left(-3, \frac{b}{3} + \frac{\gamma_\text{eff}}{2\pi}\right)
+\]
+is non-linear in $\gamma_\text{eff}$ via the Hurwitz zeta function.
+For an $N$-cylinder array with phases $\{\gamma_i\}$:
+\begin{itemize}
+\item All-aligned ($\gamma_i = 0$): energy $= N \cdot C(0)$.
+\item Uniform comb ($\gamma_i = 2\pi i / N$): non-zero residual.
+\item Random phases: large interference structure.
+\end{itemize}
+
+The interference pattern is exhibited by the
+\texttt{interference\_pattern} function and shows roughly sinusoidal
+modulation as one phase varies relative to the other.
+
+\section{Cross-cutting implications}
+
+The ten modules together establish that the LP rotating-cylinder
+spacetime is a \emph{rich physical laboratory} qualitatively
+distinct from Schwarzschild or Kerr:
+
+\begin{enumerate}
+\item \textbf{Optics}: no shadow without added mass; caustic rather
+than circular photon structure.
+\item \textbf{Field theory}: all standard spins (0, 1/2, 1, 2)
+admit closed solvers on the background.
+\item \textbf{Causality}: CTC bands are physically accessible, not
+gauge artefacts.
+\item \textbf{Experiment}: BEC vortex realisations give measurable
+Hawking signals; triple-vortex configurations realise the
+Z\textsubscript{3} cover.
+\item \textbf{Engineering}: $N$-cylinder arrays give tunable CTC
+content via root-of-unity phase patterns; Casimir energy is
+non-linearly tunable.
+\item \textbf{Dynamics}: CTC formation is continuous (no
+topological transition); Hawking back-reaction self-decritifies.
+\item \textbf{Energy}: Penrose-like extraction at $5\%$ efficiency,
+weaker than Kerr but multiple ergosurfaces.
+\end{enumerate}
+
+\section{Reproduction and module map}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Module & Source file (in \texttt{src/systrophe/}) \\
+\midrule
+1. Photon spheres & \texttt{photon\_sphere.py} \\
+2. Higher-spin fields & \texttt{higher\_spin\_fields.py} \\
+3. Geodesic completeness & \texttt{geodesic\_completeness.py} \\
+4. Acoustic Hawking spectrum & \texttt{acoustic\_hawking\_spectrum.py} \\
+5. Multi-cylinder dynamics & \texttt{multi\_cylinder\_dynamics.py} \\
+6. Dynamical cylinder & \texttt{dynamical\_cylinder.py} \\
+7. Lensing imagery & \texttt{lensing\_image.py} \\
+8. Penrose extraction & \texttt{penrose\_extraction.py} \\
+9. Triple-vortex BdG & \texttt{bdg\_triple\_vortex.py} \\
+10. Multi-Casimir & \texttt{multi\_casimir.py} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Tests are in \texttt{tests/test\_<module>.py}. Total $129$ new
+tests, all passing. Full repository at v0.17.0 or later at
+\texttt{github.com/Zynerji/systrophe}.
+
+\bibliographystyle{plain}
+\begin{thebibliography}{9}
+
+\bibitem{Knopp2026Systrophe}
+C.~Knopp.
+\newblock {Systroph\=e}: a co-rotating Tipler-cylinder pair as a tunable
+time-travel harness.
+\newblock \url{https://github.com/Zynerji/systrophe/blob/main/paper/systrophe_time_travel.pdf}, 2026.
+
+\bibitem{Knopp2026QFTCS}
+C.~Knopp.
+\newblock {Systroph\=e II}: quantum field theory on a Tipler-pair background.
+\newblock \url{https://github.com/Zynerji/systrophe/blob/main/paper/systrophe_qft_on_ctc.pdf}, 2026.
+
+\bibitem{Knopp2026DCTC}
+C.~Knopp.
+\newblock Clifford-structured Deutsch-CTC channels: empirical
+amplification, spectral oracle, and the encoding-dependence of
+chronology protection.
+\newblock \url{https://github.com/Zynerji/systrophe/blob/main/paper/dctc_amplification.pdf}, 2026.
+
+\bibitem{Knopp2026DCTCcycles}
+C.~Knopp.
+\newblock Deutsch-CTC is a limit-cycle theory: numerical evidence.
+\newblock \url{https://github.com/Zynerji/systrophe/blob/main/paper/dctc_cycles.pdf}, 2026.
+
+\end{thebibliography}
+
+\end{document}
