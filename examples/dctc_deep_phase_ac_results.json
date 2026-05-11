@@ -1,0 +1,68 @@
+{
+  "config": {
+    "dim_cr": 2,
+    "dim_ctc": 3,
+    "eps_input": 0.1,
+    "helstrom_success": 0.55
+  },
+  "noise_sweep": [
+    {
+      "noise": 0.0,
+      "rho_a_purity": 1.0,
+      "output_td": 0.18181818181213694,
+      "ctc_success": 0.5909090909060685,
+      "speedup": 1.8181818181213678
+    },
+    {
+      "noise": 0.001,
+      "rho_a_purity": 0.9980022211113334,
+      "output_td": 0.18150153040588482,
+      "ctc_success": 0.5907507652029425,
+      "speedup": 1.8150153040588475
+    },
+    {
+      "noise": 0.005,
+      "rho_a_purity": 0.9900554168055555,
+      "output_td": 0.1802379831684873,
+      "ctc_success": 0.5901189915842436,
+      "speedup": 1.8023798316848711
+    },
+    {
+      "noise": 0.01,
+      "rho_a_purity": 0.9802211133333335,
+      "output_td": 0.17866542310657946,
+      "ctc_success": 0.5893327115532897,
+      "speedup": 1.7866542310657925
+    },
+    {
+      "noise": 0.02,
+      "rho_a_purity": 0.9608800355555555,
+      "output_td": 0.17554316939419468,
+      "ctc_success": 0.5877715846970973,
+      "speedup": 1.7554316939419452
+    },
+    {
+      "noise": 0.05,
+      "rho_a_purity": 0.9054180555555558,
+      "output_td": 0.16635844748537187,
+      "ctc_success": 0.5831792237426859,
+      "speedup": 1.6635844748537172
+    },
+    {
+      "noise": 0.1,
+      "rho_a_purity": 0.8211333333333333,
+      "output_td": 0.15165137614513827,
+      "ctc_success": 0.5758256880725692,
+      "speedup": 1.5165137614513822
+    },
+    {
+      "noise": 0.2,
+      "rho_a_purity": 0.6803555555555556,
+      "output_td": 0.12444444444928993,
+      "ctc_success": 0.5622222222246449,
+      "speedup": 1.244444444492897
+    }
+  ],
+  "reference_purity_noise0": 1.0,
+  "breakdown_noise_level": 0.2
+}
