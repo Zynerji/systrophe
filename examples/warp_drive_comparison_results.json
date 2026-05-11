@@ -1,0 +1,50 @@
+{
+  "distance": 0.52,
+  "comparison": [
+    {
+      "family": "Alcubierre (1994)",
+      "E_neg": 0.17025353824413797,
+      "comment": "Original FTL bubble. NEC violation scales as v_s^2 sigma^3."
+    },
+    {
+      "family": "Krasnikov tube (1995)",
+      "E_neg": 0.4244131815783876,
+      "comment": "Permanent 1+1D corridor. NEC ~ alpha^2 in wall."
+    },
+    {
+      "family": "Lentz soliton (2021, subluminal claim)",
+      "E_neg": 0.0,
+      "comment": "Claim: NEC >= 0 everywhere at subluminal v_s."
+    },
+    {
+      "family": "Lentz soliton (superluminal v_s=2.0)",
+      "E_neg": 0.01,
+      "comment": "Cross-term turns on; small NEC floor."
+    },
+    {
+      "family": "Bobrick-Martire (m_ADM=-1)",
+      "E_neg": 0.09626485961395598,
+      "comment": "Generalised class; NEC sign follows m_ADM."
+    },
+    {
+      "family": "Bobrick-Martire (m_ADM=+1)",
+      "E_neg": 0.0,
+      "comment": "Positive m_ADM = positive E density (no NEC violation)."
+    },
+    {
+      "family": "Knopp Drive (Q=100.0)",
+      "E_neg": 0.0,
+      "comment": "Composite: Tipler-gated + Krasnikov + Q-feedback + horn."
+    },
+    {
+      "family": "Knopp Drive (Q=500)",
+      "E_neg": 0.0,
+      "comment": "Same composite at higher feedback Q."
+    }
+  ],
+  "knopp_advantage": {
+    "knopp_E_neg": 0.0,
+    "alcubierre_E_neg": 0.17025353824413797,
+    "ratio": "infinity (Knopp = 0)"
+  }
+}
