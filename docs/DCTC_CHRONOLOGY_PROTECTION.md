@@ -132,21 +132,41 @@ information processing.
 ### Refined physical interpretation
 
 The chronology-protection × D-CTC coupling is **contingent on the
-encoding**:
+encoding**, and falls into a clean **trichotomy** of embeddings:
 
-- **Abstract encoding** (Clifford gates, Floquet propagators,
-  generic Hamiltonians): D-CTC amplification is independent of
-  physical CTC content. Aaronson-Watrous speedup survives chronology
-  protection.
+#### Three regimes of D-CTC channel construction
 
-- **Direct CTC-structure encoding** (matrix entries literally
-  proportional to L_pair(r)): D-CTC amplification vanishes when the
-  CTC vanishes. Chronology protection kills both.
+| Regime | What it represents | amp at δ=π | purity | Example construction |
+|---|---|---|---|---|
+| **Abstract** | Clifford / Floquet / generic Hamiltonian | varies; often peak | rare-event high | A, B, C, D, F, G, H, generic Clifford |
+| **Direct CTC** | Matrix entries literally `~ L_pair(r)` | **0** (vanishes) | high (when amp > 0) | E (direct L) |
+| **LP-Hamiltonian** | Matrix entries from F/K/L on Clifford backbone | finite, constant | **1.0** | Phase AJ |
 
-This means the Aaronson-Watrous result requires the channel to be
-*implemented abstractly*, e.g., via post-selection quantum circuits
-or pre-engineered Clifford gates. Channels built directly from
-spacetime CTC physics inherit chronology protection.
+The three regimes are physically distinct:
+
+- **Abstract D-CTC channels** are decoupled from the underlying
+  spacetime. They support Aaronson-Watrous amplification even at
+  chronology-protected configurations. *Implementable via abstract
+  quantum circuits or post-selection.*
+
+- **Direct CTC channels** *are* the spacetime physics: their matrix
+  structure literally encodes the CTC tensor. Chronology protection
+  trivialises them by structural degeneracy.
+
+- **LP-Hamiltonian channels** are physically grounded but still
+  computationally non-trivial: they achieve perfect purity by
+  construction but only moderate amplification, irrespective of the
+  underlying (omega, R) regime.
+
+#### Concrete implications
+
+The Aaronson-Watrous polynomial-time PSPACE speedup is:
+- **Available** in abstract D-CTC implementations (post-selection,
+  Clifford circuits) regardless of chronology protection.
+- **Lost** in direct-CTC implementations where the channel literally
+  uses the spacetime CTC structure.
+- **Muted** in physically-grounded LP-Hamiltonian channels
+  (purity 1.0 but amp only 0.18).
 
 ## Reproduction
 
@@ -154,6 +174,8 @@ spacetime CTC physics inherit chronology protection.
 python examples/dctc_deep_phase_am.py            # original
 python examples/dctc_deep_phase_am_extended.py   # 4 abstract constructions
 python examples/dctc_deep_phase_am_counter.py    # 4 physical constructions
+python examples/dctc_deep_phase_aj.py            # LP-Hamiltonian backbone
 ```
 
-Results in `examples/dctc_deep_phase_am*_results.json`.
+Results in `examples/dctc_deep_phase_am*_results.json` and
+`dctc_deep_phase_aj_results.json`.
