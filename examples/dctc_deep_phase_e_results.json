@@ -1,0 +1,186 @@
+{
+  "config": {
+    "dim_cr": 2,
+    "dim_ctc": 3,
+    "n_samples": 2000
+  },
+  "correlations": {
+    "pearson_purity_vs_sigma_min": -0.35491449778571876,
+    "pearson_purity_vs_neg_log_sigma_min": 0.32132664080353207,
+    "pearson_purity_vs_neg_log_shared_sv": 0.32132664080353207
+  },
+  "sigma_min_stats": {
+    "min": 0.005189929154692046,
+    "median": 0.17784741227814255,
+    "mean": 0.18997806881178395,
+    "max": 0.5910160542710388
+  },
+  "top10_high_purity": [
+    {
+      "idx": 160,
+      "iter": 41,
+      "purity": 0.9580962709097671,
+      "sigma_min_commutator": 0.02413657362428149,
+      "shared_singular_value": 0.02413657362428149,
+      "n_kraus": 2
+    },
+    {
+      "idx": 1875,
+      "iter": 127,
+      "purity": 0.9524326386608419,
+      "sigma_min_commutator": 0.047691446564436905,
+      "shared_singular_value": 0.047691446564436905,
+      "n_kraus": 2
+    },
+    {
+      "idx": 524,
+      "iter": 40,
+      "purity": 0.9222278601207877,
+      "sigma_min_commutator": 0.020113921677436218,
+      "shared_singular_value": 0.020113921677436218,
+      "n_kraus": 2
+    },
+    {
+      "idx": 955,
+      "iter": 70,
+      "purity": 0.9212333859178268,
+      "sigma_min_commutator": 0.044338531353716154,
+      "shared_singular_value": 0.044338531353716154,
+      "n_kraus": 2
+    },
+    {
+      "idx": 44,
+      "iter": 120,
+      "purity": 0.9180707446383259,
+      "sigma_min_commutator": 0.040420091580252546,
+      "shared_singular_value": 0.040420091580252546,
+      "n_kraus": 2
+    },
+    {
+      "idx": 418,
+      "iter": 212,
+      "purity": 0.9156487481628424,
+      "sigma_min_commutator": 0.04099230654949727,
+      "shared_singular_value": 0.04099230654949727,
+      "n_kraus": 2
+    },
+    {
+      "idx": 248,
+      "iter": 130,
+      "purity": 0.9130368468544086,
+      "sigma_min_commutator": 0.07051835525518925,
+      "shared_singular_value": 0.07051835525518925,
+      "n_kraus": 2
+    },
+    {
+      "idx": 478,
+      "iter": 41,
+      "purity": 0.9081031992275852,
+      "sigma_min_commutator": 0.16109869354059334,
+      "shared_singular_value": 0.16109869354059334,
+      "n_kraus": 2
+    },
+    {
+      "idx": 1813,
+      "iter": 75,
+      "purity": 0.9049730238144129,
+      "sigma_min_commutator": 0.05992972156510031,
+      "shared_singular_value": 0.05992972156510031,
+      "n_kraus": 2
+    },
+    {
+      "idx": 1449,
+      "iter": 104,
+      "purity": 0.9022301137974241,
+      "sigma_min_commutator": 0.06944062390443533,
+      "shared_singular_value": 0.06944062390443533,
+      "n_kraus": 2
+    }
+  ],
+  "bottom10_low_purity": [
+    {
+      "idx": 621,
+      "iter": 69,
+      "purity": 0.33721787805543285,
+      "sigma_min_commutator": 0.3755869079576936,
+      "shared_singular_value": 0.3755869079576936,
+      "n_kraus": 2
+    },
+    {
+      "idx": 545,
+      "iter": 101,
+      "purity": 0.33799753979574354,
+      "sigma_min_commutator": 0.021954090770183662,
+      "shared_singular_value": 0.021954090770183662,
+      "n_kraus": 2
+    },
+    {
+      "idx": 726,
+      "iter": 181,
+      "purity": 0.33868589345223316,
+      "sigma_min_commutator": 0.07739894690150054,
+      "shared_singular_value": 0.07739894690150054,
+      "n_kraus": 2
+    },
+    {
+      "idx": 1451,
+      "iter": 167,
+      "purity": 0.34407783096027456,
+      "sigma_min_commutator": 0.08207286208759033,
+      "shared_singular_value": 0.08207286208759033,
+      "n_kraus": 2
+    },
+    {
+      "idx": 1357,
+      "iter": 86,
+      "purity": 0.3461637602336478,
+      "sigma_min_commutator": 0.09847240224437324,
+      "shared_singular_value": 0.09847240224437324,
+      "n_kraus": 2
+    },
+    {
+      "idx": 264,
+      "iter": 130,
+      "purity": 0.3462946722673106,
+      "sigma_min_commutator": 0.3295989581558211,
+      "shared_singular_value": 0.3295989581558211,
+      "n_kraus": 2
+    },
+    {
+      "idx": 1186,
+      "iter": 98,
+      "purity": 0.34652453317524573,
+      "sigma_min_commutator": 0.06364212212513416,
+      "shared_singular_value": 0.06364212212513416,
+      "n_kraus": 2
+    },
+    {
+      "idx": 1437,
+      "iter": 147,
+      "purity": 0.34684805782759276,
+      "sigma_min_commutator": 0.19889078834164978,
+      "shared_singular_value": 0.19889078834164978,
+      "n_kraus": 2
+    },
+    {
+      "idx": 1947,
+      "iter": 175,
+      "purity": 0.3473416638644941,
+      "sigma_min_commutator": 0.16698382431351985,
+      "shared_singular_value": 0.16698382431351985,
+      "n_kraus": 2
+    },
+    {
+      "idx": 566,
+      "iter": 63,
+      "purity": 0.3477005219907947,
+      "sigma_min_commutator": 0.28962987862830936,
+      "shared_singular_value": 0.28962987862830936,
+      "n_kraus": 2
+    }
+  ],
+  "overlap_top20": [
+    1088,
+    524
+  ]
+}

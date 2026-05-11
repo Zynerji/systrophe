@@ -1,0 +1,23 @@
+{
+  "phase_K": {
+    "n": 1500,
+    "max_purity": 0.8582260849606799,
+    "P_gt_07": 0.006666666666666667,
+    "P_gt_09": 0.0,
+    "pearson_purity_vs_triple_overlap": 0.4465506577469582
+  },
+  "phase_N": {
+    "n_U": 100,
+    "n_init": 10,
+    "mean_max_distance": 3.472914215627129e-10,
+    "max_max_distance": 1.9579509871814523e-09,
+    "fraction_unique": 1.0
+  },
+  "phase_P": {
+    "n": 1500,
+    "ipr_mean": 0.29165827472070693,
+    "ipr_max": 0.9456005438075678,
+    "pearson_purity_vs_ipr": -0.046513248467622746
+  },
+  "phase_AI": "see stdout"
+}
