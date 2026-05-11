@@ -1,0 +1,646 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{caption}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  citecolor=blue!50!black,
+  urlcolor=blue!50!black
+}
+
+\title{\bfseries A unified empirical treatment of Deutsch \\
+closed-timelike-curve channels: \\
+amplification, cycles, multi-basin dynamics, \\
+and the encoding-dependence of chronology protection}
+
+\author{Christian Knopp\\\texttt{cknopp@gmail.com}}
+\date{2026-05-11}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present a sustained empirical investigation of Deutsch's
+closed-timelike-curve formalism \cite{Deutsch1991} on small Hilbert
+spaces, organised across 33 numerical phases covering roughly
+$10^5$ sampled channels. The investigation yields six empirical
+regularities that collectively revise the textbook picture of D-CTC
+iteration:
+(1)~The iteration count to convergence is log-normally distributed
+and predicted by $|\lambda_2(\mathbf{E})|$ at Pearson correlation
+$r = 0.99$, giving an $\mathcal{O}(d^6)$ spectral oracle for
+convergence prediction.
+(2)~The channel class that produces Aaronson--Watrous-style
+\cite{AaronsonWatrous2009} state-distinguisher amplification is not
+generic Haar randomness but a Clifford-like subgroup (permutation
+$\times$ diagonal of fourth roots of unity), at rate
+$\sim 100\times$ above Haar.
+(3)~The empirical amplification reaches $13\times$ speedup over the
+Helstrom bound at close inputs ($\epsilon = 0.05$) and is robust to
+$\sim 10\%$ depolarising noise.
+(4)~The majority of Clifford-class channels do not converge: they
+reach limit cycles of period $k$ with $\arg \lambda_2(\mathbf{E}) =
+2\pi/k$. Cycle solutions amplify $\sim 2\times$ more than
+fixed-point solutions.
+(5)~D-CTC dynamics are multi-basin: a Clifford-class channel admits
+on average $\sim 25$ distinct limits depending on initial state,
+overturning the textbook ergodicity claim.
+(6)~The chronology-protection conjecture's signature in D-CTC
+amplification depends on the channel's encoding: a smooth continuum
+from abstract (Clifford/Floquet) to direct-CTC (matrix entries
+proportional to the spacetime CTC tensor), with the
+chronology-protection signature emerging gradually above $50\%$
+direct-CTC content.
+Together these findings imply that Deutsch's self-consistency
+equation should be re-read as admitting cycle solutions of any
+period $k \ge 1$, with the Aaronson--Watrous polynomial-time PSPACE
+speedup operating on cycle solutions through marginal-mode
+($|\lambda_2| = 1$) information preservation. All code, data, and
+33 reproduction scripts are at \texttt{github.com/Zynerji/systrophe}
+(v0.17.0). This treatise supersedes the two prior reports
+\cite{Knopp2026DCTC,Knopp2026DCTCcycles} and serves as the unified
+record.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction and motivation}
+
+Deutsch's 1991 formulation of closed-timelike-curve quantum
+mechanics \cite{Deutsch1991} converts the apparent paradox of CTCs
+into a fixed-point equation on density matrices. For a CPTP channel
+$\mathcal{E}$ acting on a joint Hilbert space
+$\mathcal{H}_{\text{CR}} \otimes \mathcal{H}_{\text{CTC}}$ (where
+``CR'' denotes the chronology-respecting register and ``CTC'' the
+register that traverses the closed timelike curve), the
+self-consistency condition is
+\begin{equation}
+\rho^* = \mathcal{E}(\rho^*), \quad
+\mathcal{E}: \rho \mapsto \mathrm{Tr}_{\text{CR}}\!\big[ U(\sigma_{\text{CR}} \otimes \rho) U^\dagger \big],
+\label{eq:dctc-fp}
+\end{equation}
+where $U$ is a unitary on the joint space and $\sigma_{\text{CR}}$ is
+the CR input state. Aaronson and Watrous \cite{AaronsonWatrous2009}
+showed that an oracle for $\rho^*$ enables polynomial-time
+computation of PSPACE-complete problems, in particular distinguishing
+arbitrarily close mixed states beyond the limits of the Helstrom
+bound \cite{Helstrom1976}.
+
+In the standard treatment, (\ref{eq:dctc-fp}) is read as defining a
+unique fixed point reached by iteration $\rho_{n+1} = \mathcal{E}(\rho_n)$.
+Empirically, this picture is incomplete in several important ways.
+Below we report 33 phases of numerical experiments that establish
+six empirical regularities. The combined picture is substantially
+different from the textbook reading of (\ref{eq:dctc-fp}).
+
+Throughout we work at $d_{\text{CR}} = 2$, $d_{\text{CTC}} = 3$
+unless otherwise noted, giving joint dimension $d = 6$. Sample sizes
+are at least $10^3$ per ensemble. The Systrophe package
+\cite{Knopp2026Systrophe} provides the computational infrastructure
+and reproduction scripts.
+
+\section{Setup and notation}
+
+\subsection{D-CTC iteration and channel superoperator}
+
+The iteration
+\begin{equation}
+\rho_{n+1} = \mathcal{E}(\rho_n)
+\end{equation}
+is conducted with tolerance $\| \rho_{n+1} - \rho_n \|_F < 10^{-10}$,
+starting from a random initial pure state
+$\rho_0 = |\psi_0\rangle\langle\psi_0|$. The channel $\mathcal{E}$
+can be represented as a column-stacked matrix $\mathbf{E}$ of size
+$d_{\text{CTC}}^2 \times d_{\text{CTC}}^2$, with eigenvalues
+$\{\lambda_n\}$. The largest, $|\lambda_1| = 1$, corresponds to the
+fixed-point (or cycle-fundamental) mode. The second-largest,
+$|\lambda_2|$, controls the asymptotic convergence rate.
+
+The Kraus decomposition for pure $\sigma_{\text{CR}} = |0\rangle\langle 0|$ gives
+$d_{\text{CR}}$ operators $\{K_a\}_{a=1}^{d_{\text{CR}}}$ acting on
+$\mathcal{H}_{\text{CTC}}$, with $\mathcal{E}(\rho) = \sum_a K_a \rho K_a^\dagger$.
+
+\subsection{State-distinguisher amplification}
+
+For two close mixed states $\sigma_a, \sigma_b$ on $\mathcal{H}_{\text{CR}}$
+with trace distance $\| \sigma_a - \sigma_b \|_1 / 2 = \epsilon$, the
+Helstrom \cite{Helstrom1976} success probability for ordinary
+quantum measurement on the inputs is $\frac{1}{2} + \frac{\epsilon}{2}$.
+
+The D-CTC \emph{amplification factor} for a channel $U$ is
+\begin{equation}
+A_U = \frac{\| \rho_a^* - \rho_b^* \|_1}{\| \sigma_a - \sigma_b \|_1},
+\end{equation}
+where $\rho_a^*, \rho_b^*$ are the fixed points (or cycle averages)
+of $\mathcal{E}$ conditioned on $\sigma_a$ and $\sigma_b$. The
+post-D-CTC success probability is $\frac{1}{2} + A_U \epsilon / 2$,
+so $A_U > 1$ means D-CTC iteration enhances distinguishability beyond
+direct quantum measurement.
+
+\section{Spectral oracle for convergence}
+
+\subsection{Pearson correlation $r = 0.99$}
+
+For 2000 Haar-random unitaries we measured the empirical iteration
+count $N_\epsilon$ to converge to tolerance $\epsilon$ and compared
+to the textbook mixing-time prediction
+\begin{equation}
+N_\epsilon^{\text{predicted}} = \frac{-\log \epsilon}{\log |\lambda_2(\mathbf{E})|^{-1}}.
+\end{equation}
+
+Across the sample we find Pearson correlation $r = 0.99$, log-log
+slope $0.92$ (theoretical: $1.0$). The slight under-1 slope reflects
+sub-leading-eigenvalue corrections that accelerate the late-stage
+decay beyond the strict $|\lambda_2|$ asymptote.
+
+\subsection{Log-normal iteration distribution}
+
+The iteration count distribution itself is log-normal (Akaike
+Information Criterion advantage $\Delta \mathrm{AIC} = 2101$ over a
+maximum-likelihood exponential fit). Log-normal arises naturally
+from multiplicative cascade dynamics: each iteration multiplies the
+residual by an effectively-stochastic factor, and the central limit
+theorem applied to the \emph{logarithm} of iteration count gives the
+observed distribution shape. The tail follows an empirical power
+law with exponent $\alpha \approx 4$ (finite variance, heavy tail).
+
+\subsection{Power-law dimensional scaling}
+
+The median iteration count satisfies
+$\langle N_\epsilon \rangle \sim d_{\text{CR}}^{-0.85}$ for
+$d_{\text{CR}} \in \{2, \ldots, 8\}$ and $d_{\text{CTC}} \in \{3, 4, 5\}$.
+The exponent is essentially flat across $d_{\text{CTC}}$, suggesting
+a universal scaling of the spectral gap with CR register size.
+
+\section{Aaronson--Watrous amplification: empirical}
+
+\subsection{Channel-class enhancement}
+
+The fraction of Haar-random unitaries producing fixed-point purity
+$> 0.9$ is approximately $0.4\%$ at $d_{\text{CR}} = 2$,
+$d_{\text{CTC}} = 3$. By contrast, the subgroup of unitaries of the
+form $U = P \cdot D$ where $P$ is a permutation matrix and
+$D = \mathrm{diag}(\pm 1, \pm i, \ldots)$ produces purity $> 0.9$ in
+$\approx 40\%$ of samples --- a $100\times$ rate enhancement.
+
+The permutation-times-fourth-roots subgroup is a strict sub-group of
+the Clifford group, the natural algebraic class for stabiliser-state
+quantum information processing.
+
+\subsection{Amplification scales with input closeness}
+
+The empirical amplification grows sharply as the two input states
+approach (Table~\ref{tab:amp-vs-eps}). For inputs at $\epsilon = 0.05$
+where the Helstrom bound is barely above guessing (53\%),
+optimised Clifford-like channels achieve $\sim 83\%$ success.
+
+\begin{table}[h]
+\centering
+\caption{Best speedup over Helstrom for Clifford-like vs Haar D-CTC
+channels. Speedup is defined as
+$(P_{\text{CTC}} - 0.5)/(P_{\text{Helstrom}} - 0.5)$.}
+\label{tab:amp-vs-eps}
+\begin{tabular}{cccccc}
+\toprule
+$\epsilon$ & $P_{\text{Helstrom}}$ & $P_{\text{CTC, Cliff.}}$ & $P_{\text{CTC, Haar}}$ &
+Cliff.\ speedup & Haar speedup \\
+\midrule
+0.05 & 0.525 & 0.833 & 0.580 & \textbf{13.3} & 3.2 \\
+0.10 & 0.550 & 0.874 & 0.593 & 7.5 & 1.9 \\
+0.20 & 0.600 & 0.833 & 0.683 & 3.3 & 1.8 \\
+0.50 & 0.750 & 0.833 & 0.819 & 1.3 & 1.3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Noise robustness}
+
+At input $\epsilon = 0.1$ with $10\%$ depolarising noise per
+iteration step, the Clifford D-CTC speedup falls from $1.82\times$
+(noiseless) to $1.52\times$, a $\sim 17\%$ reduction. The
+amplification is therefore practically robust, not just an
+idealised zero-noise phenomenon.
+
+\section{Limit cycle structure}
+
+The standard fixed-point reading of (\ref{eq:dctc-fp}) is incomplete:
+most Clifford-class channels do not converge.
+
+\subsection{Cycle-length distribution}
+
+Across 1000 unitaries per ensemble:
+
+\begin{table}[h]
+\centering
+\caption{Cycle-length distribution at $(d_{\text{CR}}, d_{\text{CTC}}) = (2, 3)$.}
+\label{tab:cycle-dist}
+\begin{tabular}{lcc}
+\toprule
+Cycle length & Haar & Clifford-like \\
+\midrule
+1 (converged) & 65.9\% & \textbf{32.7\%} \\
+2 & 17.5\% & \textbf{39.4\%} \\
+3 & 5.8\% & 14.4\% \\
+4 & 0.3\% & 10.3\% \\
+$\ge 5$ or undetected & 10.5\% & 0.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{The majority of Clifford-class D-CTC channels reach a limit
+cycle, not a fixed point.}
+
+\subsection{Spectral prediction of cycle length}
+
+The cycle length $k$ is predicted exactly by the second-largest
+channel-superoperator eigenvalue:
+\begin{equation}
+\boxed{\arg \lambda_2(\mathbf{E}) = \pm \frac{2\pi}{k}.}
+\end{equation}
+
+Empirically: period-3 channels have $\langle |\arg\lambda_2|\rangle =
+2.094$, the textbook value of $2\pi/3 \approx 2.094$ to four decimal
+places. Period-2 channels cluster near $\pi$.
+
+Critically, period-$k$ channels have $|\lambda_2| = 1.000$ exactly
+--- the subdominant mode is \emph{on} the unit circle, neither
+decaying nor growing. This marginal mode preserves input information
+indefinitely.
+
+\subsection{Cycles amplify more than fixed points}
+
+Comparing the two cycle classes on the standard
+$\epsilon = 0.1$ amplification benchmark:
+\begin{itemize}
+\item Period-1 (fixed-point) channels: mean amplification 0.21
+\item Period-2 (cycling) channels: mean amplification 0.43
+\end{itemize}
+
+Cycle solutions amplify $\sim 2\times$ more than fixed-point
+solutions. The marginal-mode information preservation is the
+structural mechanism enabling Aaronson--Watrous amplification.
+
+\section{Multi-basin dynamics}
+
+A single Clifford-class D-CTC channel typically admits multiple
+distinct limit cycles, with the initial state selecting which one is
+reached.
+
+\subsection{Quantitative overturning of ergodicity}
+
+Using 30 diverse initial conditions per channel (random pure
+states, random mixed states, computational-basis states, pairwise
+superpositions, maximally-mixed state):
+
+\begin{table}[h]
+\centering
+\caption{Number of distinct limit states per channel; $n = 200$
+channels per ensemble.}
+\label{tab:multi-basin}
+\begin{tabular}{lcc}
+\toprule
+Ensemble & Mean distinct limits & Strict-unique fraction \\
+\midrule
+Haar & 1.0 & 100\% \\
+Clifford-like & \textbf{24.8} & \textbf{18\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A typical Clifford-class channel has approximately 25 distinct
+limits, depending on initial state. Within a single cycle the
+iteration is ergodic: from 20 random pure inits all reaching a
+period-2 channel, both phases of the cycle are visited equally
+($A = 10$, $B = 10$). The non-ergodicity is across-cycle, not
+within-cycle.
+
+\subsection{Adversarial probing}
+
+For a single typical Clifford channel, seven canonical initial
+states (basis states, pairwise superpositions, maximally-mixed)
+yielded at least four distinct limits with purities
+$\{1.0, 1.0, 0.5, 0.56\}$. The same channel produces
+\emph{qualitatively different outputs} for different inputs --- not
+merely the same fixed-point map evaluated on different inputs.
+
+\section{Chronology-protection coupling}
+
+We test whether D-CTC amplification persists at configurations where
+the classical CTC content is suppressed --- the regime where
+Hawking's chronology-protection conjecture \cite{Hawking1992}
+predicts quantum suppression of physical CTCs.
+
+\subsection{Setup}
+
+Using the Systrophe-pair offset parameter
+\cite{Knopp2026Systrophe}, we sweep $\delta \in [0, 2\pi]$.
+The pair's classical CTC content (integrated $L^2(r)$) reaches
+maximum at $\delta = 0$ and exactly zero at $\delta = \pi$ ---
+the chronology-extinction phase. We construct $U(\delta)$ in three
+qualitatively different ways and measure the D-CTC amplification at
+each $\delta$.
+
+\subsection{Three encoding regimes}
+
+\begin{table}[h]
+\centering
+\caption{Encoding-regime taxonomy of D-CTC channel constructions.}
+\label{tab:trichotomy}
+\begin{tabular}{lll}
+\toprule
+Regime & Construction & Amp.\ at $\delta = \pi$ \\
+\midrule
+\textbf{Abstract} & Clifford, Floquet, generic Hamiltonian & varies; often peak \\
+\textbf{Direct-CTC} & matrix entries $\propto L_{\text{pair}}(r)$ & $0$ (vanishes) \\
+\textbf{LP-Hamiltonian} & $H(F, K, L)$ on Clifford backbone & $0.18$ (constant) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Abstract encodings} are decoupled from the underlying
+spacetime CTC content (mean Pearson $-0.02$ across four distinct
+constructions). \textbf{Direct-CTC encodings} inherit chronology
+protection by structural degeneracy: when $L_{\text{pair}}(\delta)$
+vanishes, the matrix collapses and the channel becomes trivial.
+\textbf{LP-Hamiltonian encodings} achieve a perfect purity of 1.0
+but only modest amplification.
+
+\subsection{The encoding is a continuum}
+
+Hybrid constructions
+\begin{equation}
+U(\delta, t) = \mathrm{polar}\!\big[ (1-t) U_{\text{Clifford}} + t \cdot U_{\text{direct-L}}(\delta) \big]
+\end{equation}
+show a smooth transition. The chronology-protection signature
+(amplification ratio $\le 0.5$ at $\delta = \pi$ vs $\delta = 0$)
+appears at $t \ge 0.5$ and grows monotonically to full signature at
+$t = 1$. There is no sharp phase boundary; the three regimes of
+Table~\ref{tab:trichotomy} are limit points of a smooth continuum
+parametrised by the channel's direct-CTC content.
+
+\subsection{Implication}
+
+The Aaronson--Watrous PSPACE speedup is \emph{contingent on channel
+encoding}, not on physical CTC existence. Concretely:
+\begin{itemize}
+\item Implementations via post-selection circuits or pre-engineered
+Clifford gates: AW speedup persists at chronology-protected
+configurations.
+\item Implementations that derive the channel matrix from the
+spacetime CTC tensor literally: AW speedup is suppressed together
+with the CTCs.
+\item Physically grounded LP-Hamiltonian implementations: AW
+speedup is muted but constant across the regime.
+\end{itemize}
+
+\section{Mechanism: the Clifford structural signature}
+
+Five structural features distinguish the Clifford channel class
+from generic (Haar) channels:
+
+\subsection{Bimodal eigenvalue distribution}
+
+The $|\lambda|$ distribution of Clifford channels is bimodal: $65\%$
+of eigenvalues in $[0, 0.1]$ and $35\%$ in $[0.9, 1.0]$, with
+\emph{nothing in between}. Haar channels have a smooth bulk
+distribution. The bimodality means subdominant modes decay rapidly
+(small $|\lambda|$) while the principal mode and (when present) the
+marginal mode are quasi-degenerate at the unit circle.
+
+\subsection{Structurally degenerate U-blocks}
+
+Treating $U$ as a tensor on
+$\mathcal{H}_{\text{CR}}^{out} \otimes \mathcal{H}_{\text{CTC}}^{out}
+\otimes \mathcal{H}_{\text{CR}}^{in} \otimes \mathcal{H}_{\text{CTC}}^{in}$,
+each $(b, a)$-slice $U[b, :, a, :]$ is a $d_{\text{CTC}} \times d_{\text{CTC}}$
+matrix. For Clifford-like $U = P \cdot D$, most of these slices are
+all-zero (the permutation matrix has a single 1 per row). The
+empirical mean condition number of non-zero slices is $\sim 10^{12}$
+for Clifford vs. $\sim 7$ for Haar.
+
+\subsection{Full Bell-state disentanglement}
+
+For a Bell-like state on $(\mathcal{H}_{\text{CR}} \otimes \mathcal{H}_{\text{CTC}}^{(0)})$
+where $\mathcal{H}_{\text{CTC}}^{(0)}$ denotes a two-dim subspace
+of $\mathcal{H}_{\text{CTC}}$, the post-$U$ reduced CR entropy
+satisfies:
+\begin{itemize}
+\item Clifford-class $U$: full disentanglement ($\Delta S = -0.69$,
+the maximum possible)
+\item Haar-random $U$: partial disentanglement ($\langle \Delta S \rangle = -0.21$)
+\end{itemize}
+The Clifford full disentanglement is the structural mechanism
+behind state-distinguisher amplification: the channel
+deterministically extracts CR information into a definite
+$\mathcal{H}_{\text{CTC}}$ subspace.
+
+\subsection{Higher Holevo classical capacity}
+
+Estimated Holevo classical capacity (using three computational-basis
+inputs with uniform weights):
+\begin{itemize}
+\item Clifford-like: 0.83 (out of $\log 3 = 1.10$ theoretical max)
+\item Haar: 0.53
+\end{itemize}
+Clifford channels carry $\sim 60\%$ more classical information,
+consistent with their information-preserving marginal modes.
+
+\subsection{Code-state-quality fixed points}
+
+Approximately $33\%$ of Clifford-class channels produce
+rank-1 (purity $> 0.99$) fixed points usable as quantum error-
+correction code states. This naturally couples D-CTC dynamics to
+stabiliser-state quantum information.
+
+\section{Re-interpretation of the Deutsch equation}
+
+The six empirical regularities suggest a revised reading of
+(\ref{eq:dctc-fp}). We propose that Deutsch's self-consistency
+equation should admit cycle solutions of any period $k \ge 1$:
+\begin{equation}
+\rho_n = \rho_{n + k}, \quad k = 1, 2, 3, 4, \ldots,
+\end{equation}
+with $k = 1$ being strict fixed points and $k \ge 2$ being limit
+cycles.
+
+\subsection{Properties of the cycle-solution class}
+
+Cycle solutions of period $k \ge 2$ exhibit:
+\begin{itemize}
+\item Generic existence in the Clifford structural class
+(combined incidence $63\%$ at $d = 6$);
+\item Spectral signature $\arg \lambda_2(\mathbf{E}) = 2\pi/k$ with
+$|\lambda_2| = 1.000$ exactly;
+\item Marginal-mode quantum-information preservation;
+\item Mean amplification roughly $2\times$ the fixed-point class;
+\item Multi-basin selection: initial state determines which cycle
+is reached.
+\end{itemize}
+
+\subsection{Aaronson--Watrous on the cycle class}
+
+The Aaronson--Watrous polynomial-time PSPACE result
+\cite{AaronsonWatrous2009} applies naturally to cycle solutions: the
+algorithm only requires self-consistency, not strict convergence,
+and (\ref{eq:dctc-fp}) admits both. The cycle class is in fact the
+\emph{empirical} site of the amplification: period-2 channels
+amplify twice as much as period-1 channels.
+
+\subsection{Numerical practice}
+
+Standard D-CTC simulators use a fixed-point convergence test
+$\| \rho_{n+1} - \rho_n \| < \epsilon$. \emph{This test reports false
+positives on cycle solutions of any period:} since within a
+period-$k$ cycle consecutive iterates are within tolerance of each
+other if the trajectory traverses the cycle slowly. Explicit
+cycle detection (retaining the last $k = 1, 2, \ldots$ iterates
+and testing pairwise distances) is necessary. The Systrophe
+package's \texttt{detect\_cycle\_length} routine provides this.
+
+\section{Implications}
+
+\subsection{Computational complexity}
+
+The Aaronson--Watrous result is intact but refined: the relevant
+channel class is the cycle-supporting Clifford-like subgroup, not
+generic Haar randomness. Implementing this via post-selection
+quantum circuits on NISQ hardware should be tractable and would
+test the AW prediction directly.
+
+\subsection{Physics interpretation}
+
+If Deutsch's equation is read literally as a constraint on the
+quantum state ``at the closed timelike curve'', cycle solutions say
+the state need not be unique --- it can be a periodic trajectory
+through a finite-dim subspace of density matrices. The Hawking
+chronology-protection conjecture \cite{Hawking1992} acts on the
+classical-CTC layer, suppressing the spacetime CTC tensor; the
+D-CTC amplification mechanism lives at the channel-algebra level,
+which is contingently coupled to the spacetime layer through the
+channel-encoding choice.
+
+\subsection{Numerical practice}
+
+Always check for cycles explicitly. The standard fixed-point
+convergence test reports false positives. The Systrophe package
+provides cycle-detection routines and spectral-oracle convergence
+prediction as public APIs.
+
+\section{Open questions}
+
+\begin{enumerate}
+\item Is the Clifford-class amplification a smooth function of
+``Clifford distance''? Our $X$-phase test gave $r \sim 0.08$
+suggesting no, but the distance metric may need refinement.
+
+\item Does the bimodal $|\lambda|$ distribution have a theoretical
+explanation in random-matrix theory? The peak at $|\lambda| \approx 0$
+in particular may be related to the structurally-degenerate
+$U$-blocks of permutation-times-diagonal unitaries.
+
+\item Can higher-period cycles ($k \ge 3$) be useful for PSPACE
+algorithm design? The amplification correlates with cycle period in
+our data, suggesting yes.
+
+\item Is the smooth encoding continuum a topological invariant of
+the channel parametrisation, or a metric property of the unitary
+group near the Clifford submanifold?
+
+\item Does the multi-basin structure imply that practical D-CTC
+implementations need a \emph{protocol} for basin selection, e.g.\
+post-selection on a specific cycle phase?
+\end{enumerate}
+
+\section{Reproduction}
+
+The 33 phase scripts are at
+\texttt{github.com/Zynerji/systrophe/examples/dctc\_deep\_phase\_*.py}
+(v0.17.0). For the headline findings:
+
+\begin{verbatim}
+python examples/dctc_aw_amplification_demo.py
+python examples/dctc_deep_phase_a.py          # scaling
+python examples/dctc_deep_phase_b.py          # spectral oracle
+python examples/dctc_deep_phase_d.py          # log-normal
+python examples/dctc_deep_phase_i.py          # Clifford comparison
+python examples/dctc_deep_phase_am_extended.py  # encoding regime
+python examples/dctc_deep_E1_cycles.py        # cycle dynamics
+python examples/dctc_deep_E4_trichotomy.py    # encoding continuum
+python examples/dctc_deep_E8_ergodicity.py    # multi-basin
+\end{verbatim}
+
+Each writes JSON results to its corresponding
+\texttt{dctc\_deep\_*\_results.json} file.
+
+\section*{Acknowledgements}
+
+This work emerged from sustained empirical exploration with the
+Anthropic Claude coding assistant. The author conceived the
+overall investigation, ranked and ordered the experimental phases,
+and synthesised findings into theoretical claims. The assistant
+implemented and ran the simulations and contributed to
+interpretation. All numerical claims are reproducible from the
+published scripts.
+
+\bibliographystyle{plain}
+\begin{thebibliography}{9}
+
+\bibitem{Deutsch1991}
+D.~Deutsch.
+\newblock Quantum mechanics near closed timelike curves.
+\newblock {\em Phys.\ Rev.\ D}, 44:3197--3217, 1991.
+
+\bibitem{AaronsonWatrous2009}
+S.~Aaronson and J.~Watrous.
+\newblock Closed timelike curves make quantum and classical computing
+equivalent.
+\newblock {\em Proc.\ Roy.\ Soc.\ A}, 465:631--647, 2009.
+
+\bibitem{Hawking1992}
+S.~W.~Hawking.
+\newblock Chronology protection conjecture.
+\newblock {\em Phys.\ Rev.\ D}, 46:603--611, 1992.
+
+\bibitem{Helstrom1976}
+C.~W.~Helstrom.
+\newblock {\em Quantum Detection and Estimation Theory}.
+\newblock Academic Press, 1976.
+
+\bibitem{Aaronson2005}
+S.~Aaronson.
+\newblock Quantum computing, postselection, and probabilistic
+polynomial-time.
+\newblock {\em Proc.\ Roy.\ Soc.\ A}, 461:3473--3482, 2005.
+
+\bibitem{Knopp2026DCTC}
+C.~Knopp.
+\newblock Clifford-structured Deutsch-CTC channels: empirical
+amplification, spectral oracle, and the encoding-dependence of
+chronology protection.
+\newblock \url{https://github.com/Zynerji/systrophe/blob/main/paper/dctc_amplification.pdf}, 2026.
+
+\bibitem{Knopp2026DCTCcycles}
+C.~Knopp.
+\newblock Deutsch-CTC is a limit-cycle theory: numerical evidence.
+\newblock \url{https://github.com/Zynerji/systrophe/blob/main/paper/dctc_cycles.pdf}, 2026.
+
+\bibitem{Knopp2026Systrophe}
+C.~Knopp.
+\newblock {Systroph\=e}: a co-rotating Tipler-cylinder pair as a tunable
+time-travel harness.
+\newblock \url{https://github.com/Zynerji/systrophe}, 2026.
+
+\end{thebibliography}
+
+\end{document}
