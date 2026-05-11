@@ -1,0 +1,18 @@
+{
+  "haar_eigs": {
+    "mean": 0.5657574403237666,
+    "frac_gt_09": 0.11644444444444445,
+    "n_samples": 4500
+  },
+  "clifford_eigs": {
+    "mean": 0.388,
+    "frac_gt_09": 0.388,
+    "n_samples": 4500
+  },
+  "spacing_log_means": {
+    "haar": -11.576684032133771,
+    "clifford": -27.622856022156377,
+    "poisson_ref": -0.577
+  },
+  "ergodicity_fraction": 1.0
+}
