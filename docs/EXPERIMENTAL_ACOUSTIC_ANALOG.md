@@ -211,7 +211,7 @@ The full mathematical machinery is in:
   condition
 - `src/systrophe/horned_torus.py`: regular + inverted horn modes
   for vortex-core profiles
-- `examples/grok_verification.py`: closed-form Tipler verification
+- `examples/external_claim_verification.py`: closed-form Tipler verification
 - `paper/systrophe_qft_on_ctc.tex`: detailed derivation (Whitepaper
   II, forthcoming v0.13)
 

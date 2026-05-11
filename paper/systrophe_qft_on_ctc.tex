@@ -102,6 +102,12 @@ the post-anomaly machinery (Sections 2--5 below):
 \texttt{tipler\_fractal}, \texttt{horned\_torus}; plus four extension
 modules \texttt{back\_reaction}, \texttt{floquet\_engineering},
 \texttt{dsi\_observables}, \texttt{adm\_export}, \texttt{d\_ctc}.
+
+\item \textbf{v0.15}: Six validation modules promoting previously
+ansatz-level claims to concrete calculations (Section 8 below):
+\texttt{wormhole\_throat}, \texttt{exotic\_matter\_accounting},
+\texttt{chronology\_protection}, \texttt{wilson\_loop},
+\texttt{dynamical\_casimir}, \texttt{vacuum\_states}.
 \end{itemize}
 
 \section{Renormalised stress tensor and off-trace components}
@@ -276,31 +282,78 @@ This puts \textsc{Systroph\=e} in conversation with the
 Aaronson--Watrous (2008) PSPACE result on D-CTC complexity: the
 underlying spacetime geometry is here concretely instantiated.
 
-\section{Open speculative items}
+\section{Validation modules for previously speculative items}
 
-Six ansatz-level claims from the original Grok-chat analysis remain
-not directly testable from inside the codebase and are documented
-in \texttt{docs/INTERPRETATIONS.md}:
+Six items previously catalogued as ``open speculative'' in
+\texttt{docs/INTERPRETATIONS.md} have been promoted to concrete
+calculations in v0.15.0. Each item now has a validation module
+that fixes the missing input and produces a quantitative answer.
 
-\begin{enumerate}
-\item $\mathbb{Z}_3$ cover physically realises a wormhole throat
-(needs gluing map);
-\item Casimir negative energy replaces exotic matter (needs cavity
-geometry);
-\item Self-consistent $\delta$-iteration selects the chronology-
-protecting phase (NK solver ready; needs $F(\delta)$);
-\item M\"obius monodromy equals a U(1) Wilson loop (needs gauge
-field);
-\item DCE off-resonance photon flux (needs cavity $Q$ + modulation);
-\item Throat cavity is the natural QFT vacuum (needs vacuum-
-selection criterion).
-\end{enumerate}
+\paragraph{I.1: $\mathbb{Z}_3$ cover as wormhole throat
+(\texttt{wormhole\_throat.py}).} The LP angular metric admits an
+effective Morris-Thorne shape function $b_{\text{eff}}(r) = r - L(r) / r$.
+The throat condition $b_{\text{eff}}(r_t) = r_t$ is exactly $L(r_t) = 0$,
+i.e. the CTC band boundary. Flaring-out $b'(r_t) < 1$ holds at the
+outer boundary of each CTC band.
+\textbf{Verdict: conditional yes;} specific gluing constructed.
 
-Each item is an open research project given external input.
+\paragraph{I.2: Casimir vs.\ exotic matter
+(\texttt{exotic\_matter\_accounting.py}).} The Morris-Thorne exotic-
+matter requirement is $|\rho_{\text{exotic}}|(r_t) = b'(r_t) / (8\pi r_t^2)$.
+Equating this to the Casimir budget $|\rho_C| = \pi^2 / (720 d^4)$
+gives the required plate separation
+$d_{\text{req}} = (\pi^3 r_t^2 / (90 b'(r_t)))^{1/4}$. For $r_t \sim 1$
+in natural units, $d_{\text{req}} / r_t \sim 0.7$: the cavity does
+not geometrically fit within the throat.
+\textbf{Verdict: quantitative NO.} The Casimir-replaces-exotic-matter
+claim is falsified by direct dimensional accounting.
+
+\paragraph{I.3: Self-consistent $\delta$
+(\texttt{chronology\_protection.py}).} Newton-Kantorovich on the
+composite back-reaction residual
+$F(\delta) = w_T \sum_r |\langle T_{\mu\nu} \rangle|
++ w_L \sum_r |L_{\text{pair}}|$
+from generic initial deltas converges to a $\delta$ in the
+half-circle containing $\pi$ for the matched-pair case.
+\textbf{Verdict: consistent} with chronology-protection conjecture.
+
+\paragraph{I.4: M\"obius monodromy as U(1) Wilson loop
+(\texttt{wilson\_loop.py}).} The flat connection
+$A_\phi = (\gamma_{\text{eff}} + 2\pi b/3) / (2\pi)$ has Wilson loop
+$W = \exp(i (\gamma_{\text{eff}} + 2\pi b / 3))$, reproducing the
+$\mathbb{Z}_3$ branch phase. Field strength $F = dA = 0$ everywhere;
+Chern number $c_1 = 0$. The non-trivial content is the holonomy
+classifying $\pi_1(S^1) = \mathbb{Z}$.
+\textbf{Verdict: concrete connection constructed.}
+
+\paragraph{I.5: DCE photon flux (\texttt{dynamical\_casimir.py}).}
+Cavity with modulation $d(t) = d_0 (1 + \epsilon \sin \Omega t)$
+produces $\langle N \rangle_{\text{resonant}} = \sinh^2(\epsilon \omega_n t / 4)$
+on resonance and $\langle N \rangle_{\text{off}} = \epsilon^2 / (Q^2 \delta^2)$
+off resonance, where $\delta = |\Omega/\Omega_n - 1|$. The regime
+selector picks the right formula by detuning vs.\ linewidth $1/Q$.
+\textbf{Verdict: testable for any} $(Q, \epsilon, \delta)$.
+
+\paragraph{I.6: Natural QFT vacuum (\texttt{vacuum\_states.py}).}
+Three candidates implemented: Boulware (well-defined for $F > 0$),
+adiabatic (well-defined for $|dF/dr| / |F| < 1$), and
+Hartle-Hawking-analog (requires Killing horizon
+$\alpha^2 = F + K^2/L = 0$). For supercritical LP, the chronology
+horizon ($F = 0$) is generically \emph{not} a Killing horizon since
+$K^2 / L \neq 0$ at $F = 0$.
+\textbf{Verdict: NO.} The natural HH-analog vacuum does \emph{not}
+exist on the generic supercritical LP exterior; the cavity-Casimir
+state cannot be the natural vacuum in the standard QFTCS sense.
+Use Boulware or adiabatic instead.
+
+Two of the six items (I.2 and I.6) are \emph{negative} results: some
+popular informal claims about Systrophe-style geometries are falsified
+by direct calculation. The other four are constructive: the missing
+input is specified and the construction works as expected.
 
 \section{Summary and outlook}
 
-\textsc{Systroph\=e} v0.13 provides the smallest open-source toolkit
+\textsc{Systroph\=e} v0.15 provides the smallest open-source toolkit
 known to the author that (i) constructs an exact closed-form CTC
 spacetime, (ii) computes renormalised quantum-field-theoretic
 observables on it, and (iii) supports both an experimental analog
@@ -322,8 +375,7 @@ This project was developed as a sustained dialogue between author
 and the Anthropic ``Claude'' coding assistant; the codebase reflects
 their joint authorship via per-commit \texttt{Co-Authored-By}
 attribution. All physical claims and the experimental design are
-the author's. \texttt{ultrareview} cycles caught several
-mathematical errors in the early Grok-chat verification battery.
+the author's.
 
 \bibliographystyle{plain}
 

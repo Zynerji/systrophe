@@ -5,6 +5,51 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.0] - 2026-05-10
+
+### Validation modules for the six previously-speculative items + branding cleanup
+
+All six items previously catalogued as "open ansatz" in
+`docs/INTERPRETATIONS.md` now have concrete validation modules:
+
+- `wormhole_throat.py`: Morris-Thorne shape function on LP exterior;
+  throat condition is L(r) = 0. **Verdict: conditional yes** (gluing
+  constructed). 10 tests.
+- `exotic_matter_accounting.py`: comparison of Morris-Thorne exotic-
+  matter budget vs. Casimir budget. **Verdict: quantitative NO**
+  (d_req / r_t ~ 0.7 in natural units; cavity does not fit). 16 tests.
+- `chronology_protection.py`: NK on back-reaction residual from
+  multi-seed sweep. **Verdict: consistent** (matched-pair selects
+  delta in half-circle around pi). 6 tests.
+- `wilson_loop.py`: flat U(1) connection A = (gamma + 2 pi b/3)/(2 pi).
+  **Verdict: concrete connection constructed** (Mobius monodromy
+  is U(1) holonomy of this specific flat connection). 16 tests.
+- `dynamical_casimir.py`: Bogoliubov-coefficient on/off-resonance
+  photon flux. **Verdict: testable** for any (Q, eps, detuning).
+  16 tests.
+- `vacuum_states.py`: Boulware / adiabatic / Hartle-Hawking-analog.
+  **Verdict: NO** for HH (chronology horizon != Killing horizon).
+  11 tests.
+
+Two negative results (I.2, I.6) falsify popular informal claims by
+direct calculation.
+
+### Branding cleanup
+All "Grok" mentions removed from: README, CHANGELOG, paper LaTeX,
+INTERPRETATIONS.md, ARXIV_SUBMISSION.md, EXPERIMENTAL_ACOUSTIC_ANALOG.md,
+source-code docstrings (acoustic_metric, anomaly_inflow,
+newton_kantorovich, tipler_fractal, casimir), test names, and example
+scripts. Example files renamed:
+- `examples/grok_verification.py` -> `external_claim_verification.py`
+- `examples/grok_updates_verification.py` -> `external_claim_verification_extended.py`
+- `examples/grok_falsification.py` -> `cauchy_horizon_finiteness_check.py`
+(plus matching `_results.json` files).
+
+Whitepaper II Section 8 rewritten as "Validation modules for
+previously speculative items" with per-item verdict paragraphs.
+
+Tests: 481 passed, 1 skipped (was 406). +75 new tests.
+
 ## [0.14.1] - 2026-05-10
 
 - `examples/quantum_layer_walkthrough.py`: end-to-end demonstration
@@ -77,7 +122,7 @@ Tests: 406 passed, 1 skipped (was 357).
 
 ## [0.13.0] - 2026-05-10
 
-### Eight new modules integrating Bucket A + Bucket C of the Grok 14
+### Eight new modules integrating Bucket A + Bucket C of the external 14
 ###   not-testable claims, with Bucket B documented as interpretation.
 
 #### Bucket C (yet-unverified, given mathematical scaffolding)
@@ -87,7 +132,7 @@ Tests: 406 passed, 1 skipped (was 357).
     `exp(pi / alpha)`, box-counting dimension 0. Not a fractal *by itself*.
   - `CascadeDSI` multi-cylinder cascade: cascading alpha-scales produce
     non-trivial box-counting dimension (>0.3 in test case).
-  - Verdict: Grok's "fractal" handwave has real content for the
+  - Verdict: the "fractal" handwave has real content for the
     multi-source cascade, not for the base case.
   - 14 tests, all pass.
 
@@ -98,12 +143,12 @@ Tests: 406 passed, 1 skipped (was 357).
     closed cover is anomaly-cancelled (verified).
   - For nonzero gamma_eff, the sum breaks; Chern-Simons coefficient
     `1/(24 pi^2)` times bulk flux closes the residual exactly.
-  - Verdict: Grok's "Z_3 anomaly inflow" is real and constructible.
+  - Verdict: the "Z_3 anomaly inflow" is real and constructible.
   - 19 tests, all pass.
 
 - `horned_torus.py` --- regular + inverted horn variants.
   - Both modes: `h(z) > 0`, so the r-CTC bands are *unchanged* in
-    location. Grok's "horn protects chronology" is *falsified*.
+    location. the "horn protects chronology" is *falsified*.
   - What does change: CTC traversal proper-area integral
     `int_{L<0} sqrt|L_h| dr dz`. Regular horn (pinch) shortens it;
     inverted horn (bulge) lengthens it. The inverted horn was added at
@@ -129,7 +174,7 @@ Tests: 406 passed, 1 skipped (was 357).
   - Quadratic convergence verified on smooth test problems
     (`is_convergence_rate_quadratic`).
   - Picard iteration `picard_iteration_1d` provided for comparison.
-  - Direct demonstration that Grok's "constant-step" iteration was
+  - Direct demonstration that the "constant-step" iteration was
     linear (Picard), not quadratic (NK).
   - 11 tests, all pass.
 
@@ -170,7 +215,7 @@ Total: 109 new tests across 8 new modules; full suite remains green.
 ### Casimir / Z_3-cover mode sums (integrates verified updates.txt math)
 
 New module `systrophe.casimir` integrates the four mathematically-verified
-claims from `examples/grok_updates_verification.py`:
+claims from `examples/external_claim_verification_extended.py`:
 
 - `hurwitz_zeta_neg3(a)`: exact closed form
   `zeta_H(-3, a) = -a^4/4 + a^3/2 - a^2/4 + 1/120`
@@ -191,16 +236,16 @@ claims from `examples/grok_updates_verification.py`:
   closed form at s = -3).
 
 The module's docstring explicitly separates the verified mathematics
-from Grok's speculative throat-Casimir interpretation; only the
+from the speculative throat-Casimir interpretation; only the
 mathematics is implemented.
 
 Tests: 15 new in `tests/test_casimir.py`; all pass.
 
 ## [0.11.0] - 2026-05-10
 
-### Verified / falsified Grok-chat math assertions (examples/grok_verification.py)
+### Verified / falsified external-chat math assertions (examples/external_claim_verification.py)
 Systematic verification battery covering 19 mathematical claims from the
-Grok conversation on the Systrophe repo:
+external conversation on the Systrophe repo:
 
 - **VERIFIED (10)**: alpha formula `sqrt(4a^2 - 1)`; F closed form;
   phasor sum `A_eff e^{i delta_eff} = A_1 e^{i d_1} + A_2 e^{i d_2}`;
@@ -211,7 +256,7 @@ Grok conversation on the Systrophe repo:
   trace anomaly `K/(2880 pi^2)`; heat-kernel `a_2 = K/180`; CTC band
   is `L < 0`; tunable chronology via phase; log-measure minimum at
   delta = pi.
-- **FALSIFIED (1)**: Grok's "Ernst potential E_0 = F + i K". The Ernst
+- **FALSIFIED (1)**: the "Ernst potential E_0 = F + i K". The Ernst
   potential is `F + i psi` where psi is the *twist potential*, not
   the metric component `K = g_{t phi}`. They are dual but distinct
   fields.
@@ -266,9 +311,9 @@ Tests run for 2-3 minutes (the bound-state shooting is the bottleneck);
 - `detect_parametric_resonance(spec)`: locates avoided crossings in
   the Floquet band gap (candidate parametric-resonance points).
 
-**Grok-claim falsification** (`examples/grok_falsification.py`):
+**external-claim falsification** (`examples/cauchy_horizon_finiteness_check.py`):
 - Direct numerical test of the claim "Z_3 Mobius cover keeps
-  <T_munu> finite at Cauchy horizons" raised in a Grok conversation
+  <T_munu> finite at Cauchy horizons" raised in an external claim battery
   on the repo.
 - Result: Kretschmann scalar K converges to ~1.07 at the first
   Cauchy horizon (spread 0.17% across r in [r_h - 1e-3, r_h - 1e-4]).
@@ -276,7 +321,7 @@ Tests run for 2-3 minutes (the bound-state shooting is the bottleneck);
   without invoking any Z_3 cover. F = 0 is a *coordinate* singularity
   (ergosurface), not a curvature singularity; finiteness of the
   trace is intrinsic.
-- Grok's attribution overstated for the trace component; the
+- the attribution overstated for the trace component; the
   non-trivial chronology-protection question (off-trace <T_munu>
   via Hadamard point-splitting) remains open.
 

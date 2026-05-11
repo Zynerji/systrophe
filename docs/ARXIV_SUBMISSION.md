@@ -122,7 +122,7 @@ that prevents some downstream uses inconsistent with MIT.
 - [ ] Companion repo tagged at the corresponding version (v0.14.0)
 - [ ] Whitepaper I cited in Whitepaper II
 - [ ] Acknowledgements section accurate (Anthropic Claude attribution)
-- [ ] No use of unreviewed Grok-chat material in the body
+- [ ] No use of unreviewed external-claim material in the body
 - [ ] Source `.tex` is self-contained (no external `\include`)
 - [ ] License section in source matches MIT
 

@@ -8,7 +8,7 @@
       "name": "hurwitz_zeta_neg3",
       "claim": "Hurwitz zeta at s=-3: zeta_H(-3, a) = -a^4/4 + a^3/2 - a^2/4 + 1/120",
       "status": "VERIFIED",
-      "evidence": "max |Grok form - Bernoulli form| over a in [0.0, 0.5, 1.0, 0.3333333333333333, 0.6666666666666666, 0.16666666666666666]: 0.00e+00"
+      "evidence": "max |external form - Bernoulli form| over a in [0.0, 0.5, 1.0, 0.3333333333333333, 0.6666666666666666, 0.16666666666666666]: 0.00e+00"
     },
     {
       "name": "standard_casimir_formula",
@@ -18,19 +18,19 @@
     },
     {
       "name": "horned_torus_ctc_fractions",
-      "claim": "Horned torus L_eff = r^2 (1 - (omega r / R)^2 / 4) with hf=1 gives Grok-reported CTC fractions",
+      "claim": "Horned torus L_eff = r^2 (1 - (omega r / R)^2 / 4) with hf=1 gives external-reported CTC fractions",
       "status": "FALSIFIED",
-      "evidence": "Computed: {0.5: 0.0, 1.0: 0.0, 1.4: 0.0, 1.5: 0.0, 1.6: 0.0, 1.8: 0.0, 2.5: 0.0}. Grok: {0.5: 0.0, 1.4: 0.0, 1.5: 0.2, 1.6: 0.32, 1.8: 0.41}. Matches within 5% threshold: False."
+      "evidence": "Computed: {0.5: 0.0, 1.0: 0.0, 1.4: 0.0, 1.5: 0.0, 1.6: 0.0, 1.8: 0.0, 2.5: 0.0}. External claim: {0.5: 0.0, 1.4: 0.0, 1.5: 0.2, 1.6: 0.32, 1.8: 0.41}. Matches within 5% threshold: False."
     },
     {
       "name": "iterator_convergence_claim",
-      "claim": "Grok claims the self-consistent iterator converges to a fixed point in <10 iterations",
+      "claim": "External claim states the self-consistent iterator converges to a fixed point in <10 iterations",
       "status": "FALSIFIED",
-      "evidence": "The reported trace has constant per-iteration step ~-0.0228 across all iterations (max-min spread 0.0046). This is a linear walk, not convergence: a true fixed-point iteration has decreasing step. Grok's 'converged' verdict is incorrect; the iteration is simply walking past zero."
+      "evidence": "The reported trace has constant per-iteration step ~-0.0228 across all iterations (max-min spread 0.0046). This is a linear walk, not convergence: a true fixed-point iteration has decreasing step. the 'converged' verdict is incorrect; the iteration is simply walking past zero."
     },
     {
       "name": "topological_casimir_coefficient_evaluable",
-      "claim": "Grok's topological Casimir coefficient C(delta) is well-defined and evaluates without divergence",
+      "claim": "the topological Casimir coefficient C(delta) is well-defined and evaluates without divergence",
       "status": "VERIFIED",
       "evidence": "C(gamma) at gamma=0..2pi (9 samples): ['4.286694e-07', '-2.777560e-07', '-2.344286e-08', '1.743563e-07', '-6.805127e-06', '-3.418618e-05', '-1.012966e-04', '-2.335677e-04', '-4.625343e-04']. Note: physical interpretation (Casimir energy on a Z_3 cover at the throat) is asserted, not derived, in updates.txt."
     },
@@ -38,37 +38,37 @@
       "name": "topological_casimir_delta_dependence",
       "claim": "The topological Casimir coefficient depends meaningfully on delta",
       "status": "NOT TESTABLE",
-      "evidence": "max |C| = 4.625343e-04, min |C| = 2.344286e-08, ratio = 19730.2857. If ~1, C is essentially constant in delta (function of b/3 only) and Grok's claim that delta tunes Casimir strength fails. If >> 1, delta does tune it."
+      "evidence": "max |C| = 4.625343e-04, min |C| = 2.344286e-08, ratio = 19730.2857. If ~1, C is essentially constant in delta (function of b/3 only) and the claim that delta tunes Casimir strength fails. If >> 1, delta does tune it."
     },
     {
       "name": "casimir_sign_at_throat",
       "claim": "Casimir energy density at the throat is negative (required for NEC violation / traversability)",
       "status": "NOT TESTABLE",
-      "evidence": "Of 9 delta samples, C(delta) is positive at 2, negative at 7. Sign depends on delta; cannot make blanket 'rho < 0 stabilizes throat' claim. Even if C > 0 gives rho < 0, the throat-stability calculation Grok cites is not derived in updates.txt; just asserted."
+      "evidence": "Of 9 delta samples, C(delta) is positive at 2, negative at 7. Sign depends on delta; cannot make blanket 'rho < 0 stabilizes throat' claim. Even if C > 0 gives rho < 0, the throat-stability calculation external cites is not derived in updates.txt; just asserted."
     },
     {
       "name": "dce_off_switch_at_pi",
-      "claim": "DCE flux drops by >2 orders of magnitude near delta = pi (Grok's off-switch claim)",
+      "claim": "DCE flux drops by >2 orders of magnitude near delta = pi (the off-switch claim)",
       "status": "FALSIFIED",
-      "evidence": "|C(0)|/|C(pi)| = 0.0630. Grok claims >100. |C(0)| = 4.286694e-07, |C(pi)| = 6.805127e-06. Note: assumes gamma_eff(delta) = delta (simplest mapping); actual gamma_eff comes from phasor sum and may differ. The 'off switch at pi' for the CLASSICAL CTC bands is well-established and tested in Systrophe; transferring the same off-switch to DCE requires the phasor cancellation to also kill the Casimir coefficient. Grok asserts this without derivation."
+      "evidence": "|C(0)|/|C(pi)| = 0.0630. External claim states >100. |C(0)| = 4.286694e-07, |C(pi)| = 6.805127e-06. Note: assumes gamma_eff(delta) = delta (simplest mapping); actual gamma_eff comes from phasor sum and may differ. The 'off switch at pi' for the CLASSICAL CTC bands is well-established and tested in Systrophe; transferring the same off-switch to DCE requires the phasor cancellation to also kill the Casimir coefficient. External claim asserts this without derivation."
     },
     {
       "name": "casimir_cavity_at_throat_ansatz",
-      "claim": "Grok's identification of the ringhole throat as a Casimir cavity with effective separation 2 b (1 - lambda)",
+      "claim": "the identification of the ringhole throat as a Casimir cavity with effective separation 2 b (1 - lambda)",
       "status": "NOT TESTABLE",
-      "evidence": "Ansatz, not derived. A genuine throat-Casimir calculation would require (a) solving the wave equation in the actual ringhole metric, (b) imposing the Z_3 monodromy as a boundary condition on the cover, (c) summing zero-point energies with appropriate UV regularization. Grok skips (a), (b), (c) and writes the answer by analogy to flat-space Casimir."
+      "evidence": "Ansatz, not derived. A genuine throat-Casimir calculation would require (a) solving the wave equation in the actual ringhole metric, (b) imposing the Z_3 monodromy as a boundary condition on the cover, (c) summing zero-point energies with appropriate UV regularization. external skips (a), (b), (c) and writes the answer by analogy to flat-space Casimir."
     },
     {
       "name": "gravito_dce_formula_inherits_ansatz",
-      "claim": "Grok's gravito-dynamical Casimir power formula derived as the time-derivative of the static throat energy",
+      "claim": "the gravito-dynamical Casimir power formula derived as the time-derivative of the static throat energy",
       "status": "NOT TESTABLE",
       "evidence": "If the static Casimir energy at the throat is correct, the time-derivative form is correct calculus. But the static energy is an ansatz; so is its derivative."
     },
     {
-      "name": "grok_dce_toy_peak_power",
-      "claim": "Grok's toy run: delta(t) = 0.5 + 0.3 sin t, b(t) = 1 + 0.1 sin 2t, lambda = 0.7 -> peak DCE power ~ 0.042",
+      "name": "external_dce_toy_peak_power",
+      "claim": "the toy run: delta(t) = 0.5 + 0.3 sin t, b(t) = 1 + 0.1 sin 2t, lambda = 0.7 -> peak DCE power ~ 0.042",
       "status": "FALSIFIED",
-      "evidence": "Reproduced peak |P_DCE| = 0.0000 (Grok claimed ~ 0.042). Tolerance: 3 sigma of Grok's reporting precision."
+      "evidence": "Reproduced peak |P_DCE| = 0.0000 (external claimed ~ 0.042). Tolerance: 3 sigma of the reporting precision."
     },
     {
       "name": "exotic_matter_free_throat",
@@ -86,7 +86,7 @@
       "name": "acoustic_metric_mapping",
       "claim": "Hybrid GR metric maps onto a standard acoustic metric for BEC analogue gravity",
       "status": "NOT TESTABLE",
-      "evidence": "Grok's mapping is dimensionally consistent but skips the matter sector (no fluid equation of state, no specific BEC realisation). Not a derivation; a sketch."
+      "evidence": "the mapping is dimensionally consistent but skips the matter sector (no fluid equation of state, no specific BEC realisation). Not a derivation; a sketch."
     }
   ]
 }

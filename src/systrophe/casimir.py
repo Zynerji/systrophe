@@ -1,15 +1,15 @@
 """Casimir-energy diagnostics on the Z3 Mobius cover.
 
-This module integrates the *verified* mathematical content from the
-Grok updates.txt chat: standard Casimir energy density, the Hurwitz
-zeta closed form at s = -3, and the topological "Z3 Mobius cover"
-mode sum that arises naturally in the Dinos correspondence
-(`dinos_bridge.py`).
+Standard Casimir energy density, the Hurwitz zeta closed form at
+s = -3, and the topological "Z3 Mobius cover" mode sum that arises
+naturally in the Dinos correspondence (`dinos_bridge.py`).
 
 The Casimir-energy form itself is well-defined and computable. Its
-*physical interpretation* in the Grok chat (as the regulariser of the
-stress-energy tensor at a ringhole throat) is speculative and not
-implemented; only the mathematics is.
+*physical interpretation* as the regulariser of the stress-energy
+tensor at a ringhole throat is speculative and is handled separately
+in `casimir_throat.py` (the Brown-Maclay machinery) and
+`exotic_matter_accounting.py` (quantitative comparison to the
+Morris-Thorne exotic-matter budget); only the mathematics is here.
 
 References
 ----------
@@ -82,10 +82,10 @@ def topological_casimir_coefficient(gamma_eff: float | np.ndarray) -> np.ndarray
     Note
     ----
     The physical *identification* of this coefficient with a throat
-    Casimir energy density requires additional ansatz (Grok's
-    updates.txt frames it as such; the identification is speculative
-    and not derived from first principles). The coefficient itself is
-    a well-defined mathematical object.
+    Casimir energy density requires additional ansatz (typically
+    framed as such in informal proposals; the identification is
+    speculative and not derived from first principles). The
+    coefficient itself is a well-defined mathematical object.
     """
     g = np.asarray(gamma_eff, dtype=float)
     result = np.zeros_like(g)

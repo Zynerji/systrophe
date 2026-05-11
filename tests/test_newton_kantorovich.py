@@ -124,7 +124,7 @@ def test_classification_linear_for_picard():
     assert result.rate == "linear"
 
 
-def test_groks_iterator_was_picard_not_nk():
+def test_constant_step_iterator_is_classified_as_picard():
     """Direct demonstration: a 'constant per-iteration step' is linear-rate,
     which classify as 'linear' (Picard), not 'quadratic' (NK)."""
     # Construct an iterator with constant per-step difference, then check

@@ -181,5 +181,5 @@
   ],
   "K_at_horizon_converged": 1.0700936352964672,
   "relative_spread_percent": 0.17488371997223048,
-  "verdict": "Kretschmann scalar K is bounded at every Cauchy horizon (F = 0). Trace anomaly <T^mu_mu> \u221d K is finite without invoking the Z_3 cover. Grok's framing 'Z_3 cover keeps <T_munu> finite' is misattributed for the trace component; the LP vacuum is intrinsically curvature-regular at F = 0."
+  "verdict": "Kretschmann scalar K is bounded at every Cauchy horizon (F = 0). Trace anomaly <T^mu_mu> \u221d K is finite without invoking the Z_3 cover. the framing 'Z_3 cover keeps <T_munu> finite' is misattributed for the trace component; the LP vacuum is intrinsically curvature-regular at F = 0."
 }

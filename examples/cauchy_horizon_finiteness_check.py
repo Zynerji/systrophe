@@ -1,6 +1,6 @@
-"""Falsification of Grok's "Z_3 cover keeps <T_munu> finite at Cauchy horizons" claim.
+"""Falsification of the "Z_3 cover keeps <T_munu> finite at Cauchy horizons" claim.
 
-A Grok conversation (2026-05-10) on the Systrophe repo asserted that
+A external conversation (2026-05-10) on the Systrophe repo asserted that
 the Z_3 Mobius cover identified by the Dinos bridge is what regularises
 the renormalised stress-energy tensor at Cauchy horizons (F = 0
 surfaces) in the supercritical Tipler exterior.
@@ -21,7 +21,7 @@ evaluation.
 
 Run
 ---
-    python examples/grok_falsification.py
+    python examples/cauchy_horizon_finiteness_check.py
 """
 
 from __future__ import annotations
@@ -83,7 +83,7 @@ def main() -> dict:
     print("K is BOUNDED at the Cauchy horizon. The trace anomaly therefore stays finite.")
     print("No Z_3 cover is invoked; finiteness is intrinsic to the classical LP vacuum.")
     print()
-    print("Grok's specific claim — that the Z_3 cover provides chronology-protection-via-")
+    print("the specific claim — that the Z_3 cover provides chronology-protection-via-")
     print("finiteness — is overstated for the *trace* component. The non-trivial")
     print("question is whether the *off-trace* <T_munu> components (via Hadamard")
     print("point-splitting) diverge at F = 0; that requires a separate calculation.")
@@ -100,11 +100,11 @@ def main() -> dict:
         "verdict": (
             "Kretschmann scalar K is bounded at every Cauchy horizon (F = 0). "
             "Trace anomaly <T^mu_mu> ∝ K is finite without invoking the Z_3 cover. "
-            "Grok's framing 'Z_3 cover keeps <T_munu> finite' is misattributed for the "
+            "the framing 'Z_3 cover keeps <T_munu> finite' is misattributed for the "
             "trace component; the LP vacuum is intrinsically curvature-regular at F = 0."
         ),
     }
-    out_path = Path("examples") / "grok_falsification_results.json"
+    out_path = Path("examples") / "cauchy_horizon_finiteness_check_results.json"
     out_path.write_text(json.dumps(results, indent=2), encoding="utf-8")
     print()
     print(f"Results written to {out_path}")

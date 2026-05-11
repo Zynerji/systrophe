@@ -227,6 +227,60 @@ from .d_ctc import (
     verify_fixed_point,
     z3_ctc_unitary,
 )
+from .wormhole_throat import (
+    WormholeThroatReport,
+    build_wormhole_report,
+    effective_redshift_function,
+    effective_shape_function,
+    find_candidate_throats,
+    flaring_out_check,
+    z3_cover_throat_interpretation,
+)
+from .exotic_matter_accounting import (
+    ExoticMatterReport,
+    casimir_cavity_energy,
+    exotic_vs_casimir_comparison,
+    is_casimir_route_physically_plausible,
+    morris_thorne_exotic_budget,
+    morris_thorne_exotic_density,
+    required_plate_separation,
+)
+from .chronology_protection import (
+    ChronologyProtectionStudy,
+    chronology_protection_study,
+    chronology_protection_verdict,
+    matched_pair_default_study,
+)
+from .wilson_loop import (
+    field_strength_is_zero,
+    flat_u1_connection,
+    gauge_field_strength_4d,
+    integrated_chern_number,
+    verify_wilson_loop_matches_z3,
+    wilson_loop,
+    wilson_loop_sum_over_branches,
+    z3_branch_holonomy,
+)
+from .dynamical_casimir import (
+    DCEFluxResult,
+    cavity_mode_frequency,
+    dce_flux_estimate,
+    dce_spectrum,
+    linewidth_at_resonance,
+    off_resonance_photon_number,
+    on_resonance_photon_number,
+    resonance_frequency_for_mode,
+)
+from .vacuum_states import (
+    VacuumStateReport,
+    adiabatic_well_defined,
+    boulware_energy_density_proxy,
+    boulware_well_defined,
+    compare_vacua_at_radius,
+    hartle_hawking_analog_exists,
+    natural_vacuum_verdict,
+    vacuum_selection_summary,
+)
 
 __all__ = [
     "VanStockumInterior",
@@ -269,4 +323,4 @@ __all__ = [
     "z3_cover_mode_density",
     "z3_cover_regularised_zeta_sum",
 ]
-__version__ = "0.14.1"
+__version__ = "0.15.0"

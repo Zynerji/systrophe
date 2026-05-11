@@ -8,10 +8,10 @@
 [![PyPI](https://img.shields.io/pypi/v/systrophe.svg)](https://pypi.org/project/systrophe/)
 [![Python ≥ 3.10](https://img.shields.io/badge/python-%E2%89%A5%203.10-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 406 passing](https://img.shields.io/badge/tests-406%20passing-brightgreen.svg)](#tests)
+[![Tests: 481 passing](https://img.shields.io/badge/tests-481%20passing-brightgreen.svg)](#tests)
 [![Whitepaper I](https://img.shields.io/badge/whitepaper%20I-PDF-informational.svg)](paper/systrophe_time_travel.pdf)
 [![Whitepaper II](https://img.shields.io/badge/whitepaper%20II-PDF-informational.svg)](paper/systrophe_qft_on_ctc.pdf)
-[![Version 0.14.1](https://img.shields.io/badge/version-0.14.1-blue.svg)](pyproject.toml)
+[![Version 0.15.0](https://img.shields.io/badge/version-0.15.0-blue.svg)](pyproject.toml)
 
 *Systrophē* (Greek **Συστροφή**, "twisting-together"): the joint exterior of two co-rotating, dual-positive-mass van Stockum dust cylinders, whose log-periodic Tipler sinusoids superpose with a tunable relative phase offset.
 
@@ -47,7 +47,7 @@ pip install systrophe          # latest release
 git clone https://github.com/Zynerji/systrophe
 cd systrophe
 pip install -e ".[dev]"        # editable install with dev tools
-pytest                         # 406 tests, ~3 minutes
+pytest                         # 481 tests, ~3 minutes
 ```
 
 Optional extras:

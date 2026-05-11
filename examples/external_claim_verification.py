@@ -1,13 +1,11 @@
-"""Systematic verification of every testable mathematical assertion in the Grok chat.
+"""Systematic verification of every testable mathematical assertion in an
+external claim battery on the Systrophe repo.
 
-Source: a Grok conversation on the Systrophe repo (2026-05-10), saved as
-HTML on the user's desktop and excerpted in
-`examples/grok_falsification.py`. This script extracts every claim
-that is mathematically testable, runs the test, and records VERIFIED /
-FALSIFIED / NOT-TESTABLE verdicts.
+This script extracts every claim that is mathematically testable, runs
+the test, and records VERIFIED / FALSIFIED / NOT-TESTABLE verdicts.
 
-Output: `examples/grok_verification_results.json` and a human-readable
-summary printed to stdout.
+Output: `examples/external_claim_verification_results.json` and a
+human-readable summary printed to stdout.
 """
 
 from __future__ import annotations
@@ -53,7 +51,7 @@ def record(name: str, claim: str, verified: bool | None, evidence: str) -> None:
 
 
 # =====================================================================
-# Standard Systrophe formulas Grok summarised correctly
+# Standard Systrophe formulas external summarised correctly
 # =====================================================================
 
 # --- 1. alpha = sqrt(4 a^2 - 1) (Tipler log-frequency) -----------------
@@ -228,10 +226,10 @@ record(
 )
 
 # =====================================================================
-# Grok-specific assertions that look correct on inspection but require check
+# external-specific assertions that look correct on inspection but require check
 # =====================================================================
 
-# --- 13. Grok line 1092: "Ernst potential E_0 = F + i K" ---------------
+# --- 13. Source line 1092: "Ernst potential E_0 = F + i K" ---------------
 # Verdict: WRONG. The Ernst potential is E = F + i psi where psi is the
 # *twist potential* (defined by d_a psi = (F^2 / r) eps_ab d^b omega), NOT
 # the metric component K = g_{t phi}. K is the metric off-diagonal, psi
@@ -239,8 +237,8 @@ record(
 # For the supercritical LP, psi varies with z; K varies with r. Different
 # quantities.
 record(
-    "ernst_potential_grok_error",
-    "Grok wrote 'Ernst potential E_0 = F + i K'",
+    "ernst_potential_external_claim_error",
+    "External claim was that 'Ernst potential E_0 = F + i K'",
     False,
     "Standard Ernst potential is E = F + i psi where psi is the twist potential "
     "(d psi = -F^2 / rho eps d omega_metric, NOT the metric K = g_{t phi}). "
@@ -249,7 +247,7 @@ record(
 )
 
 # --- 14. CTC region is L < 0 ------------------------------------------
-# Grok: "negative-L (CTC-producing) intervals". Cross-check by computing
+# External claim: "negative-L (CTC-producing) intervals". Cross-check by computing
 # g_phi phi at fixed r within a known CTC band.
 windows = find_single_cylinder_windows(vs, r_min=1.05, r_max=200.0)
 r_mid = (windows[0].r_inner + windows[0].r_outer) / 2
@@ -263,7 +261,7 @@ record(
 
 # --- 15. CTC log-measure of pair has a single minimum at delta = pi ----
 # Stronger and chat-grounded version: "at delta = pi the phasor sum vanishes
-# identically and all CTC bands disappear" (Grok). Test by showing the
+# identically and all CTC bands disappear" (external). Test by showing the
 # log-measure attains its minimum at delta = pi and zero CTCs there.
 omega_test = 1.5
 cyl_t = VanStockumInterior(omega=omega_test, R=1.0)
@@ -284,7 +282,7 @@ record(
     f"global minimum at delta = {deltas[int(np.argmin(measures))]:.4f}",
 )
 
-# --- 16. Grok asserts: chronology violation can be turned on/off by a global phase
+# --- 16. External claim asserts: chronology violation can be turned on/off by a global phase
 # This is the package's central claim. Verified by 4 + 5 above.
 record(
     "tunable_chronology_via_phase",
@@ -293,10 +291,10 @@ record(
     "Direct consequence of phasor cancellation; verified by claims 4 and 5.",
 )
 
-# --- 17. Grok line 4666: "On full Z_3 cover renormalized <T_mu nu> stays finite"
+# --- 17. Source line 4666: "On full Z_3 cover renormalized <T_mu nu> stays finite"
 # The trace (only) is bounded by intrinsic K finiteness; tested in
-# `grok_falsification.py`. Off-trace requires Hadamard renormalisation
-# of two-point functions which is NOT done in the repo. Grok asserts
+# `cauchy_horizon_finiteness_check.py`. Off-trace requires Hadamard renormalisation
+# of two-point functions which is NOT done in the repo. external asserts
 # this is "proven"; the assertion is unproven in the package.
 record(
     "z3_cover_finite_T_mu_nu",
@@ -305,26 +303,26 @@ record(
     "Trace component IS finite, but for the trivial reason that K is bounded at F = 0 "
     "(coordinate singularity, not curvature singularity). The Z_3 cover plays no role. "
     "Off-trace <T_mu nu> via full Hadamard point-splitting NOT computed in repo. "
-    "Grok's framing is misattributed for the trace and unsupported for the off-trace.",
+    "the framing is misattributed for the trace and unsupported for the off-trace.",
 )
 
-# --- 18. Grok claims "Newton-Kantorovich for Ernst correction converges in 3-5 iterations to machine precision"
+# --- 18. External claim states "Newton-Kantorovich for Ernst correction converges in 3-5 iterations to machine precision"
 # Not implemented in the repo; not claimed to be in the repo either, but
-# Grok asserts the convergence rate as if measured. This is a Grok
+# External claim asserts the convergence rate as if measured. This is a external
 # prediction; testable only by implementing it.
 record(
     "newton_kantorovich_convergence",
     "Newton-Kantorovich iteration on the Ernst residual converges in 3-5 iterations to machine precision",
     None,
-    "Iteration scheme not implemented in the repo; Grok's '3-5 iterations to machine precision' "
+    "Iteration scheme not implemented in the repo; the '3-5 iterations to machine precision' "
     "is a forecast not a measurement. Quadratic convergence of Newton-Kantorovich is "
     "well-established when (a) the linearised operator is invertible at the seed and (b) the "
     "seed is in the basin of attraction. The Tipler sinusoid is exact for the *linearised* "
     "vacuum Ernst, so the seed residual is ZERO, not small -- Newton-Kantorovich converges in "
-    "ONE iteration trivially. Grok overstates by suggesting iterative refinement is needed.",
+    "ONE iteration trivially. External claim overstates by suggesting iterative refinement is needed.",
 )
 
-# --- 19. Grok line 1700: "Self-consistent iterator delta_{n+1} = delta_n - f(<T_munu>(delta_n))"
+# --- 19. Source line 1700: "Self-consistent iterator delta_{n+1} = delta_n - f(<T_munu>(delta_n))"
 # Not implemented. Testability depends on having a closed form for f.
 record(
     "self_consistent_delta_iteration",
@@ -355,7 +353,7 @@ def main() -> None:
     n_untestable = sum(1 for c in CLAIMS if c["status"] == "NOT TESTABLE")
     total = len(CLAIMS)
 
-    print(f"Tested {total} mathematical assertions from the Grok chat.")
+    print(f"Tested {total} mathematical assertions from the external claim battery.")
     print(f"  VERIFIED:     {n_verified} ({100*n_verified/total:.1f}%)")
     print(f"  FALSIFIED:    {n_falsified} ({100*n_falsified/total:.1f}%)")
     print(f"  NOT TESTABLE: {n_untestable} ({100*n_untestable/total:.1f}%)")
@@ -369,7 +367,7 @@ def main() -> None:
         print(f"     {c['evidence']}")
         print()
 
-    out_path = Path("examples") / "grok_verification_results.json"
+    out_path = Path("examples") / "external_claim_verification_results.json"
     out_path.write_text(json.dumps({
         "total": total,
         "verified": n_verified,

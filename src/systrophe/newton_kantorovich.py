@@ -10,11 +10,12 @@ back-reaction wrapper. NK is contrasted directly with Picard iteration
 (linear convergence) so that the actual asymptotic rate of a real
 iterate can be classified.
 
-The Grok updates.txt chat claimed a self-consistent iterator
-"converges in <10 iterations", but the printed trace showed a *constant*
-per-iteration step --- i.e. a linear walk (Picard), not quadratic NK.
-This module exposes the genuine NK iteration so the user can verify
-or falsify the convergence claim concretely.
+Some informal proposals describe self-consistent iterators that
+"converge in <10 iterations" without specifying convergence rate.
+A constant per-iteration step is a *linear* walk (Picard), not
+*quadratic* NK; convergence-rate claims often conflate the two.
+This module exposes the genuine NK iteration so a user can classify
+the asymptotic rate concretely against the Picard reference.
 
 Notes
 -----

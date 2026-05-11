@@ -17,8 +17,9 @@ dimension zero. However, the *natural multi-scale extension* obtained
 by superposing log-periodic cosines with a hierarchy of alpha-scales
 (equivalent to a hierarchy of co-axial cylinders with different
 rotation parameters a) produces structures with non-trivial box-counting
-dimension --- which is the actual mathematical content behind Grok's
-"Tipler sinusoid extends to a fractal" assertion.
+dimension --- which is the actual mathematical content behind the
+informal "Tipler sinusoid extends to a fractal" assertion sometimes
+made about supercritical LP exteriors.
 
 References
 ----------

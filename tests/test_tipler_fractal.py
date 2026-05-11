@@ -130,7 +130,7 @@ def test_cascade_zeros_exist():
 def test_multi_level_cascade_box_dimension_nontrivial():
     """A self-similar multi-scale cascade has measurable box dimension > 0.
 
-    This is the proper mathematical content of Grok's 'fractal' claim:
+    This is the proper mathematical content of the informal 'fractal' claim:
     single-cosine zero sets are trivial; cascade zero sets are not.
     """
     c = CascadeDSI(R=1.0, alpha_0=0.8, A_0=1.0, delta_0=0.0,

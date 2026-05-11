@@ -25,8 +25,8 @@ boundary) and an *acoustic horizon* (sound cone closes); F < 0 is
 "supersonic" (CTC region; closed timelike curves <-> closed acoustic
 characteristics).
 
-This realises the analog identification Grok asserted but never
-specified.
+This realises the analog identification asserted in informal
+proposals but never previously specified concretely.
 
 References
 ----------

@@ -71,8 +71,8 @@
       "evidence": "package a_2 = 0.013169, expected = 0.013169"
     },
     {
-      "name": "ernst_potential_grok_error",
-      "claim": "Grok wrote 'Ernst potential E_0 = F + i K'",
+      "name": "ernst_potential_external_claim_error",
+      "claim": "External claim was that 'Ernst potential E_0 = F + i K'",
       "status": "FALSIFIED",
       "evidence": "Standard Ernst potential is E = F + i psi where psi is the twist potential (d psi = -F^2 / rho eps d omega_metric, NOT the metric K = g_{t phi}). psi and K are dual but distinct; equality would imply trivial twist structure. Misidentification."
     },
@@ -98,13 +98,13 @@
       "name": "z3_cover_finite_T_mu_nu",
       "claim": "Z_3 cover keeps renormalized <T_mu nu> finite at the Cauchy horizon",
       "status": "NOT TESTABLE",
-      "evidence": "Trace component IS finite, but for the trivial reason that K is bounded at F = 0 (coordinate singularity, not curvature singularity). The Z_3 cover plays no role. Off-trace <T_mu nu> via full Hadamard point-splitting NOT computed in repo. Grok's framing is misattributed for the trace and unsupported for the off-trace."
+      "evidence": "Trace component IS finite, but for the trivial reason that K is bounded at F = 0 (coordinate singularity, not curvature singularity). The Z_3 cover plays no role. Off-trace <T_mu nu> via full Hadamard point-splitting NOT computed in repo. the framing is misattributed for the trace and unsupported for the off-trace."
     },
     {
       "name": "newton_kantorovich_convergence",
       "claim": "Newton-Kantorovich iteration on the Ernst residual converges in 3-5 iterations to machine precision",
       "status": "NOT TESTABLE",
-      "evidence": "Iteration scheme not implemented in the repo; Grok's '3-5 iterations to machine precision' is a forecast not a measurement. Quadratic convergence of Newton-Kantorovich is well-established when (a) the linearised operator is invertible at the seed and (b) the seed is in the basin of attraction. The Tipler sinusoid is exact for the *linearised* vacuum Ernst, so the seed residual is ZERO, not small -- Newton-Kantorovich converges in ONE iteration trivially. Grok overstates by suggesting iterative refinement is needed."
+      "evidence": "Iteration scheme not implemented in the repo; the '3-5 iterations to machine precision' is a forecast not a measurement. Quadratic convergence of Newton-Kantorovich is well-established when (a) the linearised operator is invertible at the seed and (b) the seed is in the basin of attraction. The Tipler sinusoid is exact for the *linearised* vacuum Ernst, so the seed residual is ZERO, not small -- Newton-Kantorovich converges in ONE iteration trivially. External claim overstates by suggesting iterative refinement is needed."
     },
     {
       "name": "self_consistent_delta_iteration",

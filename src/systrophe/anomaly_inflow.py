@@ -30,8 +30,8 @@ three branch etas vanishes:
 
 A non-zero gauge twist gamma_eff breaks this cancellation, producing
 a residual anomaly that must be cancelled by an inflowing bulk
-Chern-Simons-like current. This is the "anomaly inflow" Grok
-referenced.
+Chern-Simons-like current. This is the standard Callan-Harvey
+anomaly inflow on the orbifold-cover construction.
 
 References
 ----------
