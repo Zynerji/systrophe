@@ -1,39 +1,62 @@
-"""Exotic-matter accounting at a wormhole throat.
+"""Conditional exotic-matter accounting (Morris-Thorne vs. Casimir).
 
 Validates speculative item I.2 from `docs/INTERPRETATIONS.md`:
 "The Casimir negative energy replaces the exotic matter that Tipler
 / Morris-Thorne wormholes require."
 
+Important framing
+-----------------
+The Systrophe LP exterior at L = 0 is **vacuum** (R_{mu nu} = 0)
+and is NOT a Morris-Thorne wormhole junction (see the framing
+docstring in `wormhole_throat.py`). The LP "throat" stays open
+without local exotic matter because no local stress-energy is
+required at the L = 0 locus --- the geometry is sourced remotely by
+the rotating cylinder interior.
+
+This module therefore answers a *conditional* question:
+
+  "If one tried to interpret the L = 0 locus as a genuine Morris-
+   Thorne wormhole junction (against the actual topology), how much
+   local exotic matter would Morris-Thorne require, and could the
+   Casimir vacuum supply it?"
+
+The answer is quantitative NO: even under that hypothetical
+interpretation, the Casimir budget is far too small.
+
+What this module computes
+-------------------------
 For a Morris-Thorne wormhole with throat radius r_t and shape
-function b(r), the null energy condition (NEC) is violated at the
-throat: the radial pressure satisfies p_r(r_t) < 0 and the total
-density-plus-pressure is also negative. The integrated NEC violation
-defines the *exotic matter budget*:
+function b(r), NEC violation defines the exotic-matter budget
 
-    E_exotic = integral_(throat) [rho + p_r] dV
+    E_exotic = integral_(throat) [rho + p_r] dV.
 
-The Casimir vacuum gives a *fixed* negative energy density
-rho_C = -pi^2 / (720 d^4) within a cavity of plate separation d.
-The total Casimir energy in a cavity of throat radius r_t (modelled
-as a cylindrical cavity of length d enclosing the throat) is
+Morris-Thorne (1988) Eq. (32): at the throat, the leading-order
+density that must violate NEC is
 
-    E_C = rho_C * (volume) = -pi^2 / (720 d^4) * (pi r_t^2 d)
-        = -pi^3 r_t^2 / (720 d^3).
+    |rho_exotic|(r_t) = b'(r_t) / (8 pi r_t^2),
 
-This module:
+with b'(r_t) in (0, 1).
 
-- Computes the Morris-Thorne exotic-matter budget for a given
-  throat radius;
-- Computes the Casimir vacuum negative-energy budget for a given
-  plate separation;
-- Reports the ratio E_C / E_exotic;
-- Identifies the regime where E_C is sufficient to replace exotic
-  matter (typically requires unphysically small d).
+The Casimir vacuum gives rho_C = -pi^2 / (720 d^4) in a parallel-
+plate cavity of separation d. Total Casimir energy in a cylindrical
+cavity of radius r_t and length d:
 
-This concretises speculative item I.2: the answer is a quantitative
-NO in the typical regime --- the Casimir vacuum is *not* enough.
-The wormhole throat still requires additional exotic matter, just
-less of it.
+    E_C = rho_C * (pi r_t^2 d) = -pi^3 r_t^2 / (720 d^3).
+
+The required plate separation to match exotic-matter budget is
+
+    d_req = (pi^3 r_t^2 / (90 b'(r_t)))^{1/4}.
+
+Verdict
+-------
+For r_t ~ 1 in natural units (b' = 0.5), d_req / r_t ~ 0.7 --- the
+Casimir cavity does not geometrically fit within the throat. The
+hypothetical Morris-Thorne interpretation requires either sub-
+Planckian plate separation or super-Planckian throat radius. The
+Casimir vacuum is NOT sufficient under the Morris-Thorne ansatz.
+
+This is *separate* from the question of whether the LP "throat"
+actually needs exotic matter: it does not, because it is vacuum.
 
 References
 ----------

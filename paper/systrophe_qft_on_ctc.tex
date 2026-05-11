@@ -291,22 +291,34 @@ that fixes the missing input and produces a quantitative answer.
 
 \paragraph{I.1: $\mathbb{Z}_3$ cover as wormhole throat
 (\texttt{wormhole\_throat.py}).} The LP angular metric admits an
-effective Morris-Thorne shape function $b_{\text{eff}}(r) = r - L(r) / r$.
-The throat condition $b_{\text{eff}}(r_t) = r_t$ is exactly $L(r_t) = 0$,
-i.e. the CTC band boundary. Flaring-out $b'(r_t) < 1$ holds at the
-outer boundary of each CTC band.
-\textbf{Verdict: conditional yes;} specific gluing constructed.
+effective Morris-Thorne shape function $b_{\text{eff}}(r) = r - L(r)/r$,
+with throat candidates at $L(r_t) = 0$ (the CTC band boundary) and
+flaring-out $b'(r_t) < 1$ at the outer boundary of each CTC band.
+However, a genuine Morris-Thorne wormhole connects two asymptotic
+regions through a topological \emph{junction}; the LP exterior is a
+\emph{single connected} spacetime with $L = 0$ a coordinate locus,
+not a junction. Direct evaluation of $R_{\mu\nu}$ at $L = 0$
+returns vacuum.
+\textbf{Verdict:} the kinematic shape-function mapping is well-
+defined, but the L=0 locus is \emph{not} a Morris-Thorne throat ---
+it is a vacuum-supported CTC band boundary in a single-connected
+manifold.
 
 \paragraph{I.2: Casimir vs.\ exotic matter
-(\texttt{exotic\_matter\_accounting.py}).} The Morris-Thorne exotic-
-matter requirement is $|\rho_{\text{exotic}}|(r_t) = b'(r_t) / (8\pi r_t^2)$.
-Equating this to the Casimir budget $|\rho_C| = \pi^2 / (720 d^4)$
-gives the required plate separation
-$d_{\text{req}} = (\pi^3 r_t^2 / (90 b'(r_t)))^{1/4}$. For $r_t \sim 1$
-in natural units, $d_{\text{req}} / r_t \sim 0.7$: the cavity does
-not geometrically fit within the throat.
-\textbf{Verdict: quantitative NO.} The Casimir-replaces-exotic-matter
-claim is falsified by direct dimensional accounting.
+(\texttt{exotic\_matter\_accounting.py}).} The LP $L = 0$ locus is
+Einstein vacuum (item I.1) and requires \emph{no} local
+exotic matter; the geometry is sourced remotely by the rotating
+cylinder interior (positive-energy van Stockum dust). The
+``Casimir-replaces-exotic-matter'' question is therefore vacuous
+for this geometry. Under the hypothetical that one nevertheless
+interpreted $L = 0$ as a Morris-Thorne junction: equating the MT
+exotic budget $|\rho_{\text{exotic}}|(r_t) = b'(r_t)/(8\pi r_t^2)$
+to the Casimir budget $|\rho_C| = \pi^2/(720 d^4)$ gives
+$d_{\text{req}}/r_t \sim 0.7$ at $r_t \sim 1$ (natural units), so
+the cavity does not geometrically fit.
+\textbf{Verdict:} the LP throat stays open without exotic matter
+because no Morris-Thorne wormhole is being built; the conditional
+Casimir/exotic-matter comparison gives quantitative NO regardless.
 
 \paragraph{I.3: Self-consistent $\delta$
 (\texttt{chronology\_protection.py}).} Newton-Kantorovich on the
@@ -346,10 +358,17 @@ exist on the generic supercritical LP exterior; the cavity-Casimir
 state cannot be the natural vacuum in the standard QFTCS sense.
 Use Boulware or adiabatic instead.
 
-Two of the six items (I.2 and I.6) are \emph{negative} results: some
-popular informal claims about Systrophe-style geometries are falsified
-by direct calculation. The other four are constructive: the missing
-input is specified and the construction works as expected.
+The most consequential resolution is the I.1+I.2 pair: the LP
+``throat'' (L = 0 locus) is vacuum-supported, single-connected,
+and not a Morris-Thorne junction. The throat stays open
+\emph{without} exotic matter, because no Morris-Thorne wormhole
+exists in this geometry. Popular informal framings that treated
+the L = 0 surface as a Morris-Thorne junction (and asked whether
+Casimir could supply the resulting exotic-matter budget) are
+vacuous for the actual Systrophe geometry. I.6 is also negative:
+the Hartle-Hawking-analog vacuum does not exist generically on the
+supercritical LP background. The other three items (I.3, I.4, I.5)
+are constructive.
 
 \section{Summary and outlook}
 

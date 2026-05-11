@@ -1,36 +1,55 @@
-"""Morris-Thorne wormhole throat construction on the LP exterior.
+"""Kinematic Morris-Thorne mapping of the LP "throat" (L = 0 locus).
 
 Validates speculative item I.1 from `docs/INTERPRETATIONS.md`:
 "The Z_3 cover physically realises a wormhole throat."
 
-Morris-Thorne wormholes are characterised by a spherically-symmetric
-metric
-
+What this module is
+-------------------
+The Morris-Thorne wormhole metric
     ds^2 = -e^{2 Phi(r)} dt^2 + dr^2 / (1 - b(r)/r) + r^2 d Omega^2
+with shape function b(r) and redshift Phi(r) has a *throat* at
+r = r_t where b(r_t) = r_t and flaring-out b'(r_t) < 1.
 
-with `b(r)` the shape function and `Phi(r)` the redshift function.
-The throat is at r = r_t where b(r_t) = r_t; flaring-out requires
-b'(r_t) < 1.
+The Lewis-Papapetrou exterior is *cylindrically* symmetric, not
+spherically, so the Morris-Thorne mapping is *kinematic*: we read
+off an effective shape function from L(r) and an effective redshift
+from F(r). This identifies the L = 0 locus with the candidate
+"throat" radius.
 
-The Lewis-Papapetrou exterior is *cylindrically* symmetric, so the
-mapping to Morris-Thorne is only approximate: we read off an
-effective shape function from the angular metric L(r) and an
-effective redshift from F(r).
+What the throat is and is NOT
+-----------------------------
+The L = 0 locus in the LP exterior is **not** a Morris-Thorne
+wormhole throat in the strict sense. Two key distinctions:
 
-This module:
+1. **Topology.** A Morris-Thorne wormhole connects two asymptotic
+   regions; the throat is a junction. The LP exterior is a *single
+   connected* manifold; L = 0 is a *coordinate locus* (where the
+   angular metric component vanishes), not a topological junction.
 
-- Computes effective shape function b_eff(r) and redshift Phi_eff(r);
-- Identifies candidate throat radii r_t where b_eff(r_t) = r_t;
-- Verifies the flaring-out condition b_eff'(r_t) < 1;
-- Computes the Z_3 cover quotient interpretation of the throat
-  (which Z_3 phase corresponds to a closed-throat configuration).
+2. **Stress-energy.** A Morris-Thorne throat needs *local* exotic
+   matter (NEC violation) to support itself. The LP exterior is
+   *Einstein vacuum* (R_{mu nu} = 0) everywhere, including at L = 0.
+   The CTC geometry is sourced by the *cylinder interior* (positive-
+   energy van Stockum dust); no local matter sits at the L = 0
+   locus.
 
-This concretises speculative item I.1 by providing a specific
-gluing-map identification. The resulting wormhole is *valid* (the
-flaring-out condition can be satisfied for some r_t in the
-supercritical LP exterior) but, as the energy-condition module
-verifies, requires exotic matter --- the wormhole is not
-self-supporting from the LP vacuum alone.
+Concretely: **the LP "throat" stays open in vacuum**, without any
+exotic matter at the throat, because the geometry is not actually
+a Morris-Thorne wormhole. The kinematic mapping is mathematically
+well-defined but does not carry Morris-Thorne's local stress-energy
+implication.
+
+What this module computes
+-------------------------
+- Effective shape function b_eff(r) = r - L(r) / r
+- Effective redshift Phi_eff(r) = (1/2) ln |F(r)|
+- Throat candidates: zeros of L(r) on the exterior
+- Flaring-out check b_eff'(r_t) < 1
+- Z_3 cover monodromy at gamma_eff (closed-cover indicator)
+
+For the *conditional* Morris-Thorne exotic-matter comparison (i.e.
+"if you tried to interpret L = 0 as a true wormhole junction, how
+much exotic matter would you need?") see `exotic_matter_accounting.py`.
 """
 
 from __future__ import annotations

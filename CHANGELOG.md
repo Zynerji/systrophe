@@ -5,6 +5,35 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.1] - 2026-05-10
+
+### Framing correction: LP "throat" is vacuum, not a Morris-Thorne wormhole
+
+Doc-only patch addressing a framing error in v0.15.0 I.1/I.2 verdicts.
+
+The L=0 locus in the LP exterior was treated as a Morris-Thorne
+wormhole throat. It isn't: the LP exterior is Einstein vacuum
+(R_munu = 0, verified by point_splitting.vacuum_residual), single-
+connected (no junction), and the L=0 surface is a coordinate locus,
+not a topological identification. The throat stays open without
+exotic matter because no Morris-Thorne wormhole is being constructed.
+
+Updates:
+
+- `src/systrophe/wormhole_throat.py`: docstring rewrite separating
+  the *kinematic shape-function mapping* (mathematically valid) from
+  the *Morris-Thorne wormhole interpretation* (which does not apply
+  to the LP exterior).
+- `src/systrophe/exotic_matter_accounting.py`: docstring rewrite
+  making the comparison explicitly *conditional* ("IF one tried to
+  interpret L=0 as an MT junction, THEN ...").
+- `docs/INTERPRETATIONS.md`: I.1 and I.2 verdicts rewritten with
+  two-layer framing.
+- `paper/systrophe_qft_on_ctc.tex` Section 8: I.1 and I.2 paragraphs
+  rewritten. PDF recompiled (still 6 pages).
+
+No code changes; all 481 tests still pass.
+
 ## [0.15.0] - 2026-05-10
 
 ### Validation modules for the six previously-speculative items + branding cleanup
