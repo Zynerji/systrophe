@@ -1,0 +1,743 @@
+<!doctype html>
+<html><head>
+<meta charset="utf-8">
+<title>Systrophe · WebGL · v0.15.1 framework explorer</title>
+<style>
+:root{color-scheme:dark}
+html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:ui-monospace,monospace}
+canvas{display:block;width:100vw;height:100vh;cursor:grab}
+canvas.dragging{cursor:grabbing}
+.cap{position:fixed;bottom:8px;left:12px;color:#cf9;font-size:11px;max-width:920px;pointer-events:none;text-shadow:0 1px 2px #000;line-height:1.4}
+.cap b{color:#dfd}
+.mode{position:fixed;top:8px;left:12px;color:#fec;font-size:13px;pointer-events:none;text-shadow:0 1px 2px #000}
+.mode b{color:#fff}
+.fps{position:fixed;bottom:8px;right:12px;color:#9c9;font-size:11px;pointer-events:none;text-shadow:0 1px 2px #000}
+
+/* Control panel */
+#panel{position:fixed;top:8px;right:8px;background:rgba(8,12,16,.85);border:1px solid #354;border-radius:6px;padding:8px;color:#dfe;font-size:11px;width:260px;max-height:calc(100vh - 16px);overflow-y:auto;backdrop-filter:blur(4px)}
+#panel.collapsed .body{display:none}
+#panel .head{display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
+#panel .head b{color:#fff}
+#panel .head .toggle{color:#9af;border:1px solid #46a;padding:1px 6px;border-radius:3px;font-size:10px}
+#panel h3{margin:8px 0 4px;font-size:10px;color:#9af;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+#modeBtns{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-top:4px}
+.mb{padding:4px 0;background:#234;border:1px solid #345;color:#bdf;cursor:pointer;text-align:center;font-size:10px;border-radius:3px;font-family:inherit}
+.mb:hover{background:#356;border-color:#58a}
+.mb.active{background:#48a;border-color:#7be;color:#fff}
+.slider-row{display:flex;align-items:center;gap:6px;margin:3px 0}
+.slider-row label{flex:0 0 80px;color:#aef}
+.slider-row input[type=range]{flex:1;height:14px;background:#234}
+.slider-row .val{flex:0 0 50px;color:#fff;text-align:right;font-variant-numeric:tabular-nums}
+.toggle-row{display:flex;align-items:center;gap:6px;margin:2px 0;cursor:pointer}
+.toggle-row input{cursor:pointer}
+.toggle-row label{cursor:pointer;color:#cef}
+.btn-row{display:flex;gap:4px;margin-top:6px}
+.btn{flex:1;padding:5px;background:#345;border:1px solid #456;color:#dfe;cursor:pointer;border-radius:3px;font-size:10px;font-family:inherit}
+.btn:hover{background:#467;border-color:#79b}
+</style>
+</head><body>
+<canvas id="c"></canvas>
+<div class="mode" id="mode">mode 8 · GRAND UNIFICATION</div>
+<div class="cap" id="cap"><b>Systrophe v0.15.1</b> · WebGL2 framework explorer · 200k GPU particles · single-pass vertex shader · additive blending · drag · scroll · arrows · R reset</div>
+<div class="fps" id="fps">— fps</div>
+
+<div id="panel">
+  <div class="head" onclick="togglePanel()">
+    <b>controls</b><span class="toggle" id="panelToggle">▾</span>
+  </div>
+  <div class="body">
+
+    <h3>scene</h3>
+    <div id="modeBtns"></div>
+
+    <h3>cylinder</h3>
+    <div class="slider-row">
+      <label>ω · rot</label>
+      <input type="range" id="sl_omega" min="0.5" max="3" step="0.05" value="1.0">
+      <span class="val" id="v_omega">1.00</span>
+    </div>
+    <div class="slider-row">
+      <label>R · radius</label>
+      <input type="range" id="sl_R" min="0.5" max="3" step="0.05" value="1.0">
+      <span class="val" id="v_R">1.00</span>
+    </div>
+    <div class="slider-row">
+      <label>δ · offset</label>
+      <input type="range" id="sl_delta" min="0" max="6.28" step="0.05" value="0">
+      <span class="val" id="v_delta">0.00</span>
+    </div>
+
+    <h3>Z₃ / Wilson</h3>
+    <div class="slider-row">
+      <label>γ_eff</label>
+      <input type="range" id="sl_gamma" min="-3.14" max="3.14" step="0.05" value="0">
+      <span class="val" id="v_gamma">0.00</span>
+    </div>
+
+    <h3>DCE drive</h3>
+    <div class="slider-row">
+      <label>amp ε</label>
+      <input type="range" id="sl_amp" min="0" max="0.5" step="0.01" value="0.15">
+      <span class="val" id="v_amp">0.15</span>
+    </div>
+    <div class="slider-row">
+      <label>Ω drive</label>
+      <input type="range" id="sl_drive" min="0.1" max="10" step="0.05" value="6.28">
+      <span class="val" id="v_drive">6.28</span>
+    </div>
+
+    <h3>view</h3>
+    <div class="slider-row">
+      <label>point size</label>
+      <input type="range" id="sl_ps" min="0.3" max="6" step="0.1" value="1.5">
+      <span class="val" id="v_ps">1.5</span>
+    </div>
+    <div class="slider-row">
+      <label>zoom</label>
+      <input type="range" id="sl_zoom" min="0.2" max="5" step="0.05" value="1.0">
+      <span class="val" id="v_zoom">1.00</span>
+    </div>
+
+    <h3>toggles</h3>
+    <div class="toggle-row"><input type="checkbox" id="tg_paused"><label for="tg_paused">paused</label></div>
+    <div class="toggle-row"><input type="checkbox" id="tg_ctc" checked><label for="tg_ctc">highlight CTC bands</label></div>
+    <div class="toggle-row"><input type="checkbox" id="tg_horizon" checked><label for="tg_horizon">show acoustic horizon</label></div>
+    <div class="toggle-row"><input type="checkbox" id="tg_branches" checked><label for="tg_branches">color by Z₃ branch</label></div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="resetView()">reset view</button>
+      <button class="btn" onclick="resetParams()">reset params</button>
+    </div>
+
+    <h3 style="margin-bottom:0">keys</h3>
+    <div style="color:#9ad;font-size:10px;line-height:1.4">
+      0–9 / b–g : scenes &nbsp; · &nbsp; R: reset &nbsp; · &nbsp; space: pause
+      <br>drag pan · scroll zoom · arrows pan · T/G tilt · Q/E spin · [/] point size
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const gl = canvas.getContext('webgl2', { antialias: false, premultipliedAlpha: false });
+if (!gl){
+  document.body.innerHTML = '<div style="color:#f88;padding:24px">WebGL2 required.</div>';
+  throw new Error('no webgl2');
+}
+
+const PARTICLES = 200000;
+
+// 16 scenes: 0-9 are the original layers; 10-15 are v0.15 framework additions.
+const VS = `#version 300 es
+precision highp float;
+uniform float t;
+uniform int   mode;
+uniform float zoom;
+uniform float spin;
+uniform float tilt;
+uniform vec2  pan;
+uniform vec2  resolution;
+uniform float pointScale;
+
+// v0.15 controllable parameters
+uniform float u_omega;       // cylinder rotation
+uniform float u_R;           // cylinder radius
+uniform float u_delta;       // pair offset (also single-cylinder phase)
+uniform float u_gamma_eff;   // Z_3 twist parameter
+uniform float u_amp;         // DCE drive amplitude
+uniform float u_drive;       // DCE drive frequency
+uniform int   u_show_ctc;
+uniform int   u_show_horizon;
+uniform int   u_show_branches;
+
+out vec4 v_color;
+
+const float TAU = 6.28318530717958;
+const float PHI = 1.61803398874989;
+const float AG  = 2.41421356237310;
+const float BR  = 3.30277563773199;
+const float Z3  = 2.09439510239320;
+
+vec3 hsv(float h, float s, float v){
+  vec3 c = clamp(abs(fract(h + vec3(0.0, 2.0/3.0, 1.0/3.0)) * 6.0 - 3.0) - 1.0, 0.0, 1.0);
+  return v * mix(vec3(1.0), c, s);
+}
+
+// Tipler exterior log-frequency
+float tipler_alpha(){
+  float a = u_omega * u_R;
+  return sqrt(max(4.0*a*a - 1.0, 0.001));
+}
+
+// F(r) = (r/R) sin(alpha u + gamma)/sin(gamma) -- supercritical Case III
+float F_LP(float r){
+  float a = u_omega * u_R;
+  float alpha = sqrt(max(4.0*a*a - 1.0, 0.001));
+  float gam = 3.14159265 - atan(alpha);
+  float u = log(max(r/u_R, 1e-6));
+  return (r/u_R) * sin(alpha*u + gam) / sin(gam);
+}
+
+// L(r) approximately tracks cos(alpha ln(r/R) + delta) envelope (sign-tracking proxy)
+float L_LP(float r){
+  float a = u_omega * u_R;
+  float alpha = sqrt(max(4.0*a*a - 1.0, 0.001));
+  float u = log(max(r/u_R, 1e-6));
+  return cos(alpha*u + u_delta);
+}
+
+void main(){
+  float fi = float(gl_VertexID) * (10000.0 / 200000.0);
+  float yy = fi / 235.0;
+
+  float k = 4.0 * cos(fi / 21.0);
+  float e = yy / 8.0 - 20.0;
+  float d = sqrt(k*k + e*e);
+
+  // layer toggles per mode (original)
+  bool useH      = (mode == 1 || mode == 2 || mode == 4 || mode == 8 || mode == 9);
+  bool useInv    = (mode == 2 || mode == 4 || mode == 8 || mode == 9);
+  bool useM      = (mode == 3 || mode == 4 || mode == 8 || mode == 9);
+  bool useMobius = (mode == 5 || mode == 8 || mode == 9);
+  bool useZ3     = (mode == 5 || mode == 8 || mode == 9 || mode == 10 || mode == 12 || mode == 14);
+  bool usePell   = (mode == 5 || mode == 8 || mode == 9);
+  bool useBragg  = (mode == 6 || mode == 8 || mode == 9);
+  bool useDemo   = (mode == 6);
+  bool useShell  = (mode == 6);
+  bool useDirac  = (mode == 7);
+
+  // Hamiltonian flow
+  float theta = 0.0, pmom = 0.0, H = 0.0;
+  if (useH){
+    float om  = sqrt(1.0 + 0.04*d);
+    float th0 = 0.6 * k;
+    float p0  = 0.5;
+    theta = th0*cos(om*t) + (p0/om)*sin(om*t);
+    pmom  = -om*th0*sin(om*t) + p0*cos(om*t);
+    H     = 0.5*pmom*pmom + 0.5*om*om*theta*theta;
+  }
+
+  float mob = 1.0;
+  if (useMobius){
+    float fold = floor(t * 0.6 / TAU);
+    mob = (mod(fold, 2.0) > 0.5) ? -1.0 : 1.0;
+  }
+
+  float branch = useZ3   ? mod(fi, 3.0) : 0.0;
+  float pell   = usePell ? fract((k+4.0)*AG + d*AG*AG) : 0.0;
+
+  float metallicS = 0.0;
+  if (useM){
+    metallicS = (sin(e*14.0    - d*3.0*PHI + t*2.0)
+               + sin(e*14.0*AG - d*3.0     + t*2.0*PHI)
+               + sin(e*14.0*BR - d*3.0*AG  + t*2.0*BR)) / 3.0;
+  }
+
+  float win = useBragg ? (0.54 - 0.46 * cos(TAU * d / 4.0)) : 1.0;
+
+  float demo = 0.0;
+  if (useDemo){
+    for (float m = 1.0; m <= 8.0; m += 1.0)
+      demo += sin(m*e*1.7 - d*0.4*m + t*m*0.3);
+    demo /= 8.0;
+  }
+
+  float shellPhi = 0.0;
+  if (useShell){
+    float idx = max(0.0, floor(log(d / 13.0) / log(AG)));
+    float shellRad = 13.0 * pow(AG, idx);
+    shellPhi = (d - shellRad) * TAU / 5.0;
+  }
+
+  float diracI = 1.0, diracHue = 0.0;
+  if (useDirac){
+    float omega_disp = 1.5 * abs(k);
+    float delta = d*0.45 - omega_disp*t*0.7;
+    float sr = 1.0 + cos(TAU/3.0 + delta) + cos(2.0*TAU/3.0 + 2.0*delta);
+    float si =       sin(TAU/3.0 + delta) + sin(2.0*TAU/3.0 + 2.0*delta);
+    diracI   = (sr*sr + si*si) / 9.0;
+    diracHue = degrees(atan(si, sr));
+  }
+
+  // ── v0.15 framework modes 10-15 ──────────────────────────────────────
+  // Mode 10: Tipler sinusoid + CTC bands + acoustic horizon
+  // Mode 11: Wormhole-throat radial map (L=0 loci highlighted)
+  // Mode 12: Wilson loop on angular S^1 (Z_3 phases)
+  // Mode 13: DSI cascade (log-periodic multi-alpha)
+  // Mode 14: DCE photon-flux spectrum visualization
+  // Mode 15: Vacuum-state regimes (Boulware vs supersonic CTC)
+
+  float tipler_phase = 0.0, ctc_mask = 1.0, horizon_mask = 1.0;
+  if (mode >= 10){
+    // radius proxy from d (galaxy-distance), mapped to [1, R*e^8]
+    float r_map = u_R * exp(d * 0.4);
+    tipler_phase = cos(tipler_alpha() * log(r_map / u_R) + u_delta);
+
+    if (u_show_ctc == 1){
+      ctc_mask = tipler_phase < 0.0 ? 1.6 : 0.8;
+    }
+    if (u_show_horizon == 1){
+      float F_val = F_LP(r_map);
+      horizon_mask = abs(F_val) < 0.05 ? 2.0 : 1.0;
+    }
+  }
+
+  float c, ripple;
+  if (mode == 0 || mode == 1 || mode == 2){
+    c      = d - t + 0.55*theta;
+    ripple = 9.0 + 2.0*sin(e*14.0 - d*3.0 + t*2.0) + 1.5*theta;
+  } else if (mode == 3){
+    c      = d - t * PHI;
+    ripple = 9.0 + 2.0 * metallicS;
+  } else if (mode == 4){
+    c      = d - t + 0.45*theta;
+    ripple = 9.0 + 2.0 * metallicS + 1.2 * theta;
+  } else if (mode == 5){
+    c      = mob*(d - t) + branch*Z3 + 0.4*pell*TAU;
+    ripple = (9.0 + 2.0*sin(e*14.0 - d*3.0 + t*2.0)) * (1.0 + 0.25*cos(3.0*c));
+  } else if (mode == 6){
+    c      = d - t + 0.5 * shellPhi;
+    ripple = (9.0 + 2.0*demo) * win;
+  } else if (mode == 7){
+    c      = d - t;
+    ripple = 9.0 + 2.0*sin(e*14.0 - d*3.0 + t*2.0);
+  } else if (mode == 8){
+    c      = mob*(d - t) + branch*Z3 + 0.3*pell*TAU + 0.4*theta;
+    ripple = ((9.0 + 2.0*metallicS) * win + 1.2*theta) * (1.0 + 0.15*cos(3.0*c));
+  } else if (mode == 9){
+    c      = mob*(d - t) + branch*Z3 + 0.3*pell*TAU + 0.4*theta;
+    ripple = ((9.0 + 2.0*metallicS) * win + 1.2*theta) * (1.0 + 0.15*cos(3.0*c));
+  } else if (mode == 10){
+    // Tipler sinusoid: rotation phase modulated by log-periodic F-component
+    c      = d - t + 0.7 * tipler_phase + branch * Z3;
+    ripple = (9.0 + 4.0 * tipler_phase) * ctc_mask;
+  } else if (mode == 11){
+    // wormhole-throat L=0 loci: highlight where L(r) crosses zero
+    float L_val = tipler_phase;  // tracks cos(alpha u + delta)
+    c      = d - t + 0.5 * sign(L_val);
+    ripple = 9.0 + 2.0 * tipler_phase + (abs(L_val) < 0.05 ? 4.0 : 0.0);
+  } else if (mode == 12){
+    // Wilson loop: angular S^1 with Z_3 monodromy
+    // arrange particles on a circle parameterised by angle theta_phi
+    c      = (fi * TAU / 200.0) + branch * TAU/3.0 + u_gamma_eff;
+    ripple = 9.0;
+  } else if (mode == 13){
+    // DSI cascade: multi-alpha hierarchy
+    float aL = tipler_alpha();
+    float dsi = cos(aL*log(max(d,1e-3)) + u_delta)
+              + 0.6*cos(aL*2.0*log(max(d,1e-3)) + u_delta)
+              + 0.3*cos(aL*4.0*log(max(d,1e-3)) + u_delta);
+    c      = d - t + 0.3 * dsi;
+    ripple = 9.0 + 3.0 * dsi;
+  } else if (mode == 14){
+    // DCE photon flux: drive amp epsilon * sin(Omega t) modulates ripple
+    float drive = u_amp * sin(u_drive * t);
+    c      = d - t + 0.4 * drive + branch * Z3 * 0.4;
+    ripple = 9.0 + 5.0 * drive * sin(d * u_drive * 0.3);
+  } else { // mode == 15
+    // Vacuum state regimes: color by F sign (Boulware where F>0, supersonic CTC where F<0)
+    c      = d - t;
+    ripple = 9.0 + 2.0 * tipler_phase;
+  }
+
+  float kCo = (mode == 3 || mode == 4 || mode == 8 || mode == 9) ? AG  : 1.0;
+  float yCo = (mode == 3 || mode == 4 || mode == 8 || mode == 9) ? PHI : 1.0;
+  float q = 3.0*sin(k*2.0*kCo) + 0.3/k + sin(yy / 19.0 * yCo) * k * ripple;
+
+  vec2 pos;
+  float depth_norm = 0.5;
+  float branch_torus = branch;
+
+  if (mode == 5 || mode == 9) {
+    int idx = gl_VertexID;
+    float ui = float(idx % 500);
+    float vi = float((idx / 500) % 400);
+    float u  = (ui / 500.0) * TAU + t * 0.4;
+    float vb = (vi / 400.0) * TAU;
+    branch_torus = floor(vb * 3.0 / TAU);
+
+    float v_eff = mob * (vb + u * 0.5);
+    float R_M  = 110.0;
+    float R_m  = 40.0 * (1.0 + 0.12 * (pell - 0.5));
+
+    float cosV = cos(v_eff), sinV = sin(v_eff);
+    float cosU = cos(u),     sinU = sin(u);
+    vec3 p3 = vec3(
+      (R_M + R_m * cosV) * cosU,
+      (R_M + R_m * cosV) * sinU,
+      R_m * sinV
+    );
+
+    float ct = cos(0.55), st = sin(0.55);
+    pos = vec2(p3.x + 200.0, p3.y * ct - p3.z * st + 200.0);
+
+    float depth_z = p3.y * st + p3.z * ct;
+    depth_norm = clamp((depth_z + R_m) / (2.0 * R_m), 0.0, 1.0);
+  } else if (mode == 12) {
+    // Place on a Wilson-loop circle in the (x, y) plane
+    float radius = 150.0 + 30.0 * branch + 8.0 * sin(t + branch * Z3);
+    pos = vec2(radius * cos(c) + 200.0, radius * sin(c) + 200.0);
+  } else {
+    pos = vec2(q + 50.0*cos(c) + 200.0, q*sin(c) + d*39.0 - 475.0);
+  }
+
+  vec2 centered = pos - vec2(200.0, 200.0);
+  float galaxyScale = min(resolution.x, resolution.y) / 400.0;
+  centered *= galaxyScale * zoom;
+  float cs = cos(spin), ss = sin(spin);
+  centered = mat2(cs, -ss, ss, cs) * centered;
+  centered.y *= cos(tilt);
+  centered += pan;
+
+  vec2 ndc = centered * 2.0 / resolution;
+  gl_Position = vec4(ndc, 0.0, 1.0);
+
+  float kk = k * k;
+  gl_PointSize = (kk > 15.0 ? 2.5 : 1.5) * pointScale * horizon_mask;
+
+  // color
+  vec3 col = vec3(1.0);
+  float alpha = 0.35;
+
+  if (useInv){
+    float hueDeg = mod(H*140.0 + d*7.0, 360.0);
+    col = hsv(hueDeg / 360.0, 0.8, 1.0);
+  }
+  if (mode == 5){
+    float hueDeg = mod(branch_torus*120.0 + (mob > 0.0 ? 0.0 : 40.0) + pell*60.0, 360.0);
+    col = hsv(hueDeg / 360.0, 0.75, 1.0);
+    alpha = 0.10 + 0.45 * depth_norm;
+  }
+  if (useDirac){
+    float hueDeg = mod(diracHue + d*4.0 + 360.0, 360.0);
+    col   = hsv(hueDeg / 360.0, 0.8, 1.0);
+    alpha = 0.05 + 0.5 * diracI;
+  }
+  if (mode == 8){
+    float hueDeg = mod(H*100.0 + branch*120.0 + (mob > 0.0 ? 0.0 : 30.0) + pell*60.0 + d*3.0, 360.0);
+    col = hsv(hueDeg / 360.0, 0.75, 1.0);
+  }
+  if (mode == 9){
+    float hueDeg = mod(H*100.0 + branch_torus*120.0 + (mob > 0.0 ? 0.0 : 30.0) + pell*60.0, 360.0);
+    col = hsv(hueDeg / 360.0, 0.75, 1.0);
+    alpha = 0.10 + 0.45 * depth_norm;
+  }
+
+  // v0.15 framework coloring
+  if (mode == 10){
+    // Tipler: blue in subhorizon, red in CTC, cyan at horizon
+    float hueDeg = tipler_phase > 0.0 ? 210.0 : 350.0;
+    col   = hsv(hueDeg / 360.0, 0.8, 1.0);
+    alpha = 0.15 + 0.4 * abs(tipler_phase);
+    if (u_show_branches == 1) col = hsv(mod(hueDeg + branch*120.0, 360.0)/360.0, 0.8, 1.0);
+  } else if (mode == 11){
+    // throat: highlight L~0 in yellow
+    float L_val = tipler_phase;
+    float hueDeg = abs(L_val) < 0.05 ? 60.0 : (L_val > 0.0 ? 180.0 : 0.0);
+    col = hsv(hueDeg/360.0, 0.85, 1.0);
+    alpha = abs(L_val) < 0.05 ? 0.9 : 0.2;
+  } else if (mode == 12){
+    // Wilson loop: 3 cube-root-of-unity colors
+    float hueDeg = mod(branch * 120.0 + u_gamma_eff * 180.0 / 3.14159, 360.0);
+    col = hsv(hueDeg/360.0, 0.85, 1.0);
+    alpha = 0.6;
+  } else if (mode == 13){
+    // DSI: hue follows log-period
+    float hueDeg = mod(log(max(d,1e-3)) * 60.0, 360.0);
+    col = hsv(hueDeg/360.0, 0.7, 1.0);
+    alpha = 0.3;
+  } else if (mode == 14){
+    // DCE: red when amp*sin > 0 (creating photons), blue when < 0
+    float drive = u_amp * sin(u_drive * t);
+    float hueDeg = drive > 0.0 ? 0.0 : 240.0;
+    col = hsv(hueDeg/360.0, 0.85, 1.0);
+    alpha = 0.25 + 0.5 * abs(drive);
+  } else if (mode == 15){
+    // vacuum regimes: green=Boulware (F>0), red=supersonic CTC (F<0)
+    float F_val = F_LP(u_R * exp(d * 0.4));
+    float hueDeg = F_val > 0.0 ? 130.0 : 0.0;
+    col = hsv(hueDeg/360.0, 0.85, 1.0);
+    alpha = 0.35;
+  }
+
+  v_color = vec4(col, alpha);
+}`;
+
+const FS = `#version 300 es
+precision highp float;
+in vec4 v_color;
+out vec4 frag;
+void main(){
+  vec2 d = gl_PointCoord - 0.5;
+  float r2 = dot(d, d);
+  if (r2 > 0.25) discard;
+  float fall = 1.0 - r2 * 4.0;
+  frag = vec4(v_color.rgb * fall, v_color.a * fall);
+}`;
+
+function compile(src, type){
+  const sh = gl.createShader(type);
+  gl.shaderSource(sh, src);
+  gl.compileShader(sh);
+  if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)){
+    console.error(gl.getShaderInfoLog(sh));
+    throw new Error('compile fail');
+  }
+  return sh;
+}
+
+const prog = gl.createProgram();
+gl.attachShader(prog, compile(VS, gl.VERTEX_SHADER));
+gl.attachShader(prog, compile(FS, gl.FRAGMENT_SHADER));
+gl.linkProgram(prog);
+if (!gl.getProgramParameter(prog, gl.LINK_STATUS)){
+  console.error(gl.getProgramInfoLog(prog));
+  throw new Error('link fail');
+}
+gl.useProgram(prog);
+
+const vao = gl.createVertexArray();
+gl.bindVertexArray(vao);
+
+const u = name => gl.getUniformLocation(prog, name);
+const uT     = u('t');
+const uMode  = u('mode');
+const uZoom  = u('zoom');
+const uSpin  = u('spin');
+const uTilt  = u('tilt');
+const uPan   = u('pan');
+const uRes   = u('resolution');
+const uPS    = u('pointScale');
+const uOmega = u('u_omega');
+const uR     = u('u_R');
+const uDelta = u('u_delta');
+const uGamma = u('u_gamma_eff');
+const uAmp   = u('u_amp');
+const uDrive = u('u_drive');
+const uCTC   = u('u_show_ctc');
+const uHor   = u('u_show_horizon');
+const uBr    = u('u_show_branches');
+
+let mode = 8, zoom = 1, spin = 0, tilt = 0, pan = [0, 0], pointScale = 1.5;
+let omega = 1.0, R = 1.0, delta = 0.0, gamma_eff = 0.0;
+let drive_amp = 0.15, drive_omega = 6.28;
+let show_ctc = 1, show_horizon = 1, show_branches = 1;
+let dragging = false;
+let paused = false;
+let pausedTime = 0;
+let pauseStart = 0;
+const startTime = performance.now();
+
+const MODE_NAMES = [
+  '0 · baseline',
+  '1 · Hamiltonian pendulum',
+  '2 · invariants → hue',
+  '3 · metallic anti-resonant',
+  '4 · pendulum + invariants + metallic',
+  '5 · Möbius × Z₃ × Pell · TOROIDAL',
+  '6 · DiracCrystal × Bragg × democracy',
+  '7 · Dirac ternary spinor',
+  '8 · GRAND UNIFICATION',
+  '9 · GRAND · TOROIDAL',
+  '10 · Tipler sinusoid + CTC bands',
+  '11 · wormhole-throat L=0 loci',
+  '12 · Wilson loop / Z₃ monodromy',
+  '13 · DSI cascade (log-fractal)',
+  '14 · dynamical Casimir flux',
+  '15 · vacuum regimes (Boulware vs supersonic)',
+];
+
+const MODE_BLURB = {
+  10: 'F(r) = cos(α ln(r/R) + δ) — supercritical log-periodic exterior. red = L<0 CTC bands; cyan = subhorizon. tune δ to slide bands.',
+  11: 'L(r) = 0 throat loci highlighted in yellow. these are CTC band boundaries in vacuum, NOT Morris-Thorne wormhole junctions.',
+  12: 'flat U(1) connection A_φ = (γ_eff + 2πb/3)/(2π). 3 branches = 3 cube roots of unity. γ_eff slider sweeps the holonomy.',
+  13: 'multi-α cascade F = Σ cos(2^k α ln r + δ) — discrete-scale-invariant log-periodic precursor.',
+  14: 'cavity-modulation photon flux. ε sin(Ωt) drive; tune ε and Ω. red = pair-creation half-cycle, blue = absorption half-cycle.',
+  15: 'green = Boulware (F>0, static observer well-defined). red = supersonic CTC region (F<0). chronology horizon = green/red boundary.',
+};
+
+const modeBtnEl = document.getElementById('modeBtns');
+for (let i = 0; i < 16; i++){
+  const b = document.createElement('button');
+  b.className = 'mb';
+  b.textContent = i;
+  b.title = MODE_NAMES[i];
+  b.onclick = () => setMode(i);
+  modeBtnEl.appendChild(b);
+}
+
+function setMode(m){
+  mode = m;
+  document.getElementById('mode').innerHTML = `<b>mode ${m}</b> · ${MODE_NAMES[m].replace(/^\d+ · /, '')}`;
+  const cap = document.getElementById('cap');
+  if (MODE_BLURB[m]){
+    cap.innerHTML = `<b>${MODE_NAMES[m]}</b> — ${MODE_BLURB[m]}`;
+  } else {
+    cap.innerHTML = `<b>Systrophe v0.15.1</b> · WebGL2 framework explorer · 200k GPU particles · drag · scroll · arrows · R reset`;
+  }
+  for (const b of modeBtnEl.children){
+    b.classList.toggle('active', parseInt(b.textContent, 10) === m);
+  }
+}
+setMode(8);
+
+function resetView(){ pan=[0,0]; zoom=1; spin=0; tilt=0; pointScale=1.5;
+  document.getElementById('sl_zoom').value=1; document.getElementById('v_zoom').textContent='1.00';
+  document.getElementById('sl_ps').value=1.5; document.getElementById('v_ps').textContent='1.5';
+}
+function resetParams(){
+  omega=1; R=1; delta=0; gamma_eff=0; drive_amp=0.15; drive_omega=6.28;
+  document.getElementById('sl_omega').value=1.0; document.getElementById('v_omega').textContent='1.00';
+  document.getElementById('sl_R').value=1.0; document.getElementById('v_R').textContent='1.00';
+  document.getElementById('sl_delta').value=0; document.getElementById('v_delta').textContent='0.00';
+  document.getElementById('sl_gamma').value=0; document.getElementById('v_gamma').textContent='0.00';
+  document.getElementById('sl_amp').value=0.15; document.getElementById('v_amp').textContent='0.15';
+  document.getElementById('sl_drive').value=6.28; document.getElementById('v_drive').textContent='6.28';
+}
+function togglePanel(){
+  document.getElementById('panel').classList.toggle('collapsed');
+  const tg = document.getElementById('panelToggle');
+  tg.textContent = document.getElementById('panel').classList.contains('collapsed') ? '▸' : '▾';
+}
+
+function bindSlider(slId, valId, cb){
+  const sl = document.getElementById(slId);
+  const v  = document.getElementById(valId);
+  sl.addEventListener('input', () => {
+    const x = parseFloat(sl.value);
+    v.textContent = x.toFixed(2);
+    cb(x);
+  });
+}
+bindSlider('sl_omega', 'v_omega', x => omega = x);
+bindSlider('sl_R',     'v_R',     x => R = x);
+bindSlider('sl_delta', 'v_delta', x => delta = x);
+bindSlider('sl_gamma', 'v_gamma', x => gamma_eff = x);
+bindSlider('sl_amp',   'v_amp',   x => drive_amp = x);
+bindSlider('sl_drive', 'v_drive', x => drive_omega = x);
+bindSlider('sl_ps',    'v_ps',    x => pointScale = x);
+bindSlider('sl_zoom',  'v_zoom',  x => zoom = x);
+
+document.getElementById('tg_paused').addEventListener('change', (e) => {
+  if (e.target.checked){ paused = true; pauseStart = performance.now(); }
+  else { paused = false; pausedTime += performance.now() - pauseStart; }
+});
+document.getElementById('tg_ctc').addEventListener('change', (e) => show_ctc = e.target.checked ? 1 : 0);
+document.getElementById('tg_horizon').addEventListener('change', (e) => show_horizon = e.target.checked ? 1 : 0);
+document.getElementById('tg_branches').addEventListener('change', (e) => show_branches = e.target.checked ? 1 : 0);
+
+function resize(){
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  canvas.width  = innerWidth  * dpr;
+  canvas.height = innerHeight * dpr;
+  gl.viewport(0, 0, canvas.width, canvas.height);
+}
+resize();
+addEventListener('resize', resize);
+
+canvas.addEventListener('pointerdown', (e) => {
+  dragging = true;
+  canvas.classList.add('dragging');
+  canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener('pointerup', () => {
+  dragging = false;
+  canvas.classList.remove('dragging');
+});
+canvas.addEventListener('pointermove', (e) => {
+  if (!dragging) return;
+  const dpr = canvas.width / innerWidth;
+  pan[0] += e.movementX * dpr;
+  pan[1] -= e.movementY * dpr;
+});
+canvas.addEventListener('wheel', (e) => {
+  zoom *= e.deltaY < 0 ? 1.07 : 1/1.07;
+  document.getElementById('sl_zoom').value = zoom;
+  document.getElementById('v_zoom').textContent = zoom.toFixed(2);
+  e.preventDefault();
+}, { passive: false });
+
+const keys = new Set();
+addEventListener('keydown', (e) => {
+  // Ignore typing in input fields
+  if (e.target.tagName === 'INPUT') return;
+  const k = e.key;
+  if (k === 'r' || k === 'R'){ resetView(); }
+  if (k >= '0' && k <= '9'){ setMode(parseInt(k, 10)); }
+  if (k === 'b') setMode(10);
+  if (k === 'c') setMode(11);
+  if (k === 'd') setMode(12);
+  if (k === 'f') setMode(13);
+  if (k === 'g') setMode(14);
+  if (k === 'h') setMode(15);
+  if (k === ' '){
+    const tg = document.getElementById('tg_paused');
+    tg.checked = !tg.checked;
+    tg.dispatchEvent(new Event('change'));
+    e.preventDefault();
+  }
+  if (k === '[') pointScale = Math.max(0.3, pointScale / 1.1);
+  if (k === ']') pointScale = Math.min(8, pointScale * 1.1);
+  keys.add(k.length === 1 ? k.toLowerCase() : k);
+});
+addEventListener('keyup', (e) => keys.delete(e.key.length === 1 ? e.key.toLowerCase() : e.key));
+
+function pollKeys(){
+  if (keys.has('ArrowLeft'))  pan[0] += 8;
+  if (keys.has('ArrowRight')) pan[0] -= 8;
+  if (keys.has('ArrowUp'))    pan[1] -= 8;
+  if (keys.has('ArrowDown'))  pan[1] += 8;
+  if (keys.has('t')) tilt -= 0.02;
+  if (keys.has('g')) tilt += 0.02;
+  if (keys.has('q')) spin -= 0.02;
+  if (keys.has('e')) spin += 0.02;
+  tilt = Math.max(-1.35, Math.min(1.35, tilt));
+}
+
+gl.enable(gl.BLEND);
+gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+
+let frames = 0, fpsLast = startTime;
+const fpsEl = document.getElementById('fps');
+
+function frame(){
+  pollKeys();
+  const now = performance.now();
+  const liveTime = paused ? (pauseStart - startTime - pausedTime) / 1000
+                          : (now - startTime - pausedTime) / 1000;
+
+  gl.clearColor(0, 0, 0, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  gl.uniform1f(uT, liveTime);
+  gl.uniform1i(uMode, mode);
+  gl.uniform1f(uZoom, zoom);
+  gl.uniform1f(uSpin, spin);
+  gl.uniform1f(uTilt, tilt);
+  gl.uniform2f(uPan, pan[0], pan[1]);
+  gl.uniform2f(uRes, canvas.width, canvas.height);
+  gl.uniform1f(uPS, pointScale);
+  gl.uniform1f(uOmega, omega);
+  gl.uniform1f(uR, R);
+  gl.uniform1f(uDelta, delta);
+  gl.uniform1f(uGamma, gamma_eff);
+  gl.uniform1f(uAmp, drive_amp);
+  gl.uniform1f(uDrive, drive_omega);
+  gl.uniform1i(uCTC, show_ctc);
+  gl.uniform1i(uHor, show_horizon);
+  gl.uniform1i(uBr, show_branches);
+
+  gl.drawArrays(gl.POINTS, 0, PARTICLES);
+
+  frames++;
+  if (now - fpsLast > 500){
+    const fps = (frames * 1000 / (now - fpsLast)).toFixed(0);
+    fpsEl.textContent = `${fps} fps · ${(PARTICLES/1000).toFixed(0)}k particles`;
+    frames = 0; fpsLast = now;
+  }
+
+  requestAnimationFrame(frame);
+}
+frame();
+</script>
+</body></html>
