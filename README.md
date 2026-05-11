@@ -7,9 +7,10 @@
 [![Tests](https://github.com/Zynerji/systrophe/actions/workflows/tests.yml/badge.svg)](https://github.com/Zynerji/systrophe/actions/workflows/tests.yml)
 [![Python ≥ 3.10](https://img.shields.io/badge/python-%E2%89%A5%203.10-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 237 passing](https://img.shields.io/badge/tests-237%20passing-brightgreen.svg)](#tests)
-[![Whitepaper](https://img.shields.io/badge/whitepaper-PDF-informational.svg)](paper/systrophe_time_travel.pdf)
-[![Version 0.10.0](https://img.shields.io/badge/version-0.10.0-blue.svg)](pyproject.toml)
+[![Tests: 406 passing](https://img.shields.io/badge/tests-406%20passing-brightgreen.svg)](#tests)
+[![Whitepaper I](https://img.shields.io/badge/whitepaper%20I-PDF-informational.svg)](paper/systrophe_time_travel.pdf)
+[![Whitepaper II](https://img.shields.io/badge/whitepaper%20II-PDF-informational.svg)](paper/systrophe_qft_on_ctc.pdf)
+[![Version 0.13.0](https://img.shields.io/badge/version-0.13.0-blue.svg)](pyproject.toml)
 
 *Systrophē* (Greek **Συστροφή**, "twisting-together"): the joint exterior of two co-rotating, dual-positive-mass van Stockum dust cylinders, whose log-periodic Tipler sinusoids superpose with a tunable relative phase offset.
 
@@ -35,7 +36,7 @@ The package ships with a **comprehensive whitepaper** ([`paper/systrophe_time_tr
 
 ```bash
 pip install -e ".[dev]"        # editable install with dev tools
-pytest                         # 65 tests, ~5 seconds
+pytest                         # 406 tests, ~3 minutes
 ```
 
 Optional extras:
@@ -157,23 +158,89 @@ The full derivation, with Lewis–Papapetrou Ernst-equation reduction and Bonnor
 ## Architecture
 
 ```
-src/systrophe/
-  vanstockum.py        — Interior metric + analytic Case III exterior closed forms
-  lewis_papapetrou.py  — Basic numerical Ernst-equation integrator (Radau IRK)
-  lp_robust.py         — Regime-dispatching robust solver (machine precision at any a)
-  sinusoid.py          — Generic TiplerSinusoid log-periodic envelope class
-  pair.py              — SystrophePair co-axial linearised superposition
-  off_axis.py          — OffAxisPair parallel-axis Cartesian superposition + CTC map
-  ctc.py               — Generic CTC band detector (sign-change bisection)
-  geodesic.py          — CircularOrbit + integrate_geodesic
-  time_machine.py      — TimeMachineWindow + harness_time_loop
-  dinos_bridge.py      — Optional Dinos-DKN interop (Z₃ Möbius eigenvalue match)
+src/systrophe/                  Classical-GR backbone (v0.1-v0.6)
+  vanstockum.py                 — Interior metric + analytic Case III exterior
+  lewis_papapetrou.py           — Numerical Ernst-equation integrator
+  lp_robust.py                  — Regime-dispatching robust solver
+  sinusoid.py                   — TiplerSinusoid log-periodic envelope
+  pair.py                       — SystrophePair co-axial superposition
+  off_axis.py                   — OffAxisPair parallel-axis
+  ctc.py                        — CTC band detector
+  geodesic.py                   — Circular orbits, integrate_geodesic
+  time_machine.py               — TimeMachineWindow + harness
+  dinos_bridge.py               — Optional Dinos-DKN interop
 
-tests/                 — 81 tests across 11 modules
-paper/                 — LaTeX whitepaper + figure generator + compiled PDF (14 pp)
-examples/              — Reproduction scripts + JSON simulation outputs
-tools/                 — One-shot SymPy derivations
+src/systrophe/                  Quantum / QFT layer (v0.7-v0.13; see paper II)
+  dirac.py, dirac_spectrum.py   — Radial Dirac operator + bound-state spectrum
+  dirac_sea.py                  — Dirac-sea pressure, horizon divergence
+  particle_creation.py          — Bogoliubov-style horizon emission
+  qftcs_backreaction.py         — QFTCS curvature back-reaction trace
+  quantum_diagnostics.py        — Ricci, surface gravity, Hawking T, Tolman
+  point_splitting.py            — 4D Riemann/Kretschmann/trace anomaly
+  hadamard_offtrace.py          — Full <T_munu>_ren tensor
+  floquet.py                    — Adiabatic Floquet on radial Dirac
+  floquet_mobius.py             — Joint Floquet on (time x Z_3 branch)
+  casimir.py                    — Topological Casimir / Z_3 mode sums
+  casimir_throat.py             — Brown-Maclay <T_munu> at cavity
+  anomaly_inflow.py             — APS eta + Callan-Harvey Z_3 closure
+  tipler_fractal.py             — DSI + cascade-DSI extension
+  horned_torus.py               — Regular + inverted horn modes
+  acoustic_metric.py            — Unruh acoustic-metric mapping
+  newton_kantorovich.py         — NK solver + Picard comparison
+  back_reaction.py              — Self-consistency composite residual
+  floquet_engineering.py        — CTC stability map (drive_amp, omega)
+  dsi_observables.py            — Log-periodic precursor fits
+  adm_export.py                 — ADM 3+1 hand-off for NR codes
+  d_ctc.py                      — Deutsch CTC fixed-point on Z_3 cover
+
+tests/                          — 367 passing tests across 30 modules
+paper/
+  systrophe_time_travel.tex/pdf   Whitepaper I (classical, v0.1-v0.6)
+  systrophe_qft_on_ctc.tex/pdf    Whitepaper II (QFT, v0.7-v0.13)
+docs/
+  INTERPRETATIONS.md            — 6 open ansatz claims, with required input
+  EXPERIMENTAL_ACOUSTIC_ANALOG.md — BEC-vortex design proposal
+examples/                       — Verification batteries + simulation scripts
+tools/                          — One-shot SymPy derivations
 ```
+
+---
+
+## Quantum layer (v0.13)
+
+Beyond the classical-GR core, Systrophe v0.7–v0.13 adds:
+
+- **Renormalised stress tensor** on the LP background, with off-trace
+  components `<T_{μν}>_ren = (1/2880π²) R_{μρστ} R_ν^{ρστ}`, whose
+  trace recovers the conformal anomaly exactly.
+- **Anomaly inflow** on the Z₃ Möbius cover: APS η-invariants give
+  (0, 1/3, −1/3) summing to zero; nonzero gauge twist is closed by
+  Chern-Simons coefficient `1/(24π²)`.
+- **Acoustic-metric mapping**: identification `c² − v² = F` makes
+  the chronology horizon an acoustic horizon. Gravitational and
+  acoustic Hawking temperatures agree to machine precision.
+- **Joint Floquet** on (time-circle × Z₃-branch), with cyclic-
+  permutation symmetry verified and the `(e_b − e_b')` resonance
+  identified.
+- **Brown-Maclay** flat-space Casimir at the cavity, with LP
+  curvature-correction scale `K · d⁴` (small means flat-space
+  approximation valid).
+- **Newton-Kantorovich** back-reaction solver demonstrating that
+  naive Picard iterations converge linearly, not quadratically.
+- **Cascade discrete-scale invariance** (`tipler_fractal.py`):
+  proves the base Tipler sinusoid is not fractal (dim 0) but the
+  multi-cylinder cascade is (dim > 0.3).
+- **Horned torus** topology with regular (pinch) and inverted
+  (bulge) variants.
+- **ADM 3+1 export** for hand-off to Einstein Toolkit / similar NR
+  codes.
+- **D-CTC** Deutsch-CTC fixed-point solver on the Z₃ cover.
+
+Full derivations are in [`paper/systrophe_qft_on_ctc.pdf`](paper/systrophe_qft_on_ctc.pdf)
+(Whitepaper II). Open ansatz-level interpretations are documented in
+[`docs/INTERPRETATIONS.md`](docs/INTERPRETATIONS.md). A BEC-vortex
+experimental-analog design proposal is in
+[`docs/EXPERIMENTAL_ACOUSTIC_ANALOG.md`](docs/EXPERIMENTAL_ACOUSTIC_ANALOG.md).
 
 ---
 
@@ -258,7 +325,7 @@ cd paper && pdflatex systrophe_time_travel.tex && pdflatex systrophe_time_travel
 
 ```bibtex
 @misc{Knopp2026Systrophe,
-  author = {Knopp, Christopher},
+  author = {Knopp, Christian},
   title  = {{Systrophē}: A co-rotating Tipler-cylinder pair as a tunable
             time-travel harness},
   year   = {2026},

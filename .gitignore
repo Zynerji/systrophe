@@ -23,3 +23,7 @@ docs/_autosummary/
 *.fdb_latexmk
 *.fls
 *.synctex.gz
+
+# Private notes (not pushed)
+CONTACTS.md
+NOTES_PRIVATE.md

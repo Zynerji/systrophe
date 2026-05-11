@@ -5,6 +5,62 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.14.0] - 2026-05-10
+
+### Avenues 1-5 + cross-disciplinary infrastructure (49 new tests)
+
+Author name corrected to Christian Knopp across all repo files
+(pyproject.toml, README.md, LICENSE, docs/conf.py, paper LaTeX).
+
+Bucket A and Bucket C from v0.13 each opened follow-on avenues; this
+release builds out five of them and adds Whitepaper II.
+
+- `back_reaction.py` (Avenue 2): self-consistency composite residual
+  combining Hadamard `<T_{mu nu}>` magnitude and pair |L|. Newton-
+  Kantorovich search for local minima. For matched pair, minimum is at
+  delta = pi, matching v0.11 CTC log-measure result. 9 tests.
+
+- `floquet_engineering.py` (Avenue 3): 2D stability map of CTC bands
+  across (drive_amp, omega_drive) plane. Resonance identification at
+  omega = |e_b - e_b'|. Efficacy diagnostic. 10 tests.
+
+- `dsi_observables.py` (Avenue 4): cross-disciplinary log-periodic
+  precursor toolkit. Sornette model fit (7-parameter, with
+  geometric_ratio = exp(2 pi / omega)). DSI test via geometric-
+  progression residual. Box-counting dimension on 1D point sets.
+  Lomb-Scargle log-frequency search. 12 tests.
+
+- `adm_export.py` (NR hand-off, expansion item 4): 3+1 ADM decompo-
+  sition of LP exterior. Spatial metric gamma_ij, shift beta^i, lapse
+  alpha, extrinsic curvature K_{ij}. Einstein Toolkit-compatible ASCII
+  export. Hamiltonian-constraint residual diagnostic. CTC region marks
+  invalid (alpha^2 < 0). 8 tests.
+
+- `d_ctc.py` (CS audience expansion): Deutsch-CTC fixed-point solver on
+  the Z_3 cover. Banach iteration with trace renormalisation.
+  Z_3-symmetric joint unitary (cyclic shift on CTC register, identity
+  on chronology-respecting). 10 tests.
+
+- `paper/systrophe_qft_on_ctc.tex` + `.pdf`: Whitepaper II (5 pages)
+  covering v0.7-v0.13 QFT layer. Contains rigorous formulation of all
+  new infrastructure with references.
+
+- `docs/EXPERIMENTAL_ACOUSTIC_ANALOG.md` (Avenue 1): BEC-vortex
+  experimental design doc with concrete parameter mapping for
+  Steinhauer-style apparatus. Triple-vortex Z_3 configuration.
+  Predicted analog Hawking signal at ~0.5 nK with O(30 shots)
+  S/N requirement.
+
+- `CONTACTS.md` (gitignored): tiered outreach list with 12 named
+  experimentalists/theorists, draft cold-pitch template, do-not-send
+  list, outreach state tracker.
+
+- README.md, .gitignore, CHANGELOG.md, paper LaTeX: name fix +
+  v0.14 module overview + Quantum Layer section + dual-whitepaper
+  badge.
+
+Tests: 406 passed, 1 skipped (was 357).
+
 ## [0.13.0] - 2026-05-10
 
 ### Eight new modules integrating Bucket A + Bucket C of the Grok 14

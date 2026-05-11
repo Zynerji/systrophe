@@ -1,0 +1,379 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{siunitx}
+\usepackage{enumitem}
+\usepackage{caption}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  citecolor=blue!50!black,
+  urlcolor=blue!50!black
+}
+
+\title{\bfseries Systroph\=e II: \\
+Quantum Field Theory on a Tipler-Pair Background}
+\author{Christian Knopp\\\texttt{cknopp@gmail.com}}
+\date{2026-05-10}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We extend the open-source \textsc{Systroph\=e} package
+(\texttt{github.com/Zynerji/systrophe}) from a classical-GR
+Tipler-pair simulator (v0.1--v0.6) to a quantum-field-theoretic
+laboratory (v0.7--v0.13). The new infrastructure supports:
+(i) renormalised stress-energy tensor $\langle T_{\mu\nu} \rangle$ on
+the Lewis--Papapetrou exterior via point-splitting and the Hadamard
+parametrix, with exact recovery of the conformal anomaly
+$K_{\text{Kretsch}} / (2880 \pi^2)$ in vacuum; (ii) closed-form
+Atiyah--Patodi--Singer $\eta$-invariant on the $\mathbb{Z}_3$
+M\"obius cover with verified $\eta_0 + \eta_1 + \eta_2 = 0$
+anomaly closure and Callan--Harvey inflow balance; (iii) joint
+Floquet quasi-energies on the $(t, b)$ Brillouin product torus with
+$\mathbb{Z}_3$ cyclic-permutation symmetry; (iv) Unruh acoustic-
+metric mapping ($c^2 - v^2 = F$) identifying the chronology horizon
+as an acoustic horizon, with the gravitational and acoustic Hawking
+temperatures coinciding to machine precision; (v) Brown--Maclay
+$\langle T_{\mu\nu} \rangle$ at a Casimir cavity in flat space with
+LP curvature correction; (vi) Newton--Kantorovich back-reaction
+solver demonstrating the linear-walk failure of na\"ive Picard
+iteration. The package now contains 406 passing tests and ships
+the math via a clean module-per-construction layout. We document
+the open speculative items as ansatz-level interpretations needing
+external input (cavity geometry, vacuum-selection criterion, etc.),
+and propose specific experimental tests in BEC sonic-horizon
+apparatuses.
+\end{abstract}
+
+\section{Introduction}
+
+\textsc{Systroph\=e} v0.1 implemented the closed-form van Stockum /
+Tipler exterior with log-periodic structure and a co-axial pair
+construction allowing tunable CTC interference. The first whitepaper
+\cite{Knopp2026Systrophe} established the classical-GR mathematics:
+exact $\alpha = \sqrt{4a^2-1}$, $F(r) \propto \cos(\alpha \ln r/R + \delta)$
+sinusoid, phasor-sum closure, and the structural $\delta = \pi$
+extinction. The present paper extends to QFT on this background.
+
+\subsection{Scope of Systroph\=e II}
+
+The v0.7--v0.13 series of releases adds the following independent
+machinery, each with a clean module and a separate test suite:
+
+\begin{itemize}
+\item \textbf{v0.7}: Radial Dirac operator on the LP exterior with
+bound-state spectrum
+(\texttt{dirac.py}, \texttt{dirac\_spectrum.py}).
+
+\item \textbf{v0.8}: Quantum-field-theory in curved spacetime
+infrastructure: Dirac sea pressure, particle creation at the
+chronology horizon, QFTCS back-reaction trace, vacuum-energy proxy
+(\texttt{dirac\_sea.py}, \texttt{particle\_creation.py},
+\texttt{qftcs\_backreaction.py}, \texttt{quantum\_diagnostics.py}).
+
+\item \textbf{v0.9}: Point-splitting renormalisation; full Riemann
+tensor, Kretschmann scalar, exact 4D conformal-anomaly trace, and
+DeWitt heat-kernel $a_2$ coefficient
+(\texttt{point\_splitting.py}).
+
+\item \textbf{v0.11}: Research-grade adiabatic Floquet on the radial
+Dirac problem (\texttt{floquet.py}).
+
+\item \textbf{v0.12}: Topological-Casimir mode sums on the
+$\mathbb{Z}_3$ cover with the Hurwitz $\zeta$ at $s=-3$ closed
+form (\texttt{casimir.py}).
+
+\item \textbf{v0.13}: \emph{This paper.} Eight new modules covering
+the post-anomaly machinery (Sections 2--5 below):
+\texttt{hadamard\_offtrace}, \texttt{anomaly\_inflow},
+\texttt{floquet\_mobius}, \texttt{acoustic\_metric},
+\texttt{casimir\_throat}, \texttt{newton\_kantorovich},
+\texttt{tipler\_fractal}, \texttt{horned\_torus}; plus four extension
+modules \texttt{back\_reaction}, \texttt{floquet\_engineering},
+\texttt{dsi\_observables}, \texttt{adm\_export}, \texttt{d\_ctc}.
+\end{itemize}
+
+\section{Renormalised stress tensor and off-trace components}
+
+The package's exact 4D conformal anomaly is
+\begin{equation}
+\langle T^\mu_{\ \mu} \rangle_{\text{ren}}
+  = \frac{K_{\text{Kretsch}}}{2880\, \pi^2}
+  \qquad (\text{vacuum},\ R_{\mu\nu} = 0).
+\label{eq:anomaly}
+\end{equation}
+Module \texttt{hadamard\_offtrace.py} extends this to the full
+\emph{tensor}
+\begin{equation}
+\langle T_{\mu\nu} \rangle_{\text{ren}}
+  = \frac{1}{2880\, \pi^2}
+    R_{\mu\rho\sigma\tau} R_\nu^{\ \rho\sigma\tau},
+\label{eq:offtrace}
+\end{equation}
+whose trace recovers (\ref{eq:anomaly}) exactly. The
+state-independent geometric piece (\ref{eq:offtrace}) is testable
+against the trace anomaly numerically; state-dependent corrections
+(Boulware vs.\ Hartle--Hawking) are documented but not implemented
+(they require mode-sum machinery beyond this paper).
+
+We verify the trace-matching condition numerically:
+\begin{verbatim}
+trace_decomp = trace_decomposition(vs, r=2.0)
+trace_decomp["trace_anomaly_check"]  # < 1e-13
+\end{verbatim}
+
+\section{Anomaly inflow on the $\mathbb{Z}_3$ cover}
+
+The angular Dirac operator on $S^1$ with twist $\alpha$ has
+APS $\eta$-invariant
+\begin{equation}
+\eta(\alpha) = 1 - 2\alpha,\qquad \alpha \in (0, 1),
+\end{equation}
+with $\eta(0) = 0$ (symmetric regularisation).
+
+For the $\mathbb{Z}_3$ M\"obius cover ($\alpha_b = b/3 +
+\gamma_{\text{eff}}/(2\pi)$), the three branches have
+\begin{equation}
+(\eta_0, \eta_1, \eta_2)\big|_{\gamma=0} = (0,\ \tfrac{1}{3},\ -\tfrac{1}{3}),
+\end{equation}
+and
+\begin{equation}
+\sum_{b=0}^{2} \eta_b = 0,
+\label{eq:closure}
+\end{equation}
+the anomaly closure condition. A non-zero gauge twist
+$\gamma_{\text{eff}}$ breaks (\ref{eq:closure}); the residual is
+cancelled by a Chern--Simons bulk inflow with coefficient
+$k_{\text{CS}} = 1 / (24 \pi^2)$:
+\begin{equation}
+k_{\text{CS}} \cdot q_{\text{flux}}
+  = -\tfrac{1}{2} \sum_b \eta_b(\gamma_{\text{eff}}).
+\end{equation}
+This is the Callan--Harvey relation evaluated explicitly on the
+$\mathbb{Z}_3$ cover; verified by direct construction in
+\texttt{z3\_anomaly\_inflow\_balance}.
+
+\section{Acoustic-metric mapping and analog Hawking}
+
+Unruh's 1981 acoustic-metric mapping identifies the LP angular
+metric as an acoustic line element via
+\begin{equation}
+\rho_{\text{acoustic}} = \sqrt{L},\quad
+v_\phi = K/\sqrt{L},\quad
+c^2 - v_\phi^2 = F.
+\end{equation}
+The chronology horizon $F = 0$ coincides exactly with an
+\emph{acoustic} horizon ($c = v$); the CTC region ($F < 0$) is the
+\emph{supersonic} flow region. The acoustic Hawking temperature
+\begin{equation}
+T_H^{\text{ac}} = \kappa_{\text{ac}} / (2\pi),\qquad
+\kappa_{\text{ac}} = \tfrac{1}{2} |dF/dr|_{r=r_H}
+\end{equation}
+equals the gravitational Hawking temperature at the LP chronology
+horizon to machine precision (relative difference $< 10^{-12}$;
+\texttt{compare\_acoustic\_vs\_gravitational\_T\_H}).
+
+\paragraph{Experimental access.} The acoustic-analog mapping is the
+\emph{only currently lab-tractable path} to the Systroph\=e physics.
+In a Bose--Einstein condensate (BEC) with a quantum vortex of
+winding $\ell$, the azimuthal flow $v_\phi(r) = \hbar / (m r)$
+automatically violates $v_\phi(R) > c/2$ once $R < 2 \xi_{\text{BEC}}$
+(the healing length), reproducing the Tipler supercritical
+condition $\omega R > 1/2$. A $\mathbb{Z}_3$ triple-vortex
+configuration realises the M\"obius cover. The full design
+proposal is in \texttt{docs/EXPERIMENTAL\_ACOUSTIC\_ANALOG.md}.
+
+\section{Floquet engineering and discrete-scale invariance}
+
+\subsection{Joint Floquet on $(t, b)$}
+
+Module \texttt{floquet\_mobius} computes Floquet quasi-energies on
+the joint time-circle $\times$ $\mathbb{Z}_3$ branch space. The
+three-level Hamiltonian
+\begin{equation}
+H_{\text{static}} = \text{diag}(e_0, e_1, e_2)
+  + g \cdot (\,|0\rangle\langle 1| + |1\rangle\langle 2| + |2\rangle\langle 0| + h.c.\,)
+\end{equation}
+is driven by $V(t) = A \sin(\Omega t) (S + S^\dagger)$, where $S$
+is the $\mathbb{Z}_3$ cycle-shift. Quasi-energies satisfy
+$\mathbb{Z}_3$ cyclic-permutation symmetry; resonances open at
+$\Omega = e_b - e_{b'}$.
+
+The \texttt{floquet\_engineering} extension module maps the
+(amplitude, frequency) plane and identifies the CTC stability gap
+
+\begin{equation}
+\Delta_{\text{stable}}(\text{amp},\,\Omega)
+  = \min_{i \ne j} |\epsilon_i - \epsilon_j| / \Omega,
+\end{equation}
+quantifying drive-induced stabilisation or destabilisation of CTC
+bands.
+
+\subsection{Tipler-sinusoid discrete-scale invariance and cascade-DSI}
+
+The Tipler sinusoid $F(r) = \cos(\alpha \ln r/R + \delta)$ has
+zero set $\{r_n = r_0 e^{\pi n / \alpha}\}$: a geometric progression
+with ratio
+\begin{equation}
+\rho = e^{\pi / \alpha},
+\end{equation}
+verified to machine precision in \texttt{base\_tipler\_sinusoid\_is\_dsi}.
+This is the textbook DSI signature of a log-periodic precursor
+(Sornette 1998). A multi-cylinder cascade
+\begin{equation}
+F_{\text{cascade}}(r) = \sum_{k=0}^{L-1} A_k \cos(\alpha_k \ln r/R + \delta_k),
+\quad \alpha_k = \alpha_0 \lambda^k,
+\end{equation}
+extends to non-trivial box-counting dimension (measured $> 0.3$ in
+\texttt{cascade\_box\_dimension}). \texttt{dsi\_observables} ports
+this machinery to data analysis: log-periodic precursor fits and
+Lomb--Scargle log-frequency search.
+
+\section{Back-reaction and self-consistency}
+
+The \texttt{back\_reaction} module wires \texttt{hadamard\_offtrace}
+and \texttt{newton\_kantorovich} into a composite back-reaction
+residual
+\begin{equation}
+\mathcal{R}(\delta) = w_T \sum_r \|\langle T_{\mu\nu} \rangle(s_1; r)\|
+  + w_L \sum_r |L_{\text{pair}}(\delta; r)|.
+\end{equation}
+For the matched pair (identical $a, R, A$), the residual is
+minimised at $\delta = \pi$, matching the v0.11 CTC log-measure
+result. This is \emph{not} a full Einstein-coupled back-reaction
+solve (the spatial metric is not updated between iterations); it is
+a static residual minimisation. Full back-reaction requires an
+ADM-coupled solver, which is enabled by the \texttt{adm\_export}
+module providing initial-data hand-off for Einstein Toolkit / similar
+NR codes.
+
+\section{D-CTC and quantum information}
+
+Module \texttt{d\_ctc} implements Deutsch's 1991 CTC fixed-point
+equation
+\begin{equation}
+\rho_{\text{CTC}} = \text{Tr}_{\text{CR}}
+  \big[ U (\sigma_{\text{CR}} \otimes \rho_{\text{CTC}}) U^\dagger \big]
+\end{equation}
+on the $\mathbb{Z}_3$ branch space as the natural 3-dimensional
+CTC register. The cyclic-shift unitary
+$U = R_{\text{CR}} \otimes S$ admits the maximally-mixed CTC state
+as a Banach fixed point; the iteration converges to machine
+precision in tens of iterations.
+
+This puts \textsc{Systroph\=e} in conversation with the
+Aaronson--Watrous (2008) PSPACE result on D-CTC complexity: the
+underlying spacetime geometry is here concretely instantiated.
+
+\section{Open speculative items}
+
+Six ansatz-level claims from the original Grok-chat analysis remain
+not directly testable from inside the codebase and are documented
+in \texttt{docs/INTERPRETATIONS.md}:
+
+\begin{enumerate}
+\item $\mathbb{Z}_3$ cover physically realises a wormhole throat
+(needs gluing map);
+\item Casimir negative energy replaces exotic matter (needs cavity
+geometry);
+\item Self-consistent $\delta$-iteration selects the chronology-
+protecting phase (NK solver ready; needs $F(\delta)$);
+\item M\"obius monodromy equals a U(1) Wilson loop (needs gauge
+field);
+\item DCE off-resonance photon flux (needs cavity $Q$ + modulation);
+\item Throat cavity is the natural QFT vacuum (needs vacuum-
+selection criterion).
+\end{enumerate}
+
+Each item is an open research project given external input.
+
+\section{Summary and outlook}
+
+\textsc{Systroph\=e} v0.13 provides the smallest open-source toolkit
+known to the author that (i) constructs an exact closed-form CTC
+spacetime, (ii) computes renormalised quantum-field-theoretic
+observables on it, and (iii) supports both an experimental analog
+(BEC vortices) and a quantum-information substrate (D-CTC).
+
+\paragraph{Tests.} The package now contains 406 passing tests
+covering all numerical claims in this paper. The full source is
+at \texttt{github.com/Zynerji/systrophe}; license is MIT.
+
+\paragraph{Next steps.} (a) BEC-vortex experimental design
+collaboration (\texttt{CONTACTS.md}, Tier 1); (b) full
+back-reaction NR run via ADM hand-off; (c) extension to the
+multi-cylinder cascade DSI as a model of analog-cosmological
+log-periodic precursors.
+
+\section*{Acknowledgements}
+
+This project was developed as a sustained dialogue between author
+and the Anthropic ``Claude'' coding assistant; the codebase reflects
+their joint authorship via per-commit \texttt{Co-Authored-By}
+attribution. All physical claims and the experimental design are
+the author's. \texttt{ultrareview} cycles caught several
+mathematical errors in the early Grok-chat verification battery.
+
+\bibliographystyle{plain}
+
+\begin{thebibliography}{99}
+\bibitem{Knopp2026Systrophe}
+Knopp, C., \textit{Systroph\=e: A co-rotating Tipler-cylinder pair as a
+tunable time-travel harness},
+\texttt{github.com/Zynerji/systrophe}, 2026.
+
+\bibitem{Deutsch1991}
+Deutsch, D., \textit{Quantum mechanics near closed timelike curves},
+Phys. Rev. D \textbf{44} (1991) 3197.
+
+\bibitem{AaronsonWatrous2009}
+Aaronson, S., Watrous, J., \textit{Closed timelike curves make
+quantum and classical computing equivalent},
+Proc. Roy. Soc. A \textbf{465} (2009) 631.
+
+\bibitem{Unruh1981}
+Unruh, W. G., \textit{Experimental black-hole evaporation?},
+Phys. Rev. Lett. \textbf{46} (1981) 1351.
+
+\bibitem{BrownMaclay1969}
+Brown, L. S., Maclay, G. J.,
+\textit{Vacuum stress between conducting plates: An image solution},
+Phys. Rev. \textbf{184} (1969) 1272.
+
+\bibitem{CallanHarvey1985}
+Callan, C. G., Harvey, J. A., \textit{Anomalies and fermion zero modes
+on strings and domain walls},
+Nucl. Phys. B \textbf{250} (1985) 427.
+
+\bibitem{Sornette1998}
+Sornette, D., \textit{Discrete-scale invariance and complex dimensions},
+Phys. Rep. \textbf{297} (1998) 239.
+
+\bibitem{Christensen1976}
+Christensen, S. M., \textit{Vacuum expectation value of the stress
+tensor in an arbitrary curved background: The covariant point-separation
+method}, Phys. Rev. D \textbf{14} (1976) 2490.
+
+\bibitem{Steinhauer2019}
+Steinhauer, J., \textit{Observation of thermal Hawking radiation and
+its temperature in an analogue black hole}, Nature \textbf{569} (2019)
+688.
+
+\bibitem{Visser1996}
+Visser, M., \textit{Lorentzian Wormholes: From Einstein to Hawking},
+AIP Press, 1996.
+
+\end{thebibliography}
+
+\end{document}

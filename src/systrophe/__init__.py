@@ -188,6 +188,45 @@ from .casimir_throat import (
     topological_throat_coefficient,
     transverse_pressure,
 )
+from .back_reaction import (
+    BackReactionLandscape,
+    back_reaction_landscape,
+    chronology_favoring_deltas,
+    compare_to_ctc_extinction,
+    optimal_delta_by_NK,
+    pair_back_reaction_residual,
+    pair_back_reaction_residual_at_r,
+)
+from .floquet_engineering import (
+    StabilityMapResult,
+    ctc_stability_gap,
+    floquet_engineering_map,
+    identify_floquet_resonances,
+    stabilisation_efficacy,
+)
+from .dsi_observables import (
+    LogPeriodicFit,
+    box_count_dimension_1d,
+    discrete_scale_invariance_test,
+    fit_log_periodic_precursor,
+    log_periodic_model,
+    lomb_scargle_log_periodicity,
+)
+from .adm_export import (
+    ADMSlice,
+    adm_decompose_lp,
+    adm_summary,
+    export_to_einsteintoolkit_ascii,
+    hamiltonian_constraint_residual,
+)
+from .d_ctc import (
+    apply_channel,
+    dctc_fixed_point,
+    density_matrix_diagnostics,
+    maximally_mixed_state,
+    verify_fixed_point,
+    z3_ctc_unitary,
+)
 
 __all__ = [
     "VanStockumInterior",
@@ -230,4 +269,4 @@ __all__ = [
     "z3_cover_mode_density",
     "z3_cover_regularised_zeta_sum",
 ]
-__version__ = "0.13.0"
+__version__ = "0.14.0"

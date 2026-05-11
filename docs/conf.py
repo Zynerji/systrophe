@@ -9,9 +9,9 @@ from datetime import date
 sys.path.insert(0, os.path.abspath("../src"))
 
 project = "Systrophe"
-author = "Christopher Knopp"
+author = "Christian Knopp"
 copyright = f"{date.today().year}, {author}"
-release = "0.5.0"
+release = "0.13.0"
 
 extensions = [
     "sphinx.ext.autodoc",
