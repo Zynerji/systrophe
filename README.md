@@ -5,6 +5,7 @@
 **A co-rotating Tipler-cylinder pair as a tunable time-travel harness.**
 
 [![Tests](https://github.com/Zynerji/systrophe/actions/workflows/tests.yml/badge.svg)](https://github.com/Zynerji/systrophe/actions/workflows/tests.yml)
+[![PyPI](https://img.shields.io/pypi/v/systrophe.svg)](https://pypi.org/project/systrophe/)
 [![Python ≥ 3.10](https://img.shields.io/badge/python-%E2%89%A5%203.10-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Tests: 406 passing](https://img.shields.io/badge/tests-406%20passing-brightgreen.svg)](#tests)
@@ -34,7 +35,17 @@ The package ships with a **comprehensive whitepaper** ([`paper/systrophe_time_tr
 
 ## Installation
 
+### From PyPI
+
 ```bash
+pip install systrophe          # latest release
+```
+
+### From source (for development)
+
+```bash
+git clone https://github.com/Zynerji/systrophe
+cd systrophe
 pip install -e ".[dev]"        # editable install with dev tools
 pytest                         # 406 tests, ~3 minutes
 ```
