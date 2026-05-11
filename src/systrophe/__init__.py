@@ -100,6 +100,16 @@ from .floquet import (
     nonadiabatic_floquet_correction,
     static_pair_bound_states,
 )
+from .casimir import (
+    hurwitz_zeta_neg3,
+    standard_casimir_energy_density,
+    standard_casimir_force,
+    topological_casimir_coefficient,
+    topological_casimir_derivative,
+    z3_cover_fundamental_eigenvalue,
+    z3_cover_mode_density,
+    z3_cover_regularised_zeta_sum,
+)
 
 __all__ = [
     "VanStockumInterior",
@@ -128,5 +138,18 @@ __all__ = [
     "energy_condition_report",
     "proper_energy_density",
     "total_energy_per_unit_length",
+    "AdiabaticFloquetSpectrum",
+    "adiabatic_floquet_spectrum",
+    "adiabatic_floquet_validity",
+    "nonadiabatic_floquet_correction",
+    "static_pair_bound_states",
+    "hurwitz_zeta_neg3",
+    "standard_casimir_energy_density",
+    "standard_casimir_force",
+    "topological_casimir_coefficient",
+    "topological_casimir_derivative",
+    "z3_cover_fundamental_eigenvalue",
+    "z3_cover_mode_density",
+    "z3_cover_regularised_zeta_sum",
 ]
-__version__ = "0.11.0"
+__version__ = "0.12.0"

@@ -5,6 +5,37 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.0] - 2026-05-10
+
+### Casimir / Z_3-cover mode sums (integrates verified updates.txt math)
+
+New module `systrophe.casimir` integrates the four mathematically-verified
+claims from `examples/grok_updates_verification.py`:
+
+- `hurwitz_zeta_neg3(a)`: exact closed form
+  `zeta_H(-3, a) = -a^4/4 + a^3/2 - a^2/4 + 1/120`
+  (from Bernoulli polynomial `B_4`).
+- `standard_casimir_energy_density(d)`: textbook
+  `rho = -pi^2 / (720 d^4)`.
+- `standard_casimir_force(d)`: textbook `P = -pi^2 / (240 d^4)`.
+- `topological_casimir_coefficient(gamma_eff)`: Z_3-cover sum
+  `(1/720) sum_{b=0,1,2} zeta_H(-3, b/3 + gamma_eff / (2 pi))`.
+- `topological_casimir_derivative(gamma_eff)`: central-difference
+  derivative.
+- `z3_cover_mode_density(N, gamma_eff)`: discrete-Laplacian eigenvalues
+  on the N-node Z_3 cover.
+- `z3_cover_fundamental_eigenvalue(N, gamma_eff)`: lowest non-trivial
+  mode per branch.
+- `z3_cover_regularised_zeta_sum(s, gamma_eff)`: zeta-regularised
+  sum over the three branches (general s via scipy; falls back to
+  closed form at s = -3).
+
+The module's docstring explicitly separates the verified mathematics
+from Grok's speculative throat-Casimir interpretation; only the
+mathematics is implemented.
+
+Tests: 15 new in `tests/test_casimir.py`; all pass.
+
 ## [0.11.0] - 2026-05-10
 
 ### Verified / falsified Grok-chat math assertions (examples/grok_verification.py)
