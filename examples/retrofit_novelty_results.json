@@ -25,7 +25,21 @@
   },
   {
     "module": "optical_fiber_analog",
-    "error": "TypeError: linear_pump_profile() got an unexpected keyword argument 'x_min'"
+    "verdict": "novel_structure",
+    "n_sharp": 1,
+    "sharp": [
+      {
+        "between_indices": [
+          6,
+          7
+        ],
+        "parameter_value": 0.6689655172413793,
+        "hamming_step": 13,
+        "median_step": 1.0,
+        "mad": 1.0,
+        "excess_over_median": 12.0
+      }
+    ]
   },
   {
     "module": "energy_condition_survey",
@@ -183,7 +197,9 @@
   },
   {
     "module": "chronology_protection",
-    "error": "TypeError: chronology_protection_study() got an unexpected keyword argument 'omega'"
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp": []
   },
   {
     "module": "aharonov_bohm_ctc",
