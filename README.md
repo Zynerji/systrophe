@@ -2,15 +2,15 @@
 
 # Συστροφή — Systrophe
 
-**A co-rotating Tipler-cylinder pair as a tunable time-travel harness.**
+**A co-rotating Tipler-cylinder pair as a tunable time-travel harness — and the framework it now anchors.**
 
 [![Tests](https://github.com/Zynerji/systrophe/actions/workflows/tests.yml/badge.svg)](https://github.com/Zynerji/systrophe/actions/workflows/tests.yml)
 [![PyPI](https://img.shields.io/pypi/v/systrophe.svg)](https://pypi.org/project/systrophe/)
 [![Python ≥ 3.10](https://img.shields.io/badge/python-%E2%89%A5%203.10-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 481 passing](https://img.shields.io/badge/tests-481%20passing-brightgreen.svg)](#tests)
-[![Whitepaper I](https://img.shields.io/badge/whitepaper%20I-PDF-informational.svg)](paper/systrophe_time_travel.pdf)
-[![Whitepaper II](https://img.shields.io/badge/whitepaper%20II-PDF-informational.svg)](paper/systrophe_qft_on_ctc.pdf)
+[![Tests: 1118 passing](https://img.shields.io/badge/tests-1118%20passing-brightgreen.svg)](#tests)
+[![Papers: 11](https://img.shields.io/badge/papers-11%20PDFs-informational.svg)](#papers)
+[![IBM Marrakesh: 4 batches](https://img.shields.io/badge/IBM%20Marrakesh-4%20batches-purple.svg)](#ibm-marrakesh-hardware-validation)
 [![Version 0.17.0](https://img.shields.io/badge/version-0.17.0-blue.svg)](pyproject.toml)
 
 *Systrophē* (Greek **Συστροφή**, "twisting-together"): the joint exterior of two co-rotating, dual-positive-mass van Stockum dust cylinders, whose log-periodic Tipler sinusoids superpose with a tunable relative phase offset.
@@ -21,15 +21,17 @@
 
 ## What this is
 
-A complete numerical and analytic implementation of:
+A complete numerical and analytic framework spanning **50 phases** of development, from classical general relativity through quantum field theory on the CTC background, Deutsch-CTC channel theory, and IBM quantum-hardware validation. The repository ships with **94 source modules**, **1118 passing tests** across **98 test files**, **11 LaTeX whitepapers**, **40 reproducible example scripts**, and **4 batches of IBM Marrakesh hardware experiments**.
 
-1. **The single rotating cylinder** — exact van Stockum 1937 interior + analytic Bonnor Case III exterior (closed forms for `F`, `K`, `L`).
-2. **The Lewis–Papapetrou ODE integrator** — Ernst-equation numerical exterior for any rotation parameter, validated to machine precision against the closed forms.
-3. **The Systrophe pair** — two co-axial supercritical cylinders linearly superposed, producing an *off-set Tipler sinusoid* whose CTC band positions are tunable by the relative phase `δ₂ − δ₁`.
-4. **A time-machine harness** — locate CTC bands, derive timelike-orbit angular-velocity sectors, tune coordinate-time-per-revolution to a target value, simulate forward and backward time-travel orbits.
-5. **A bridge to the Δῖνος (Dinos) Dirac–Kerr–Newman framework** — exact identification of the Tipler log-grid fundamental eigenvalue with the Z₃ Möbius cover branch=0 fundamental; non-trivial branches realise the off-set sectors of the systrophic pair.
+The five canonical layers:
 
-The package ships with a **comprehensive whitepaper** ([`paper/systrophe_time_travel.pdf`](paper/systrophe_time_travel.pdf)) deriving every formula, all five figures, and reproducing the simulation results end-to-end.
+1. **Classical-GR backbone** (v0.1 – v0.6) — exact van Stockum 1937 interior, analytic Bonnor Case III exterior, Lewis–Papapetrou Ernst-equation integrator, Systrophe co-axial pair + off-axis pair, CTC band detector, time-machine harness, Z₃ Möbius-cover bridge to the Δῖνος (Dinos) DKN framework.
+2. **Quantum / QFT layer** (v0.7 – v0.13) — radial Dirac operator and bound-state spectrum, renormalised stress tensor, anomaly inflow on the Z₃ cover, joint Floquet on (time × branch), Newton-Kantorovich back-reaction, cascade-DSI fractal extension, ADM 3+1 export, Deutsch-CTC fixed-point solver on the cover.
+3. **Phase-by-phase extensions** (v0.13 – v0.17, **Phases 11 – 50**) — photon orbits, lensing, Penrose extraction, optical-fibre / synchrotron analogs, Wilson loops, Aharonov-Bohm CTC phase, Berry / twistor / spinor-monodromy on LP, BMS soft hair, ER=EPR pair, monopole on cylinder, anyonic CTC, stochastic LP, BH pair production, vacuum polarization, Casimir-Polder, Unruh, KG scattering, solitons, holographic complexity, holography, page-curve construction, LQG discretisation, modified dispersion, GW emission, ANEC bound, energy-condition survey, exotic-matter accounting, photon sphere structure, tidal-force diagnostics, frame dragging, Hawking budget, dark-matter scalar coupling, geodesic completeness, topology change, cosmological embedding, KK embedding, higher-spin fields, Cauchy-stability, chronology-protection budget, wormhole-throat, dynamical Casimir, dynamical-cylinder back-reaction, multi-cylinder dynamics, NR initial data.
+4. **Deutsch-CTC channel theory** — independent line of empirical investigation of D-CTC fixed-point iteration: spectral oracle (`|λ₂|` predicts iteration count, Pearson r = 0.99 across 2000 Haar samples), power-law scaling, multi-basin attractor structure, Clifford-structured channel amplification, limit-cycle solutions, and an encoding-dependent chronology-protection criterion. Phases A – ZY (26 phase letters + E1, E4, E8 deep cycles).
+5. **IBM Marrakesh hardware validation** — 4 batches on the IBM Quantum `ibm_marrakesh` 156-qubit Heron-r2 device, demonstrating KK escape interference cancellation at the supercritical threshold, Page-curve recovery from the LP cover, and a log-periodic LP quantum walk with phase-by-phase α recovery (batch 4 in queue at time of v0.17.0 tag).
+
+Every phase module ships with a **mandatory novelty catcher** (address-space λ₂ on the Hamming graph of bit-hashed distributions) that flags surprises before any "validated" / "null" verdict is issued.
 
 ---
 
@@ -47,12 +49,13 @@ pip install systrophe          # latest release
 git clone https://github.com/Zynerji/systrophe
 cd systrophe
 pip install -e ".[dev]"        # editable install with dev tools
-pytest                         # 481 tests, ~3 minutes
+pytest                         # 1118 tests, 1 skipped (z3-solver)
 ```
 
 Optional extras:
 - `.[symbolic]` — SymPy for the one-shot derivation script (`tools/derive_lewis_papapetrou.py`).
-- `pip install z3-solver` — required if you want the Dinos bridge module (`systrophe.dinos_bridge`).
+- `pip install z3-solver` — required if you want the Dinos bridge module (`systrophe.dinos_bridge`); the test suite skips silently otherwise.
+- `pip install qiskit qiskit-ibm-runtime` — required only to re-run the Marrakesh hardware batches under `experiments/`.
 
 ---
 
@@ -109,13 +112,23 @@ The phase offset between the two cylinders **continuously shifts** the CTC band 
 
 ---
 
-## End-to-end demonstration
+## End-to-end demonstrations
 
 ```bash
-python examples/time_travel_simulation.py
+python examples/time_travel_simulation.py          # classical harness
+python examples/quantum_layer_walkthrough.py       # paper II reproduction
+python examples/quantum_z3_verification.py         # Z₃ Möbius bridge
+python examples/ctc_zoo.py                         # band catalogue
+python examples/offset_tipler_demo.py              # phase-offset sweep
+python examples/off_axis_simulation.py             # parallel-axis pair
+python examples/dctc_aw_amplification_demo.py      # Clifford-D-CTC amplification
+python examples/stress_cascade_novelty.py          # novelty catcher reference run
+python examples/retrofit_novelty_scan.py           # 9-feature first-CH cluster
+python examples/investigate_first_ch_cluster.py    # cluster resolution
+jupyter notebook examples/tutorial.ipynb           # guided tutorial
 ```
 
-Runs the full numerical experiment from the whitepaper: identifies CTC bands, sweeps offset, computes time-travel orbits, writes machine-readable JSON results to `examples/time_travel_simulation_results.json`.
+Each script writes a `*_results.json` companion with machine-readable output and a novelty-catcher verdict.
 
 ---
 
@@ -162,96 +175,151 @@ A_eff · exp(i δ_eff) = A₁ exp(i δ₁) + A₂ exp(i δ₂).
 Δτ    = √(F − 2 K Ω − L Ω²) · |Δt|           (proper time per rev)
 ```
 
-The full derivation, with Lewis–Papapetrou Ernst-equation reduction and Bonnor's Case classification, is in the whitepaper.
+The full derivation, with Lewis–Papapetrou Ernst-equation reduction and Bonnor's Case classification, is in Whitepaper I.
 
 ---
 
-## Architecture
+## Scope taxonomy
+
+The 94 source modules break into four functional layers. Each module name below is also the import path `systrophe.<name>`.
+
+### Classical core (Paper I)
 
 ```
-src/systrophe/                  Classical-GR backbone (v0.1-v0.6)
-  vanstockum.py                 — Interior metric + analytic Case III exterior
-  lewis_papapetrou.py           — Numerical Ernst-equation integrator
-  lp_robust.py                  — Regime-dispatching robust solver
-  sinusoid.py                   — TiplerSinusoid log-periodic envelope
-  pair.py                       — SystrophePair co-axial superposition
-  off_axis.py                   — OffAxisPair parallel-axis
-  ctc.py                        — CTC band detector
-  geodesic.py                   — Circular orbits, integrate_geodesic
-  time_machine.py               — TimeMachineWindow + harness
-  dinos_bridge.py               — Optional Dinos-DKN interop
-
-src/systrophe/                  Quantum / QFT layer (v0.7-v0.13; see paper II)
-  dirac.py, dirac_spectrum.py   — Radial Dirac operator + bound-state spectrum
-  dirac_sea.py                  — Dirac-sea pressure, horizon divergence
-  particle_creation.py          — Bogoliubov-style horizon emission
-  qftcs_backreaction.py         — QFTCS curvature back-reaction trace
-  quantum_diagnostics.py        — Ricci, surface gravity, Hawking T, Tolman
-  point_splitting.py            — 4D Riemann/Kretschmann/trace anomaly
-  hadamard_offtrace.py          — Full <T_munu>_ren tensor
-  floquet.py                    — Adiabatic Floquet on radial Dirac
-  floquet_mobius.py             — Joint Floquet on (time x Z_3 branch)
-  casimir.py                    — Topological Casimir / Z_3 mode sums
-  casimir_throat.py             — Brown-Maclay <T_munu> at cavity
-  anomaly_inflow.py             — APS eta + Callan-Harvey Z_3 closure
-  tipler_fractal.py             — DSI + cascade-DSI extension
-  horned_torus.py               — Regular + inverted horn modes
-  acoustic_metric.py            — Unruh acoustic-metric mapping
-  newton_kantorovich.py         — NK solver + Picard comparison
-  back_reaction.py              — Self-consistency composite residual
-  floquet_engineering.py        — CTC stability map (drive_amp, omega)
-  dsi_observables.py            — Log-periodic precursor fits
-  adm_export.py                 — ADM 3+1 hand-off for NR codes
-  d_ctc.py                      — Deutsch CTC fixed-point on Z_3 cover
-
-tests/                          — 367 passing tests across 30 modules
-paper/
-  systrophe_time_travel.tex/pdf   Whitepaper I (classical, v0.1-v0.6)
-  systrophe_qft_on_ctc.tex/pdf    Whitepaper II (QFT, v0.7-v0.13)
-docs/
-  INTERPRETATIONS.md            — 6 open ansatz claims, with required input
-  EXPERIMENTAL_ACOUSTIC_ANALOG.md — BEC-vortex design proposal
-examples/                       — Verification batteries + simulation scripts
-tools/                          — One-shot SymPy derivations
+vanstockum  lewis_papapetrou  lp_robust  lp_dualities  sinusoid  pair
+off_axis    ctc               geodesic   time_machine  dinos_bridge
 ```
+
+### Quantum / QFT layer (Paper II)
+
+```
+dirac           dirac_spectrum     dirac_sea          particle_creation
+qftcs_backreaction                 quantum_diagnostics                  point_splitting
+hadamard_offtrace                  floquet            floquet_mobius     floquet_engineering
+casimir         casimir_throat     multi_casimir      anomaly_inflow
+tipler_fractal  horned_torus       acoustic_metric    newton_kantorovich
+back_reaction   dsi_observables    adm_export         d_ctc
+spacetimes/     vacuum_states      energy_conditions  energy_condition_survey
+```
+
+### Phase 11 – 50 extensions (Papers III – VIII)
+
+Optical / geodesic / dynamical (III):
+```
+photon_orbits   photon_raytrace   photon_sphere    lensing_image    penrose_extraction
+synchrotron_analog                optical_fiber_analog              frame_dragging
+tidal_forces    multi_cylinder_dynamics              dynamical_cylinder
+```
+
+Foundational + cross-disciplinary (IV):
+```
+exotic_matter_accounting   chronology_protection   wormhole_throat
+spinor_monodromy           wilson_loop             dsi_crossdisciplinary
+```
+
+Boundary / cosmological / observational (V):
+```
+cosmological_embedding   kk_embedding   higher_spin_fields   hawking_budget
+casimir_polder           cauchy_stability                    nr_initial_data
+```
+
+Probing / scattering / dimensional (VI):
+```
+kg_scattering   topology_change   geodesic_completeness   dm_scalar_coupling
+modified_dispersion              acoustic_hawking_spectrum
+```
+
+GW / ANEC / Page / LQG / tunneling (VII, Marrakesh-validated):
+```
+gw_emission   anec_bound   page_curve_ctc   lqg_discretization
+ctc_tunneling                  qi_channel
+```
+
+Lorentz / topology / G-renorm / ER=EPR / BMS / BH / monopole / stochastic / anyon (VIII, novelty-catcher-integrated):
+```
+modified_dispersion   hawking_budget          topology_change      g_renormalization
+er_epr_pair           bms_soft_hair           bh_pair_production
+monopole_on_cylinder  stochastic_lp           anyonic_ctc
+```
+
+Subsequent extensions (Phases 41 – 50):
+```
+lp_dualities  one_loop_backreaction  casimir_polder  unruh_effect
+solitons_on_lp  aharonov_bohm_ctc    vacuum_polarization
+twistor_lp     berry_phase_lp        holographic_complexity   holographic
+bdg_triple_vortex                     dynamical_casimir
+```
+
+### Cross-cutting infrastructure
+
+```
+novelty_catcher   array   spacetimes/
+```
+
+`novelty_catcher` exposes `bitstring_counts_to_address`,
+`probability_vector_to_address`, `scan_novelty`,
+`catch_novelty_in_distributions`, `summarize_novelty_for_report` — the
+mandatory address-space λ₂ Hamming-graph catcher used by every
+deliverable.
 
 ---
 
-## Quantum layer (v0.13)
+## Deutsch-CTC channel theory
 
-Beyond the classical-GR core, Systrophe v0.7–v0.13 adds:
+A parallel line of empirical investigation lives in `examples/dctc_deep_phase_*.py` and the synthesis docs `docs/DCTC_*.md`. Across **Phases A – ZY** (26 phase letters + 3 deep-cycle phases E1, E4, E8):
 
-- **Renormalised stress tensor** on the LP background, with off-trace
-  components `<T_{μν}>_ren = (1/2880π²) R_{μρστ} R_ν^{ρστ}`, whose
-  trace recovers the conformal anomaly exactly.
-- **Anomaly inflow** on the Z₃ Möbius cover: APS η-invariants give
-  (0, 1/3, −1/3) summing to zero; nonzero gauge twist is closed by
-  Chern-Simons coefficient `1/(24π²)`.
-- **Acoustic-metric mapping**: identification `c² − v² = F` makes
-  the chronology horizon an acoustic horizon. Gravitational and
-  acoustic Hawking temperatures agree to machine precision.
-- **Joint Floquet** on (time-circle × Z₃-branch), with cyclic-
-  permutation symmetry verified and the `(e_b − e_b')` resonance
-  identified.
-- **Brown-Maclay** flat-space Casimir at the cavity, with LP
-  curvature-correction scale `K · d⁴` (small means flat-space
-  approximation valid).
-- **Newton-Kantorovich** back-reaction solver demonstrating that
-  naive Picard iterations converge linearly, not quadratically.
-- **Cascade discrete-scale invariance** (`tipler_fractal.py`):
-  proves the base Tipler sinusoid is not fractal (dim 0) but the
-  multi-cylinder cascade is (dim > 0.3).
-- **Horned torus** topology with regular (pinch) and inverted
-  (bulge) variants.
-- **ADM 3+1 export** for hand-off to Einstein Toolkit / similar NR
-  codes.
-- **D-CTC** Deutsch-CTC fixed-point solver on the Z₃ cover.
+- **Spectral oracle** (Phase B, D): the empirical iteration count of D-CTC fixed-point iteration on a Haar-random channel is predicted by `|λ₂(E)|` — the second-largest-magnitude eigenvalue of the CPTP superoperator — via `iter ≈ -log(tol) / log|λ₂|^(-1)`. Pearson r = 0.99 across 2000 Haar samples at `(dim_CR=2, dim_CTC=3)`. Log-normal iteration-count distribution (AIC 19648 vs 21749 for exponential).
+- **Power-law scaling** (Phase A, H): `iter ~ dim_CR^(-0.85)` over `dim_CR ∈ {2..8}`, `dim_CTC ∈ {3,4,5}`.
+- **Multi-basin attractors** (Phase E4 trichotomy): generic D-CTC dynamics resolves into three structurally distinct basin classes.
+- **Limit-cycle solutions** (`dctc_cycles.tex`): D-CTC is not exclusively a fixed-point theory — cycle solutions, multi-basin dynamics, and a continuum of chronology-coupling regimes are documented.
+- **Clifford-structured amplification** (`dctc_amplification.tex`): structured channel families demonstrate empirical amplification of the chronology violation, with a spectral oracle and an encoding-dependent chronology-protection criterion.
 
-Full derivations are in [`paper/systrophe_qft_on_ctc.pdf`](paper/systrophe_qft_on_ctc.pdf)
-(Whitepaper II). Open ansatz-level interpretations are documented in
-[`docs/INTERPRETATIONS.md`](docs/INTERPRETATIONS.md). A BEC-vortex
-experimental-analog design proposal is in
-[`docs/EXPERIMENTAL_ACOUSTIC_ANALOG.md`](docs/EXPERIMENTAL_ACOUSTIC_ANALOG.md).
+The unified treatment is in [`paper/dctc_treatise.pdf`](paper/dctc_treatise.pdf); per-phase findings in [`docs/DCTC_FINDINGS.md`](docs/DCTC_FINDINGS.md) and [`docs/DCTC_DEEP.md`](docs/DCTC_DEEP.md); the chronology-protection budget in [`docs/DCTC_CHRONOLOGY_PROTECTION.md`](docs/DCTC_CHRONOLOGY_PROTECTION.md); the phase plan in [`docs/DCTC_PHASE_PLAN.md`](docs/DCTC_PHASE_PLAN.md).
+
+---
+
+## IBM Marrakesh hardware validation
+
+Four batches submitted to IBM Quantum `ibm_marrakesh` (156-qubit Heron-r2), each with `opt_level=3` transpilation, dynamical decoupling (XpXm), and gate/measure twirling at 8192 shots. Code in `experiments/`; raw counts, analyses, and run logs in `experiments/results/`.
+
+| Batch | Script | Subject | HW status |
+|---|---|---|---|
+| 1 | `marrakesh_batch.py` | Joint Floquet eigenmode interference | DONE (analysis + counts published) |
+| 2 | `marrakesh_batch_2.py` | KK-escape: interference cancellation **exact** at the supercritical threshold | DONE |
+| 3 | `marrakesh_batch_3_pagecurve.py` | Page-curve recovery from the LP cover | DONE |
+| 4 | `marrakesh_batch_4_lp_walk.py` | Multi-band LP quantum walk; α-recovery from bitstring distribution | QUEUED |
+
+Each batch attaches the mandatory novelty catcher to the observed bitstring distributions before issuing a verdict. The Page-curve and KK-escape results are written up in [`paper/systrophe_extensions_5.pdf`](paper/systrophe_extensions_5.pdf) (Marrakesh hardware validation) and [`paper/systrophe_extensions_6.pdf`](paper/systrophe_extensions_6.pdf) (Page-curve + novelty-catcher integration).
+
+A recovery harness `experiments/recover_batch4_hw.py` pulls a still-queued job by ID and runs the analysis pipeline (used when the local launcher crashes after submission but before `job.result()` returns).
+
+---
+
+## Novelty catcher
+
+A project-wide rule: every phase module, every example, every paper, every hardware run runs through `systrophe.novelty_catcher` before any "validated" or "null" verdict is issued. The catcher
+
+1. hashes the observed distribution / bit-pattern to an integer address space (32 bits by default),
+2. constructs the Hamming-distance graph on the populated addresses,
+3. computes the algebraic connectivity λ₂ of that graph,
+4. flags features whose λ₂ exceeds an MAD-thresholded outlier band against a rank-thermometer baseline.
+
+This caught the **9-feature first-CH cluster** in `examples/retrofit_novelty_scan.py` and its resolution into two distinct physical drivers in `examples/investigate_first_ch_cluster.py` — the last two commits before v0.17.0. The reference cascade is in `examples/stress_cascade_novelty.py`.
+
+---
+
+## Stress-test cascades
+
+`examples/stress_cascade_*.py` and `examples/stress_*.py` run cross-disciplinary stress tests:
+
+```
+stress_cascade_dsi.py      — cascade-DSI scaling against literature
+stress_cascade_novelty.py  — reference novelty catcher invocation
+stress_dctc_haar.py        — D-CTC under Haar-random noise injection
+stress_zn_closure.py       — Z_n cover closure consistency
+```
+
+See [`docs/STRESS_TESTS.md`](docs/STRESS_TESTS.md) for the protocol and expected verdicts.
 
 ---
 
@@ -279,45 +347,50 @@ Requires `pip install z3-solver` and Dinos-DKN on `PYTHONPATH`. The test suite s
 ## Tests
 
 ```bash
-pytest                 # 65 tests, ~5 seconds
+pytest                 # 1118 passed, 1 skipped
 pytest -v              # verbose
 pytest --cov=systrophe # with coverage (requires pytest-cov)
 ```
 
-Test suite breakdown:
+**Test count: 1118 passing, 1 skipped (Dinos bridge under missing z3-solver), 0 failing, across 98 test modules.**
 
-| Module | Tests | Coverage |
-|---|---:|---|
-| `test_vanstockum.py` | 7 | Minkowski limit, invariants, threshold, exterior rejection |
-| `test_sinusoid.py` | 6 | α formula, log-periodicity, fit recovery |
-| `test_pair.py` | 7 | Phasor collapse, anti-phase cancellation, principal-range wrap |
-| `test_ctc.py` | 6 | Sign-band detection, destructive interference, modulated bands |
-| `test_lewis_papapetrou.py` | 12 | Continuity, supercritical numerical-vs-analytic, constraint |
-| `test_lp_robust.py` | 8 | Regime dispatch, machine-precision supercritical, F-zero formula |
-| `test_off_axis.py` | 7 | Construction guards, reflection symmetries, 2D CTC map |
-| `test_dinos_bridge.py` | 6 | Kerr mapping, Z₃ branch correspondence (skipped if z3 absent) |
-| `test_offset_sweep.py` | 6 | Convenience constructor, offset-π minimum, type checks |
-| `test_geodesic.py` | 6 | Minkowski circular orbit, Ω-bounds, target-time inverse |
-| `test_time_machine.py` | 9 | Band detection, target-Δt matching, spacelike rejection |
+Coverage spans:
+
+| Layer | Modules | Tests (≈) | Sample files |
+|---|---:|---:|---|
+| Classical core | 11 | 80 | `test_vanstockum`, `test_lewis_papapetrou`, `test_lp_robust`, `test_pair`, `test_ctc`, `test_time_machine`, `test_geodesic` |
+| Quantum / QFT | 25 | 270 | `test_dirac_spectrum`, `test_qftcs_backreaction`, `test_floquet_mobius`, `test_casimir_throat`, `test_hadamard_offtrace`, `test_d_ctc` |
+| Extensions (Phases 11–25) | 18 | 200 | `test_photon_sphere`, `test_lensing_image`, `test_penrose_extraction`, `test_spinor_monodromy`, `test_wilson_loop`, `test_dsi_crossdisciplinary` |
+| Extensions (Phases 26–40) | 25 | 320 | `test_gw_emission`, `test_anec_bound`, `test_page_curve_ctc`, `test_lqg_discretization`, `test_g_renormalization`, `test_er_epr_pair`, `test_bms_soft_hair`, `test_bh_pair_production`, `test_monopole_on_cylinder`, `test_stochastic_lp`, `test_anyonic_ctc` |
+| Extensions (Phases 41–50) | 14 | 200 | `test_lp_dualities`, `test_one_loop_backreaction`, `test_casimir_polder`, `test_unruh_effect`, `test_solitons_on_lp`, `test_aharonov_bohm_ctc`, `test_vacuum_polarization`, `test_twistor_lp`, `test_berry_phase_lp`, `test_holographic_complexity` |
+| Infrastructure | 5 | 48 | `test_novelty_catcher`, `test_array`, `test_offset_sweep`, `test_dinos_bridge`, `test_off_axis` |
 
 ---
 
-## Whitepaper
+## Papers
 
-[`paper/systrophe_time_travel.pdf`](paper/systrophe_time_travel.pdf) (11 pages, includes 5 figures and 3 tables) covers:
+All sources are in `paper/`. PDFs build with `pdflatex` (twice) after running `python paper/generate_figures.py`.
 
-1. Mathematical framework — van Stockum, Lewis–Papapetrou, Ernst, Bonnor cases.
-2. Co-rotating cylinder pair — linearised superposition, off-set Tipler sinusoid.
-3. Closed timelike curves and time-travel orbits — geodesic structure, coordinate vs proper time.
-4. Time-machine harness — single-cylinder and pair-tuned numerical results.
-5. Connection to Dinos via Z₃ Möbius eigenvalue correspondence.
-6. Implementation, tests, evaluation.
-7. Limitations and open questions (chronology protection, asymptotic non-flatness, idealised source).
+| # | File | Subject |
+|---|---|---|
+| I | [`systrophe_time_travel.pdf`](paper/systrophe_time_travel.pdf) | Co-rotating Tipler-cylinder pair as a tunable time-travel harness (classical core). |
+| II | [`systrophe_qft_on_ctc.pdf`](paper/systrophe_qft_on_ctc.pdf) | Quantum field theory on a Tipler-pair background. |
+| III | [`systrophe_extensions.pdf`](paper/systrophe_extensions.pdf) | Optical, geodesic, dynamical, and analog-experimental structure (10 extensions, v0.17.0). |
+| IV | [`systrophe_extensions_2.pdf`](paper/systrophe_extensions_2.pdf) | Foundational and cross-disciplinary extensions (Phases 11–15). |
+| V | [`systrophe_extensions_3.pdf`](paper/systrophe_extensions_3.pdf) | Boundary, cosmological, and observational extensions (Phases 16–20). |
+| VI | [`systrophe_extensions_4.pdf`](paper/systrophe_extensions_4.pdf) | Probing, scattering, and dimensional extensions (Phases 21–25). |
+| VII | [`systrophe_extensions_5.pdf`](paper/systrophe_extensions_5.pdf) | GW, ANEC, Page-curve, LQG, tunneling extensions (Phases 26–30) + IBM Marrakesh hardware validation. |
+| VIII | [`systrophe_extensions_6.pdf`](paper/systrophe_extensions_6.pdf) | Lorentz violation, Hawking budget, topology change, G-renormalisation, ER=EPR, BMS, BH-pair, monopole, stochastic, anyon-CTC (Phases 31–40) + Marrakesh Page-curve + novelty-catcher integration. |
+| A | [`dctc_amplification.pdf`](paper/dctc_amplification.pdf) | Clifford-structured Deutsch-CTC channels: empirical amplification, spectral oracle, encoding-dependence of chronology protection. |
+| B | [`dctc_cycles.pdf`](paper/dctc_cycles.pdf) | Deutsch-CTC is a limit-cycle theory: cycles, multi-basin dynamics, continuum of chronology-coupling regimes. |
+| C | [`dctc_treatise.pdf`](paper/dctc_treatise.pdf) | Unified empirical treatment of D-CTC channels: amplification + cycles + multi-basin + encoding-dependence. |
 
-To regenerate the PDF:
+Open ansatz-level interpretations are in [`docs/INTERPRETATIONS.md`](docs/INTERPRETATIONS.md). A BEC-vortex experimental-analog design proposal is in [`docs/EXPERIMENTAL_ACOUSTIC_ANALOG.md`](docs/EXPERIMENTAL_ACOUSTIC_ANALOG.md). The photon-sphere structure is in [`docs/PHOTON_SPHERES.md`](docs/PHOTON_SPHERES.md). An arXiv submission plan is staged in [`docs/ARXIV_SUBMISSION.md`](docs/ARXIV_SUBMISSION.md).
+
+To regenerate any PDF:
 ```bash
 python paper/generate_figures.py     # produces paper/figures/*.pdf
-cd paper && pdflatex systrophe_time_travel.tex && pdflatex systrophe_time_travel.tex
+cd paper && pdflatex <name>.tex && pdflatex <name>.tex
 ```
 
 ---
@@ -328,7 +401,8 @@ cd paper && pdflatex systrophe_time_travel.tex && pdflatex systrophe_time_travel
 - **Off-axis quantitative limits.** In the off-axis case, the Case III exterior is not asymptotically flat, so both single-cylinder perturbations are simultaneously "large" at most points; the linearised superposition is best read as a qualitative tool for identifying CTC regions rather than as a quantitative orbital framework.
 - **Idealised source.** Infinite, rigid, perfectly axisymmetric dust column. No known matter form realises this; Tipler-cylinder time-travel scenarios are theoretical exercises in the structure of GR vacuum solutions.
 - **Asymptotic non-flatness.** The Case III exterior oscillates indefinitely; there is no privileged "observer at infinity" against whom coordinate time can be synchronised.
-- **No chronology protection.** This is a pre-quantum, classical-GR construction. The chronology-protection conjecture (Hawking 1992) is not addressed.
+- **Chronology protection is engaged but not resolved.** Paper VIII and the DCTC trilogy formulate an encoding-dependent chronology-protection criterion (`dctc_amplification.tex`, `dctc_treatise.tex`); the criterion is *necessary*, not *proven sufficient*.
+- **Marrakesh batch 4 is hardware-pending.** The LP-walk α-recovery is established in simulation; the matching hardware analysis lands once the queued IBM job completes.
 
 ---
 
@@ -337,12 +411,14 @@ cd paper && pdflatex systrophe_time_travel.tex && pdflatex systrophe_time_travel
 ```bibtex
 @misc{Knopp2026Systrophe,
   author = {Knopp, Christian},
-  title  = {{Systrophē}: A co-rotating Tipler-cylinder pair as a tunable
-            time-travel harness},
+  title  = {{Systroph\=e}: A co-rotating Tipler-cylinder pair as a tunable
+            time-travel harness, with quantum and Deutsch-CTC extensions},
   year   = {2026},
-  note   = {Python implementation of van Stockum interior, Lewis--Papapetrou
-            exterior, off-set Tipler sinusoid, and Z\_3 M\"obius cover
-            correspondence; 65 passing tests.},
+  note   = {v0.17.0. Python implementation: van Stockum interior, Lewis--Papapetrou
+            exterior, off-set Tipler sinusoid, Z\_3 M\"obius cover correspondence,
+            quantum / QFT layer on the CTC background, Phase 11--50 extensions,
+            Deutsch-CTC channel theory with spectral oracle, and IBM Marrakesh
+            hardware validation. 1118 passing tests; 11 LaTeX whitepapers.},
   url    = {https://github.com/Zynerji/systrophe}
 }
 ```
@@ -368,3 +444,6 @@ MIT. See [`LICENSE`](LICENSE).
 - F. J. Tipler, *Rotating cylinders and the possibility of global causality violation*, Phys. Rev. D **9** (1974) 2203.
 - W. B. Bonnor, *The exterior gravitational field of a rotating cylinder of dust*, J. Phys. A **13** (1980) 2121.
 - S. W. Hawking, *The chronology protection conjecture*, Phys. Rev. D **46** (1992) 603.
+- D. Deutsch, *Quantum mechanics near closed timelike lines*, Phys. Rev. D **44** (1991) 3197.
+- D. N. Page, *Average entropy of a subsystem*, Phys. Rev. Lett. **71** (1993) 1291.
+- IBM Quantum, *`ibm_marrakesh` 156-qubit Heron-r2 processor* (2026).
