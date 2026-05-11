@@ -51,6 +51,7 @@ canvas.dragging{cursor:grabbing}
     <div id="modeBtns">
       <button class="mb active" onclick="setMode(8)"><b>8 · grand</b>all layers unified</button>
       <button class="mb" onclick="setMode(10)"><b>10 · Tipler</b>CTC bands + horizon</button>
+      <button class="mb" onclick="setMode(11)"><b>11 · throat</b>L=0 vacuum throat</button>
     </div>
 
     <h3>cylinder</h3>
@@ -95,7 +96,7 @@ canvas.dragging{cursor:grabbing}
 
     <h3 style="margin-bottom:0">keys</h3>
     <div style="color:#9ad;font-size:10px;line-height:1.4">
-      8 / b : scenes · R : reset · space: pause
+      8 / b / c : scenes · R : reset · space: pause
       <br>drag pan · scroll zoom · arrows pan · T/G tilt · Q/E spin · [/] point size
     </div>
   </div>
@@ -164,56 +165,63 @@ void main(){
   float e = yy / 8.0 - 20.0;
   float d = sqrt(k*k + e*e);
 
-  // Mode 8 needs all layers; mode 10 needs only Z3 (branch coloring) + tipler
+  // Mode 8 needs all layers; mode 10 + 11 use Tipler-based content.
   bool useH      = (mode == 8);
   bool useM      = (mode == 8);
   bool useMobius = (mode == 8);
-  bool useZ3     = (mode == 8 || mode == 10);
+  bool useZ3     = (mode == 8 || mode == 10 || mode == 11);
   bool usePell   = (mode == 8);
   bool useBragg  = (mode == 8);
 
-  // Hamiltonian flow
+  // Hamiltonian flow.
+  // ω-slider scales the natural frequency; δ-slider phase-shifts the pendulum.
   float theta = 0.0, H = 0.0;
   if (useH){
-    float om  = sqrt(1.0 + 0.04*d);
+    float om  = sqrt(1.0 + 0.04*d) * (0.5 + 0.5 * u_omega);
     float th0 = 0.6 * k;
     float p0  = 0.5;
-    theta = th0*cos(om*t) + (p0/om)*sin(om*t);
-    float pmom = -om*th0*sin(om*t) + p0*cos(om*t);
+    theta = th0*cos(om*t + u_delta) + (p0/om)*sin(om*t + u_delta);
+    float pmom = -om*th0*sin(om*t + u_delta) + p0*cos(om*t + u_delta);
     H = 0.5*pmom*pmom + 0.5*om*om*theta*theta;
   }
 
-  // Mobius temporal loop sign-flip
+  // Mobius temporal loop sign-flip.
+  // ω-slider scales the fold rate; δ-slider phase-shifts the cycle.
   float mob = 1.0;
   if (useMobius){
-    float fold = floor(t * 0.6 / TAU);
+    float fold = floor((t * 0.6 * u_omega + u_delta) / TAU);
     mob = (mod(fold, 2.0) > 0.5) ? -1.0 : 1.0;
   }
 
   float branch = useZ3   ? mod(fi, 3.0) : 0.0;
-  float pell   = usePell ? fract((k+4.0)*AG + d*AG*AG) : 0.0;
+  // R-slider modulates the Pell-Pisot shimmer amplitude/scale in mode 8.
+  float pell   = usePell ? fract((k+4.0)*AG*u_R + d*AG*AG) : 0.0;
 
-  // metallic anti-resonant
+  // metallic anti-resonant; ω-slider scales the temporal frequency.
   float metallicS = 0.0;
   if (useM){
-    metallicS = (sin(e*14.0    - d*3.0*PHI + t*2.0)
-               + sin(e*14.0*AG - d*3.0     + t*2.0*PHI)
-               + sin(e*14.0*BR - d*3.0*AG  + t*2.0*BR)) / 3.0;
+    float tm = t * u_omega;
+    metallicS = (sin(e*14.0    - d*3.0*PHI + tm*2.0)
+               + sin(e*14.0*AG - d*3.0     + tm*2.0*PHI)
+               + sin(e*14.0*BR - d*3.0*AG  + tm*2.0*BR)) / 3.0;
   }
 
-  // Bragg / Hamming sidelobe
-  float win = useBragg ? (0.54 - 0.46 * cos(TAU * d / 4.0)) : 1.0;
+  // Bragg / Hamming sidelobe; R-slider scales the window period.
+  float win = useBragg ? (0.54 - 0.46 * cos(TAU * d / (4.0 * u_R))) : 1.0;
 
-  // v0.15 Tipler / CTC content
+  // v0.15 Tipler / CTC content (used by modes 10 + 11)
   float tipler_phase = 0.0, ctc_mask = 1.0, horizon_mask = 1.0;
-  if (mode == 10){
+  float L_val = 0.0, F_val = 1.0;
+  bool useTipler = (mode == 10 || mode == 11);
+  if (useTipler){
     float r_map = u_R * exp(d * 0.4);
     tipler_phase = cos(tipler_alpha() * log(r_map / u_R) + u_delta);
+    L_val = tipler_phase;            // proxy for L(r) sign
+    F_val = F_LP(r_map);
     if (u_show_ctc == 1){
       ctc_mask = tipler_phase < 0.0 ? 1.6 : 0.8;
     }
     if (u_show_horizon == 1){
-      float F_val = F_LP(r_map);
       horizon_mask = abs(F_val) < 0.05 ? 2.0 : 1.0;
     }
   }
@@ -223,16 +231,31 @@ void main(){
   if (mode == 8){
     c      = mob*(d - t) + branch*Z3 + 0.3*pell*TAU + 0.4*theta;
     ripple = ((9.0 + 2.0*metallicS) * win + 1.2*theta) * (1.0 + 0.15*cos(3.0*c));
-  } else { // mode == 10
+  } else if (mode == 10){
     c      = d - t + 0.7 * tipler_phase + branch * Z3;
     ripple = (9.0 + 4.0 * tipler_phase) * ctc_mask;
+  } else { // mode == 11 — wormhole throat (radial polar view)
+    // place particles on concentric rings: r ~ R * exp(d * 0.4), theta from fi.
+    c = 0.0;
+    ripple = 0.0;
   }
 
   float kCo = (mode == 8) ? AG  : 1.0;
   float yCo = (mode == 8) ? PHI : 1.0;
   float q = 3.0*sin(k*2.0*kCo) + 0.3/k + sin(yy / 19.0 * yCo) * k * ripple;
 
-  vec2 pos = vec2(q + 50.0*cos(c) + 200.0, q*sin(c) + d*39.0 - 475.0);
+  vec2 pos;
+  if (mode == 11){
+    // polar wormhole-throat layout. r is the supercritical exterior radius.
+    float r_phys = u_R * exp(d * 0.4);
+    // screen radius scaled so we see ~3 throat candidates
+    float r_screen = 30.0 + 18.0 * d;
+    float theta_phi = fi * TAU * 0.03 + t * 0.15;
+    pos = vec2(r_screen * cos(theta_phi) + 200.0,
+               r_screen * sin(theta_phi) + 200.0);
+  } else {
+    pos = vec2(q + 50.0*cos(c) + 200.0, q*sin(c) + d*39.0 - 475.0);
+  }
   vec2 centered = pos - vec2(200.0, 200.0);
   float galaxyScale = min(resolution.x, resolution.y) / 400.0;
   centered *= galaxyScale * zoom;
@@ -245,7 +268,9 @@ void main(){
   gl_Position = vec4(ndc, 0.0, 1.0);
 
   float kk = k * k;
-  gl_PointSize = (kk > 15.0 ? 2.5 : 1.5) * pointScale * horizon_mask;
+  // Mode 11: throat candidates pop with larger points.
+  float throat_boost = (mode == 11 && abs(L_val) < 0.06) ? 3.0 : 1.0;
+  gl_PointSize = (kk > 15.0 ? 2.5 : 1.5) * pointScale * horizon_mask * throat_boost;
 
   // color
   vec3 col = vec3(1.0);
@@ -254,11 +279,30 @@ void main(){
   if (mode == 8){
     float hueDeg = mod(H*100.0 + branch*120.0 + (mob > 0.0 ? 0.0 : 30.0) + pell*60.0 + d*3.0, 360.0);
     col = hsv(hueDeg / 360.0, 0.75, 1.0);
-  } else { // mode == 10
+  } else if (mode == 10){
     float hueDeg = tipler_phase > 0.0 ? 210.0 : 350.0;
     if (u_show_branches == 1) hueDeg = mod(hueDeg + branch*120.0, 360.0);
     col   = hsv(hueDeg / 360.0, 0.8, 1.0);
     alpha = 0.15 + 0.4 * abs(tipler_phase);
+  } else { // mode == 11 — wormhole throat
+    // L > 0 exterior: muted blue.
+    // L < 0 CTC band: muted red.
+    // |L| ≈ 0 throat candidate: bright yellow with high alpha.
+    float hueDeg;
+    if (abs(L_val) < 0.06){
+      hueDeg = 60.0;                    // yellow at throat
+      alpha  = 0.95;
+    } else if (L_val > 0.0){
+      hueDeg = 210.0;                   // blue exterior
+      alpha  = 0.15 + 0.15 * abs(L_val);
+    } else {
+      hueDeg = 350.0;                   // red CTC band
+      alpha  = 0.15 + 0.3 * abs(L_val);
+    }
+    if (u_show_branches == 1) hueDeg = mod(hueDeg + branch * 25.0, 360.0);
+    // F<0 (past chronology horizon) dims the colour.
+    if (F_val < 0.0) alpha *= 0.6;
+    col = hsv(hueDeg / 360.0, 0.85, 1.0);
   }
 
   v_color = vec4(col, alpha);
@@ -328,11 +372,13 @@ const startTime = performance.now();
 const MODE_NAMES = {
   8:  'GRAND UNIFICATION · all layers unified',
   10: 'Tipler sinusoid · CTC bands + acoustic horizon',
+  11: 'wormhole throat · L=0 vacuum loci (NOT Morris-Thorne)',
 };
 
 const MODE_BLURB = {
-  8:  'Hamiltonian pendulum × invariants × metallic × Möbius × Z₃ × Pell-Pisot × Bragg-democracy — all nine layers active simultaneously, hue mixes their phases.',
+  8:  'Hamiltonian pendulum × invariants × metallic × Möbius × Z₃ × Pell-Pisot × Bragg-democracy — all nine layers active. ω scales the Hamiltonian + Möbius rate; δ phase-shifts; R scales Pell + Bragg window.',
   10: 'F(r) = cos(α ln(r/R) + δ) — supercritical log-periodic exterior. red = L<0 CTC bands; blue = sub-horizon. brighter at F≈0 acoustic horizon. tune δ to slide bands.',
+  11: 'concentric rings of L(r) = g_φφ. yellow = L≈0 throat candidates (which are vacuum, NOT Morris-Thorne junctions). red = L<0 CTC band, blue = L>0 exterior. dimmed past F<0 horizon.',
 };
 
 function setMode(m){
@@ -423,6 +469,7 @@ addEventListener('keydown', (e) => {
   if (k === 'r' || k === 'R'){ resetView(); }
   if (k === '8') setMode(8);
   if (k === 'b' || k === 'B') setMode(10);
+  if (k === 'c' || k === 'C') setMode(11);
   if (k === ' '){
     const tg = document.getElementById('tg_paused');
     tg.checked = !tg.checked;
