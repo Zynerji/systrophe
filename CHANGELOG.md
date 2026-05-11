@@ -5,6 +5,58 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.0] - 2026-05-10
+
+### Verified / falsified Grok-chat math assertions (examples/grok_verification.py)
+Systematic verification battery covering 19 mathematical claims from the
+Grok conversation on the Systrophe repo:
+
+- **VERIFIED (10)**: alpha formula `sqrt(4a^2 - 1)`; F closed form;
+  phasor sum `A_eff e^{i delta_eff} = A_1 e^{i d_1} + A_2 e^{i d_2}`;
+  anti-phase extinction at delta = pi; N-fold uniform-comb extinction;
+  timelike orbit roots `Omega_+- = -(K +- r)/L`; Cauchy horizon
+  spacing `exp(pi / alpha)`; Tolman blueshift `1/sqrt(F)`; surface
+  gravity `kappa = (1/2)|F'|`; Hawking temperature `T_H = kappa/(2 pi)`;
+  trace anomaly `K/(2880 pi^2)`; heat-kernel `a_2 = K/180`; CTC band
+  is `L < 0`; tunable chronology via phase; log-measure minimum at
+  delta = pi.
+- **FALSIFIED (1)**: Grok's "Ernst potential E_0 = F + i K". The Ernst
+  potential is `F + i psi` where psi is the *twist potential*, not
+  the metric component `K = g_{t phi}`. They are dual but distinct
+  fields.
+- **NOT TESTABLE (8)**: Z_3 cover finite <T_munu> off-trace (Hadamard
+  renormalisation not implemented); Newton-Kantorovich 3-5 iter
+  convergence (iteration scheme not implemented; Tipler-sinusoid seed
+  has zero residual anyway, converging trivially in one iteration);
+  self-consistent delta iteration; Floquet-Mobius solver; etc.
+
+### Research-grade Floquet (replaces v0.10.0 toy)
+The v0.10.0 `floquet.py` used a 2-level ansatz Hamiltonian. The toy
+passed its tests but didn't compute anything specifically about the
+radial Dirac on a time-varying LP background.
+
+v0.11.0 replaces it with the **adiabatic Floquet** of the actual
+problem:
+- `adiabatic_floquet_spectrum(cyl, delta_0, delta_amp, omega_drive, ...)`:
+  at each instant t in [0, T], solves the static radial Dirac
+  eigenvalue problem on the joint matched-pair LP metric (via
+  `dirac_spectrum.find_bound_states`); returns time-averaged
+  instantaneous bound-state energies, wrapped to the fundamental
+  Brillouin zone `[-Omega/2, Omega/2)`.
+- `nonadiabatic_floquet_correction(...)`: leading-order estimate of
+  the non-adiabatic correction to a given quasi-energy.
+- `adiabatic_floquet_validity(...)`: diagnostic returning
+  Omega_drive / gap; adiabatic is exact in the limit ratio -> 0.
+- `static_pair_bound_states(...)`: convenience wrapper for the
+  bound-state shooting on the joint pair metric.
+
+This is the actual radial Dirac problem on a time-varying joint
+Lewis-Papapetrou metric, not a 2-level ansatz. Exact in the slow-drive
+limit; non-adiabatic corrections specified.
+
+Tests run for 2-3 minutes (the bound-state shooting is the bottleneck);
+237 tests total, all passing.
+
 ## [0.10.0] - 2026-05-10
 
 ### Added

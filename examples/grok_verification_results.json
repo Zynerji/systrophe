@@ -1,0 +1,122 @@
+{
+  "total": 19,
+  "verified": 10,
+  "falsified": 1,
+  "not_testable": 8,
+  "claims": [
+    {
+      "name": "alpha_formula",
+      "claim": "alpha = sqrt(4 a^2 - 1) is the Tipler log-frequency",
+      "status": "NOT TESTABLE",
+      "evidence": "package alpha = 1.732050807569, expected = 1.732050807569, |diff| = 0.00e+00"
+    },
+    {
+      "name": "F_closed_form",
+      "claim": "F(r) = (r/R) sin(alpha u + gamma)/sin(gamma) with gamma = pi - arctan(alpha)",
+      "status": "NOT TESTABLE",
+      "evidence": "predicted = 0.5856293812, package = 0.5856293812"
+    },
+    {
+      "name": "phasor_sum",
+      "claim": "Two matched-frequency Tipler sinusoids sum to a single sinusoid via phasor addition",
+      "status": "VERIFIED",
+      "evidence": "A_eff package = 1.6264900433, expected = 1.6264900433, delta_eff package = 0.5454653769, expected = 0.5454653769"
+    },
+    {
+      "name": "anti_phase_extinction",
+      "claim": "Two identical sinusoids at relative phase pi cancel exactly",
+      "status": "VERIFIED",
+      "evidence": "max |L_pair(r)| at delta = pi: 5.33e-15"
+    },
+    {
+      "name": "uniform_phase_comb",
+      "claim": "N uniform-phase cylinders (delta_k = 2 pi k / N) extinguish the joint envelope for all N >= 2",
+      "status": "VERIFIED",
+      "evidence": "Verified for N in {3, 4, 5, 6}; all max |L_arr| < 1e-9"
+    },
+    {
+      "name": "timelike_omega_bounds",
+      "claim": "Roots of F - 2 K Omega - L Omega^2 are at Omega_+- = -(K +- r)/L (valid in canonical Weyl coordinates where FL + K^2 = r^2)",
+      "status": "VERIFIED",
+      "evidence": "with F=1, K=0.3, L=1, r=sqrt(F L + K^2) = 1.0440: quadratic at om_lo: -2.22e-16, at om_hi: 0.00e+00"
+    },
+    {
+      "name": "tolman_blueshift",
+      "claim": "Tolman blueshift factor = 1 / sqrt(F)",
+      "status": "NOT TESTABLE",
+      "evidence": "at F = 0.25: package = 2.0000000000, expected = 2.0000000000"
+    },
+    {
+      "name": "surface_gravity",
+      "claim": "Surface gravity kappa = (1/2) |F'(r_h)|",
+      "status": "VERIFIED",
+      "evidence": "package kappa = 1.000000, expected (1/2)|F'| = 1.000000"
+    },
+    {
+      "name": "hawking_temperature",
+      "claim": "Hawking temperature T_H = kappa / (2 pi)",
+      "status": "VERIFIED",
+      "evidence": "package T_H = 0.159155, expected = 0.159155"
+    },
+    {
+      "name": "trace_anomaly_4d",
+      "claim": "Vacuum trace anomaly <T^mu_mu>_ren = K / (2880 pi^2)",
+      "status": "VERIFIED",
+      "evidence": "package trace = 8.339191e-05, expected = 8.339191e-05"
+    },
+    {
+      "name": "dewitt_a2_vacuum",
+      "claim": "Heat-kernel coefficient a_2(x) = K / 180 for vacuum",
+      "status": "VERIFIED",
+      "evidence": "package a_2 = 0.013169, expected = 0.013169"
+    },
+    {
+      "name": "ernst_potential_grok_error",
+      "claim": "Grok wrote 'Ernst potential E_0 = F + i K'",
+      "status": "FALSIFIED",
+      "evidence": "Standard Ernst potential is E = F + i psi where psi is the twist potential (d psi = -F^2 / rho eps d omega_metric, NOT the metric K = g_{t phi}). psi and K are dual but distinct; equality would imply trivial twist structure. Misidentification."
+    },
+    {
+      "name": "ctc_band_L_negative",
+      "claim": "Inside a CTC band, g_phi phi = L < 0",
+      "status": "VERIFIED",
+      "evidence": "At r = 3.592 (mid of first band): L = -3.3170"
+    },
+    {
+      "name": "ctc_measure_min_at_pi",
+      "claim": "At delta = pi the matched pair has zero CTC log-measure (global minimum)",
+      "status": "NOT TESTABLE",
+      "evidence": "measure(delta=pi) = 0.00e+00; global minimum at delta = 3.1416"
+    },
+    {
+      "name": "tunable_chronology_via_phase",
+      "claim": "Chronology violation can be turned on (delta != pi) or off (delta = pi) by a single global phase",
+      "status": "VERIFIED",
+      "evidence": "Direct consequence of phasor cancellation; verified by claims 4 and 5."
+    },
+    {
+      "name": "z3_cover_finite_T_mu_nu",
+      "claim": "Z_3 cover keeps renormalized <T_mu nu> finite at the Cauchy horizon",
+      "status": "NOT TESTABLE",
+      "evidence": "Trace component IS finite, but for the trivial reason that K is bounded at F = 0 (coordinate singularity, not curvature singularity). The Z_3 cover plays no role. Off-trace <T_mu nu> via full Hadamard point-splitting NOT computed in repo. Grok's framing is misattributed for the trace and unsupported for the off-trace."
+    },
+    {
+      "name": "newton_kantorovich_convergence",
+      "claim": "Newton-Kantorovich iteration on the Ernst residual converges in 3-5 iterations to machine precision",
+      "status": "NOT TESTABLE",
+      "evidence": "Iteration scheme not implemented in the repo; Grok's '3-5 iterations to machine precision' is a forecast not a measurement. Quadratic convergence of Newton-Kantorovich is well-established when (a) the linearised operator is invertible at the seed and (b) the seed is in the basin of attraction. The Tipler sinusoid is exact for the *linearised* vacuum Ernst, so the seed residual is ZERO, not small -- Newton-Kantorovich converges in ONE iteration trivially. Grok overstates by suggesting iterative refinement is needed."
+    },
+    {
+      "name": "self_consistent_delta_iteration",
+      "claim": "Self-consistent semi-classical iteration converges to a fixed point in <10 iterations",
+      "status": "NOT TESTABLE",
+      "evidence": "Update rule and convergence not implemented; pure speculation. Cannot verify."
+    },
+    {
+      "name": "floquet_mobius_machine_precision",
+      "claim": "Floquet-Mobius solver yields machine-precision solutions in seconds",
+      "status": "NOT TESTABLE",
+      "evidence": "No 'Floquet-Mobius' solver exists in the repo. The v0.10.0 toy Floquet uses an ansatz 2-level Hamiltonian, not the actual radial Dirac on a time-varying LP background. Pending the research-grade reimplementation (this session)."
+    }
+  ]
+}

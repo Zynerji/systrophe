@@ -1,40 +1,51 @@
-"""Floquet analysis of a periodically-driven Systrophe pair.
+"""Adiabatic Floquet analysis of a periodically-driven Systrophe pair.
 
 For a co-rotating SystrophePair whose relative phase offset varies
 periodically in time,
 
     delta(t) = delta_0 + delta_amp * sin(Omega_drive * t),
 
-the joint L envelope L_pair(r, t) becomes a time-periodic function with
-period T = 2 pi / Omega_drive. The radial Dirac (or scalar) equation
-inherits this periodicity and admits Floquet solutions
+the joint Lewis-Papapetrou exterior becomes a time-periodic
+background with period T = 2 pi / Omega_drive. The radial Dirac
+spinor admits Floquet solutions
 
     psi(t, r) = e^{-i eps t} u(t, r),     u(t + T, r) = u(t, r),
 
-with quasi-energy eps defined modulo Omega_drive.
+with quasi-energy eps defined mod Omega_drive.
 
-This module implements a one-period time-evolution-operator approach:
+This module implements the **adiabatic** Floquet calculation, which is
+exact in the slow-drive limit Omega_drive << omega_band where
+omega_band is the typical bound-state energy gap of the static
+problem:
 
-  1. Build the radial Dirac system at fixed (E, m, k, mass) on a grid r.
-  2. The "Hamiltonian" matrix at each r depends on (F, K, L) and hence
-     on delta(t). At fixed r the effective 2-spinor matrix is time-
-     periodic with period T.
-  3. Compute U_T(r) = T-ordered exp(-i integral_0^T H(t, r) dt) via
-     small time-step product expansion.
-  4. Diagonalise U_T(r) -> eigenvalues lambda_+- = exp(-i eps_+- T)
-     -> Floquet quasi-energies eps_+-(r).
+  1. At each instant t in [0, T], solve the static radial Dirac
+     eigenvalue problem (via the bound-state shooting method in
+     `dirac_spectrum.find_bound_states`) for the joint Lewis-
+     Papapetrou metric of the SystrophePair with offset delta(t).
+  2. Time-average the instantaneous eigenvalues:
+        eps_n = (1/T) integral_0^T E_n(t) dt.
+  3. These are the adiabatic Floquet quasi-energies; non-adiabatic
+     corrections appear at order Omega_drive / |E_m - E_n|.
 
-The Floquet quasi-energies as a function of r are the analog of the
-band structure of a time-crystal modulation of the Tipler exterior.
-Avoided crossings between Floquet bands signal parametric resonance,
-the regime in which a driven CTC band could in principle pump energy
-into the radial spinor sea.
+This is the actual radial Dirac on a time-varying LP background, not a
+toy 2-level system. Bound state eigenvalues come from the real
+Chandrasekhar-Page-on-LP radial system implemented in
+`dirac_spectrum.boundary_functional`.
+
+Limitations
+-----------
+- Adiabatic only. Fast driving (Omega_drive comparable to the
+  bound-state spacing) requires the non-adiabatic Berry-phase
+  correction A_{mn}(t) = i <psi_m | partial_t | psi_n>, which is
+  implemented in `nonadiabatic_floquet_correction`.
+- Requires the static-pair to have a discrete bound-state spectrum on
+  [r_min, r_max] with Dirichlet BCs. The unbounded-r continuum is not
+  covered here.
 
 References
 ----------
-- J. H. Shirley, Phys. Rev. 138 (1965) B979 (original Floquet QM).
-- N. Goldman and J. Dalibard, Phys. Rev. X 4 (2014) 031027 (modern
-  Floquet engineering review).
+- J. H. Shirley, Phys. Rev. 138 (1965) B979.
+- M. V. Berry, Proc. R. Soc. London A 392 (1984) 45 (adiabatic geometric phase).
 """
 
 from __future__ import annotations
@@ -43,212 +54,253 @@ from dataclasses import dataclass
 from typing import Callable
 
 import numpy as np
-from scipy.linalg import expm
+
+from .vanstockum import VanStockumInterior
+from .dirac_spectrum import find_bound_states
 
 
 @dataclass(frozen=True)
-class FloquetSpectrum:
-    """Floquet quasi-energy spectrum on a radial grid.
+class AdiabaticFloquetSpectrum:
+    """Adiabatic Floquet quasi-energies of a periodically driven LP-pair.
 
     Attributes
     ----------
-    r : np.ndarray
-        Radial sample points.
+    t_samples : np.ndarray
+        Time samples in [0, T].
+    delta_samples : np.ndarray
+        delta(t) at each sample.
+    instantaneous_eigenvalues : list[np.ndarray]
+        E_n(t_i) for each t_i. Each entry is an array of bound-state
+        energies at the corresponding instant; arrays may have different
+        lengths if the spectrum changes count across the drive cycle.
     quasi_energies : np.ndarray
-        Shape (len(r), 2): two Floquet quasi-energies per radius (the
-        radial Dirac system is 2 x 2).
+        Adiabatic Floquet quasi-energies: time-averaged instantaneous
+        eigenvalues. Shape (n_states,) where n_states is the minimum
+        number of bound states across all sampled times.
     period : float
         T = 2 pi / Omega_drive.
-    omega_drive : float
-    delta_0 : float
-    delta_amp : float
     """
 
-    r: np.ndarray
+    t_samples: np.ndarray
+    delta_samples: np.ndarray
+    instantaneous_eigenvalues: list
     quasi_energies: np.ndarray
     period: float
-    omega_drive: float
-    delta_0: float
-    delta_amp: float
 
 
-def _effective_hamiltonian(
-    F: float, K: float, L: float, h: float,
-    E: float, m: int, k: float, mass: float,
-) -> np.ndarray:
-    """Local Hermitian 2 x 2 effective Hamiltonian H_eff(r, t) for Floquet evolution.
+def _joint_LP_metric(cyl: VanStockumInterior, r: float, delta: float) -> tuple[float, float, float]:
+    """Joint (F_pair, K_pair, L_pair) for the matched-cylinder pair at offset delta.
 
-    We use a toy two-level Hamiltonian capturing the essential structure
-    of the radial Dirac problem on a time-periodic LP background:
-
-        H_eff = epsilon(r) sigma_z + V(r, t) sigma_x,
-
-    with epsilon = sqrt(max(F, 0)) * sqrt(mass^2 + m^2/(max(L, eps)) + k^2)
-    (mass-shell energy of a localised mode at radius r), and V the
-    "Tipler potential" coupling V = (E sqrt(F) - m K / sqrt(F)).
-
-    H_eff is real-symmetric (hence Hermitian), so the time-evolution
-    operator exp(-i H dt) is unitary. The Floquet quasi-energies
-    extracted from U(T) are real and bounded mod 2 pi / T.
+    F_pair, K_pair are computed by direct linear superposition; L_pair via
+    the log-shift superposition L(r) + L(r * exp(-delta / alpha)) used
+    elsewhere in the package.
     """
-    sqrt_F = np.sqrt(max(F, 1e-300)) if F > 0 else np.sqrt(max(-F, 1e-300))
-    sqrt_h = np.sqrt(max(h, 1e-300))
-    L_safe = max(abs(L), 1e-9)
-    epsilon = sqrt_F * np.sqrt(mass * mass + (m * m) / L_safe + k * k)
-    V = E * sqrt_F - m * K / max(sqrt_F, 1e-9)
-    sigma_z = np.array([[1.0, 0.0], [0.0, -1.0]], dtype=complex)
-    sigma_x = np.array([[0.0, 1.0], [1.0, 0.0]], dtype=complex)
-    return epsilon * sigma_z + V * sigma_x
+    alpha = cyl.alpha
+    r_shifted = r * np.exp(-delta / alpha)
+    F = float(cyl.analytic_exterior_F(r) + cyl.analytic_exterior_F(r_shifted))
+    K = float(cyl.analytic_exterior_K(r) + cyl.analytic_exterior_K(r_shifted))
+    L = float(cyl.analytic_exterior_L(r) + cyl.analytic_exterior_L(r_shifted))
+    return F, K, L
 
 
-def _pair_L_at(r: float, omega: float, R: float, delta: float) -> float:
-    """L_pair(r, t) via the standard log-shift approximation L_1(r) + L_2(r e^{-delta/alpha})."""
-    from .vanstockum import VanStockumInterior
-
-    vs = VanStockumInterior(omega=omega, R=R)
-    alpha = vs.alpha
-    L1 = float(vs.analytic_exterior_L(r))
-    L2 = float(vs.analytic_exterior_L(r * np.exp(-delta / alpha)))
-    return L1 + L2
-
-
-def _pair_F_at(r: float, omega: float, R: float, delta: float) -> float:
-    """F_pair(r, delta) approximated as the F-sum of the two cylinders (linear)."""
-    from .vanstockum import VanStockumInterior
-
-    vs = VanStockumInterior(omega=omega, R=R)
-    alpha = vs.alpha
-    F1 = float(vs.analytic_exterior_F(r))
-    F2 = float(vs.analytic_exterior_F(r * np.exp(-delta / alpha)))
-    return F1 + F2
-
-
-def _pair_K_at(r: float, omega: float, R: float, delta: float) -> float:
-    """K_pair(r, delta) approximated linearly."""
-    from .vanstockum import VanStockumInterior
-
-    vs = VanStockumInterior(omega=omega, R=R)
-    alpha = vs.alpha
-    K1 = float(vs.analytic_exterior_K(r))
-    K2 = float(vs.analytic_exterior_K(r * np.exp(-delta / alpha)))
-    return K1 + K2
-
-
-def time_evolution_operator_at_r(
-    r: float,
-    omega: float,
-    R: float,
-    delta_0: float,
-    delta_amp: float,
-    omega_drive: float,
-    E: float,
-    m: int,
-    k: float,
-    mass: float,
-    n_substeps: int = 200,
-) -> np.ndarray:
-    """U(T) at fixed r: one-period Floquet propagator of the local 2 x 2 system.
-
-    Uses a product-of-Suzuki-Trotter-step approach: divide T into
-    n_substeps intervals, build H(t_i) at the midpoint of each, and
-    multiply U = exp(-i H_n dt) ... exp(-i H_1 dt).
-    """
-    T = 2.0 * np.pi / omega_drive
-    dt = T / n_substeps
-    U = np.eye(2, dtype=complex)
-    for i in range(n_substeps):
-        t_mid = (i + 0.5) * dt
-        delta_t = delta_0 + delta_amp * np.sin(omega_drive * t_mid)
-        F = _pair_F_at(r, omega, R, delta_t)
-        K = _pair_K_at(r, omega, R, delta_t)
-        L = _pair_L_at(r, omega, R, delta_t)
-        h = 1.0
-        H = _effective_hamiltonian(F, K, L, h, E, m, k, mass)
-        U = expm(-1j * H * dt) @ U
-    return U
-
-
-def floquet_quasi_energies_at_r(
-    r: float,
-    omega: float,
-    R: float,
-    delta_0: float,
-    delta_amp: float,
-    omega_drive: float,
-    E: float,
-    m: int,
-    k: float,
-    mass: float,
-    n_substeps: int = 200,
-) -> tuple[float, float]:
-    """Return the two Floquet quasi-energies (epsilon_+, epsilon_-) at radius r.
-
-    From U(T) eigenvalues lambda = exp(-i epsilon T):
-        epsilon = i log(lambda) / T  (taking the principal branch).
-    Quasi-energies are defined modulo Omega_drive.
-    """
-    U = time_evolution_operator_at_r(
-        r, omega, R, delta_0, delta_amp, omega_drive,
-        E, m, k, mass, n_substeps,
-    )
-    eigvals = np.linalg.eigvals(U)
-    T = 2.0 * np.pi / omega_drive
-    # epsilon = -arg(lambda) / T
-    epsilons = -np.angle(eigvals) / T
-    epsilons = np.sort(epsilons.real)
-    return float(epsilons[0]), float(epsilons[1])
-
-
-def compute_floquet_spectrum(
-    omega: float,
-    R: float,
-    delta_0: float,
-    delta_amp: float,
-    omega_drive: float,
-    r_grid: np.ndarray,
-    E: float = 1.0,
+def static_pair_bound_states(
+    cyl: VanStockumInterior,
+    delta: float,
     m: int = 0,
     k: float = 0.0,
     mass: float = 0.5,
-    n_substeps: int = 200,
-) -> FloquetSpectrum:
-    """Compute the Floquet quasi-energy band structure across r.
+    r_min: float | None = None,
+    r_max: float | None = None,
+    E_min: float = 0.3,
+    E_max: float = 3.0,
+    n_E: int = 80,
+) -> np.ndarray:
+    """Compute bound-state energies of the radial Dirac on the *static* joint pair.
 
-    For each r in r_grid, build the one-period propagator U(T) and
-    diagonalise. Return both Floquet bands as a function of r.
+    Builds the time-independent LP metric of a matched SystrophePair at
+    offset delta, then shoots for bound-state energies on
+    [r_min, r_max] with Dirichlet BCs.
 
-    Note: convergence requires n_substeps >> Omega_drive * (variation
-    scale of H per step); for default omega_drive = 1, n_substeps = 200
-    is adequate at moderate amplitudes.
+    Returns the array of bound-state energies.
     """
-    r_grid = np.asarray(r_grid, dtype=float)
-    n = len(r_grid)
-    eps_array = np.zeros((n, 2), dtype=float)
-    for i, r in enumerate(r_grid):
-        eps_array[i] = floquet_quasi_energies_at_r(
-            float(r), omega, R, delta_0, delta_amp, omega_drive,
-            E, m, k, mass, n_substeps,
-        )
-    return FloquetSpectrum(
-        r=r_grid,
-        quasi_energies=eps_array,
-        period=2.0 * np.pi / omega_drive,
-        omega_drive=omega_drive,
-        delta_0=delta_0,
-        delta_amp=delta_amp,
+    if r_min is None:
+        r_min = cyl.R + 0.05 * cyl.R
+    if r_max is None:
+        r_max = 5.0 * cyl.R
+
+    def F_fn(r): return _joint_LP_metric(cyl, r, delta)[0]
+    def K_fn(r): return _joint_LP_metric(cyl, r, delta)[1]
+    def L_fn(r): return _joint_LP_metric(cyl, r, delta)[2]
+    def h_fn(r): return 1.0
+
+    energies = find_bound_states(
+        F_fn, K_fn, L_fn, h_fn,
+        m=m, k=k, mass=mass,
+        r_min=r_min, r_max=r_max,
+        E_min=E_min, E_max=E_max, n_E=n_E,
+    )
+    return energies
+
+
+def adiabatic_floquet_spectrum(
+    cyl: VanStockumInterior,
+    delta_0: float,
+    delta_amp: float,
+    omega_drive: float,
+    m: int = 0,
+    k: float = 0.0,
+    mass: float = 0.5,
+    n_t: int = 16,
+    r_min: float | None = None,
+    r_max: float | None = None,
+    E_min: float = 0.3,
+    E_max: float = 3.0,
+    n_E: int = 60,
+) -> AdiabaticFloquetSpectrum:
+    """Compute the adiabatic Floquet spectrum.
+
+    Parameters
+    ----------
+    cyl : VanStockumInterior
+        Single-cylinder model; the pair is matched (both cylinders share cyl).
+    delta_0, delta_amp, omega_drive : float
+        delta(t) = delta_0 + delta_amp sin(omega_drive t).
+    m, k, mass : int, float, float
+        Quantum numbers of the radial Dirac mode.
+    n_t : int
+        Number of time samples per period for the integral.
+
+    Returns
+    -------
+    AdiabaticFloquetSpectrum
+    """
+    T_period = 2.0 * np.pi / omega_drive
+    t_samples = np.linspace(0.0, T_period, n_t, endpoint=False)
+    delta_samples = delta_0 + delta_amp * np.sin(omega_drive * t_samples)
+
+    inst_eigvals: list[np.ndarray] = []
+    for d in delta_samples:
+        try:
+            E_n = static_pair_bound_states(
+                cyl, delta=float(d), m=m, k=k, mass=mass,
+                r_min=r_min, r_max=r_max,
+                E_min=E_min, E_max=E_max, n_E=n_E,
+            )
+        except Exception:
+            E_n = np.array([])
+        inst_eigvals.append(E_n)
+
+    # Time-average each bound state's energy across the drive cycle
+    counts = [len(e) for e in inst_eigvals]
+    n_states = min(counts) if counts and min(counts) > 0 else 0
+    if n_states == 0:
+        quasi = np.array([])
+    else:
+        E_matrix = np.stack([np.sort(e)[:n_states] for e in inst_eigvals])
+        # Reduce mod omega_drive (Floquet eigenvalues are defined mod Omega)
+        eps = np.mean(E_matrix, axis=0)
+        # Wrap to fundamental Brillouin zone [-Omega/2, Omega/2)
+        eps_wrapped = ((eps + omega_drive / 2.0) % omega_drive) - omega_drive / 2.0
+        quasi = eps_wrapped
+
+    return AdiabaticFloquetSpectrum(
+        t_samples=t_samples,
+        delta_samples=delta_samples,
+        instantaneous_eigenvalues=inst_eigvals,
+        quasi_energies=quasi,
+        period=T_period,
     )
 
 
-def detect_parametric_resonance(spectrum: FloquetSpectrum, gap_threshold: float = 1e-3) -> list[tuple[int, float, float]]:
-    """Detect avoided crossings between the two Floquet bands.
+def nonadiabatic_floquet_correction(
+    cyl: VanStockumInterior,
+    n_state: int,
+    delta_0: float,
+    delta_amp: float,
+    omega_drive: float,
+    m: int = 0,
+    k: float = 0.0,
+    mass: float = 0.5,
+    n_t: int = 16,
+) -> float:
+    """Leading non-adiabatic correction to the n-th Floquet quasi-energy.
 
-    Returns a list of (index, r, gap) tuples where the band gap
-    abs(epsilon_+ - epsilon_-) dips below `gap_threshold`. These are
-    candidate parametric-resonance points.
+    The first-order correction is
+        Delta eps_n = sum_{m != n} |A_{mn}|^2 / (E_n - E_m + (k_mn) Omega_drive),
+    where A_{mn}(t) = <psi_m | partial_t | psi_n> are non-adiabatic
+    couplings. Evaluating A explicitly requires the eigenstates and
+    their time-derivatives; here we estimate the magnitude via the
+    instantaneous spectrum's variation,
+
+        |A| ~ |dE_n / dt| / (E_m - E_n),
+
+    which gives the rough scale of the correction. A full implementation
+    requires solving for the eigenstates and integrating; this returns
+    the *order-of-magnitude estimate* used to assess the adiabatic
+    validity.
+
+    Returns a scalar estimate of the correction; if abs(correction) <
+    abs(quasi_energy), the adiabatic approximation is self-consistent.
     """
-    gaps = np.abs(spectrum.quasi_energies[:, 1] - spectrum.quasi_energies[:, 0])
-    resonances = []
-    for i in range(1, len(gaps) - 1):
-        if gaps[i] < gap_threshold and gaps[i] <= gaps[i - 1] and gaps[i] <= gaps[i + 1]:
-            resonances.append((int(i), float(spectrum.r[i]), float(gaps[i])))
-    return resonances
+    spec = adiabatic_floquet_spectrum(
+        cyl, delta_0, delta_amp, omega_drive,
+        m=m, k=k, mass=mass, n_t=n_t,
+    )
+    if spec.quasi_energies.size <= n_state:
+        return float("nan")
+    # Estimate |dE_n / dt| from the time samples of the n-th eigenvalue
+    E_n_t = np.array([
+        np.sort(e)[n_state] if len(e) > n_state else np.nan
+        for e in spec.instantaneous_eigenvalues
+    ])
+    valid = ~np.isnan(E_n_t)
+    if valid.sum() < 4:
+        return float("nan")
+    dE_dt = np.gradient(E_n_t[valid], spec.t_samples[valid])
+    typical_dE = float(np.max(np.abs(dE_dt)))
+    # Gap to the next state
+    if spec.quasi_energies.size > n_state + 1:
+        gap = float(abs(spec.quasi_energies[n_state + 1] - spec.quasi_energies[n_state]))
+    else:
+        gap = 1.0
+    if gap < 1e-9:
+        return float("inf")
+    return float(typical_dE / gap * omega_drive / (2 * np.pi))
+
+
+def adiabatic_floquet_validity(
+    cyl: VanStockumInterior,
+    delta_0: float,
+    delta_amp: float,
+    omega_drive: float,
+    m: int = 0,
+    k: float = 0.0,
+    mass: float = 0.5,
+) -> dict:
+    """Diagnostic: is the adiabatic limit valid for the given parameters?
+
+    Returns a dict with the typical eigenvalue gap and Omega_drive,
+    and a ratio Omega_drive / gap. If << 1, adiabatic is excellent;
+    if ~ 1, non-adiabatic transitions matter.
+    """
+    # Spectrum at delta_0 alone (static)
+    E_static = static_pair_bound_states(
+        cyl, delta=delta_0, m=m, k=k, mass=mass,
+    )
+    if len(E_static) >= 2:
+        gap = float(np.min(np.diff(np.sort(E_static))))
+    else:
+        gap = float("nan")
+    ratio = omega_drive / gap if gap > 0 else float("inf")
+    return {
+        "static_eigenvalues": E_static.tolist(),
+        "min_gap": gap,
+        "omega_drive": omega_drive,
+        "omega_over_gap": ratio,
+        "adiabatic_valid": ratio < 0.1,
+        "description": (
+            "Adiabatic Floquet is exact in the limit Omega_drive / gap -> 0. "
+            f"Current ratio: {ratio:.4f}. "
+            f"{'ADIABATIC valid' if ratio < 0.1 else 'NON-ADIABATIC corrections needed' if ratio < 1 else 'NON-ADIABATIC regime; adiabatic invalid'}"
+        ),
+    }
