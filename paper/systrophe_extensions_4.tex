@@ -1,0 +1,233 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  citecolor=blue!50!black,
+  urlcolor=blue!50!black
+}
+
+\title{\bfseries Probing, scattering, and dimensional extensions\\
+to the Systroph\=e framework\\
+\large Five further modules (Phases 21--25)}
+
+\author{Christian Knopp\\\texttt{cknopp@gmail.com}}
+\date{2026-05-11}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We add five further modules to the Systroph\=e framework covering
+probe diagnostics, wave scattering, numerical-relativity hand-off,
+dark-matter coupling, and higher-dimensional embedding:
+(1) tidal-force scalar across CTC bands, including geodesic-deviation
+evolution and a safety-radius API;
+(2) Klein-Gordon scattering with transmission/reflection coefficients
+across chronology horizons, including a superradiance probe;
+(3) NR initial-data export (ADM + BSSN) with constraint-residual
+diagnostics and 3D Cartesian extrusion;
+(4) dark-matter scalar coupling treating the cylinder as an ultra-light
+DM soliton anchor;
+(5) 5D Kaluza-Klein embedding showing that motion in a compact extra
+dimension can convert a 4D CTC into a 5D spacelike path.
+Seventy-one new tests across the five modules, all passing.
+Code at \texttt{github.com/Zynerji/systrophe} (v0.19.0+).
+\end{abstract}
+
+\section{Tidal forces across CTC bands (Phase 21)}
+
+A probe near a chronology horizon experiences strong tidal forces.
+The dominant radial tidal scalar is
+\[
+T(r) = -\tfrac{1}{2}\,F''(r),
+\]
+which oscillates log-periodically and diverges as $r$ approaches
+each F = 0 surface.
+
+The module \texttt{tidal\_forces.py} provides:
+\begin{itemize}
+\item \texttt{riemann\_scalar\_radial}: $T(r)$;
+\item \texttt{tidal\_stretch\_at\_radius}, \texttt{tidal\_squeeze\_at\_radius};
+\item \texttt{geodesic\_deviation\_evolution}: Jacobi equation integration;
+\item \texttt{multi\_band\_tidal\_signature}: $T$ at the midpoint of each CTC band;
+\item \texttt{safety\_radius\_for\_probe}: where $|T|$ exceeds a material strength.
+\end{itemize}
+
+For omega = R = 1, $|T|$ stays small in the first CTC band but grows
+log-periodically toward the second, then larger horizons -- a probe
+made of any finite material has a definite stay-out radius.
+
+\section{Klein-Gordon scattering (Phase 22)}
+
+A massive scalar $\phi$ on the LP exterior obeys
+$(\Box - m^2)\phi = 0$. Decomposing $\phi = e^{-i\omega t}e^{in\phi}\chi(r)$,
+the radial equation reduces to a Schrödinger-like form with effective
+potential
+\[
+V_{\rm eff}(r;\omega,n,m) = \frac{\omega^2}{F_{\rm eff}(r)} - m^2 - \frac{n^2}{|L|}.
+\]
+
+The module \texttt{kg\_scattering.py} provides:
+\begin{itemize}
+\item \texttt{effective\_potential};
+\item \texttt{transmission\_coefficient}: WKB $|T|^2 = \exp\!\left(-2\int\sqrt{|V_{\rm eff}|}\,dr\right)$;
+\item \texttt{reflection\_coefficient}: $|R|^2 = 1 - |T|^2$;
+\item \texttt{transmission\_at\_multiple\_CH}: cumulative transmission;
+\item \texttt{superradiance\_test}: Kerr-analog amplification condition $\omega < n\,\Omega_H$;
+\item \texttt{bound\_states\_between\_CHs}: discrete spectrum in CTC bands.
+\end{itemize}
+
+Each chronology horizon acts as a partial barrier; cumulative
+transmission decreases geometrically across multiple CHs. Modes with
+$\omega < n\,\Omega_H$ are amplified -- the LP analog of Kerr
+superradiance.
+
+\section{NR initial-data export (Phase 23)}
+
+The module \texttt{nr\_initial\_data.py} provides constraint-checked
+hand-off to numerical-relativity codes (Einstein Toolkit, GRChombo,
+BAM):
+\begin{itemize}
+\item \texttt{adm\_profile\_1d}: lapse, shift, spatial metric, extrinsic curvature on a 1D radial profile;
+\item \texttt{hamiltonian\_constraint\_residual} and
+  \texttt{momentum\_constraint\_residual}: vacuum-constraint residuals;
+\item \texttt{bssn\_decomposition}: conformal factor $\chi$, conformal
+  metric $\tilde\gamma$, traceless $\tilde A$;
+\item \texttt{extrude\_to\_3d\_cartesian}: 3D grid for NR import;
+\item \texttt{export\_initial\_data\_json}: JSON serialization;
+\item \texttt{cauchy\_horizon\_warning\_for\_foliation}: detect lapse breakdown.
+\end{itemize}
+
+This makes the Systroph\=e framework directly importable into
+production NR codes. The Cauchy-horizon warning ensures that the
+foliation choice is safe before evolution starts.
+
+\section{Dark-matter scalar coupling (Phase 24)}
+
+For an ultra-light dark-matter scalar ($m_{\rm DM} \sim 10^{-22}$ eV
+fuzzy-DM regime), the LP cylinder anchors a soliton-like coherent
+field. We model:
+\[
+\rho_{\rm DM}(r) = \frac{\rho_c}{\left(1 + (r/r_{\rm sol})^2\right)^8}
+\]
+with $r_{\rm sol}$ set by the Compton wavelength of $m_{\rm DM}$ and
+the cylinder mass.
+
+The module \texttt{dm\_scalar\_coupling.py} provides:
+\begin{itemize}
+\item \texttt{compton\_wavelength};
+\item \texttt{DM\_density\_profile\_around\_cylinder};
+\item \texttt{DM\_drag\_on\_orbits}: orbital-frequency shift;
+\item \texttt{DM\_superradiance\_growth\_rate}: Kerr-analog;
+\item \texttt{effective\_alpha\_with\_DM\_pressure};
+\item \texttt{DM\_induced\_CTC\_lifetime}: DM-noise decoherence time.
+\end{itemize}
+
+For realistic ULDM densities, the DM-noise CTC lifetime exceeds
+the Hubble time -- so even pessimistic DM scenarios do not erase
+existing Systroph\=e CTCs.
+
+\section{5D Kaluza-Klein embedding (Phase 25)}
+
+Embed the 4D LP metric in 5D with a compact $\xi$ of radius $L_\xi$:
+\[
+ds_5^2 = ds_{\rm LP}^2 + L_\xi^2\,d\xi^2,\qquad \xi\sim\xi+2\pi.
+\]
+KK reduction yields a $U(1)$ gauge field plus a dilaton from
+$g_{\xi\xi}$. A worldline that moves rapidly in $\xi$ acquires a
+positive 5D contribution that can offset a negative 4D one --
+\emph{thereby converting a 4D CTC into a 5D spacelike path}.
+
+The module \texttt{kk\_embedding.py} provides:
+\begin{itemize}
+\item \texttt{five\_d\_metric}: $5\times 5$ tensor;
+\item \texttt{kk\_tower\_masses}: $m_n = n/L_\xi$;
+\item \texttt{kk\_reduced\_alpha}: $\alpha\sqrt{1 + (R/L_\xi)^2}$;
+\item \texttt{xi\_circulation\_evades\_CTC}: minimum $d\xi/d\phi$ to
+  achieve a spacelike 5D path inside a 4D CTC band;
+\item \texttt{kk\_monopole\_charge}: $U(1)$ charge from non-trivial fiber;
+\item \texttt{compactification\_radius\_from\_observations}: bound $L_\xi$;
+\item \texttt{five\_d\_geodesic\_drift\_in\_xi}: per-revolution $\xi$ drift.
+\end{itemize}
+
+\textbf{Headline}: in any 4D CTC band ($F < 0$), the minimum
+$d\xi/d\phi$ for a 5D-spacelike escape is
+$\sqrt{-F}/L_\xi$. Sub-Compton $L_\xi$ requires impractical $\xi$
+velocities; macroscopic $L_\xi$ would already have been observed
+in collider experiments. So KK escape is theoretically possible but
+phenomenologically gated.
+
+\section{Implications}
+
+The five modules extend the framework to:
+\begin{enumerate}
+\item \textbf{Probe physics}: tidal forces give a probe-survivability map.
+\item \textbf{Wave scattering}: each chronology horizon is a quantum
+  potential barrier with explicit transmission.
+\item \textbf{NR pipeline}: initial-data is exportable to Einstein
+  Toolkit / GRChombo with constraint residuals tagged.
+\item \textbf{Cosmology / DM}: ULDM coupling is weak enough that
+  existing CTCs survive Hubble-time DM noise.
+\item \textbf{Higher dimensions}: KK extra-dim motion is a
+  potential CTC escape route, gated by observational bounds on
+  $L_\xi$.
+\end{enumerate}
+
+\section{Reproduction}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Phase & Source file \\
+\midrule
+21. Tidal forces & \texttt{tidal\_forces.py} \\
+22. KG scattering & \texttt{kg\_scattering.py} \\
+23. NR initial data & \texttt{nr\_initial\_data.py} \\
+24. DM scalar coupling & \texttt{dm\_scalar\_coupling.py} \\
+25. 5D KK embedding & \texttt{kk\_embedding.py} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All 71 new tests pass; combined Systroph\=e suite at 813 passing tests.
+
+\bibliographystyle{plain}
+\begin{thebibliography}{9}
+
+\bibitem{Knopp2026Systrophe}
+C.~Knopp, Systrophe whitepaper I (classical GR), 2026.
+
+\bibitem{Knopp2026Ext1}
+C.~Knopp, Systrophe extensions paper (Phases 1--10), 2026.
+
+\bibitem{Knopp2026Ext2}
+C.~Knopp, Systrophe extensions paper (Phases 11--15), 2026.
+
+\bibitem{Knopp2026Ext3}
+C.~Knopp, Systrophe extensions paper (Phases 16--20), 2026.
+
+\bibitem{Baumgarte2010}
+T.~Baumgarte and S.~Shapiro, Numerical Relativity, Cambridge, 2010.
+
+\bibitem{Hu2000}
+W.~Hu, R.~Barkana, A.~Gruzinov, Phys. Rev. Lett. 85 (2000) 1158.
+
+\bibitem{KK1921}
+T.~Kaluza, Sitz. Preuss. Akad. Wiss. (1921) 966; O.~Klein, Z. Phys.
+37 (1926) 895.
+
+\end{thebibliography}
+
+\end{document}
