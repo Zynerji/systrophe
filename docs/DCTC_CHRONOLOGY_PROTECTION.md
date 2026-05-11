@@ -107,11 +107,53 @@ exhibits the predicted chronology-protection signature (amp → 0 at
 δ = π specifically for chronology-protection reasons, not generic
 degeneracy).
 
+## Refined picture (Phase AM-counterfactual)
+
+To pressure-test the independence finding, 4 *more* physically-grounded
+U(δ) constructions were tested:
+
+| Construction | Description | Pearson(phys, amp) | CP signature |
+|---|---|---|---|
+| E (direct L) | L_pair(r) values as matrix entries | +0.530 | **YES (amp=0 at δ=π)** |
+| F (geodesic) | Propagator at fixed r in CTC band | +0.207 | no |
+| G (pair boundary) | H proportional to L_pair(r) | +0.048 | no |
+| H (alpha-Floquet) | Tipler-frequency drive | +0.268 | no |
+
+**One of four** here, combined with 0 of 4 in the original extended
+sweep, gives **1 of 8 total constructions** exhibiting the
+chronology-protection signature.
+
+**Construction E is special**: U is built by literally inserting
+L_pair(r) values as matrix entries. When L vanishes at δ = π (anti-
+phase extinction), the matrix collapses and U becomes trivial — so
+amp goes to zero by structural degeneracy, not by abstract
+information processing.
+
+### Refined physical interpretation
+
+The chronology-protection × D-CTC coupling is **contingent on the
+encoding**:
+
+- **Abstract encoding** (Clifford gates, Floquet propagators,
+  generic Hamiltonians): D-CTC amplification is independent of
+  physical CTC content. Aaronson-Watrous speedup survives chronology
+  protection.
+
+- **Direct CTC-structure encoding** (matrix entries literally
+  proportional to L_pair(r)): D-CTC amplification vanishes when the
+  CTC vanishes. Chronology protection kills both.
+
+This means the Aaronson-Watrous result requires the channel to be
+*implemented abstractly*, e.g., via post-selection quantum circuits
+or pre-engineered Clifford gates. Channels built directly from
+spacetime CTC physics inherit chronology protection.
+
 ## Reproduction
 
 ```bash
 python examples/dctc_deep_phase_am.py            # original
-python examples/dctc_deep_phase_am_extended.py   # 4-construction comparison
+python examples/dctc_deep_phase_am_extended.py   # 4 abstract constructions
+python examples/dctc_deep_phase_am_counter.py    # 4 physical constructions
 ```
 
 Results in `examples/dctc_deep_phase_am*_results.json`.
