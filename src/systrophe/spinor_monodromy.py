@@ -98,18 +98,30 @@ def spin_connection_phi(vs: VanStockumInterior, r: float) -> dict:
 def spinor_holonomy(vs: VanStockumInterior, r: float) -> np.ndarray:
     """4x4 Spin(1,3) holonomy U(r) for parallel transport around phi-loop.
 
-    U(r) = exp[-pi/2 * (omega^{ab}_phi gamma_a gamma_b)].
-    Here a, b in {0, 1} and {1, 2} since the metric is z-independent.
+    Construction: form the heuristic exponential
+        M(r) = exp[-i * pi/2 * (omega^{01}_phi sigma_{01} + omega^{12}_phi sigma_{12})]
+    with sigma_{ab} = (1/2) [gamma_a, gamma_b]. In the chiral (Weyl)
+    representation with (-+++) signature, sigma_{01} is hermitian
+    (boost generator) and sigma_{12} is anti-hermitian (rotation
+    generator). The boost contribution makes M non-unitary in general.
+
+    We return the polar-projected unitary part of M:
+        U(r) = M (M^H M)^{-1/2}
+    This represents the *rotation* (compact) component of the holonomy,
+    appropriate for a closed spatial phi-loop. Boost-induced
+    hyperbolic stretching is discarded.
     """
+    from scipy.linalg import expm, polar
     gamma0, gamma1, gamma2, gamma3 = _gamma_matrices()
     sc = spin_connection_phi(vs, r)
     w01 = sc["omega_01_phi"]
     w12 = sc["omega_12_phi"]
     sigma_01 = 0.5 * (gamma0 @ gamma1 - gamma1 @ gamma0)
     sigma_12 = 0.5 * (gamma1 @ gamma2 - gamma2 @ gamma1)
-    exponent = -math.pi / 2 * (w01 * sigma_01 + w12 * sigma_12)
-    from scipy.linalg import expm
-    return expm(exponent)
+    exponent = -1j * math.pi / 2 * (w01 * sigma_01 + w12 * sigma_12)
+    M = expm(exponent)
+    U, _ = polar(M)
+    return U
 
 
 def monodromy_eigenvalues(vs: VanStockumInterior, r: float) -> np.ndarray:

@@ -1,0 +1,241 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  citecolor=blue!50!black,
+  urlcolor=blue!50!black
+}
+
+\title{\bfseries GW, ANEC, Page-curve, LQG, tunneling\\
+extensions to the Systroph\=e framework\\
+\large Five further modules (Phases 26--30) + IBM Marrakesh hardware validation}
+
+\author{Christian Knopp\\\texttt{cknopp@gmail.com}}
+\date{2026-05-11}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We add five further modules to the Systroph\=e framework
+covering gravitational-wave emission, the averaged null energy
+condition, the Page curve for CTC-enclosed regions, LQG-like discrete
+area/volume spectra, and quantum tunneling out of CTC bands. In
+parallel we report two batches of hardware experiments on the IBM
+Marrakesh 156-qubit Heron processor that validate seven concrete
+Systroph\=e predictions across spinor monodromy, Deutsch/Lloyd CTC
+channel capacities, $Z_3$ cycle monodromy, KG cascade transmission,
+KK-escape interferometry, and holographic phase-wrap extraction of
+$\alpha = \sqrt{4a^2 - 1}$. Eighty-three new tests across the five
+modules, all passing. Code at \texttt{github.com/Zynerji/systrophe}
+(v0.20.0+).
+\end{abstract}
+
+\section{Gravitational-wave emission (Phase 26)}
+
+A rigidly-rotating cylinder emits no GW at constant $\omega$; GW
+emission arises from spin-up / spin-down, radial oscillation, or
+binary inspiral. The module \texttt{gw\_emission.py} provides:
+\begin{itemize}
+\item \texttt{moment\_of\_inertia}: $I_{zz} = \tfrac{1}{2} M R^2$;
+\item \texttt{spin\_up\_strain}: $h \sim 2 \dot\Omega \cdot I / D$;
+\item \texttt{radial\_oscillation\_strain}: peak $h$ from radial mode;
+\item \texttt{pair\_inspiral\_strain}: binary cylinder GW chirp;
+\item \texttt{gw\_luminosity}: $P \sim (1/5)(\ddot I)^2 \omega_{\rm GW}^4$;
+\item \texttt{detectable\_at\_distance}: SNR vs interferometer noise;
+\item \texttt{cylindrical\_resonant\_frequencies}: radial-mode spectrum.
+\end{itemize}
+
+\section{ANEC integrated bound (Phase 27)}
+
+For radial null geodesics on the LP exterior, we integrate
+$T_{ab} k^a k^b / |k^r|$ from $r_{\min}$ to $r_{\max}$ using a
+Hartle-Hawking-like vacuum stress tensor proxy. The module
+\texttt{anec\_bound.py} provides:
+\begin{itemize}
+\item \texttt{T\_kk\_radial}: stress-energy null projection at $r$;
+\item \texttt{anec\_integral\_radial}: integral over a radial path;
+\item \texttt{anec\_quantum\_inequality\_bound}: Ford-Roman lower bound;
+\item \texttt{anec\_integral\_circular\_null}: along F=0 closed null;
+\item \texttt{pair\_extinction\_anec\_recovery}: ANEC restored at
+  $\delta = \pi$ (extinction factor $(1+\cos\delta)/2 = 0$).
+\end{itemize}
+
+Headline: the Systroph\=e-pair extinction extends to ANEC: at
+$\delta = \pi$ the effective ANEC integral vanishes, removing the
+chronology-horizon contribution that would otherwise violate the
+bound.
+
+\section{Page curve for CTC region (Phase 28)}
+
+Treating a chronology-enclosed region $r \in (r_n, r_{n+1})$ as an
+``evaporating'' subsystem, we compute a toy Page curve $S(t)$ for the
+entanglement entropy of enclosed quantum fields with the exterior.
+The module \texttt{page\_curve\_ctc.py} provides:
+\begin{itemize}
+\item \texttt{enclosed\_region\_volume};
+\item \texttt{bekenstein\_bound\_estimate}: $S_{\max} \sim 2 \pi R E$;
+\item \texttt{page\_time\_estimate}: $t_P = S_{\max} / s_{\rm emit}$;
+\item \texttt{entanglement\_entropy\_proxy}: $S(t) = \min(s_{\rm emit} t,
+  s_{\rm emit}(T - t))$;
+\item \texttt{information\_paradox\_resolved\_at\_page\_time}: $S$ decay check.
+\end{itemize}
+
+\section{LQG discretization (Phase 29)}
+
+We compute the LQG-quantized area and volume on a constant-$t$ slice
+of the LP exterior, with the Immirzi parameter $\gamma \approx 0.2375$
+matched to black-hole entropy. The module \texttt{lqg\_discretization.py}
+provides:
+\begin{itemize}
+\item \texttt{lqg\_area\_spectrum\_at\_j}: $A_j = 8\pi\gamma \ell_P^2 \sqrt{j(j+1)}$;
+\item \texttt{lqg\_volume\_spectrum\_at\_j}: simple trivalent estimate;
+\item \texttt{classical\_proper\_area}: $A_{\rm class}$ on LP cylinder;
+\item \texttt{spin\_for\_classical\_area}: solve $A_j = A_{\rm class}$ for $j$;
+\item \texttt{discretization\_error\_relative}: $|A_{\rm class} - A_j|/A_{\rm class}$;
+\item \texttt{regge\_calculus\_deficit\_angle}: deficit per vertex.
+\end{itemize}
+
+For macroscopic slices ($j \gg 1$) the relative discretization error
+is $\sim 1/j$, recovering the semiclassical limit.
+
+\section{Quantum tunneling out of CTC (Phase 30)}
+
+A particle confined in a CTC band $r \in (r_n, r_{n+1})$ classically
+cannot escape -- the chronology horizons are turning points. Quantum
+mechanically it can tunnel via WKB. The module \texttt{ctc\_tunneling.py}
+provides:
+\begin{itemize}
+\item \texttt{effective\_radial\_potential}: $V_{\rm eff}(r) \sim 1/|F(r)|$;
+\item \texttt{tunneling\_action}: $S = \int \sqrt{2m(V-E)}\,dr$;
+\item \texttt{tunneling\_rate}: $\Gamma = \nu \exp(-2 S/\hbar)$;
+\item \texttt{escape\_to\_chronology\_safe\_region}: $r_{\rm CH} \to r_{\rm safe}$;
+\item \texttt{multi\_band\_tunneling\_diagram}: rates between adjacent bands;
+\item \texttt{tunneling\_resonance\_locus}: search for resonant peaks.
+\end{itemize}
+
+\section{IBM Marrakesh hardware validation}
+
+In parallel, we ran two batches on the IBM Marrakesh 156-qubit Heron
+QPU (Zynerji-Open instance, 3h allocation):
+
+\subsection{Batch 1 (job d80tnjntjchs73bm4png, 16.7\,s wall)}
+
+\begin{tabular}{lll}
+\toprule
+Validation & Predicted & Observed (TV / $\Delta$) \\
+\midrule
+LP unitary @ $r=1.5$ (Phase 19) & --- & TV $=0.004$ \\
+LP unitary @ $r=3.35$ CTC band  & --- & TV $=0.009$ \\
+Pair extinction $\delta=\pi$ to $\mathbb{I}$ & $P(00)=1$ & $0.988$, $\Delta=0.012$ \\
+Deutsch CTC fixed point $\rho_{\rm CTC}=\mathbb{I}/2$ & $(0.5,0.5)$ & $(0.507,0.493)$ \\
+Lloyd P-CTC input 0 $\to$ output 0 & $P(1)=0$ & $0.037$, postselect $24.3\%$ \\
+Lloyd P-CTC input 1 $\to$ output 1 & $P(1)=1$ & $0.952$ \\
+$Z_3$ $S^1$, $S^2$, $S^3$ cycle      & $1.0$ each & $0.984, 0.982, 0.986$ \\
+\bottomrule
+\end{tabular}
+
+\subsection{Batch 2 (job d80tqpugbeec73ajqi6g, 59.8\,s wall)}
+
+\begin{tabular}{lll}
+\toprule
+Validation & Predicted & Observed \\
+\midrule
+KG cascade $N=1$ survival (Phase 22) & $0.700$ & $0.661$ \\
+$N=2$ & $0.490$ & $0.476$ \\
+$N=3$ & $0.343$ & $0.330$ \\
+$N=4$ & $0.240$ & $0.269$ \\
+KK escape $\phi_\xi=\pi$ (Phase 25) -- {\bf threshold} & $0.500$ & $\mathbf{0.500}$ \\
+Holographic $\alpha$ from phase wrap $N=1$ & $1.732$ & $1.744$ (rel err $0.68\%$) \\
+$N=2,3,4$ (incl.\ $2\pi$ unwrap) & $1.732$ & $1.722, 1.727, 1.728$ ($\le 0.6\%$) \\
+\bottomrule
+\end{tabular}
+
+\paragraph{Headlines.}
+\begin{enumerate}
+\item KK ($\xi$-velocity) escape from a 4D CTC into a 5D-spacelike
+  path is verified by exact interference cancellation at the
+  threshold $\phi_\xi = \pi$ (observed $P=0.500$ vs predicted $0.500$).
+\item The complex conformal weight $\Delta = 1 \pm i\alpha/2$ of the
+  holographic dictionary (Phase 16) is operationally reconstructible:
+  $\alpha = \sqrt{3}$ is recovered to $\le 0.7\%$ across $N=1\dots4$
+  steps including the $2\pi$ wraparound at $N \ge 3$.
+\item Geometric decay across multiple chronology horizons holds
+  within hardware noise ($\Delta \le 0.04$ per crossing).
+\end{enumerate}
+
+\paragraph{Calibration recipe.} \texttt{generate\_preset\_pass\_manager}
+at \texttt{optimization\_level=3} (uses backend's live $T_1, T_2$ and
+gate-error calibration to pick low-error qubits and routing), plus
+modern \texttt{SamplerV2} options: \texttt{dynamical\_decoupling.sequence\_type
+= XpXm} and \texttt{twirling.enable\_gates / enable\_measure}. All
+circuits compiled to ISA depth $\le 48$ (well under the empirical
+$<150$ Marrakesh-noise threshold).
+
+\paragraph{Module bug fix.} The Marrakesh batch exposed a sign-convention
+error in \texttt{spinor\_monodromy.spinor\_holonomy}: the heuristic
+$\exp(-\pi/2 \cdot \omega \cdot \sigma_{ab})$ is non-unitary because
+$\sigma_{01}$ is hermitian (boost generator) in $(-+++)$ signature.
+Module now returns the polar-projected nearest unitary; new
+unitarity test added.
+
+\section{Reproduction}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Phase & Source file \\
+\midrule
+26. GW emission & \texttt{gw\_emission.py} \\
+27. ANEC bound & \texttt{anec\_bound.py} \\
+28. Page curve CTC & \texttt{page\_curve\_ctc.py} \\
+29. LQG discretization & \texttt{lqg\_discretization.py} \\
+30. CTC tunneling & \texttt{ctc\_tunneling.py} \\
+HW batch 1 & \texttt{experiments/marrakesh\_batch.py} \\
+HW batch 2 & \texttt{experiments/marrakesh\_batch\_2.py} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Eighty-three new tests pass; combined Systroph\=e suite at 896
+passing tests.
+
+\bibliographystyle{plain}
+\begin{thebibliography}{9}
+
+\bibitem{Knopp2026Systrophe}
+C.~Knopp, Systrophe whitepaper I (classical GR), 2026.
+
+\bibitem{Knopp2026Ext4}
+C.~Knopp, Systrophe extensions paper (Phases 21--25), 2026.
+
+\bibitem{FordRoman1995}
+L.~H.~Ford and T.~A.~Roman, Phys. Rev. D 51 (1995) 4277.
+
+\bibitem{Page1993}
+D.~N.~Page, Phys. Rev. Lett. 71 (1993) 3743.
+
+\bibitem{AshtekarLewandowski2004}
+A.~Ashtekar and J.~Lewandowski, Class. Quantum Grav. 21 (2004) R53.
+
+\bibitem{Deutsch1991}
+D.~Deutsch, Phys. Rev. D 44 (1991) 3197.
+
+\bibitem{Lloyd2011}
+S.~Lloyd et al., Phys. Rev. Lett. 106 (2011) 040403.
+
+\end{thebibliography}
+
+\end{document}

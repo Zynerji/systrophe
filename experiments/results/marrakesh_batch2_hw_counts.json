@@ -1,0 +1,138 @@
+[
+  {
+    "label": "kg_cascade_N1",
+    "isa_depth": 11,
+    "counts": {
+      "1": 2706,
+      "0": 1390
+    }
+  },
+  {
+    "label": "kg_cascade_N2",
+    "isa_depth": 24,
+    "counts": {
+      "0": 2145,
+      "1": 1951
+    }
+  },
+  {
+    "label": "kg_cascade_N3",
+    "isa_depth": 36,
+    "counts": {
+      "0": 2743,
+      "1": 1353
+    }
+  },
+  {
+    "label": "kg_cascade_N4",
+    "isa_depth": 48,
+    "counts": {
+      "0": 2993,
+      "1": 1103
+    }
+  },
+  {
+    "label": "kk_escape_no_xi_velocity",
+    "isa_depth": 3,
+    "counts": {
+      "0": 4069,
+      "1": 27
+    }
+  },
+  {
+    "label": "kk_escape_partial_escape_1",
+    "isa_depth": 12,
+    "counts": {
+      "0": 3892,
+      "1": 204
+    }
+  },
+  {
+    "label": "kk_escape_partial_escape_2",
+    "isa_depth": 12,
+    "counts": {
+      "0": 3417,
+      "1": 679
+    }
+  },
+  {
+    "label": "kk_escape_partial_escape_3",
+    "isa_depth": 12,
+    "counts": {
+      "0": 2841,
+      "1": 1255
+    }
+  },
+  {
+    "label": "kk_escape_threshold_escape",
+    "isa_depth": 7,
+    "counts": {
+      "1": 2048,
+      "0": 2048
+    }
+  },
+  {
+    "label": "phase_wrap_N1_X",
+    "isa_depth": 6,
+    "counts": {
+      "0": 2762,
+      "1": 1334
+    }
+  },
+  {
+    "label": "phase_wrap_N1_Y",
+    "isa_depth": 6,
+    "counts": {
+      "0": 3933,
+      "1": 163
+    }
+  },
+  {
+    "label": "phase_wrap_N2_X",
+    "isa_depth": 6,
+    "counts": {
+      "1": 3542,
+      "0": 554
+    }
+  },
+  {
+    "label": "phase_wrap_N2_Y",
+    "isa_depth": 6,
+    "counts": {
+      "0": 3451,
+      "1": 645
+    }
+  },
+  {
+    "label": "phase_wrap_N3_X",
+    "isa_depth": 6,
+    "counts": {
+      "1": 3873,
+      "0": 223
+    }
+  },
+  {
+    "label": "phase_wrap_N3_Y",
+    "isa_depth": 6,
+    "counts": {
+      "0": 1165,
+      "1": 2931
+    }
+  },
+  {
+    "label": "phase_wrap_N4_X",
+    "isa_depth": 6,
+    "counts": {
+      "0": 2208,
+      "1": 1888
+    }
+  },
+  {
+    "label": "phase_wrap_N4_Y",
+    "isa_depth": 6,
+    "counts": {
+      "1": 4062,
+      "0": 34
+    }
+  }
+]

@@ -1,0 +1,119 @@
+{
+  "A": [
+    {
+      "label": "spinor_r1.50_exterior_F_positive",
+      "predicted": [
+        0.07963532568335958,
+        0.06597018605959314,
+        0.46728988841118113,
+        0.387104599845866
+      ],
+      "observed_le": [
+        0.0791015625,
+        0.06982421875,
+        0.466064453125,
+        0.385009765625
+      ],
+      "observed_be": [
+        0.0791015625,
+        0.466064453125,
+        0.06982421875,
+        0.385009765625
+      ],
+      "total_variation": 0.0038540326904067806
+    },
+    {
+      "label": "spinor_r3.35_inside_CTC_band",
+      "predicted": [
+        0.2534122123075702,
+        0.24983401600858912,
+        0.2501429025622954,
+        0.2466108691215452
+      ],
+      "observed_le": [
+        0.248046875,
+        0.25830078125,
+        0.24658203125,
+        0.2470703125
+      ],
+      "observed_be": [
+        0.248046875,
+        0.24658203125,
+        0.25830078125,
+        0.2470703125
+      ],
+      "total_variation": 0.00861732206615938
+    },
+    {
+      "label": "pair_extinction_delta_pi",
+      "predicted": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observed_le": [
+        0.98828125,
+        0.0048828125,
+        0.0068359375,
+        0.0
+      ],
+      "observed_be": [
+        0.98828125,
+        0.0068359375,
+        0.0048828125,
+        0.0
+      ],
+      "total_variation": 0.01171875
+    }
+  ],
+  "B": [
+    {
+      "label": "deutsch_fixed_point",
+      "p0": 0.50732421875,
+      "p1": 0.49267578125,
+      "deviation_from_half": 0.00732421875
+    }
+  ],
+  "C": [
+    {
+      "label": "pctc_input_0",
+      "input_bit": 0,
+      "post_selected_n": 995,
+      "post_selection_rate": 0.242919921875,
+      "P(out=1 | postselect)": 0.0371859296482412,
+      "ok": true
+    },
+    {
+      "label": "pctc_input_1",
+      "input_bit": 1,
+      "post_selected_n": 959,
+      "post_selection_rate": 0.234130859375,
+      "P(out=1 | postselect)": 0.9520333680917622,
+      "ok": true
+    }
+  ],
+  "D": [
+    {
+      "label": "z3_S1",
+      "n_apply": 1,
+      "expected": "100",
+      "P(expected_bitstring)": 0.98388671875,
+      "ok": true
+    },
+    {
+      "label": "z3_S2",
+      "n_apply": 2,
+      "expected": "010",
+      "P(expected_bitstring)": 0.982177734375,
+      "ok": true
+    },
+    {
+      "label": "z3_S3",
+      "n_apply": 3,
+      "expected": "001",
+      "P(expected_bitstring)": 0.98583984375,
+      "ok": true
+    }
+  ]
+}

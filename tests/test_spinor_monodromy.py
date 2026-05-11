@@ -46,15 +46,18 @@ def test_monodromy_eigenvalues_length_4(vs):
     assert len(evals) == 4
 
 
-def test_monodromy_eigenvalues_unit_modulus_roughly(vs):
-    """For a true Spin element, eigenvalues lie on unit circle.
-
-    Our expm-based holonomy should respect this approximately.
-    """
+def test_monodromy_eigenvalues_unit_modulus(vs):
+    """Polar-projected holonomy is unitary; eigenvalues on unit circle."""
     evals = monodromy_eigenvalues(vs, r=2.5)
     mags = np.abs(evals)
-    # Allow some numerical drift
-    assert all(0.1 < m < 10.0 for m in mags)
+    assert all(abs(m - 1.0) < 1e-10 for m in mags)
+
+
+def test_spinor_holonomy_is_unitary(vs):
+    """U U^dagger = I to machine precision."""
+    U = spinor_holonomy(vs, r=2.5)
+    err = np.linalg.norm(U @ U.conj().T - np.eye(4))
+    assert err < 1e-10
 
 
 def test_multi_loop_monodromy_zero_is_identity(vs):
