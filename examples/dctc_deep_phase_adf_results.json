@@ -1,0 +1,18 @@
+{
+  "phase_AD": {
+    "n": 100,
+    "standard_mean_iter": 81.72,
+    "anderson_mean_iter": 2000.0,
+    "acceleration_factor": 0.04086
+  },
+  "phase_AF": {
+    "n": 200,
+    "haar_holevo_mean": 0.5312812695616035,
+    "haar_holevo_max": 0.8132542034864357,
+    "clifford_holevo_mean": 0.8282848882496822,
+    "clifford_holevo_max": 1.0986122886680405,
+    "max_possible_holevo": 1.0986122886681098,
+    "haar_pearson_pur_holevo": -0.048262970323446015,
+    "clifford_pearson_pur_holevo": -0.3743604494573646
+  }
+}

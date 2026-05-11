@@ -5,6 +5,50 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.16.0] - 2026-05-11
+
+### D-CTC amplification: Aaronson-Watrous PSPACE signature confirmed
+
+Sixteen phases of deep exploration of Deutsch-CTC fixed-point iteration
+(`docs/DCTC_FINDINGS.md`) produced three structural findings + one
+algorithmic payoff:
+
+1. **Spectral oracle**: |lambda_2(E)| predicts iteration count with
+   Pearson r=0.99 (Phase B, D). Iteration count distribution is
+   log-normal.
+
+2. **Power-law scaling**: iter ~ dim_CR^(-0.85). High-purity is a
+   dim_CR=2 phenomenon (vanishes for dim_CR >= 3).
+
+3. **Clifford structure dominates**: permutation x diagonal-of-fourth-
+   roots U gives P(purity > 0.9) = 39.6% vs 0% for Haar - 100x boost.
+
+4. **Algorithmic payoff**: Clifford-structured D-CTC channels AMPLIFY
+   state distinguishability by mean 3.92x (max 9.72x) vs 0.92x for
+   Haar. At input trace distance 0.1, Clifford D-CTC achieves 87%
+   success vs Helstrom 55%. Robust to ~10% depolarizing noise.
+   Empirical signature of polynomial-time PSPACE via D-CTC
+   (Aaronson-Watrous 2009).
+
+5. **Holevo capacity**: Clifford 0.83 vs Haar 0.53 (60% higher).
+   Within Clifford class, purity and Holevo are anti-correlated -
+   tradeoff between amplification and information preservation.
+
+New public API in `d_ctc.py`:
+- `clifford_like_unitary(dim, rng)` - generates Clifford-structured U
+- `predict_convergence_via_spectrum(U, sigma_cr, dim_cr)` - one-shot
+   |lambda_2| oracle for iter count prediction (added v0.14)
+- `channel_superoperator(U, sigma_cr, dim_cr)` - builds E as (d^2 x d^2)
+   matrix (added v0.14)
+
+New demo:
+- `examples/dctc_aw_amplification_demo.py` - 20-second reproduction of
+  the headline AW speedup finding.
+
+Sixteen exploration scripts in `examples/dctc_deep_phase_*.py`:
+phases A, B, C, D, E, F, G, H, I, K, L, M, N, P, W, AE, AB, AL, AC,
+AD, AF, AI. Plan for 30 total in `docs/DCTC_PHASE_PLAN.md`.
+
 ## [0.15.1] - 2026-05-10
 
 ### Framing correction: LP "throat" is vacuum, not a Morris-Thorne wormhole

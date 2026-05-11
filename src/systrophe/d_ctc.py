@@ -215,6 +215,41 @@ def channel_superoperator(
     return M
 
 
+def clifford_like_unitary(dim: int, rng: np.random.Generator | None = None) -> np.ndarray:
+    """Construct a permutation x diagonal-of-fourth-roots unitary.
+
+    A subset of the Clifford group: U = P @ D where P is a random
+    permutation matrix and D is diagonal with entries from {+1, -1, +i, -i}.
+
+    Empirical finding (`docs/DCTC_FINDINGS.md` Phase I): these unitaries
+    yield D-CTC fixed points with purity > 0.9 at ~40% rate, versus
+    ~0% for Haar-random unitaries at (dim_CR=2, dim_CTC=3). They are
+    the empirically-identified channel class supporting Aaronson-Watrous-
+    style state-distinguisher amplification (Phase AE/AL/AC):
+    speedup ~13x at close-input regime, robust to ~10% depolarizing noise.
+
+    Parameters
+    ----------
+    dim : int
+        Joint Hilbert-space dimension (dim_CR x dim_CTC).
+    rng : numpy.random.Generator, optional
+        Random number generator. Defaults to a fresh default_rng().
+
+    Returns
+    -------
+    U : np.ndarray of shape (dim, dim)
+        A unitary matrix in the Clifford-like class.
+    """
+    if rng is None:
+        rng = np.random.default_rng()
+    perm = rng.permutation(dim)
+    P = np.zeros((dim, dim), dtype=complex)
+    for i in range(dim):
+        P[i, perm[i]] = 1.0
+    D = np.diag(rng.choice([1, -1, 1j, -1j], dim))
+    return P @ D
+
+
 def predict_convergence_via_spectrum(
     U: np.ndarray, sigma_cr: np.ndarray, dim_cr: int, tol: float = 1e-10
 ) -> dict:

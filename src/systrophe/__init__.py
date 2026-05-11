@@ -222,6 +222,7 @@ from .adm_export import (
 from .d_ctc import (
     apply_channel,
     channel_superoperator,
+    clifford_like_unitary,
     dctc_fixed_point,
     density_matrix_diagnostics,
     maximally_mixed_state,
@@ -325,4 +326,4 @@ __all__ = [
     "z3_cover_mode_density",
     "z3_cover_regularised_zeta_sum",
 ]
-__version__ = "0.15.1"
+__version__ = "0.16.0"
