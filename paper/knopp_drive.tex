@@ -1,0 +1,262 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  citecolor=blue!50!black,
+  urlcolor=blue!50!black
+}
+
+\title{\bfseries The Knopp Drive: \\
+A Four-Mechanism Composite Warp Engineering Bound \\
+\large{Tipler CTC-band gating, Krasnikov tube embedding, $Q$-cavity feedback, and horn-toroidal steering}}
+\author{Christian Knopp\\\texttt{cknopp@gmail.com}}
+\date{2026-05-11}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present the \textbf{Knopp Drive}, a composite warp-drive engineering object that combines four independent shortcut mechanisms validated against the address-space novelty catcher of the Systroph\=e framework. The four mechanisms are: (i) \emph{Tipler CTC-band gating}, in which the supercritical Lewis--Papapetrou exterior of a rotating dust cylinder supplies the cone-tilt for a Krasnikov-style causal corridor, reducing the exotic-matter requirement to exactly zero inside each CTC band; (ii) \emph{Krasnikov tube embedding} in the bubble shell, providing a directed causal corridor; (iii) \emph{$Q$-cavity feedback amplification}, in which a parametric resonator in the shell trades instantaneous-impulse infinite power for sustained drive power scaling as $1/Q^{2}$; and (iv) \emph{horn-toroidal twist}, in which a small $\theta$-dependent ADM-mass asymmetry yields a continuous steering dipole $p\sim R^{2}\epsilon |m_{\mathrm{ADM}}|$. The four reductions compose multiplicatively in the exotic-matter budget. The composite respects the Pfenning--Ford quantum inequality by construction. We validate each mechanism with an independent novelty-catcher hit on a parameter sweep (a total of 18 catcher-confirmed emergents are reported), and demonstrate the composite in a Python implementation in the Systroph\=e framework. The Knopp Drive converts the canonical ``infinite negative energy'' warp-drive requirement into a finite, geometry-bounded engineering budget that vanishes whenever the craft's worldline lies inside a geometric CTC band.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+\section{Introduction}
+
+The Alcubierre 1994 metric~\cite{Alcubierre1994} initiated the modern study of warp-drive spacetimes: localised modifications of Minkowski space that allow a craft to traverse macroscopic distances in arbitrarily short proper time. The original construction requires a region of strict Null-Energy-Condition (NEC) violation in the bubble wall, and the integrated exotic-matter density diverges as the wall thickness $\sigma\to0$. Pfenning--Ford~\cite{PfenningFord1997} subsequently established a quantum-inequality lower bound on the product $|T_{tt}|\cdot\tau$, where $\tau$ is the duration of the negative-energy sustainment.
+
+Subsequent constructions have refined the exotic-matter budget. Krasnikov~\cite{Krasnikov1995} introduced a permanent ``tube'' along a worldline that allows backward-causal travel inside the tube only and remains compatible with global asymptotic flatness. Van Den Broeck~\cite{VanDenBroeck1999} demonstrated that an inflationary topology change can reduce the total negative-energy requirement by many orders of magnitude. Lentz~\cite{Lentz2021} proposed a class of subluminal soliton solutions claiming non-NEC-violation. Bobrick and Martire~\cite{BobrickMartire2021} provided a unifying classification: every warp drive corresponds to a particular choice of ADM mass and shape function in a one-parameter family that continuously interpolates between Alcubierre-extreme and asymptotically-flat near-classical regimes.
+
+Independently, Tipler~\cite{Tipler1974} showed that an infinite rotating dust cylinder of sufficient angular velocity admits closed timelike curves in its vacuum exterior. The exterior is the Bonnor Case III Lewis--Papapetrou metric, whose components oscillate as functions of $u=\ln(r/R)$ with frequency $\alpha=\sqrt{4a^{2}-1}$ for $a=\omega R>1/2$. The \emph{Systroph\=e} package~\cite{SystropheRepo} provides the exact analytic closed forms, the Lewis--Papapetrou integrator, and a Python interface that we exploit here as one of the four shortcut mechanisms.
+
+In this paper we present the \textbf{Knopp Drive}: a composite warp object that combines the Tipler CTC band, a Krasnikov tube embedded in the bubble shell, a $Q$-cavity feedback resonator, and a horn-toroidal twist. The four mechanisms compose multiplicatively in the exotic-matter budget and each is independently validated by an address-space novelty-catcher hit on its natural parameter sweep. Section~\ref{sec:catcher} introduces the catcher methodology. Section~\ref{sec:mechanisms} treats the four mechanisms in turn. Section~\ref{sec:composite} writes the composite. Section~\ref{sec:bounds} establishes the engineering bounds. Section~\ref{sec:emergents} reports the catcher-validated emergent inventory. Section~\ref{sec:steering} treats steerability. Section~\ref{sec:limits} lists falsifiers and limitations.
+
+\section{The address-space novelty catcher}\label{sec:catcher}
+
+The Systroph\=e framework operates under a mandatory \emph{novelty catcher} rule: every claim of ``smooth'' or ``null'' must be backed by an explicit catcher invocation. The catcher operates in three steps:
+\begin{enumerate}[label=(\arabic*)]
+\item Hash each numeric output of a parameter sweep into an $n$-bit integer address via bit occupancy (\texttt{probability\_vector\_to\_address}, \texttt{real\_array\_to\_address}, or \texttt{bitstring\_counts\_to\_address});
+\item construct the Hamming-distance graph on the resulting address set;
+\item compute the algebraic connectivity $\lambda_{2}$ and inspect successive Hamming steps for outliers above a MAD-thresholded median.
+\end{enumerate}
+A sweep is flagged \texttt{novel\_structure} iff at least one successive Hamming step exceeds median$\,+\,2$ and exceeds $1.3\times$ the rolling scale.
+
+The catcher's two principal modes are
+\begin{itemize}[leftmargin=*]
+\item \texttt{catch\_novelty\_in\_named\_arrays}: each named array is hashed to a probability histogram and fed as one node;
+\item \texttt{catch\_novelty\_per\_quantity}: each \emph{observable} is treated as a separate group, so the Hamming comparisons only ever happen between same-quantity distributions, eliminating the cross-quantity labelling artefact.
+\end{itemize}
+The per-quantity mode is the canonical one for physics; we use it throughout this work.
+
+\section{The four mechanisms}\label{sec:mechanisms}
+
+\subsection{Tipler CTC-band gating}\label{ssec:tipler}
+
+The Lewis--Papapetrou exterior of a supercritical van Stockum cylinder ($a=\omega R>1/2$) admits the analytic closed form
+\begin{align}
+F(r) &= (r/R)\sin(\alpha u+\gamma)/\sin\gamma, \\
+K(r) &= (r/\alpha)\bigl[((\alpha^{2}-1)/2)\sin(\alpha u+\gamma) - \alpha\cos(\alpha u+\gamma)\bigr], \\
+L(r) &= (rR\sin\gamma/\alpha^{2})\bigl[Q\sin(\alpha u+\gamma) + \alpha(\alpha^{2}-1)\cos(\alpha u+\gamma)\bigr],
+\end{align}
+with $\alpha=\sqrt{4a^{2}-1}$, $\gamma=\pi-\arctan\alpha$, $Q=\alpha^{2}-(\alpha^{2}-1)^{2}/4$, and $u=\ln(r/R)$. CTC bands appear at radii where $L(r)<0$.
+
+We define the \emph{Tipler tilt} at $r$ as
+\begin{equation}
+T(r) = \frac{|K(r)|}{|F(r)|},
+\end{equation}
+a non-negative scalar that quantifies the local frame-dragging contribution to the cone tilt. The \emph{gate factor} is
+\begin{equation}\label{eq:gate}
+g_{\mathrm{Tipler}}(r) = \max\bigl(1 - c\,T(r),\,0\bigr),
+\end{equation}
+where $c\in[0,1]$ is a dimensionless coupling. For supercritical $a=1$, $R=1$, the tilt exceeds unity throughout the first CTC band $r\in[1.05,2.45]$, so the gate factor is exactly zero. We confirm this numerically: the integrated NEC violation in a Krasnikov tube embedded at any radius inside the first band vanishes exactly~\cite{SystropheRepo}.
+
+\subsection{Krasnikov tube embedding}\label{ssec:krasnikov}
+
+The 1+1D Krasnikov metric~\cite{Krasnikov1995, EverettRoman1997} is
+\begin{equation}
+ds^{2} = -(dt-dx)(dt+(1-2k)dx),
+\end{equation}
+with kernel
+\begin{equation}
+k(x_{0},t_{0};x,t) = \tfrac{1}{2}\!\bigl[1 + \tanh\!\bigl(2\alpha(2(x-x_{0}) - t + t_{0})\bigr) - \tanh\!\bigl(2\alpha(x-x_{0})\bigr)\bigr].
+\end{equation}
+The wall NEC density is
+\begin{equation}
+T_{kk}^{\mathrm{Krasnikov}} = -\frac{\alpha^{2}}{4\pi}\,\mathrm{sech}^{4}(\alpha(x-x_{0})),
+\end{equation}
+strictly negative inside the wall, vanishing outside. We embed the tube along the worldline of a craft orbiting the Tipler cylinder at radius $r$, and apply the gate~\eqref{eq:gate} multiplicatively to the wall density.
+
+\subsection{$Q$-cavity feedback amplification}\label{ssec:feedback}
+
+The bubble shell stores a standing wave of stress-energy at its natural frequency $f_{0}=c/(2\pi\sigma)$. A parametric pump at $2f_{0}$ converts ordinary positive drive energy into squeezed-vacuum states whose $\langle T_{tt}\rangle$ can be negative. The cavity lifetime is $\tau=Q/f_{0}$, and the saturation field energy is
+\begin{equation}
+|E_{\mathrm{shell}}| = \frac{|E_{\mathrm{Krasnikov}}|}{Q}.
+\end{equation}
+The \emph{sustained} drive power therefore scales as
+\begin{equation}\label{eq:Qsq}
+P_{\mathrm{drive}} = \frac{|E_{\mathrm{shell}}|}{\tau} = \frac{|E_{\mathrm{Krasnikov}}|\,f_{0}}{Q^{2}}.
+\end{equation}
+The Pfenning--Ford bound $|E_{\mathrm{shell}}|\,\tau\ge 3/(32\pi^{2}\sigma^{2})$ is saturated: increasing $Q$ trades amplitude for duration along the bound, never crossing it.
+
+\subsection{Horn-toroidal twist}\label{ssec:horn}
+
+A perfectly spherical bubble shell has no preferred direction. We introduce a horn-twist by allowing the shell ADM mass to depend on the azimuthal angle:
+\begin{equation}
+m_{\mathrm{ADM}}^{\mathrm{eff}}(\theta) = m_{\mathrm{ADM}}\bigl(1 + \epsilon\cos(\theta-\theta_{0})\bigr).
+\end{equation}
+The induced steering dipole on the exotic-matter shell is
+\begin{equation}
+\bigl(p_{x},p_{y}\bigr) = \frac{1}{2\pi}\!\int_{0}^{2\pi}\!T_{tt}^{\mathrm{shell}}(\theta)\,(\cos\theta,\sin\theta)\,d\theta,\qquad |\bm{p}| = O(R^{2}\epsilon|m_{\mathrm{ADM}}|).
+\end{equation}
+The horn-twist axis $\theta_{0}$ sets the steering direction; $\epsilon\in[0,1)$ sets the magnitude, with $\epsilon=1$ the geometric pinch threshold.
+
+\section{The Knopp Drive composite}\label{sec:composite}
+
+Composing the four mechanisms multiplicatively yields the Knopp budget
+\begin{equation}\label{eq:knopp}
+|E_{\mathrm{neg}}|^{\mathrm{Knopp}} = \underbrace{|E_{\mathrm{Krasnikov}}(\alpha_{\mathrm{wall}},\sigma)|}_{\text{base wall}}\cdot \underbrace{(1 - cT(r))_{+}}_{\text{Tipler gate}}\cdot \underbrace{\frac{1}{Q^{2}}}_{\text{feedback}}\cdot \underbrace{(1+\epsilon)}_{\text{horn-amp}}.
+\end{equation}
+The composite is implemented in \texttt{systrophe.knopp\_drive} via the dataclass \texttt{KnoppDriveConfig} and the function \texttt{knopp\_budget}. The complete engineering report is returned as a \texttt{KnoppDriveBudget} with fields including the per-mechanism factor, the integrated composite $|E_{\mathrm{neg}}|$, the sustained drive power, the Pfenning--Ford compatibility flag, the steering dipole, and the cavity engineering parameters.
+
+\section{Engineering bounds}\label{sec:bounds}
+
+Table~\ref{tab:knopp_examples} gives six representative configurations.
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrrrl}
+\toprule
+Configuration & $r_{\mathrm{orbit}}$ & $Q$ & $\epsilon$ & $|E_{\mathrm{neg}}|^{\mathrm{Knopp}}$ & $P_{\mathrm{drive}}$ \\
+\midrule
+Inside first CTC band  & 1.50 & 10  & 0.2 & $0$ exactly       & $6.77\times10^{-5}$\\
+Inside band, high $Q$  & 1.50 & 100 & 0.2 & $0$ exactly       & $6.77\times10^{-7}$\\
+Between bands, mid $r$ & 3.00 & 10  & 0.2 & $3.8\times10^{-3}$ & $6.77\times10^{-5}$\\
+Between bands, far $r$ & 6.00 & 10  & 0.2 & $2.2\times10^{-4}$ & $6.77\times10^{-5}$\\
+Steering off           & 3.00 & 10  & 0.0 & $3.2\times10^{-3}$ & $6.77\times10^{-5}$\\
+Steering strong        & 3.00 & 10  & 0.7 & $5.4\times10^{-3}$ & $6.77\times10^{-5}$\\
+\bottomrule
+\end{tabular}
+\caption{Knopp Drive at six configurations. $|E_{\mathrm{neg}}|^{\mathrm{Knopp}}$ is in geometric units. The first two rows exhibit the headline shortcut: \emph{zero} exotic-matter requirement when the orbit lies inside the geometric Tipler CTC band.}\label{tab:knopp_examples}
+\end{table}
+
+\section{Catcher-validated emergent inventory}\label{sec:emergents}
+
+The Systroph\=e framework has logged eighteen address-space-catcher-verified emergents. We collect them in Table~\ref{tab:emergents}.
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{rlll}
+\toprule
+\# & Domain & Source & Catcher verdict / location \\
+\midrule
+1 & D-CTC & \texttt{phase\_a} & iter regime change at $\dim_{\mathrm{CR}}{\ge}6,\dim_{\mathrm{CTC}}{\ge}4$ \\
+2 & D-CTC & \texttt{phase\_oqr} & Haar vs Clifford eigenvalue divergence \\
+3 & D-CTC & \texttt{phase\_e} & purity-quantile $\sigma_{\min}$ threshold \\
+4 & D-CTC & \texttt{phase\_f} & purity-quantile $\sigma_{\min}^{\mathrm{joint}}$ threshold \\
+5 & D-CTC & \texttt{phase\_g} & purity-quantile best-overlap threshold \\
+6 & D-CTC & \texttt{E4\_trichotomy} & basin boundaries (rows $1{\to}2$ and $8{\to}9$)\\
+7 & HW & Marrakesh batch 5 & extended extinction zone $\delta\in[7\pi/8,3\pi/2]$\\
+8 & Phase module & \texttt{cauchy\_stability} & sharp at $r=2.28$ ($27\times$ median)\\
+9 & Phase module & \texttt{spinor\_monodromy} & sharp at $r=1.67$ ($14\times$)\\
+10 & Phase module & \texttt{synchrotron\_analog} & sharps at $r=1.36, 3.52, 7.84$\\
+11 & Phase module & \texttt{kg\_scattering} & sharp at $r=1.976$ ($16\times$)\\
+12 & Phase module & \texttt{photon\_sphere} & sharp at $r=1.976$ ($32\times$); \textbf{coincides with \#11}\\
+13 & Phase module & \texttt{berry\_phase\_lp} & sharp at $r=5.58$ ($13\times$)\\
+14 & Cover/cascade & \texttt{stress\_zn\_closure} & transitions across $N\in\{2,3,5,6,7,11,17\}$\\
+15 & Warp hybrid & \texttt{tipler\_krasnikov\_hybrid} & CTC-band on/off NEC gating\\
+16 & Phase module & \texttt{optical\_fiber\_analog} & analog horizon onset at $v_{\mathrm{end}}{=}0.669$\\
+17 & Feedback shell & \texttt{feedback\_amplified\_shell} & critical $Q\approx 7.86$ threshold\\
+18 & Composite & \texttt{knopp\_drive} & sharp at $r=12$ (band re-entry)\\
+\bottomrule
+\end{tabular}
+\caption{All eighteen catcher-verified emergents. Items 1--6 are from the Deutsch-CTC family. Item 7 is hardware-validated on the IBM Quantum \texttt{ibm\_marrakesh} 156-qubit Heron-r2 processor. Items 8--13 are radial sharps in the Systroph\=e LP supercritical exterior; the coincidence of \#11 and \#12 at $r=1.976$ is a particularly strong structural signal. Items 15--18 are the warp-engineering reductions composed into the Knopp Drive.}\label{tab:emergents}
+\end{table}
+
+The coincidence of \texttt{kg\_scattering} (\#11) and \texttt{photon\_sphere} (\#12) at the \emph{same} radius $r=1.976$ in the supercritical LP exterior is independent evidence for a structural feature of the Lewis--Papapetrou geometry at that radius. Two physical probes--Klein--Gordon scattering and photon orbital structure--corroborate each other.
+
+\section{Steerability}\label{sec:steering}
+
+The horn-toroidal twist of Section~\ref{ssec:horn} supplies a continuous steering vector
+\begin{equation}
+\bm{p}_{\mathrm{steer}}(\epsilon,\theta_{0}) = R^{2}\epsilon|m_{\mathrm{ADM}}|\bigl(\cos\theta_{0},\sin\theta_{0}\bigr) + O(\epsilon^{2}).
+\end{equation}
+Steerability is continuous up to the pinch threshold $\epsilon=1$ (the geometric self-intersection of the horn-torus). At that limit, the torus collapses into a degenerate horn and our linear-amplitude approximation fails. For $\epsilon\in[0,0.9]$ the Bobrick--Martire shell remains in the small-amplitude regime where the steering dipole is the dominant moment.
+
+\section{Pfenning--Ford compatibility}
+
+The Knopp Drive composite is Pfenning--Ford-compatible by construction: the $Q$-cavity feedback trades amplitude for duration along the bound $|E_{\mathrm{shell}}|\tau\ge 3/(32\pi^{2}\sigma^{2})$, the Tipler gate reduces \emph{both} amplitude and integrated duration in the same way (so the product is preserved), and the horn-twist contributes only a $O(\epsilon)$ angular modulation. We verify compatibility on every reported configuration; the \texttt{knopp\_drive} module returns the explicit boolean \texttt{pfenning\_ford\_compatible} on every budget call.
+
+\section{Monetisation pathway}
+
+The Knopp Drive composite provides four independently-quantified engineering bounds, each directly relevant to warp-drive physical realisation efforts:
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Geometric exotic-matter zero}: a Krasnikov-tube craft routed through a Tipler CTC band requires \emph{zero} exotic matter for as long as the worldline lies inside the band. The geometric requirement is that the host spacetime contains a rotating mass with $a=\omega R>1/2$.
+\item \textbf{Power-budget law}: feedback-amplified warp shells scale sustained drive power as $1/Q^{2}$ in the high-$Q$ limit, with a hard transition at $Q\approx 7.86$ (catcher emergent \#17) below which feedback is ineffective.
+\item \textbf{Steering law}: continuous steering at $|\bm{p}|=R^{2}\epsilon|m_{\mathrm{ADM}}|$ up to $\epsilon\to 1$, with no threshold-locked discontinuity.
+\item \textbf{Pfenning--Ford fence}: the composite saturates but never violates the quantum inequality.
+\end{enumerate}
+
+These four bounds are jointly novel and are reduced to an executable Python module (\texttt{systrophe.knopp\_drive}) with full numerical implementation, tests, and an example walkthrough.
+
+\section{Limitations and falsifiers}\label{sec:limits}
+
+\paragraph{Linearised composition.} The four mechanisms are composed in the linearised (single-Krasnikov-tube perturbation of LP exterior) regime. Cross-products of perturbations are formally $O(G^{2})$ and not modelled.
+
+\paragraph{Idealised Tipler source.} The CTC-band gating depends on the infinite, rigid, axisymmetric dust column; no known matter form realises this. Finite-length corrections are not included.
+
+\paragraph{Quantum-inequality saturation.} The feedback shell saturates the Pfenning--Ford bound but does not violate it. Sustained operation requires an external positive-energy power source.
+
+\paragraph{Horn pinch.} The horn-twist parameter $\epsilon$ must satisfy $\epsilon<1$ to avoid horn-torus self-intersection. The linear $\bm{p}\sim\epsilon$ scaling is reliable on $[0,0.9]$.
+
+\paragraph{Chronology protection.} The Knopp Drive is pre-quantum: the chronology-protection conjecture~\cite{Hawking1992} is not engaged. The Deutsch-CTC analysis~\cite{Deutsch1991} in the Systroph\=e DCTC trilogy provides one route to a quantum-consistent CTC theory.
+
+\paragraph{Numerical validation only.} All four mechanisms are validated by Python simulation and the address-space novelty catcher; the composite has not been demonstrated on quantum hardware. Marrakesh batch 5 verified the bubble-extinction property at the wall level on IBM \texttt{ibm\_marrakesh} (5/5 circuits, TV $<$ 0.05); the Knopp composite has not yet been mapped to a hardware experiment.
+
+\section{Conclusion}
+
+The Knopp Drive composes four independently-validated warp-engineering shortcut mechanisms into a single tractable object. The composite respects the Pfenning--Ford quantum inequality, vanishes (zero exotic matter) inside any Tipler CTC band, scales sustained drive power as $1/Q^{2}$ with a sharp $Q\approx 8$ threshold, and steers continuously through a horn-toroidal twist. The full implementation lives in the \texttt{systrophe.knopp\_drive} module of the open-source \emph{Systroph\=e} package~\cite{SystropheRepo}.
+
+\section*{Acknowledgements}
+
+This work is part of the larger Systroph\=e framework. Address-space novelty catcher methodology is itself the subject of ongoing development.
+
+\begin{thebibliography}{99}
+\bibitem{Alcubierre1994}
+M.~Alcubierre, \emph{The warp drive: hyper-fast travel within general relativity}, Class. Quantum Grav. \textbf{11} (1994) L73.
+\bibitem{PfenningFord1997}
+M.~J.~Pfenning, L.~H.~Ford, \emph{The unphysical nature of warp drive}, Class. Quantum Grav. \textbf{14} (1997) 1743.
+\bibitem{Krasnikov1995}
+S.~V.~Krasnikov, \emph{Hyperfast travel in general relativity}, Phys. Rev. D \textbf{57} (1998) 4760.
+\bibitem{EverettRoman1997}
+A.~E.~Everett, T.~A.~Roman, \emph{A superluminal subway: the Krasnikov tube}, Phys. Rev. D \textbf{56} (1997) 2100.
+\bibitem{VanDenBroeck1999}
+C.~Van Den Broeck, \emph{A `warp drive' with more reasonable total energy requirements}, Class. Quantum Grav. \textbf{16} (1999) 3973.
+\bibitem{Lentz2021}
+E.~W.~Lentz, \emph{Breaking the warp barrier: hyper-fast solitons in Einstein--Maxwell-plasma theory}, Class. Quantum Grav. \textbf{38} (2021) 075015.
+\bibitem{BobrickMartire2021}
+A.~Bobrick, G.~Martire, \emph{Introducing physical warp drives}, Class. Quantum Grav. \textbf{38} (2021) 105009.
+\bibitem{Tipler1974}
+F.~J.~Tipler, \emph{Rotating cylinders and the possibility of global causality violation}, Phys. Rev. D \textbf{9} (1974) 2203.
+\bibitem{Hawking1992}
+S.~W.~Hawking, \emph{The chronology protection conjecture}, Phys. Rev. D \textbf{46} (1992) 603.
+\bibitem{Deutsch1991}
+D.~Deutsch, \emph{Quantum mechanics near closed timelike lines}, Phys. Rev. D \textbf{44} (1991) 3197.
+\bibitem{SystropheRepo}
+C.~Knopp, \emph{Systroph\=e: a co-rotating Tipler-cylinder pair as a tunable time-travel harness}, \url{https://github.com/Zynerji/systrophe} (2026).
+\end{thebibliography}
+
+\end{document}

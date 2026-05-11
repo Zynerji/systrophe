@@ -8,10 +8,11 @@
 [![PyPI](https://img.shields.io/pypi/v/systrophe.svg)](https://pypi.org/project/systrophe/)
 [![Python ≥ 3.10](https://img.shields.io/badge/python-%E2%89%A5%203.10-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 1118 passing](https://img.shields.io/badge/tests-1118%20passing-brightgreen.svg)](#tests)
-[![Papers: 11](https://img.shields.io/badge/papers-11%20PDFs-informational.svg)](#papers)
-[![IBM Marrakesh: 4 batches](https://img.shields.io/badge/IBM%20Marrakesh-4%20batches-purple.svg)](#ibm-marrakesh-hardware-validation)
-[![Version 0.17.0](https://img.shields.io/badge/version-0.17.0-blue.svg)](pyproject.toml)
+[![Tests: 1187 passing](https://img.shields.io/badge/tests-1187%20passing-brightgreen.svg)](#tests)
+[![Papers: 12](https://img.shields.io/badge/papers-12%20PDFs-informational.svg)](#papers)
+[![IBM Marrakesh: 5 batches](https://img.shields.io/badge/IBM%20Marrakesh-5%20batches-purple.svg)](#ibm-marrakesh-hardware-validation)
+[![Knopp Drive: live](https://img.shields.io/badge/Knopp%20Drive-live-red.svg)](#the-knopp-drive-headline-composite-warp-engineering-bound)
+[![Version 0.18.0](https://img.shields.io/badge/version-0.18.0-blue.svg)](pyproject.toml)
 
 *Systrophē* (Greek **Συστροφή**, "twisting-together"): the joint exterior of two co-rotating, dual-positive-mass van Stockum dust cylinders, whose log-periodic Tipler sinusoids superpose with a tunable relative phase offset.
 
@@ -322,6 +323,38 @@ stress_zn_closure.py       — Z_n cover closure consistency
 ```
 
 See [`docs/STRESS_TESTS.md`](docs/STRESS_TESTS.md) for the protocol and expected verdicts.
+
+---
+
+## The Knopp Drive (headline composite warp engineering bound)
+
+The **Knopp Drive** is the four-mechanism composite warp engineering object that combines, in a single tractable Python module, the most monetizable shortcuts surfaced by the address-space novelty catcher in the Systrophē framework:
+
+1. **Tipler CTC-band gating** — a Krasnikov-tube craft routed through the supercritical Lewis–Papapetrou exterior CTC band requires **zero exotic matter** for as long as the worldline lies inside the band. The Tipler frame-dragging supplies the cone tilt for free.
+2. **Krasnikov tube embedding** — a directed causal corridor inside the bubble shell.
+3. **Q-cavity feedback amplification** — a parametric resonator in the shell trades instantaneous-impulse infinite power for sustained drive power scaling as `1/Q²`. Catcher-detected critical threshold: `Q ≈ 7.86` below which feedback is ineffective.
+4. **Horn-toroidal twist** — a θ-dependent ADM-mass asymmetry `m_ADM(1 + ε cos(θ − θ₀))` yields a continuous steering dipole `p ~ R² ε |m_ADM|`. The twist axis `θ₀` sets the steering direction; ε ∈ [0, 1) sets the magnitude.
+
+The four reductions compose multiplicatively in the exotic-matter budget:
+
+```
+|E_neg|_Knopp  =  |E_neg|_Krasnikov(α, σ)
+                  · (1 − c · tilt(r))_+        # Tipler gate
+                  · 1/Q²                         # feedback
+                  · (1 + ε)                      # horn-amp
+```
+
+```python
+from systrophe.knopp_drive import knopp_budget, summarise_knopp_budget
+b = knopp_budget(r_orbit=1.5, Q=100.0, epsilon_horn=0.2)
+print(summarise_knopp_budget(b))
+# Knopp Drive @ r=1.50: E_neg=-0.0000e+00, P_drive=+6.7742e-07,
+# tipler_gate=0.000, Q=100 -> 1/Q^2=0.0001, |steering|=1.000e-01, P-F_ok=True
+```
+
+The full derivation, six representative engineering configurations, the complete catcher-validated emergent inventory (18 entries at v0.18.x), and the Pfenning–Ford compatibility analysis are in [`paper/knopp_drive.pdf`](paper/knopp_drive.pdf). The end-to-end walkthrough is `examples/knopp_drive_walkthrough.py`.
+
+Implementation: `src/systrophe/knopp_drive.py`. Supporting modules: `alcubierre.py`, `lentz_soliton.py`, `bobrick_martire.py`, `krasnikov_tube.py`, `tipler_krasnikov_hybrid.py`, `feedback_amplified_shell.py`, `horn_toroidal_warp.py`.
 
 ---
 

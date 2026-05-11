@@ -1,0 +1,104 @@
+{
+  "configurations": [
+    {
+      "label": "INSIDE first CTC band",
+      "overrides": {
+        "r_orbit": 1.5,
+        "Q": 10.0,
+        "epsilon_horn": 0.2
+      },
+      "inside_band": true,
+      "summary": "Knopp Drive @ r=1.50: E_neg=-0.0000e+00, P_drive=+6.7742e-05, tipler_gate=0.000, Q=10 -> 1/Q^2=0.0100, |steering|=1.000e-01, P-F_ok=True",
+      "composite_E_neg": -0.0,
+      "drive_power": 6.774173047609902e-05,
+      "steering_mag": 0.09999999999999994,
+      "pf_ok": true
+    },
+    {
+      "label": "INSIDE band, Q=100",
+      "overrides": {
+        "r_orbit": 1.5,
+        "Q": 100.0,
+        "epsilon_horn": 0.2
+      },
+      "inside_band": true,
+      "summary": "Knopp Drive @ r=1.50: E_neg=-0.0000e+00, P_drive=+6.7742e-07, tipler_gate=0.000, Q=100 -> 1/Q^2=0.0001, |steering|=1.000e-01, P-F_ok=True",
+      "composite_E_neg": -0.0,
+      "drive_power": 6.774173047609901e-07,
+      "steering_mag": 0.09999999999999994,
+      "pf_ok": true
+    },
+    {
+      "label": "OUTSIDE band, mid r",
+      "overrides": {
+        "r_orbit": 3.0,
+        "Q": 10.0,
+        "epsilon_horn": 0.2
+      },
+      "inside_band": false,
+      "summary": "Knopp Drive @ r=3.00: E_neg=-3.8088e-03, P_drive=+6.7742e-05, tipler_gate=0.748, Q=10 -> 1/Q^2=0.0100, |steering|=1.000e-01, P-F_ok=True",
+      "composite_E_neg": -0.003808766399726812,
+      "drive_power": 6.774173047609902e-05,
+      "steering_mag": 0.09999999999999994,
+      "pf_ok": true
+    },
+    {
+      "label": "OUTSIDE band, far r",
+      "overrides": {
+        "r_orbit": 6.0,
+        "Q": 10.0,
+        "epsilon_horn": 0.2
+      },
+      "inside_band": false,
+      "summary": "Knopp Drive @ r=6.00: E_neg=-2.1976e-04, P_drive=+6.7742e-05, tipler_gate=0.043, Q=10 -> 1/Q^2=0.0100, |steering|=1.000e-01, P-F_ok=True",
+      "composite_E_neg": -0.00021975980428563834,
+      "drive_power": 6.774173047609902e-05,
+      "steering_mag": 0.09999999999999994,
+      "pf_ok": true
+    },
+    {
+      "label": "Steering off (eps=0)",
+      "overrides": {
+        "r_orbit": 3.0,
+        "Q": 10.0,
+        "epsilon_horn": 0.0
+      },
+      "inside_band": false,
+      "summary": "Knopp Drive @ r=3.00: E_neg=-3.1740e-03, P_drive=+6.7742e-05, tipler_gate=0.748, Q=10 -> 1/Q^2=0.0100, |steering|=3.951e-17, P-F_ok=True",
+      "composite_E_neg": -0.0031739719997723433,
+      "drive_power": 6.774173047609902e-05,
+      "steering_mag": 3.9510758188375636e-17,
+      "pf_ok": true
+    },
+    {
+      "label": "Steering strong (eps=0.7)",
+      "overrides": {
+        "r_orbit": 3.0,
+        "Q": 10.0,
+        "epsilon_horn": 0.7
+      },
+      "inside_band": false,
+      "summary": "Knopp Drive @ r=3.00: E_neg=-5.3958e-03, P_drive=+6.7742e-05, tipler_gate=0.748, Q=10 -> 1/Q^2=0.0100, |steering|=3.500e-01, P-F_ok=True",
+      "composite_E_neg": -0.0053957523996129835,
+      "drive_power": 6.774173047609902e-05,
+      "steering_mag": 0.34999999999999987,
+      "pf_ok": true
+    }
+  ],
+  "novelty_catcher": {
+    "verdict": "novel_structure",
+    "sharp_features": [
+      {
+        "between_indices": [
+          28,
+          29
+        ],
+        "parameter_value": 12.0,
+        "hamming_step": 32,
+        "median_step": 0.0,
+        "mad": 0.0,
+        "excess_over_median": 32.0
+      }
+    ]
+  }
+}
