@@ -67,23 +67,40 @@ def scan_frame_dragging():
 
 # --- Phase 13: Optical fiber analog ---
 def scan_optical_fiber_analog():
-    from systrophe.optical_fiber_analog import fiber_analog_horizon
-    def fn(v_pump):
-        return np.array([float(fiber_analog_horizon(c_probe=1.0, v_pump=v_pump))])
-    return safe_scan("optical_fiber_analog", fn, params=np.linspace(0.5, 1.5, 30))
+    from systrophe.optical_fiber_analog import (
+        fiber_analog_horizon, linear_pump_profile,
+    )
+    def fn(v_end):
+        prof = linear_pump_profile(v_start=0.4, v_end=float(v_end),
+                                     x_start=0.0, x_end=10.0)
+        res = fiber_analog_horizon(prof, probe_index=1.5, c=1.0)
+        horizons = res.get("horizons", [])
+        return np.array([
+            float(len(horizons)),
+            float(horizons[0] if horizons else -1.0),
+        ])
+    return safe_scan("optical_fiber_analog", fn,
+                       params=np.linspace(0.5, 1.2, 30))
 
 
 # --- Phase 14: Energy condition survey ---
 def scan_energy_condition_survey():
-    from systrophe.energy_condition_survey import systematic_energy_survey
-    def fn(omega):
-        res = systematic_energy_survey(omega=float(omega), R=1.0,
-                                          n_samples=10)
+    from systrophe.energy_condition_survey import (
+        systematic_energy_survey, summary_statistics,
+    )
+    def fn(omega_center):
+        # Narrow window around omega_center
+        oc = float(omega_center)
+        res = systematic_energy_survey(
+            omega_range=(max(oc - 0.1, 0.05), oc + 0.1),
+            R_range=(0.5, 2.0), n_omega=3, n_R=3, r_test=0.5,
+        )
+        stats = summary_statistics(res)
         return np.array([
-            float(res.get("WEC_violations", 0)),
-            float(res.get("NEC_violations", 0)),
-            float(res.get("DEC_violations", 0)),
-            float(res.get("SEC_violations", 0)),
+            float(stats.get("WEC_violation_fraction", 0.0)),
+            float(stats.get("NEC_violation_fraction", 0.0)),
+            float(stats.get("DEC_violation_fraction", 0.0)),
+            float(stats.get("SEC_violation_fraction", 0.0)),
         ])
     return safe_scan("energy_condition_survey", fn,
                        params=np.linspace(0.3, 2.0, 30))
@@ -202,6 +219,116 @@ def scan_ctc_tunneling():
     return safe_scan("ctc_tunneling", fn, params=np.linspace(2.0, 11.0, 30))
 
 
+# --- Phase 18 (new): photon sphere structure ---
+def scan_photon_sphere():
+    from systrophe.photon_sphere import impact_parameter_bare
+    def fn(r):
+        try:
+            b = impact_parameter_bare(vs, float(r), branch="prograde")
+        except Exception:
+            b = 0.0
+        return np.array([float(b) if math.isfinite(b) else 0.0])
+    return safe_scan("photon_sphere", fn, params=np.linspace(1.05, 10.0, 30))
+
+
+# --- Phase 25 (new): chronology protection budget ---
+def scan_chronology_protection():
+    from systrophe.chronology_protection import (
+        chronology_protection_study, chronology_protection_verdict,
+    )
+    from systrophe.sinusoid import TiplerSinusoid
+    def fn(delta):
+        s1 = TiplerSinusoid(R=1.0, a=1.0, A=1.0, delta=0.0)
+        s2 = TiplerSinusoid(R=1.0, a=1.0, A=1.0, delta=float(delta))
+        r_samples = np.linspace(1.05, 8.0, 20)
+        study = chronology_protection_study(s1=s1, s2_base=s2, r_samples=r_samples)
+        verdict = chronology_protection_verdict(study)
+        return np.array([
+            float(verdict.get("max_residual", 0.0)),
+            float(verdict.get("mean_residual", 0.0)),
+            float(1.0 if verdict.get("violated", False) else 0.0),
+        ])
+    return safe_scan("chronology_protection", fn,
+                       params=np.linspace(0.0, 2 * math.pi, 30))
+
+
+# --- Phase 36/38 (new): Aharonov-Bohm CTC phase ---
+def scan_aharonov_bohm_ctc():
+    from systrophe.aharonov_bohm_ctc import aharonov_bohm_phase
+    def fn(r):
+        try:
+            phi = aharonov_bohm_phase(vs, float(r))
+        except Exception:
+            phi = 0.0
+        return np.array([float(phi) if math.isfinite(phi) else 0.0])
+    return safe_scan("aharonov_bohm_ctc", fn, params=np.linspace(1.05, 12.0, 30))
+
+
+# --- Phase 49 (new): Berry phase on LP ---
+def scan_berry_phase_lp():
+    from systrophe.berry_phase_lp import berry_phase_per_revolution
+    def fn(r):
+        try:
+            ph = berry_phase_per_revolution(vs, float(r))
+        except Exception:
+            ph = 0.0
+        return np.array([float(ph) if math.isfinite(ph) else 0.0])
+    return safe_scan("berry_phase_lp", fn, params=np.linspace(1.05, 12.0, 30))
+
+
+# --- Phase 48 (new): twistor on LP ---
+def scan_twistor_lp():
+    from systrophe.twistor_lp import twistor_norm
+    def fn(r):
+        try:
+            n = twistor_norm(vs, float(r))
+        except Exception:
+            n = 0.0
+        return np.array([float(n) if math.isfinite(n) else 0.0])
+    return safe_scan("twistor_lp", fn, params=np.linspace(1.05, 12.0, 30))
+
+
+# --- Phase 47 (new): vacuum polarization ---
+def scan_vacuum_polarization():
+    from systrophe.vacuum_polarization import vacuum_polarization_at_r
+    def fn(r):
+        try:
+            res = vacuum_polarization_at_r(vs, float(r))
+            v = res.get("scalar_one_loop", 0.0) if isinstance(res, dict) else float(res)
+        except Exception:
+            v = 0.0
+        return np.array([float(v) if math.isfinite(v) else 0.0])
+    return safe_scan("vacuum_polarization", fn,
+                       params=np.linspace(1.05, 12.0, 30))
+
+
+# --- Phase 50 (new): holographic complexity ---
+def scan_holographic_complexity():
+    from systrophe.holographic_complexity import complexity_growth_rate
+    def fn(r):
+        try:
+            c = complexity_growth_rate(vs, float(r))
+        except Exception:
+            c = 0.0
+        return np.array([float(c) if math.isfinite(c) else 0.0])
+    return safe_scan("holographic_complexity", fn,
+                       params=np.linspace(1.05, 12.0, 30))
+
+
+# --- Phase 40 (new): anyonic CTC braid ---
+def scan_anyonic_ctc():
+    from systrophe.anyonic_ctc import braid_phase_at_band
+    def fn(band_index):
+        try:
+            ph = braid_phase_at_band(int(band_index), alpha=float(vs.alpha))
+        except Exception:
+            ph = 0.0
+        return np.array([float(ph) if math.isfinite(ph) else 0.0])
+    # band indices 1..30
+    return safe_scan("anyonic_ctc", fn,
+                       params=np.arange(1, 31, dtype=float))
+
+
 def main():
     all_scans = [
         scan_cauchy_stability,
@@ -220,6 +347,15 @@ def main():
         scan_page_curve_ctc,
         scan_lqg_discretization,
         scan_ctc_tunneling,
+        # Wave 2 (added 2026-05-11):
+        scan_photon_sphere,
+        scan_chronology_protection,
+        scan_aharonov_bohm_ctc,
+        scan_berry_phase_lp,
+        scan_twistor_lp,
+        scan_vacuum_polarization,
+        scan_holographic_complexity,
+        scan_anyonic_ctc,
     ]
     results = []
     for scanfn in all_scans:

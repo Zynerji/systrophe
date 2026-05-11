@@ -1,0 +1,416 @@
+[
+  {
+    "file": "cauchy_horizon_finiteness_check_results.json",
+    "status": "no_numeric_arrays"
+  },
+  {
+    "file": "ctc_zoo_results.json",
+    "status": "no_numeric_arrays"
+  },
+  {
+    "file": "dctc_deep_E1_cycles_results.json",
+    "status": "no_numeric_arrays"
+  },
+  {
+    "file": "dctc_deep_E4_trichotomy_results.json",
+    "status": "already_catchered"
+  },
+  {
+    "file": "dctc_deep_E8_ergodicity_results.json",
+    "status": "already_catchered"
+  },
+  {
+    "file": "dctc_deep_phase_a_results.json",
+    "status": "already_catchered"
+  },
+  {
+    "file": "dctc_deep_phase_abal_results.json",
+    "status": "no_numeric_arrays"
+  },
+  {
+    "file": "dctc_deep_phase_ac_results.json",
+    "status": "already_catchered"
+  },
+  {
+    "file": "dctc_deep_phase_adf_results.json",
+    "status": "already_catchered"
+  },
+  {
+    "file": "dctc_deep_phase_aj_results.json",
+    "status": "already_catchered"
+  },
+  {
+    "file": "dctc_deep_phase_am_counter_results.json",
+    "status": "scanned",
+    "n_quantities": 3,
+    "aggregate_verdict": "smooth",
+    "novel_quantities": [],
+    "per_quantity": {
+      "deltas": {
+        "verdict": "uniform",
+        "n_distributions": 4,
+        "labels": [
+          "E_direct_L",
+          "F_geodesic",
+          "G_pair_boundary",
+          "H_alpha_floquet"
+        ],
+        "n_sharp": 0,
+        "sharp_features": []
+      },
+      "amplifications": {
+        "verdict": "smooth",
+        "n_distributions": 4,
+        "labels": [
+          "E_direct_L",
+          "F_geodesic",
+          "G_pair_boundary",
+          "H_alpha_floquet"
+        ],
+        "n_sharp": 0,
+        "sharp_features": []
+      },
+      "physical_ctcs": {
+        "verdict": "uniform",
+        "n_distributions": 4,
+        "labels": [
+          "E_direct_L",
+          "F_geodesic",
+          "G_pair_boundary",
+          "H_alpha_floquet"
+        ],
+        "n_sharp": 0,
+        "sharp_features": []
+      }
+    }
+  },
+  {
+    "file": "dctc_deep_phase_am_extended_results.json",
+    "status": "scanned",
+    "n_quantities": 3,
+    "aggregate_verdict": "smooth",
+    "novel_quantities": [],
+    "per_quantity": {
+      "deltas": {
+        "verdict": "uniform",
+        "n_distributions": 4,
+        "labels": [
+          "A_original",
+          "B_interpolation",
+          "C_anomaly_flow",
+          "D_floquet"
+        ],
+        "n_sharp": 0,
+        "sharp_features": []
+      },
+      "physical_ctcs": {
+        "verdict": "uniform",
+        "n_distributions": 4,
+        "labels": [
+          "A_original",
+          "B_interpolation",
+          "C_anomaly_flow",
+          "D_floquet"
+        ],
+        "n_sharp": 0,
+        "sharp_features": []
+      },
+      "amplifications": {
+        "verdict": "smooth",
+        "n_distributions": 4,
+        "labels": [
+          "A_original",
+          "B_interpolation",
+          "C_anomaly_flow",
+          "D_floquet"
+        ],
+        "n_sharp": 0,
+        "sharp_features": []
+      }
+    }
+  },
+  {
+    "file": "dctc_deep_phase_am_results.json",
+    "status": "single_condition_only",
+    "n_arrays": 4
+  },
+  {
+    "file": "dctc_deep_phase_b_results.json",
+    "status": "scanned",
+    "n_quantities": 4,
+    "aggregate_verdict": "smooth",
+    "novel_quantities": [],
+    "per_quantity": {
+      "lambda_2": {
+        "verdict": "smooth",
+        "n_distributions": 4,
+        "labels": [
+          "2x3",
+          "4x3",
+          "2x4",
+          "3x4"
+        ],
+        "n_sharp": 0,
+        "sharp_features": []
+      },
+      "iter": {
+        "verdict": "smooth",
+        "n_distributions": 4,
+        "labels": [
+          "2x3",
+          "4x3",
+          "2x4",
+          "3x4"
+        ],
+        "n_sharp": 0,
+        "sharp_features": []
+      },
+      "purity": {
+        "verdict": "smooth",
+        "n_distributions": 4,
+        "labels": [
+          "2x3",
+          "4x3",
+          "2x4",
+          "3x4"
+        ],
+        "n_sharp": 0,
+        "sharp_features": []
+      },
+      "spectral_predict": {
+        "verdict": "smooth",
+        "n_distributions": 4,
+        "labels": [
+          "2x3",
+          "4x3",
+          "2x4",
+          "3x4"
+        ],
+        "n_sharp": 0,
+        "sharp_features": []
+      }
+    }
+  },
+  {
+    "file": "dctc_deep_phase_c_results.json",
+    "status": "no_numeric_arrays"
+  },
+  {
+    "file": "dctc_deep_phase_d_results.json",
+    "status": "already_catchered"
+  },
+  {
+    "file": "dctc_deep_phase_e_results.json",
+    "status": "already_catchered"
+  },
+  {
+    "file": "dctc_deep_phase_f_results.json",
+    "status": "already_catchered"
+  },
+  {
+    "file": "dctc_deep_phase_g_results.json",
+    "status": "already_catchered"
+  },
+  {
+    "file": "dctc_deep_phase_knpai_results.json",
+    "status": "already_catchered"
+  },
+  {
+    "file": "dctc_deep_phase_lmw_results.json",
+    "status": "already_catchered"
+  },
+  {
+    "file": "dctc_deep_phase_oqr_results.json",
+    "status": "already_catchered"
+  },
+  {
+    "file": "dctc_deep_phase_remaining_results.json",
+    "status": "already_catchered"
+  },
+  {
+    "file": "dctc_deep_phase_zy_results.json",
+    "status": "already_catchered"
+  },
+  {
+    "file": "external_claim_verification_extended_results.json",
+    "status": "no_numeric_arrays"
+  },
+  {
+    "file": "external_claim_verification_results.json",
+    "status": "no_numeric_arrays"
+  },
+  {
+    "file": "off_axis_simulation_results.json",
+    "status": "no_numeric_arrays"
+  },
+  {
+    "file": "quantum_layer_walkthrough_results.json",
+    "status": "single_condition_only",
+    "n_arrays": 2
+  },
+  {
+    "file": "stress_cascade_dsi_results.json",
+    "status": "scanned",
+    "n_quantities": 1,
+    "aggregate_verdict": "smooth",
+    "novel_quantities": [],
+    "per_quantity": {
+      "value": {
+        "verdict": "smooth",
+        "n_distributions": 20,
+        "labels": [
+          "dimension_matrix[0",
+          "dimension_matrix[1",
+          "dimension_matrix[2",
+          "dimension_matrix[3",
+          "dimension_matrix[4",
+          "dimension_matrix[5",
+          "dimension_matrix[6",
+          "dimension_matrix[7",
+          "dimension_matrix[8",
+          "dimension_matrix[9",
+          "dimension_matrix[10",
+          "dimension_matrix[11",
+          "dimension_matrix[12",
+          "dimension_matrix[13",
+          "dimension_matrix[14",
+          "dimension_matrix[15",
+          "dimension_matrix[16",
+          "dimension_matrix[17",
+          "dimension_matrix[18",
+          "dimension_matrix[19"
+        ],
+        "n_sharp": 0,
+        "sharp_features": []
+      }
+    }
+  },
+  {
+    "file": "stress_cascade_novelty_results.json",
+    "status": "scanned",
+    "n_quantities": 1,
+    "aggregate_verdict": "smooth",
+    "novel_quantities": [],
+    "per_quantity": {
+      "value": {
+        "verdict": "smooth",
+        "n_distributions": 8,
+        "labels": [
+          "local_lambda_2_surface[0",
+          "local_lambda_2_surface[1",
+          "local_lambda_2_surface[2",
+          "local_lambda_2_surface[3",
+          "local_lambda_2_surface[4",
+          "local_lambda_2_surface[5",
+          "local_lambda_2_surface[6",
+          "local_lambda_2_surface[7"
+        ],
+        "n_sharp": 0,
+        "sharp_features": []
+      }
+    }
+  },
+  {
+    "file": "stress_dctc_haar_results.json",
+    "status": "no_numeric_arrays"
+  },
+  {
+    "file": "stress_zn_closure_results.json",
+    "status": "scanned",
+    "n_quantities": 3,
+    "aggregate_verdict": "novel_structure",
+    "novel_quantities": [
+      "sums",
+      "closure_points_2pi_units"
+    ],
+    "per_quantity": {
+      "gammas": {
+        "verdict": "uniform",
+        "n_distributions": 7,
+        "labels": [
+          "gamma_sweeps.2",
+          "gamma_sweeps.3",
+          "gamma_sweeps.5",
+          "gamma_sweeps.6",
+          "gamma_sweeps.7",
+          "gamma_sweeps.11",
+          "gamma_sweeps.17"
+        ],
+        "n_sharp": 0,
+        "sharp_features": []
+      },
+      "sums": {
+        "verdict": "novel_structure",
+        "n_distributions": 7,
+        "labels": [
+          "gamma_sweeps.2",
+          "gamma_sweeps.3",
+          "gamma_sweeps.5",
+          "gamma_sweeps.6",
+          "gamma_sweeps.7",
+          "gamma_sweeps.11",
+          "gamma_sweeps.17"
+        ],
+        "n_sharp": 3,
+        "sharp_features": [
+          {
+            "between": [
+              "gamma_sweeps.2",
+              "gamma_sweeps.3"
+            ],
+            "hamming_step": 14,
+            "median_step": 7.0,
+            "ratio_to_median": 2.0
+          },
+          {
+            "between": [
+              "gamma_sweeps.5",
+              "gamma_sweeps.6"
+            ],
+            "hamming_step": 14,
+            "median_step": 7.0,
+            "ratio_to_median": 2.0
+          },
+          {
+            "between": [
+              "gamma_sweeps.6",
+              "gamma_sweeps.7"
+            ],
+            "hamming_step": 14,
+            "median_step": 7.0,
+            "ratio_to_median": 2.0
+          }
+        ]
+      },
+      "closure_points_2pi_units": {
+        "verdict": "novel_structure",
+        "n_distributions": 7,
+        "labels": [
+          "gamma_sweeps.2",
+          "gamma_sweeps.3",
+          "gamma_sweeps.5",
+          "gamma_sweeps.6",
+          "gamma_sweeps.7",
+          "gamma_sweeps.11",
+          "gamma_sweeps.17"
+        ],
+        "n_sharp": 1,
+        "sharp_features": [
+          {
+            "between": [
+              "gamma_sweeps.11",
+              "gamma_sweeps.17"
+            ],
+            "hamming_step": 19,
+            "median_step": 14.0,
+            "ratio_to_median": 1.3571428571428572
+          }
+        ]
+      }
+    }
+  },
+  {
+    "file": "time_travel_simulation_results.json",
+    "status": "no_numeric_arrays"
+  }
+]

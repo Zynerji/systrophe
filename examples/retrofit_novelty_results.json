@@ -25,11 +25,13 @@
   },
   {
     "module": "optical_fiber_analog",
-    "error": "TypeError: fiber_analog_horizon() got an unexpected keyword argument 'c_probe'"
+    "error": "TypeError: linear_pump_profile() got an unexpected keyword argument 'x_min'"
   },
   {
     "module": "energy_condition_survey",
-    "error": "TypeError: systematic_energy_survey() got an unexpected keyword argument 'omega'"
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp": []
   },
   {
     "module": "holographic",
@@ -157,6 +159,76 @@
   },
   {
     "module": "ctc_tunneling",
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp": []
+  },
+  {
+    "module": "photon_sphere",
+    "verdict": "novel_structure",
+    "n_sharp": 1,
+    "sharp": [
+      {
+        "between_indices": [
+          2,
+          3
+        ],
+        "parameter_value": 1.975862068965517,
+        "hamming_step": 32,
+        "median_step": 1.0,
+        "mad": 0.0,
+        "excess_over_median": 31.0
+      }
+    ]
+  },
+  {
+    "module": "chronology_protection",
+    "error": "TypeError: chronology_protection_study() got an unexpected keyword argument 'omega'"
+  },
+  {
+    "module": "aharonov_bohm_ctc",
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp": []
+  },
+  {
+    "module": "berry_phase_lp",
+    "verdict": "novel_structure",
+    "n_sharp": 1,
+    "sharp": [
+      {
+        "between_indices": [
+          11,
+          12
+        ],
+        "parameter_value": 5.5810344827586205,
+        "hamming_step": 13,
+        "median_step": 1.0,
+        "mad": 0.0,
+        "excess_over_median": 12.0
+      }
+    ]
+  },
+  {
+    "module": "twistor_lp",
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp": []
+  },
+  {
+    "module": "vacuum_polarization",
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp": []
+  },
+  {
+    "module": "holographic_complexity",
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp": []
+  },
+  {
+    "module": "anyonic_ctc",
     "verdict": "smooth",
     "n_sharp": 0,
     "sharp": []
