@@ -93,6 +93,13 @@ from .point_splitting import (
     trace_anomaly_4d_exact,
     vacuum_residual,
 )
+from .floquet import (
+    FloquetSpectrum,
+    compute_floquet_spectrum,
+    detect_parametric_resonance,
+    floquet_quasi_energies_at_r,
+    time_evolution_operator_at_r,
+)
 
 __all__ = [
     "VanStockumInterior",
@@ -122,4 +129,4 @@ __all__ = [
     "proper_energy_density",
     "total_energy_per_unit_length",
 ]
-__version__ = "0.9.0"
+__version__ = "0.10.0"

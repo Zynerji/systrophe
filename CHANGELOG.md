@@ -5,6 +5,41 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.0] - 2026-05-10
+
+### Added
+
+**Floquet quasi-energy solver for time-varying offset** (`floquet.py`):
+- `time_evolution_operator_at_r(...)`: one-period propagator U(T) for
+  a periodically-driven LP background with `delta(t) = delta_0 +
+  delta_amp sin(Omega_drive t)`. Built via product-Trotter at
+  configurable substep count.
+- `floquet_quasi_energies_at_r(...)`: diagonalises U(T) to extract the
+  two Floquet quasi-energies of the effective 2 x 2 Dirac-spinor
+  problem on the t-periodic background.
+- `compute_floquet_spectrum(omega, R, delta_0, delta_amp, omega_drive,
+  r_grid, ...)`: full radial scan returning a `FloquetSpectrum`
+  dataclass.
+- `detect_parametric_resonance(spec)`: locates avoided crossings in
+  the Floquet band gap (candidate parametric-resonance points).
+
+**Grok-claim falsification** (`examples/grok_falsification.py`):
+- Direct numerical test of the claim "Z_3 Mobius cover keeps
+  <T_munu> finite at Cauchy horizons" raised in a Grok conversation
+  on the repo.
+- Result: Kretschmann scalar K converges to ~1.07 at the first
+  Cauchy horizon (spread 0.17% across r in [r_h - 1e-3, r_h - 1e-4]).
+  The trace anomaly <T^mu_mu> = K/(2880 pi^2) is therefore bounded
+  without invoking any Z_3 cover. F = 0 is a *coordinate* singularity
+  (ergosurface), not a curvature singularity; finiteness of the
+  trace is intrinsic.
+- Grok's attribution overstated for the trace component; the
+  non-trivial chronology-protection question (off-trace <T_munu>
+  via Hadamard point-splitting) remains open.
+
+### Tests
+- 6 new tests in `test_floquet.py`; 237 total.
+
 ## [0.9.0] - 2026-05-09
 
 ### Added
