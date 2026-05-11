@@ -1,0 +1,164 @@
+[
+  {
+    "module": "cauchy_stability",
+    "verdict": "novel_structure",
+    "n_sharp": 1,
+    "sharp": [
+      {
+        "between_indices": [
+          3,
+          4
+        ],
+        "parameter_value": 2.2844827586206895,
+        "hamming_step": 27,
+        "median_step": 1.0,
+        "mad": 0.0,
+        "excess_over_median": 26.0
+      }
+    ]
+  },
+  {
+    "module": "frame_dragging",
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp": []
+  },
+  {
+    "module": "optical_fiber_analog",
+    "error": "TypeError: fiber_analog_horizon() got an unexpected keyword argument 'c_probe'"
+  },
+  {
+    "module": "energy_condition_survey",
+    "error": "TypeError: systematic_energy_survey() got an unexpected keyword argument 'omega'"
+  },
+  {
+    "module": "holographic",
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp": []
+  },
+  {
+    "module": "qi_channel",
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp": []
+  },
+  {
+    "module": "spinor_monodromy",
+    "verdict": "novel_structure",
+    "n_sharp": 1,
+    "sharp": [
+      {
+        "between_indices": [
+          1,
+          2
+        ],
+        "parameter_value": 1.6672413793103447,
+        "hamming_step": 28,
+        "median_step": 2.0,
+        "mad": 1.0,
+        "excess_over_median": 26.0
+      }
+    ]
+  },
+  {
+    "module": "synchrotron_analog",
+    "verdict": "novel_structure",
+    "n_sharp": 3,
+    "sharp": [
+      {
+        "between_indices": [
+          0,
+          1
+        ],
+        "parameter_value": 1.3586206896551725,
+        "hamming_step": 25,
+        "median_step": 2.0,
+        "mad": 2.0,
+        "excess_over_median": 23.0
+      },
+      {
+        "between_indices": [
+          7,
+          8
+        ],
+        "parameter_value": 3.518965517241379,
+        "hamming_step": 10,
+        "median_step": 2.0,
+        "mad": 2.0,
+        "excess_over_median": 8.0
+      },
+      {
+        "between_indices": [
+          21,
+          22
+        ],
+        "parameter_value": 7.839655172413792,
+        "hamming_step": 17,
+        "median_step": 2.0,
+        "mad": 2.0,
+        "excess_over_median": 15.0
+      }
+    ]
+  },
+  {
+    "module": "tidal_forces",
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp": []
+  },
+  {
+    "module": "kg_scattering",
+    "verdict": "novel_structure",
+    "n_sharp": 1,
+    "sharp": [
+      {
+        "between_indices": [
+          2,
+          3
+        ],
+        "parameter_value": 1.975862068965517,
+        "hamming_step": 32,
+        "median_step": 2.0,
+        "mad": 0.0,
+        "excess_over_median": 30.0
+      }
+    ]
+  },
+  {
+    "module": "dm_scalar_coupling",
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp": []
+  },
+  {
+    "module": "gw_emission",
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp": []
+  },
+  {
+    "module": "anec_bound",
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp": []
+  },
+  {
+    "module": "page_curve_ctc",
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp": []
+  },
+  {
+    "module": "lqg_discretization",
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp": []
+  },
+  {
+    "module": "ctc_tunneling",
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp": []
+  }
+]
