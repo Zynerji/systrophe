@@ -29,7 +29,7 @@ The five canonical layers:
 2. **Quantum / QFT layer** (v0.7 – v0.13) — radial Dirac operator and bound-state spectrum, renormalised stress tensor, anomaly inflow on the Z₃ cover, joint Floquet on (time × branch), Newton-Kantorovich back-reaction, cascade-DSI fractal extension, ADM 3+1 export, Deutsch-CTC fixed-point solver on the cover.
 3. **Phase-by-phase extensions** (v0.13 – v0.17, **Phases 11 – 50**) — photon orbits, lensing, Penrose extraction, optical-fibre / synchrotron analogs, Wilson loops, Aharonov-Bohm CTC phase, Berry / twistor / spinor-monodromy on LP, BMS soft hair, ER=EPR pair, monopole on cylinder, anyonic CTC, stochastic LP, BH pair production, vacuum polarization, Casimir-Polder, Unruh, KG scattering, solitons, holographic complexity, holography, page-curve construction, LQG discretisation, modified dispersion, GW emission, ANEC bound, energy-condition survey, exotic-matter accounting, photon sphere structure, tidal-force diagnostics, frame dragging, Hawking budget, dark-matter scalar coupling, geodesic completeness, topology change, cosmological embedding, KK embedding, higher-spin fields, Cauchy-stability, chronology-protection budget, wormhole-throat, dynamical Casimir, dynamical-cylinder back-reaction, multi-cylinder dynamics, NR initial data.
 4. **Deutsch-CTC channel theory** — independent line of empirical investigation of D-CTC fixed-point iteration: spectral oracle (`|λ₂|` predicts iteration count, Pearson r = 0.99 across 2000 Haar samples), power-law scaling, multi-basin attractor structure, Clifford-structured channel amplification, limit-cycle solutions, and an encoding-dependent chronology-protection criterion. Phases A – ZY (26 phase letters + E1, E4, E8 deep cycles).
-5. **IBM Marrakesh hardware validation** — 4 batches on the IBM Quantum `ibm_marrakesh` 156-qubit Heron-r2 device, demonstrating KK escape interference cancellation at the supercritical threshold, Page-curve recovery from the LP cover, and a log-periodic LP quantum walk with phase-by-phase α recovery (batch 4 in queue at time of v0.17.0 tag).
+5. **IBM Marrakesh hardware validation** — 4 batches on the IBM Quantum `ibm_marrakesh` 156-qubit Heron-r2 device, demonstrating KK escape interference cancellation at the supercritical threshold, Page-curve recovery from the LP cover, and a log-periodic LP quantum walk with phase-by-phase α recovery to <1% relative error at the theoretical α_LP = √3.
 
 Every phase module ships with a **mandatory novelty catcher** (address-space λ₂ on the Hamming graph of bit-hashed distributions) that flags surprises before any "validated" / "null" verdict is issued.
 
@@ -287,7 +287,7 @@ Four batches submitted to IBM Quantum `ibm_marrakesh` (156-qubit Heron-r2), each
 | 1 | `marrakesh_batch.py` | Joint Floquet eigenmode interference | DONE (analysis + counts published) |
 | 2 | `marrakesh_batch_2.py` | KK-escape: interference cancellation **exact** at the supercritical threshold | DONE |
 | 3 | `marrakesh_batch_3_pagecurve.py` | Page-curve recovery from the LP cover | DONE |
-| 4 | `marrakesh_batch_4_lp_walk.py` | Multi-band LP quantum walk; α-recovery from bitstring distribution | QUEUED |
+| 4 | `marrakesh_batch_4_lp_walk.py` | Multi-band LP quantum walk; α-recovery from bitstring distribution (5-point sweep, <1% rel. err at all scales including α_LP = √3; novelty catcher: smooth, 0 sharp features) | DONE |
 
 Each batch attaches the mandatory novelty catcher to the observed bitstring distributions before issuing a verdict. The Page-curve and KK-escape results are written up in [`paper/systrophe_extensions_5.pdf`](paper/systrophe_extensions_5.pdf) (Marrakesh hardware validation) and [`paper/systrophe_extensions_6.pdf`](paper/systrophe_extensions_6.pdf) (Page-curve + novelty-catcher integration).
 
@@ -402,7 +402,7 @@ cd paper && pdflatex <name>.tex && pdflatex <name>.tex
 - **Idealised source.** Infinite, rigid, perfectly axisymmetric dust column. No known matter form realises this; Tipler-cylinder time-travel scenarios are theoretical exercises in the structure of GR vacuum solutions.
 - **Asymptotic non-flatness.** The Case III exterior oscillates indefinitely; there is no privileged "observer at infinity" against whom coordinate time can be synchronised.
 - **Chronology protection is engaged but not resolved.** Paper VIII and the DCTC trilogy formulate an encoding-dependent chronology-protection criterion (`dctc_amplification.tex`, `dctc_treatise.tex`); the criterion is *necessary*, not *proven sufficient*.
-- **Marrakesh batch 4 is hardware-pending.** The LP-walk α-recovery is established in simulation; the matching hardware analysis lands once the queued IBM job completes.
+- **Hardware reach.** Marrakesh validates the LP framework at low qubit count (≤4) and shallow ISA depth (≈27). Higher-band LP walks and pair-superposition circuits exceed the 156-qubit Heron-r2 depth budget under `opt_level=3` transpilation; deeper validation requires either next-generation hardware or a parameterised-circuit / variational unfolding.
 
 ---
 
