@@ -20,6 +20,7 @@ from systrophe.d_ctc import (
     dctc_fixed_point,
     density_matrix_diagnostics,
 )
+from systrophe.novelty_catcher import catch_novelty_in_named_arrays
 
 
 def haar_random_unitary(dim, rng):
@@ -213,6 +214,15 @@ def main():
         print("Many Clifford channels have multiple distinct limits -- ergodicity")
         print("breaks down.")
 
+    # Native novelty catcher: per-channel limit-count distributions.
+    novelty = catch_novelty_in_named_arrays({
+        "haar_n_limits": haar_n_limits,
+        "cliff_n_limits": cliff_n_limits,
+    })
+    print()
+    print(f"Novelty catcher: verdict='{novelty['verdict']}', "
+          f"n_sharp={len(novelty['sharp_features'])}")
+
     out = Path("examples") / "dctc_deep_E8_ergodicity_results.json"
     with open(out, "w") as f:
         json.dump({
@@ -224,6 +234,7 @@ def main():
             "clifford_mean_n_limits": float(cliff_n_limits.mean()),
             "haar_max_n_limits": int(haar_n_limits.max()),
             "clifford_max_n_limits": int(cliff_n_limits.max()),
+            "novelty_catcher": novelty,
         }, f, indent=2)
     print(f"\nWrote {out}")
 

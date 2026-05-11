@@ -27,6 +27,10 @@ from systrophe.d_ctc import (
     dctc_fixed_point,
     density_matrix_diagnostics,
 )
+from systrophe.novelty_catcher import (
+    catch_novelty_in_named_arrays,
+    catch_novelty_per_quantity,
+)
 
 
 def haar_random_unitary(dim, rng):
@@ -272,6 +276,25 @@ def main():
         print(f"individual eigenvectors does not directly predict purity.")
     print()
 
+    # Per quantity: bin by purity tail. Real novelty = a Kraus-eigenvector
+    # diagnostic that flips regime exactly at the high-purity tail.
+    p_low = np.where(purities < np.quantile(purities, 0.33))[0]
+    p_mid = np.where((purities >= np.quantile(purities, 0.33)) &
+                      (purities < np.quantile(purities, 0.67)))[0]
+    p_hi  = np.where(purities >= np.quantile(purities, 0.67))[0]
+    novelty = catch_novelty_per_quantity({
+        "overlap":       {"p_low": overlaps[p_low], "p_mid": overlaps[p_mid],
+                          "p_hi":  overlaps[p_hi]},
+        "eig_norm_sq":   {"p_low": eig_norm_sqs[p_low],
+                          "p_mid": eig_norm_sqs[p_mid],
+                          "p_hi":  eig_norm_sqs[p_hi]},
+        "fidelity":      {"p_low": fidelities[p_low],
+                          "p_mid": fidelities[p_mid],
+                          "p_hi":  fidelities[p_hi]},
+    })
+    print(f"Novelty catcher aggregate='{novelty['aggregate_verdict']}', "
+          f"novel quantities={novelty['novel_quantities']}")
+
     out_path = Path("examples") / "dctc_deep_phase_g_results.json"
     with open(out_path, "w") as f:
         json.dump({
@@ -281,6 +304,7 @@ def main():
                 "pearson_purity_vs_eigenvalue_norm_sq": pearson_eigsq,
                 "pearson_purity_vs_fidelity": pearson_fid,
             },
+            "novelty_catcher": novelty,
             "stats": {
                 "best_overlap": {"mean": float(overlaps.mean()),
                                    "min": float(overlaps.min()),

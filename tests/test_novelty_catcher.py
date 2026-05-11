@@ -7,6 +7,8 @@ from systrophe.novelty_catcher import (
     NoveltyScanResult,
     bitstring_counts_to_address,
     catch_novelty_in_distributions,
+    catch_novelty_in_named_arrays,
+    catch_novelty_per_quantity,
     hamming_distance,
     lambda_2_of_hamming_graph,
     probability_vector_to_address,
@@ -111,6 +113,55 @@ def test_summarize_novelty_returns_string():
     s = summarize_novelty_for_report(result)
     assert isinstance(s, str)
     assert "Novelty catcher" in s
+
+
+def test_catch_novelty_in_named_arrays_basic():
+    """Three differently-distributed sample arrays produce a verdict."""
+    rng = np.random.default_rng(0)
+    arrays = {
+        "uniform":  rng.uniform(0, 1, size=500),
+        "gaussian": rng.normal(0, 1, size=500),
+        "shifted":  rng.normal(5, 1, size=500),
+    }
+    res = catch_novelty_in_named_arrays(arrays, n_bins=32)
+    assert "verdict" in res
+    assert res["n_distributions"] == 3
+    assert res["labels"] == ["uniform", "gaussian", "shifted"]
+
+
+def test_catch_novelty_in_named_arrays_handles_constant_column():
+    """Constant input must not raise (histogram bin-edge floor)."""
+    arrays = {
+        "varying":  np.linspace(0, 1, 200),
+        "constant": np.full(200, 0.5),
+    }
+    res = catch_novelty_in_named_arrays(arrays, n_bins=16)
+    assert "verdict" in res
+    assert res["n_distributions"] == 2
+
+
+def test_catch_novelty_per_quantity_groups_observables():
+    rng = np.random.default_rng(7)
+    per_q = {
+        "purity": {
+            "haar":  rng.uniform(0, 1, 200),
+            "cliff": rng.uniform(0, 1, 200),
+        },
+        "iter": {
+            "haar":  rng.exponential(20, 200),
+            "cliff": rng.exponential(20, 200),
+        },
+    }
+    res = catch_novelty_per_quantity(per_q)
+    assert "per_quantity" in res
+    assert set(res["per_quantity"].keys()) == {"purity", "iter"}
+    assert res["aggregate_verdict"] in ("smooth", "uniform", "novel_structure")
+
+
+def test_catch_novelty_per_quantity_marks_insufficient():
+    per_q = {"only_one_dist": {"haar": np.linspace(0, 1, 50)}}
+    res = catch_novelty_per_quantity(per_q)
+    assert res["per_quantity"]["only_one_dist"]["verdict"] == "insufficient"
 
 
 def test_catcher_on_counts_dicts():

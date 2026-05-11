@@ -20,6 +20,10 @@ from systrophe.d_ctc import (
     density_matrix_diagnostics,
 )
 from systrophe.floquet_mobius import z3_cycle_shift
+from systrophe.novelty_catcher import (
+    catch_novelty_in_named_arrays,
+    catch_novelty_per_quantity,
+)
 
 
 def haar_random_unitary(dim, rng):
@@ -285,6 +289,26 @@ def main():
     print(f"   have unique fixed point (max pairwise dist < 1e-6)")
     print(f"P (IPR correlation): Pearson r = {all_results['phase_P']['pearson_purity_vs_ipr']:+.3f}")
     print()
+
+    # Per-quantity catcher: compare same observable across sub-experiments.
+    # Real novelty = purity distribution differs between K (dim_CR=3) and
+    # P (dim_CR=2) at the same dim_CTC; or IPR splits cleanly by purity.
+    p_low_P = np.where(purities_P < np.quantile(purities_P, 0.5))[0]
+    p_hi_P  = np.where(purities_P >= np.quantile(purities_P, 0.5))[0]
+    all_results["novelty_catcher"] = catch_novelty_per_quantity({
+        "purity":          {"K_dim_cr_3": purities_K, "P_dim_cr_2": purities_P},
+        "triple_overlap":  {"K_low_pur":  triple_overlaps[~np.isnan(triple_overlaps)][
+                              :len(triple_overlaps[~np.isnan(triple_overlaps)]) // 2],
+                            "K_hi_pur":   triple_overlaps[~np.isnan(triple_overlaps)][
+                              len(triple_overlaps[~np.isnan(triple_overlaps)]) // 2:]},
+        "ipr":             {"p_low": iprs[p_low_P], "p_hi": iprs[p_hi_P]},
+        "max_pairwise":    {"first_half":  max_pairwise_distances[
+                              :len(max_pairwise_distances) // 2],
+                            "second_half": max_pairwise_distances[
+                              len(max_pairwise_distances) // 2:]},
+    })
+    print(f"Novelty catcher aggregate='{all_results['novelty_catcher']['aggregate_verdict']}', "
+          f"novel quantities={all_results['novelty_catcher']['novel_quantities']}")
 
     out = Path("examples") / "dctc_deep_phase_knpai_results.json"
     with open(out, "w") as f:

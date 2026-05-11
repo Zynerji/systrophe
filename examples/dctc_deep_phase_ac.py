@@ -19,6 +19,10 @@ from systrophe.d_ctc import (
     density_matrix_diagnostics,
     dctc_fixed_point,
 )
+from systrophe.novelty_catcher import (
+    catch_novelty_in_named_arrays,
+    catch_novelty_per_quantity,
+)
 
 
 def haar_random_unitary(dim, rng):
@@ -147,6 +151,24 @@ def main():
         print(f"Amplification (speedup > 1.5) survives across all tested noise levels.")
     print()
 
+    # Native novelty catcher: per observable, split the noise sweep into
+    # low-noise vs high-noise regimes. Sharp Hamming step within a
+    # quantity flags a regime change in that observable.
+    purities = np.array([r["rho_a_purity"] for r in results])
+    out_tds  = np.array([r["output_td"]    for r in results])
+    succs    = np.array([r["ctc_success"]  for r in results])
+    speedups = np.array([r["speedup"]      for r in results])
+    half = len(results) // 2
+    novelty = catch_novelty_per_quantity({
+        "purity":   {"low_noise": purities[:half], "high_noise": purities[half:]},
+        "output_td":{"low_noise": out_tds[:half],  "high_noise": out_tds[half:]},
+        "ctc_success":{"low_noise": succs[:half], "high_noise": succs[half:]},
+        "speedup": {"low_noise": speedups[:half], "high_noise": speedups[half:]},
+    })
+    print()
+    print(f"Novelty catcher aggregate='{novelty['aggregate_verdict']}', "
+          f"novel quantities={novelty['novel_quantities']}")
+
     out = Path("examples") / "dctc_deep_phase_ac_results.json"
     with open(out, "w") as f:
         json.dump({
@@ -155,6 +177,7 @@ def main():
             "noise_sweep": results,
             "reference_purity_noise0": float(best_pur),
             "breakdown_noise_level": float(breakdown_noise) if breakdown_noise is not None else None,
+            "novelty_catcher": novelty,
         }, f, indent=2)
     print(f"Wrote {out}")
 

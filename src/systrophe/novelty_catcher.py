@@ -361,6 +361,104 @@ def catch_novelty_in_distributions(
     }
 
 
+def _array_to_histogram_probability(
+    arr, n_bins: int = 32,
+) -> np.ndarray:
+    """Bin a real-valued array into a normalised histogram.
+
+    Robust to constant columns (`hi - lo` below numpy's bin-edge floor):
+    in that case all mass is placed in bin 0.
+    """
+    a = np.asarray(arr, dtype=float).ravel()
+    a = a[np.isfinite(a)]
+    if a.size == 0:
+        return np.zeros(n_bins)
+    lo, hi = float(a.min()), float(a.max())
+    eps = n_bins * np.finfo(float).eps * max(abs(lo), abs(hi), 1.0)
+    if hi - lo <= eps:
+        h = np.zeros(n_bins)
+        h[0] = a.size
+    else:
+        h, _ = np.histogram(a, bins=n_bins, range=(lo, hi))
+    s = h.sum()
+    return h.astype(float) / s if s > 0 else h.astype(float)
+
+
+def catch_novelty_in_named_arrays(
+    named_arrays: dict,
+    n_bins: int = 32,
+    radii: tuple[int, ...] = (4, 8, 12, 16),
+    sharp_threshold: float = 0.3,
+) -> dict:
+    """Convenience wrapper: hash each labelled array into a histogram
+    probability vector and run the catcher on the resulting list.
+
+    Each input array becomes one node in the address-space Hamming graph.
+    Sharp Hamming steps between successive entries (in dict-insertion
+    order) flag suspect structural transitions.
+
+    Useful for retrofitting the catcher into existing scripts where the
+    natural unit of comparison is "this Haar ensemble's iter-count
+    histogram vs that Haar ensemble's iter-count histogram" etc.
+    """
+    labels = list(named_arrays.keys())
+    dists = [_array_to_histogram_probability(named_arrays[k], n_bins=n_bins)
+             for k in labels]
+    return catch_novelty_in_distributions(
+        dists, labels=labels, n_bits=n_bins, radii=radii,
+        sharp_threshold=sharp_threshold,
+    )
+
+
+def catch_novelty_per_quantity(
+    per_quantity: dict,
+    n_bins: int = 32,
+    radii: tuple[int, ...] = (4, 8, 12, 16),
+    sharp_threshold: float = 0.3,
+) -> dict:
+    """Run the catcher SEPARATELY per quantity to avoid the cross-quantity
+    labelling artefact.
+
+    `per_quantity` is a nested dict::
+
+        {
+          "purity": {"haar": np.ndarray, "cliff": np.ndarray, ...},
+          "iter":   {"haar": np.ndarray, "cliff": np.ndarray, ...},
+          ...
+        }
+
+    Each inner dict is fed independently to `catch_novelty_in_named_arrays`,
+    so the Hamming-step comparisons only ever happen between distributions
+    of the *same* observable. The wrapper aggregates per-quantity verdicts
+    plus a single ``aggregate_verdict`` for downstream gating.
+    """
+    per: dict = {}
+    aggregate = "smooth"
+    for quantity, named in per_quantity.items():
+        if not named or len(named) < 2:
+            per[quantity] = {
+                "verdict": "insufficient",
+                "n_distributions": len(named),
+                "labels": list(named.keys()),
+            }
+            continue
+        per[quantity] = catch_novelty_in_named_arrays(
+            named, n_bins=n_bins, radii=radii,
+            sharp_threshold=sharp_threshold,
+        )
+        v = per[quantity]["verdict"]
+        if v == "novel_structure":
+            aggregate = "novel_structure"
+        elif v == "smooth" and aggregate != "novel_structure":
+            aggregate = "smooth"
+    return {
+        "per_quantity": per,
+        "aggregate_verdict": aggregate,
+        "novel_quantities": [q for q, r in per.items()
+                              if r.get("verdict") == "novel_structure"],
+    }
+
+
 def summarize_novelty_for_report(result: NoveltyScanResult) -> str:
     """One-line summary for inclusion in paper / commit message."""
     n_sharp = len(result.sharp_features)

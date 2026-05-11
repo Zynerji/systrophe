@@ -18,6 +18,7 @@ from pathlib import Path
 import numpy as np
 
 from systrophe.d_ctc import dctc_fixed_point, density_matrix_diagnostics
+from systrophe.novelty_catcher import catch_novelty_in_named_arrays
 
 
 def haar_random_unitary(dim: int, rng: np.random.Generator) -> np.ndarray:
@@ -222,12 +223,22 @@ def main():
     print("point purity is a SEPARATE feature uncorrelated with convergence rate,")
     print("emerging in ~1% of Haar samples without obvious structural signature.")
 
+    novelty = catch_novelty_in_named_arrays({
+        "iters": iters,
+        "lambda_2": l2,
+        "purity": purity,
+    })
+    print()
+    print(f"Novelty catcher: verdict='{novelty['verdict']}', "
+          f"n_sharp={len(novelty['sharp_features'])}")
+
     payload = {
         "config": {"dim_cr": dim_cr, "dim_ctc": dim_ctc, "n_samples": n_samples},
         "fits": {
             "log_normal": ln_fit,
             "exponential": exp_fit,
         },
+        "novelty_catcher": novelty,
         "iter_stats": {
             "min": float(iters.min()), "max": float(iters.max()),
             "median": float(np.median(iters)), "mean": float(iters.mean()),

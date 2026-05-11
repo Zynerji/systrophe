@@ -14,6 +14,10 @@ from pathlib import Path
 import numpy as np
 
 from systrophe.d_ctc import dctc_fixed_point, density_matrix_diagnostics
+from systrophe.novelty_catcher import (
+    catch_novelty_in_named_arrays,
+    catch_novelty_per_quantity,
+)
 
 
 def haar_random_unitary(dim, rng):
@@ -196,6 +200,27 @@ def main():
     print(f"M: P(>0.9) peaks at eps={[r['P_gt_09'] for r in m_results].index(max(r['P_gt_09'] for r in m_results)) * 0.05:.2f}")
     print(f"W: r(purity, sep_dist) = {pearson:+.4f}")
     print()
+
+    # Per-quantity catcher: compare same observable across sub-experiments.
+    # L is dim_CR=2, dim_CTC=2 (5000 Haar); W is dim_CR=2, dim_CTC=3 (1500).
+    # Comparing L_purities vs W_purities = same-quantity-different-condition.
+    # M is a sigma_CR-mixedness sweep; compare the per-eps mean-purity
+    # distribution against itself split into low/high eps regimes.
+    m_means = np.array([r["mean"] for r in m_results])
+    m_p_gt_09 = np.array([r["P_gt_09"] for r in m_results])
+    half_m = len(m_results) // 2
+    half_W = len(sep_dists) // 2
+    all_results["novelty_catcher"] = catch_novelty_per_quantity({
+        "purity":      {"L_dim2x2": purities, "W_dim2x3": purities_w},
+        "M_mean_purity_vs_eps": {"low_eps": m_means[:half_m],
+                                  "high_eps": m_means[half_m:]},
+        "M_P_gt_09_vs_eps":     {"low_eps": m_p_gt_09[:half_m],
+                                  "high_eps": m_p_gt_09[half_m:]},
+        "sep_dist":    {"first_half":  sep_dists[:half_W],
+                        "second_half": sep_dists[half_W:]},
+    })
+    print(f"Novelty catcher aggregate='{all_results['novelty_catcher']['aggregate_verdict']}', "
+          f"novel quantities={all_results['novelty_catcher']['novel_quantities']}")
 
     out = Path("examples") / "dctc_deep_phase_lmw_results.json"
     with open(out, "w") as f:

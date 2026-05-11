@@ -17,6 +17,10 @@ from systrophe.d_ctc import (
     dctc_fixed_point,
     density_matrix_diagnostics,
 )
+from systrophe.novelty_catcher import (
+    catch_novelty_in_named_arrays,
+    catch_novelty_per_quantity,
+)
 
 
 def haar_random_unitary(dim, rng):
@@ -344,6 +348,29 @@ def main():
         "fraction_gt_099": float(np.mean(np.array(code_capacities) > 0.99)),
     }
     print()
+
+    # Per-quantity catcher: every comparison is Haar-vs-Clifford on the
+    # same observable. Real novelty = a Haar-vs-Clifford gap that the
+    # paper missed.
+    results["novelty_catcher"] = catch_novelty_per_quantity({
+        "T_cond_num":      {"haar": haar_cond, "cliff": cliff_cond},
+        "T_purity":        {"haar": haar_pur,  "cliff": cliff_pur},
+        "U_schmidt":       {"haar": np.array(haar_schmidt),
+                            "cliff": np.array(cliff_schmidt)},
+        "V_dist_to_I":     {"haar": np.array(haar_d_to_I),
+                            "cliff": np.array(cliff_d_to_I)},
+        "AG_q":            {"haar": np.array(haar_q),
+                            "cliff": np.array(cliff_q)},
+        # Within-Haar quantile splits for single-ensemble observables.
+        "AA_iters":        {"first_half":  iters[:len(iters)//2],
+                            "second_half": iters[len(iters)//2:]},
+        "S_slopes":        {"first_half":  slopes[:len(slopes)//2],
+                            "second_half": slopes[len(slopes)//2:]},
+        "AH_code_cap":     {"first_half":  np.array(code_capacities[:len(code_capacities)//2]),
+                            "second_half": np.array(code_capacities[len(code_capacities)//2:])},
+    })
+    print(f"Novelty catcher aggregate='{results['novelty_catcher']['aggregate_verdict']}', "
+          f"novel quantities={results['novelty_catcher']['novel_quantities']}")
 
     out = Path("examples") / "dctc_deep_phase_remaining_results.json"
     with open(out, "w") as f:

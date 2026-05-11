@@ -13,6 +13,10 @@ from systrophe.d_ctc import (
     dctc_fixed_point,
     density_matrix_diagnostics,
 )
+from systrophe.novelty_catcher import (
+    catch_novelty_in_named_arrays,
+    catch_novelty_per_quantity,
+)
 
 
 def haar_random_unitary(dim, rng):
@@ -146,6 +150,34 @@ def main():
           f"std = {entropy_changes_haar.std():.4f}")
     print()
 
+    # Native novelty catcher: compare same observable across natural
+    # conditions. Trajectory time series are split early/mid/late to
+    # surface convergence-phase transitions; Haar entropy changes are
+    # one ensemble compared against a uniform reference (shuffled).
+    purities_traj = np.array([t["purity"] for t in trajectory])
+    entropies_traj = np.array([t["entropy"] for t in trajectory])
+    dists_traj = np.array([t["dist_to_fp"] for t in trajectory])
+    n_traj = len(purities_traj)
+    cuts = (slice(0, n_traj // 3), slice(n_traj // 3, 2 * n_traj // 3),
+            slice(2 * n_traj // 3, n_traj))
+    rng_shuffle = np.random.default_rng(0)
+    haar_shuffled = rng_shuffle.permutation(entropy_changes_haar)
+    novelty = catch_novelty_per_quantity({
+        "traj_purity":      {"early": purities_traj[cuts[0]],
+                             "mid":   purities_traj[cuts[1]],
+                             "late":  purities_traj[cuts[2]]},
+        "traj_entropy":     {"early": entropies_traj[cuts[0]],
+                             "mid":   entropies_traj[cuts[1]],
+                             "late":  entropies_traj[cuts[2]]},
+        "traj_dist_to_fp":  {"early": dists_traj[cuts[0]],
+                             "mid":   dists_traj[cuts[1]],
+                             "late":  dists_traj[cuts[2]]},
+        "haar_entropy_changes": {"observed": entropy_changes_haar,
+                                  "shuffled_ref": haar_shuffled},
+    })
+    print(f"Novelty catcher aggregate='{novelty['aggregate_verdict']}', "
+          f"novel quantities={novelty['novel_quantities']}")
+
     out = Path("examples") / "dctc_deep_phase_zy_results.json"
     with open(out, "w") as f:
         json.dump({
@@ -157,6 +189,7 @@ def main():
                 "haar_entropy_change_mean": float(entropy_changes_haar.mean()),
                 "haar_entropy_change_std": float(entropy_changes_haar.std()),
             },
+            "novelty_catcher": novelty,
         }, f, indent=2)
     print(f"Wrote {out}")
 

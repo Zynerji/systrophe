@@ -6,5 +6,100 @@
   "haar_mean_n_limits": 1.0,
   "clifford_mean_n_limits": 24.78,
   "haar_max_n_limits": 1,
-  "clifford_max_n_limits": 30
+  "clifford_max_n_limits": 30,
+  "novelty_catcher": {
+    "n_distributions": 2,
+    "labels": [
+      "haar_n_limits",
+      "cliff_n_limits"
+    ],
+    "addresses": [
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ]
+    ],
+    "hamming_distance_matrix": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ]
+    ],
+    "lambda_2_at_radius": {
+      "4": 2.0,
+      "8": 2.0,
+      "12": 2.0,
+      "16": 2.0
+    },
+    "sharp_features": [],
+    "verdict": "smooth"
+  }
 }

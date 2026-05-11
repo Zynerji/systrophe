@@ -24,6 +24,10 @@ from pathlib import Path
 import numpy as np
 
 from systrophe.d_ctc import dctc_fixed_point, density_matrix_diagnostics
+from systrophe.novelty_catcher import (
+    catch_novelty_in_named_arrays,
+    catch_novelty_per_quantity,
+)
 
 
 def haar_random_unitary(dim: int, rng: np.random.Generator) -> np.ndarray:
@@ -251,6 +255,25 @@ def main():
         print("alone. Some other structural feature is at play.")
     print()
 
+    # Per quantity: split the Haar ensemble by purity quantile and check
+    # if low/mid/high purity sub-samples have structurally distinct
+    # commutator-singular-value distributions. Real novelty = a sigma_min
+    # regime change correlated with the purity tail.
+    p_low = np.where(purities < np.quantile(purities, 0.33))[0]
+    p_mid = np.where((purities >= np.quantile(purities, 0.33)) &
+                      (purities < np.quantile(purities, 0.67)))[0]
+    p_hi  = np.where(purities >= np.quantile(purities, 0.67))[0]
+    novelty = catch_novelty_per_quantity({
+        "sigma_min":   {"p_low": sigma_mins[p_low], "p_mid": sigma_mins[p_mid],
+                        "p_hi":  sigma_mins[p_hi]},
+        "shared_sv":   {"p_low": shared_svs[p_low], "p_mid": shared_svs[p_mid],
+                        "p_hi":  shared_svs[p_hi]},
+        "purity":      {"p_low": purities[p_low],   "p_mid": purities[p_mid],
+                        "p_hi":  purities[p_hi]},
+    })
+    print(f"Novelty catcher aggregate='{novelty['aggregate_verdict']}', "
+          f"novel quantities={novelty['novel_quantities']}")
+
     out_path = Path("examples") / "dctc_deep_phase_e_results.json"
     with open(out_path, "w") as f:
         json.dump({
@@ -269,6 +292,7 @@ def main():
             "top10_high_purity": [records[int(i)] for i in purity_top10_idx],
             "bottom10_low_purity": [records[int(i)] for i in purity_bot10_idx],
             "overlap_top20": [int(x) for x in overlap],
+            "novelty_catcher": novelty,
         }, f, indent=2)
     print(f"Wrote {out_path}")
 

@@ -18,6 +18,7 @@ from systrophe.d_ctc import (
     dctc_fixed_point,
     density_matrix_diagnostics,
 )
+from systrophe.novelty_catcher import catch_novelty_in_named_arrays
 
 
 def haar_random_unitary(dim, rng):
@@ -152,6 +153,16 @@ def main():
     print()
     print(f"R: {n_ergodic*100/n_U:.0f}% of channels reach the same fixed point regardless of rho_init")
 
+    novelty = catch_novelty_in_named_arrays({
+        "haar_eigs":     all_eigs_haar,
+        "cliff_eigs":    all_eigs_cliff,
+        "haar_spacing":  haar_spacing,
+        "cliff_spacing": cliff_spacing,
+        "ergodic_spreads": max_spreads,
+    })
+    print(f"Novelty catcher: verdict='{novelty['verdict']}', "
+          f"n_sharp={len(novelty['sharp_features'])}")
+
     out = Path("examples") / "dctc_deep_phase_oqr_results.json"
     with open(out, "w") as f:
         json.dump({
@@ -165,6 +176,7 @@ def main():
                                     "clifford": cliff_mean_log_s,
                                     "poisson_ref": -0.577},
             "ergodicity_fraction": float(n_ergodic / n_U),
+            "novelty_catcher": novelty,
         }, f, indent=2)
     print(f"\nWrote {out}")
 

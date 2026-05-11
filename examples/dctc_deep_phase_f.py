@@ -34,6 +34,10 @@ from systrophe.d_ctc import (
     dctc_fixed_point,
     density_matrix_diagnostics,
 )
+from systrophe.novelty_catcher import (
+    catch_novelty_in_named_arrays,
+    catch_novelty_per_quantity,
+)
 
 
 def haar_random_unitary(dim: int, rng: np.random.Generator) -> np.ndarray:
@@ -301,6 +305,30 @@ def main():
         print("matrix is essentially equal to the purity itself (definitional).")
     print()
 
+    # Per quantity: bin Haar samples by purity quantile and look for
+    # structural transitions in Kraus diagnostics. Real novelty = a
+    # diagnostic that flips regime exactly at the high-purity tail.
+    p_low = np.where(purities < np.quantile(purities, 0.33))[0]
+    p_mid = np.where((purities >= np.quantile(purities, 0.33)) &
+                      (purities < np.quantile(purities, 0.67)))[0]
+    p_hi  = np.where(purities >= np.quantile(purities, 0.67))[0]
+    novelty = catch_novelty_per_quantity({
+        "sigma_min_joint": {"p_low": sigma_min_joints[p_low],
+                              "p_mid": sigma_min_joints[p_mid],
+                              "p_hi":  sigma_min_joints[p_hi]},
+        "alignment":      {"p_low": alignments[p_low],
+                            "p_mid": alignments[p_mid],
+                            "p_hi":  alignments[p_hi]},
+        "jade_residual":  {"p_low": jade_resids[p_low],
+                            "p_mid": jade_resids[p_mid],
+                            "p_hi":  jade_resids[p_hi]},
+        "lambda_2":       {"p_low": lambda_2s[p_low],
+                            "p_mid": lambda_2s[p_mid],
+                            "p_hi":  lambda_2s[p_hi]},
+    })
+    print(f"Novelty catcher aggregate='{novelty['aggregate_verdict']}', "
+          f"novel quantities={novelty['novel_quantities']}")
+
     out_path = Path("examples") / "dctc_deep_phase_f_results.json"
     with open(out_path, "w") as f:
         json.dump({
@@ -311,6 +339,7 @@ def main():
                 "pearson_purity_vs_neg_log_jade_residual": pearson_jade,
                 "pearson_purity_vs_rho_principal_top": pearson_rho,
             },
+            "novelty_catcher": novelty,
             "stats": {
                 "alignment_score": {
                     "mean": float(alignments.mean()),

@@ -20,6 +20,7 @@ from systrophe.d_ctc import (
     dctc_fixed_point,
     density_matrix_diagnostics,
 )
+from systrophe.novelty_catcher import catch_novelty_in_named_arrays
 
 
 def haar_random_unitary(dim, rng):
@@ -219,6 +220,20 @@ def main():
     else:
         print(f"Holevo capacity is comparable across Clifford and Haar.")
 
+    # Native novelty catcher: AD iteration-count distributions +
+    # AF Holevo / purity distributions for Haar and Clifford.
+    novelty = catch_novelty_in_named_arrays({
+        "AD_iters_standard": iters_standard,
+        "AD_iters_anderson": iters_anderson,
+        "AF_holevos_haar":   holevos_haar,
+        "AF_holevos_cliff":  holevos_cliff,
+        "AF_purities_haar":  purities_haar,
+        "AF_purities_cliff": purities_cliff,
+    })
+    print()
+    print(f"Novelty catcher: verdict='{novelty['verdict']}', "
+          f"n_sharp={len(novelty['sharp_features'])}")
+
     out = Path("examples") / "dctc_deep_phase_adf_results.json"
     with open(out, "w") as f:
         json.dump({
@@ -238,6 +253,7 @@ def main():
                 "haar_pearson_pur_holevo": float(np.corrcoef(purities_haar, holevos_haar)[0,1]),
                 "clifford_pearson_pur_holevo": float(np.corrcoef(purities_cliff, holevos_cliff)[0,1]),
             },
+            "novelty_catcher": novelty,
         }, f, indent=2)
     print(f"\nWrote {out}")
 

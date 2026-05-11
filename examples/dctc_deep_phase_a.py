@@ -17,6 +17,7 @@ from systrophe.d_ctc import (
     density_matrix_diagnostics,
     maximally_mixed_state,
 )
+from systrophe.novelty_catcher import catch_novelty_in_named_arrays
 
 
 def haar_random_unitary(dim: int, rng: np.random.Generator) -> np.ndarray:
@@ -81,12 +82,14 @@ def main():
     print()
 
     results = {}
+    iters_per_cell: dict[str, list[float]] = {}
     t0 = time.time()
     for dim_cr in dim_cr_list:
         for dim_ctc in dim_ctc_list:
             seed = 11 + dim_cr * 100 + dim_ctc
             r = stress_one_config(dim_cr, dim_ctc, n_per, seed)
             key = f"{dim_cr}x{dim_ctc}"
+            iters_per_cell[key] = r["iters"].tolist()
             results[key] = {
                 "dim_cr": dim_cr, "dim_ctc": dim_ctc,
                 "iter_median": float(np.median(r["iters"])),
@@ -148,6 +151,16 @@ def main():
         row = [results[f"{dc}x{dim_ctc}"]["purity_max"] for dc in dim_cr_list]
         floor_str = f"(floor {1.0/dim_ctc:.3f})"
         print(f"     {dim_ctc:2d}    | " + " ".join(f"{r:5.3f}" for r in row) + f" {floor_str}")
+
+    # Native novelty catcher: each (dim_CR, dim_CTC) cell's iteration
+    # count distribution is one node in the address-space graph; sharp
+    # Hamming steps flag suspect transitions across the sweep.
+    results["novelty_catcher"] = catch_novelty_in_named_arrays(
+        {f"iters_{k}": v for k, v in iters_per_cell.items()}
+    )
+    print()
+    print(f"Novelty catcher: verdict='{results['novelty_catcher']['verdict']}', "
+          f"n_sharp={len(results['novelty_catcher']['sharp_features'])}")
 
     # Write results
     out_path = Path("examples") / "dctc_deep_phase_a_results.json"

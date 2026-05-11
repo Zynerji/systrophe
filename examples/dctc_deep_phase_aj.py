@@ -21,6 +21,7 @@ from systrophe.d_ctc import (
     dctc_fixed_point,
     density_matrix_diagnostics,
 )
+from systrophe.novelty_catcher import catch_novelty_in_named_arrays
 from systrophe.vanstockum import VanStockumInterior
 
 
@@ -205,6 +206,20 @@ def main():
         print(f"less than Clifford ({best_clifford_amp:.3f}).")
     else:
         print("MARGINAL: LP-derived channels show only weak amplification.")
+
+    # Native novelty catcher: amplification + purity across LP regimes
+    # vs the Haar/Clifford references. Constant-mass histograms when
+    # only one value is in the array; the catcher handles that.
+    catcher_arrays = {}
+    catcher_arrays["amp_clifford_best"] = np.array([best_clifford_amp])
+    catcher_arrays["amp_haar_best"]     = np.array([best_haar_amp])
+    for omega, R, label in configs:
+        if label in results and "amp" in results[label]:
+            catcher_arrays[f"amp_{label}"] = np.array([results[label]["amp"]])
+    novelty = catch_novelty_in_named_arrays(catcher_arrays)
+    print(f"Novelty catcher: verdict='{novelty['verdict']}', "
+          f"n_sharp={len(novelty['sharp_features'])}")
+    results["novelty_catcher"] = novelty
 
     out = Path("examples") / "dctc_deep_phase_aj_results.json"
     with open(out, "w") as f:
