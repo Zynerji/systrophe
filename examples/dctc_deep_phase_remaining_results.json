@@ -1,0 +1,43 @@
+{
+  "T_conditioning": {
+    "haar_mean_cond": 7.219654571306876,
+    "cliff_mean_cond": 895000000000.105,
+    "haar_pearson_pur_cond": 0.15365483125776094,
+    "cliff_pearson_pur_cond": -0.4193467998462518
+  },
+  "U_schmidt": {
+    "haar_mean": 0.5069368330221765,
+    "cliff_mean": 0.49633596847966177
+  },
+  "V_distance_to_I": {
+    "haar_mean": 3.487361092300945,
+    "cliff_mean": 3.4726905500819885
+  },
+  "X_dist_to_clifford": {
+    "haar_mean_dist": 2.9079154967711816,
+    "haar_pearson_pur_neg_dist": -0.07919985049057238
+  },
+  "AG_coherent_info_proxy": {
+    "haar_mean": -0.1202765713530916,
+    "cliff_mean": -0.30960574065008567
+  },
+  "AA_distribution": {
+    "n": 500,
+    "n_peaks": 2,
+    "min": 25,
+    "max": 385,
+    "median": 72.0
+  },
+  "S_lyapunov": {
+    "mean_slope": -0.3051494706832557,
+    "mean_lambda2_implied": 0.7370132042910189
+  },
+  "AK_acoustic": {
+    "purity": 0.9999999999999916,
+    "amplification": 3.0009376175250765e-14
+  },
+  "AH_code_capacity": {
+    "mean_leading_eig": 0.8348796772620956,
+    "fraction_gt_099": 0.3333333333333333
+  }
+}
