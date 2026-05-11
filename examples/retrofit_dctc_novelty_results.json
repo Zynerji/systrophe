@@ -1,0 +1,275 @@
+[
+  {
+    "file": "dctc_deep_E1_cycles_results.json",
+    "stem": "dctc_deep_E1_cycles",
+    "status": "scanned",
+    "n_distributions": 2,
+    "labels": [
+      "haar_cycle_distribution",
+      "clifford_cycle_distribution"
+    ],
+    "verdict": "uniform",
+    "n_sharp": 0,
+    "sharp_features": [],
+    "lambda_2_at_radius": {
+      "4": 2.0,
+      "8": 2.0,
+      "12": 2.0,
+      "16": 2.0
+    }
+  },
+  {
+    "file": "dctc_deep_E4_trichotomy_results.json",
+    "stem": "dctc_deep_E4_trichotomy",
+    "status": "scanned",
+    "n_distributions": 11,
+    "labels": [
+      "row0",
+      "row1",
+      "row2",
+      "row3",
+      "row4",
+      "row5",
+      "row6",
+      "row7",
+      "row8",
+      "row9",
+      "row10"
+    ],
+    "verdict": "novel_structure",
+    "n_sharp": 2,
+    "sharp_features": [
+      {
+        "between": [
+          "row1",
+          "row2"
+        ],
+        "hamming_step": 9,
+        "median_step": 6.5,
+        "ratio_to_median": 1.3846153846153846
+      },
+      {
+        "between": [
+          "row8",
+          "row9"
+        ],
+        "hamming_step": 9,
+        "median_step": 6.5,
+        "ratio_to_median": 1.3846153846153846
+      }
+    ],
+    "lambda_2_at_radius": {
+      "4": 0.0,
+      "8": 4.645344896570331,
+      "12": 10.999999999999988,
+      "16": 10.999999999999988
+    }
+  },
+  {
+    "file": "dctc_deep_E8_ergodicity_results.json",
+    "stem": "dctc_deep_E8_ergodicity",
+    "status": "scalar_summary_only",
+    "needs_in_place_patch": true
+  },
+  {
+    "file": "dctc_deep_phase_a_results.json",
+    "stem": "dctc_deep_phase_a",
+    "status": "insufficient_distributions",
+    "n": 0,
+    "needs_in_place_patch": true
+  },
+  {
+    "file": "dctc_deep_phase_abal_results.json",
+    "stem": "dctc_deep_phase_abal",
+    "status": "scanned",
+    "n_distributions": 2,
+    "labels": [
+      "phase_AB",
+      "phase_AL"
+    ],
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp_features": [],
+    "lambda_2_at_radius": {
+      "4": 2.0,
+      "8": 2.0,
+      "12": 2.0,
+      "16": 2.0
+    }
+  },
+  {
+    "file": "dctc_deep_phase_ac_results.json",
+    "stem": "dctc_deep_phase_ac",
+    "status": "scalar_summary_only",
+    "needs_in_place_patch": true
+  },
+  {
+    "file": "dctc_deep_phase_adf_results.json",
+    "stem": "dctc_deep_phase_adf",
+    "status": "scalar_summary_only",
+    "needs_in_place_patch": true
+  },
+  {
+    "file": "dctc_deep_phase_aj_results.json",
+    "stem": "dctc_deep_phase_aj",
+    "status": "scalar_summary_only",
+    "needs_in_place_patch": true
+  },
+  {
+    "file": "dctc_deep_phase_am_counter_results.json",
+    "stem": "dctc_deep_phase_am_counter",
+    "status": "scanned",
+    "n_distributions": 4,
+    "labels": [
+      "E_direct_L",
+      "F_geodesic",
+      "G_pair_boundary",
+      "H_alpha_floquet"
+    ],
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp_features": [],
+    "lambda_2_at_radius": {
+      "4": 0.9999999999999997,
+      "8": 3.9999999999999982,
+      "12": 3.9999999999999982,
+      "16": 3.9999999999999982
+    }
+  },
+  {
+    "file": "dctc_deep_phase_am_extended_results.json",
+    "stem": "dctc_deep_phase_am_extended",
+    "status": "scanned",
+    "n_distributions": 4,
+    "labels": [
+      "A_original",
+      "B_interpolation",
+      "C_anomaly_flow",
+      "D_floquet"
+    ],
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp_features": [],
+    "lambda_2_at_radius": {
+      "4": 3.435041992611059e-17,
+      "8": 3.9999999999999982,
+      "12": 3.9999999999999982,
+      "16": 3.9999999999999982
+    }
+  },
+  {
+    "file": "dctc_deep_phase_am_results.json",
+    "stem": "dctc_deep_phase_am",
+    "status": "scanned",
+    "n_distributions": 3,
+    "labels": [
+      "physical_ctcs",
+      "dctc_amplifications",
+      "fixed_point_purities"
+    ],
+    "verdict": "smooth",
+    "n_sharp": 0,
+    "sharp_features": [],
+    "lambda_2_at_radius": {
+      "4": 3.0,
+      "8": 3.0,
+      "12": 3.0,
+      "16": 3.0
+    }
+  },
+  {
+    "file": "dctc_deep_phase_b_results.json",
+    "stem": "dctc_deep_phase_b",
+    "status": "scanned",
+    "n_distributions": 4,
+    "labels": [
+      "2x3",
+      "4x3",
+      "2x4",
+      "3x4"
+    ],
+    "verdict": "uniform",
+    "n_sharp": 0,
+    "sharp_features": [],
+    "lambda_2_at_radius": {
+      "4": 3.9999999999999982,
+      "8": 3.9999999999999982,
+      "12": 3.9999999999999982,
+      "16": 3.9999999999999982
+    }
+  },
+  {
+    "file": "dctc_deep_phase_c_results.json",
+    "stem": "dctc_deep_phase_c",
+    "status": "scanned",
+    "n_distributions": 2,
+    "labels": [
+      "top_20",
+      "bottom_20"
+    ],
+    "verdict": "uniform",
+    "n_sharp": 0,
+    "sharp_features": [],
+    "lambda_2_at_radius": {
+      "4": 2.0,
+      "8": 2.0,
+      "12": 2.0,
+      "16": 2.0
+    }
+  },
+  {
+    "file": "dctc_deep_phase_d_results.json",
+    "stem": "dctc_deep_phase_d",
+    "status": "scalar_summary_only",
+    "needs_in_place_patch": true
+  },
+  {
+    "file": "dctc_deep_phase_e_results.json",
+    "stem": "dctc_deep_phase_e",
+    "status": "scalar_summary_only",
+    "needs_in_place_patch": true
+  },
+  {
+    "file": "dctc_deep_phase_f_results.json",
+    "stem": "dctc_deep_phase_f",
+    "status": "scalar_summary_only",
+    "needs_in_place_patch": true
+  },
+  {
+    "file": "dctc_deep_phase_g_results.json",
+    "stem": "dctc_deep_phase_g",
+    "status": "scalar_summary_only",
+    "needs_in_place_patch": true
+  },
+  {
+    "file": "dctc_deep_phase_knpai_results.json",
+    "stem": "dctc_deep_phase_knpai",
+    "status": "scalar_summary_only",
+    "needs_in_place_patch": true
+  },
+  {
+    "file": "dctc_deep_phase_lmw_results.json",
+    "stem": "dctc_deep_phase_lmw",
+    "status": "scalar_summary_only",
+    "needs_in_place_patch": true
+  },
+  {
+    "file": "dctc_deep_phase_oqr_results.json",
+    "stem": "dctc_deep_phase_oqr",
+    "status": "scalar_summary_only",
+    "needs_in_place_patch": true
+  },
+  {
+    "file": "dctc_deep_phase_remaining_results.json",
+    "stem": "dctc_deep_phase_remaining",
+    "status": "scalar_summary_only",
+    "needs_in_place_patch": true
+  },
+  {
+    "file": "dctc_deep_phase_zy_results.json",
+    "stem": "dctc_deep_phase_zy",
+    "status": "insufficient_distributions",
+    "n": 0,
+    "needs_in_place_patch": true
+  }
+]

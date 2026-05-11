@@ -276,6 +276,8 @@ A parallel line of empirical investigation lives in `examples/dctc_deep_phase_*.
 
 The unified treatment is in [`paper/dctc_treatise.pdf`](paper/dctc_treatise.pdf); per-phase findings in [`docs/DCTC_FINDINGS.md`](docs/DCTC_FINDINGS.md) and [`docs/DCTC_DEEP.md`](docs/DCTC_DEEP.md); the chronology-protection budget in [`docs/DCTC_CHRONOLOGY_PROTECTION.md`](docs/DCTC_CHRONOLOGY_PROTECTION.md); the phase plan in [`docs/DCTC_PHASE_PLAN.md`](docs/DCTC_PHASE_PLAN.md).
 
+**Novelty-catcher coverage (2026-05-11):** the DCTC trilogy was authored before the always-on rule landed. A retrofit pass (`examples/retrofit_dctc_novelty_scan.py`) scans every `dctc_*_results.json` whose shape carries extractable distributions and writes verdicts to `examples/retrofit_dctc_novelty_results.json`. Current status: **8 scanned, 1 novel-structure (`dctc_deep_E4_trichotomy`, confirming the trichotomy basin boundaries the paper already claims), 7 smooth/uniform, 14 scalar-summary-only result files awaiting in-place patches to emit native catcher verdicts on re-run.** `dctc_deep_E4_trichotomy.py` is patched (catcher block landed); the remaining 14 scripts are queued for native instrumentation.
+
 ---
 
 ## IBM Marrakesh hardware validation

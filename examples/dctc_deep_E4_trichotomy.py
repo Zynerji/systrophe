@@ -18,6 +18,7 @@ from systrophe.d_ctc import (
     dctc_fixed_point,
     density_matrix_diagnostics,
 )
+from systrophe.novelty_catcher import catch_novelty_in_distributions
 from systrophe.pair import SystrophePair
 from systrophe.sinusoid import TiplerSinusoid
 
@@ -144,6 +145,37 @@ def main():
         print("never triggered in this construction series.")
 
     print()
+
+    # Mandatory novelty catcher: hash each row's amplitude distribution
+    # to address space and inspect successive Hamming steps for sharp
+    # transitions across the t sweep. Retrofit pass on 2026-05-11
+    # surfaced sharp jumps at rows 1->2 and 8->9 (the trichotomy basin
+    # boundaries); recording the verdict here so future re-runs preserve
+    # that finding without an external scan.
+    def _hist(arr, n_bins: int = 16) -> np.ndarray:
+        a = np.asarray(arr, dtype=float).ravel()
+        a = a[np.isfinite(a)]
+        if a.size == 0:
+            return np.zeros(n_bins)
+        lo, hi = float(a.min()), float(a.max())
+        eps = n_bins * np.finfo(float).eps * max(abs(lo), abs(hi), 1.0)
+        if hi - lo <= eps:
+            h = np.zeros(n_bins); h[0] = a.size
+        else:
+            h, _ = np.histogram(a, bins=n_bins, range=(lo, hi))
+        s = h.sum()
+        return h.astype(float) / s if s > 0 else h.astype(float)
+
+    catcher_labels = [f"row{i}" for i in range(len(results))]
+    catcher_dists = [_hist(r["amps"]) for r in results]
+    novelty = catch_novelty_in_distributions(catcher_dists,
+                                              labels=catcher_labels)
+    print(f"Novelty catcher: verdict='{novelty['verdict']}', "
+          f"sharp_features={len(novelty['sharp_features'])}")
+    for sf in novelty["sharp_features"]:
+        print(f"  sharp: {sf.get('between')}  step={sf.get('hamming_step')}  "
+              f"ratio_to_median={sf.get('ratio_to_median'):.3f}")
+
     out = Path("examples") / "dctc_deep_E4_trichotomy_results.json"
     with open(out, "w") as f:
         json.dump({
@@ -151,6 +183,7 @@ def main():
             "ts": ts.tolist(),
             "results": results,
             "transition_t": transition_t,
+            "novelty_catcher": novelty,
         }, f, indent=2)
     print(f"Wrote {out}")
 
