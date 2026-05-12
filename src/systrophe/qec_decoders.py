@@ -140,14 +140,33 @@ def minimum_weight_proxy_decoder(
     iterations when the channel's spectral gap is large.
     """
     n = superoperator.shape[0]
-    eigvals, eigvecs = np.linalg.eig(superoperator)
-    # Sort by descending eigenvalue magnitude
-    order = np.argsort(-np.abs(eigvals))
-    eigvecs = eigvecs[:, order]
-    eigvals = eigvals[order]
-    # Project onto top-k eigenvectors (k = sqrt(n))
-    k_proj = max(2, int(math.sqrt(n)))
-    V = eigvecs[:, :k_proj]
+    # Use sparse Arnoldi for the dominant eigenpairs. The dense
+    # np.linalg.eig allocates an O(n^2) eigenvector matrix that
+    # OOMs on n_qubits >= 7 (4^7 = 16384). eigs is O(k * n * iter)
+    # in memory and time.
+    # Project onto a small spectral subspace. For dense (small n) we
+    # use sqrt(n); for sparse (large n) we cap at 8 to keep Arnoldi
+    # cheap. The decoder dynamics only depend on the top few
+    # eigenvectors anyway -- the channel spectrum decays rapidly.
+    if n <= 256:
+        k_proj = max(2, int(math.sqrt(n)))
+        eigvals, eigvecs = np.linalg.eig(superoperator)
+        order = np.argsort(-np.abs(eigvals))
+        eigvecs = eigvecs[:, order]
+        V = eigvecs[:, :k_proj]
+    else:
+        from scipy.sparse.linalg import eigs as sparse_eigs
+        k_proj = 8
+        try:
+            _, V_sparse = sparse_eigs(
+                superoperator, k=k_proj, which="LM",
+                maxiter=1000, tol=1e-8,
+            )
+            V = V_sparse
+        except Exception:
+            eigvals, eigvecs = np.linalg.eig(superoperator)
+            order = np.argsort(-np.abs(eigvals))
+            V = eigvecs[:, order][:, :k_proj]
     S_proj = V.conj().T @ superoperator @ V
     rng = np.random.default_rng(seed)
     rho = rng.normal(size=k_proj) + 1j * rng.normal(size=k_proj)
