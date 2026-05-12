@@ -240,6 +240,19 @@
     "status": "no_numeric_arrays"
   },
   {
+    "file": "investigate_r_1976_cluster_results.json",
+    "status": "no_numeric_arrays"
+  },
+  {
+    "file": "knopp_drive_earth_mars_results.json",
+    "status": "single_condition_only",
+    "n_arrays": 3
+  },
+  {
+    "file": "knopp_drive_walkthrough_results.json",
+    "status": "already_catchered"
+  },
+  {
     "file": "off_axis_simulation_results.json",
     "status": "no_numeric_arrays"
   },
@@ -247,6 +260,10 @@
     "file": "quantum_layer_walkthrough_results.json",
     "status": "single_condition_only",
     "n_arrays": 2
+  },
+  {
+    "file": "stress_a_critical_transition_results.json",
+    "status": "already_catchered"
   },
   {
     "file": "stress_cascade_dsi_results.json",
@@ -411,6 +428,10 @@
   },
   {
     "file": "time_travel_simulation_results.json",
+    "status": "no_numeric_arrays"
+  },
+  {
+    "file": "warp_drive_comparison_results.json",
     "status": "no_numeric_arrays"
   }
 ]

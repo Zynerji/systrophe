@@ -10,7 +10,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Tests: 1187 passing](https://img.shields.io/badge/tests-1187%20passing-brightgreen.svg)](#tests)
 [![Papers: 12](https://img.shields.io/badge/papers-12%20PDFs-informational.svg)](#papers)
-[![IBM Marrakesh: 5 batches](https://img.shields.io/badge/IBM%20Marrakesh-5%20batches-purple.svg)](#ibm-marrakesh-hardware-validation)
+[![IBM Marrakesh: 6 batches](https://img.shields.io/badge/IBM%20Marrakesh-6%20batches-purple.svg)](#ibm-marrakesh-hardware-validation)
 [![Knopp Drive: live](https://img.shields.io/badge/Knopp%20Drive-live-red.svg)](#the-knopp-drive-headline-composite-warp-engineering-bound)
 [![Version 0.18.0](https://img.shields.io/badge/version-0.18.0-blue.svg)](pyproject.toml)
 
@@ -283,18 +283,20 @@ The unified treatment is in [`paper/dctc_treatise.pdf`](paper/dctc_treatise.pdf)
 
 ## IBM Marrakesh hardware validation
 
-Four batches submitted to IBM Quantum `ibm_marrakesh` (156-qubit Heron-r2), each with `opt_level=3` transpilation, dynamical decoupling (XpXm), and gate/measure twirling at 8192 shots. Code in `experiments/`; raw counts, analyses, and run logs in `experiments/results/`.
+Six batches submitted to IBM Quantum `ibm_marrakesh` (156-qubit Heron-r2), each with `opt_level=3` transpilation, dynamical decoupling (XpXm), and gate/measure twirling at 8192 shots. Code in `experiments/`; raw counts, analyses, and run logs in `experiments/results/`.
 
 | Batch | Script | Subject | HW status |
 |---|---|---|---|
-| 1 | `marrakesh_batch.py` | Joint Floquet eigenmode interference | DONE (analysis + counts published) |
+| 1 | `marrakesh_batch.py` | Joint Floquet eigenmode interference | DONE |
 | 2 | `marrakesh_batch_2.py` | KK-escape: interference cancellation **exact** at the supercritical threshold | DONE |
 | 3 | `marrakesh_batch_3_pagecurve.py` | Page-curve recovery from the LP cover | DONE |
 | 4 | `marrakesh_batch_4_lp_walk.py` | Multi-band LP quantum walk; α-recovery from bitstring distribution (5-point sweep, <1% rel. err at all scales including α_LP = √3; novelty catcher: smooth, 0 sharp features) | DONE |
+| 5 | `marrakesh_batch_5_pair_extinction.py` | Tipler-pair anti-phase extinction; 7-point δ-sweep bracketing δ=π; HW reproduces sim catcher signal | DONE |
+| 6 | `marrakesh_batch_6_knopp_drive.py` | **Knopp Drive CTC-band gating**: 8 r-points across the first CTC band. HW confirms extinction inside band (P(data=1) ≈ 0.05) vs full bias outside (P(data=1) ≈ 0.60). Catcher: novel_structure, 3 sharps (primary at the band exit `r3→r4` step=12). | DONE |
 
-Each batch attaches the mandatory novelty catcher to the observed bitstring distributions before issuing a verdict. The Page-curve and KK-escape results are written up in [`paper/systrophe_extensions_5.pdf`](paper/systrophe_extensions_5.pdf) (Marrakesh hardware validation) and [`paper/systrophe_extensions_6.pdf`](paper/systrophe_extensions_6.pdf) (Page-curve + novelty-catcher integration).
+Each batch attaches the mandatory novelty catcher to the observed bitstring distributions before issuing a verdict. The Page-curve and KK-escape results are written up in [`paper/systrophe_extensions_5.pdf`](paper/systrophe_extensions_5.pdf) (Marrakesh hardware validation) and [`paper/systrophe_extensions_6.pdf`](paper/systrophe_extensions_6.pdf) (Page-curve + novelty-catcher integration). **The Knopp Drive batch 6 result hardware-validates the headline IP** — see [`paper/knopp_drive.pdf`](paper/knopp_drive.pdf).
 
-A recovery harness `experiments/recover_batch4_hw.py` pulls a still-queued job by ID and runs the analysis pipeline (used when the local launcher crashes after submission but before `job.result()` returns).
+Recovery harnesses for crashed-mid-job recoveries: `experiments/recover_batch4_hw.py`, `experiments/recover_batch5_hw.py`, `experiments/recover_batch6_hw.py`.
 
 ---
 
