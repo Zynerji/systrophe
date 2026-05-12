@@ -1,0 +1,38 @@
+{
+  "job_id": "d81kel6gbeec73akmp00",
+  "paired_by_n_rounds": {
+    "1": {
+      "surface": {
+        "logical_zero_rate_greedy": 0.698974609375,
+        "logical_zero_rate_mwpm": 0.884521484375,
+        "n_shots_total": 4096
+      },
+      "bare": {
+        "physical_zero_rate": 0.852783203125,
+        "n_shots_total": 4096
+      }
+    },
+    "2": {
+      "surface": {
+        "logical_zero_rate_greedy": 0.601318359375,
+        "logical_zero_rate_mwpm": 0.74755859375,
+        "n_shots_total": 4096
+      },
+      "bare": {
+        "physical_zero_rate": 0.775390625,
+        "n_shots_total": 4096
+      }
+    },
+    "4": {
+      "surface": {
+        "logical_zero_rate_greedy": 0.53369140625,
+        "logical_zero_rate_mwpm": 0.64453125,
+        "n_shots_total": 4096
+      },
+      "bare": {
+        "physical_zero_rate": 0.702392578125,
+        "n_shots_total": 4096
+      }
+    }
+  }
+}

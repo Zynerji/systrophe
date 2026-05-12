@@ -1,0 +1,91 @@
+{
+  "job_id": "d81kel6gbeec73akmp00",
+  "per_circuit": [
+    {
+      "kind": "surface",
+      "n_rounds": 1,
+      "duration_dt": 30400,
+      "decoded": {
+        "logical_zero_rate": 0.698974609375,
+        "n_shots_total": 4096
+      }
+    },
+    {
+      "kind": "bare",
+      "n_rounds": 1,
+      "duration_dt": 30400,
+      "decoded": {
+        "physical_zero_rate": 0.852783203125,
+        "n_shots_total": 4096
+      }
+    },
+    {
+      "kind": "surface",
+      "n_rounds": 2,
+      "duration_dt": 57800,
+      "decoded": {
+        "logical_zero_rate": 0.601318359375,
+        "n_shots_total": 4096
+      }
+    },
+    {
+      "kind": "bare",
+      "n_rounds": 2,
+      "duration_dt": 57800,
+      "decoded": {
+        "physical_zero_rate": 0.775390625,
+        "n_shots_total": 4096
+      }
+    },
+    {
+      "kind": "surface",
+      "n_rounds": 4,
+      "duration_dt": 93000,
+      "decoded": {
+        "logical_zero_rate": 0.53369140625,
+        "n_shots_total": 4096
+      }
+    },
+    {
+      "kind": "bare",
+      "n_rounds": 4,
+      "duration_dt": 93000,
+      "decoded": {
+        "physical_zero_rate": 0.702392578125,
+        "n_shots_total": 4096
+      }
+    }
+  ],
+  "paired_by_n_rounds": {
+    "1": {
+      "surface": {
+        "logical_zero_rate": 0.698974609375,
+        "n_shots_total": 4096
+      },
+      "bare": {
+        "physical_zero_rate": 0.852783203125,
+        "n_shots_total": 4096
+      }
+    },
+    "2": {
+      "surface": {
+        "logical_zero_rate": 0.601318359375,
+        "n_shots_total": 4096
+      },
+      "bare": {
+        "physical_zero_rate": 0.775390625,
+        "n_shots_total": 4096
+      }
+    },
+    "4": {
+      "surface": {
+        "logical_zero_rate": 0.53369140625,
+        "n_shots_total": 4096
+      },
+      "bare": {
+        "physical_zero_rate": 0.702392578125,
+        "n_shots_total": 4096
+      }
+    }
+  }
+}
