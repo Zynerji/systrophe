@@ -182,6 +182,32 @@ $n_{\mathrm{rounds}}$ & ISA depth (Steane) & $P(\hat L = 0)$ & $P_{\mathrm{bare}
 \end{tabular}
 \end{center}
 
+\subsection{Exponential-decay fit and lifetime extraction}
+
+Fitting the model
+\[
+P(Z = 0; n) - 0.5 \;=\; (P_0 - 0.5)\, e^{-n / \tau_n}
+\]
+to each curve gives:
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Curve & $P_0$ & $\tau_n$ (rounds) \\
+\midrule
+Logical $\hat L = 0$ & $0.906 \pm 0.012$ & $3.57 \pm 0.20$ \\
+Bare-qubit Z = 0 & $0.875 \pm 0.008$ & $6.17 \pm 0.34$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The per-round duration (estimated from $(\Delta t_{n=8} - \Delta t_{n=1})/7$) is $\approx 11.80\,\mu\mathrm{s}$. Converting:
+\[
+\boxed{T_{1,L} = \tau_{n,L} \cdot \Delta t_{\mathrm{round}} = 42.15\,\mu\mathrm{s}, \quad T_{1,\mathrm{phys}} = 72.81\,\mu\mathrm{s}, \quad \frac{T_{1,L}}{T_{1,\mathrm{phys}}} = 0.579.}
+\]
+
+The encoded logical qubit retains $58\%$ of the bare-qubit effective lifetime --- a clean engineering number for the cost of $d = 3$ Steane encoding on Heron-r2 at current gate fidelities. For comparison, Heron-r2's published single-qubit $T_1$ is $\approx 280\,\mu\mathrm{s}$; dynamical decoupling on the bare qubit gives $T_2$-eff $\approx 73\,\mu\mathrm{s}$; the encoding then drops this to $T_{1,L} \approx 42\,\mu\mathrm{s}$.
+
 \subsection{Interpretation: we are sub-threshold at $d = 3$}
 
 The logical recovery rate is \emph{below} the bare-qubit baseline at every $n_{\mathrm{rounds}}$ tested, with the gap growing from $-0.017$ at $n_{\mathrm{rounds}} = 1$ to $-0.091$ at $n_{\mathrm{rounds}} = 8$. This means our $d = 3$ Steane code is currently \textbf{below the QEC break-even point on Heron-r2}: a bare qubit with dynamical decoupling preserves $Z$ information better than the encoded logical qubit at matched wall-clock time. The encoding + syndrome-extraction overhead introduces more errors than the $d = 3$ code can correct.
