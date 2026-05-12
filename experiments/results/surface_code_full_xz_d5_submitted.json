@@ -1,0 +1,20 @@
+{
+  "job_id": "d81ktimgbeec73akndi0",
+  "d": 5,
+  "metadata_per_circuit": [
+    {
+      "d": 5,
+      "n_rounds": 1,
+      "kind": "surface_full_xz",
+      "shots": 8192
+    },
+    {
+      "d": 5,
+      "n_rounds": 4,
+      "kind": "surface_full_xz",
+      "shots": 8192
+    }
+  ],
+  "shots_actual": 8192,
+  "submitted_unix": 1778601676
+}
