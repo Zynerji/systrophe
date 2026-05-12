@@ -8,7 +8,7 @@
 [![PyPI](https://img.shields.io/pypi/v/systrophe.svg)](https://pypi.org/project/systrophe/)
 [![Python ≥ 3.10](https://img.shields.io/badge/python-%E2%89%A5%203.10-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 1187 passing](https://img.shields.io/badge/tests-1187%20passing-brightgreen.svg)](#tests)
+[![Tests: 1228 passing](https://img.shields.io/badge/tests-1228%20passing-brightgreen.svg)](#tests)
 [![Papers: 12](https://img.shields.io/badge/papers-12%20PDFs-informational.svg)](#papers)
 [![IBM Marrakesh: 6 batches](https://img.shields.io/badge/IBM%20Marrakesh-6%20batches-purple.svg)](#ibm-marrakesh-hardware-validation)
 [![Knopp Drive: live](https://img.shields.io/badge/Knopp%20Drive-live-red.svg)](#the-knopp-drive-headline-composite-warp-engineering-bound)

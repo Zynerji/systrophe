@@ -268,3 +268,142 @@ def summarise_knopp_budget(b: KnoppDriveBudget) -> str:
         f"|steering|={b.steering_magnitude:.3e}, "
         f"P-F_ok={b.pfenning_ford_compatible}"
     )
+
+
+class KnoppDrive:
+    """High-level Knopp Drive interface.
+
+    Provides a single object-oriented entry point to the four-mechanism
+    composite warp engineering bound. Wraps the lower-level functional
+    API in `knopp_drive` and the traversal calculator in
+    `knopp_traversal` so a typical user can construct a drive,
+    inspect its instantaneous budget, run a journey, and query
+    quantum-inequality compatibility without touching the supporting
+    modules directly.
+
+    Examples
+    --------
+    >>> from systrophe.knopp_drive import KnoppDrive
+    >>> drive = KnoppDrive(Q=100.0, epsilon_horn=0.2)
+    >>> budget = drive.budget(r_orbit=1.5)
+    >>> budget.composite_E_neg
+    0.0   # zero exotic matter inside the Tipler CTC band
+    >>> report = drive.journey(distance=10.0)
+    >>> report.total_energy_budget
+    6.78e-7
+    >>> drive.is_pfenning_ford_compatible(distance=10.0)
+    True
+
+    Parameters
+    ----------
+    Q : float
+        Cavity quality factor for the feedback-amplified shell.
+        Sustained drive power scales as 1/Q^2 in the high-Q regime;
+        the catcher-detected threshold is Q >= ~8.
+    epsilon_horn : float
+        Horn-twist amplitude in [0, 1). Sets the steering dipole
+        magnitude.
+    theta_0_horn : float
+        Horn-twist axis orientation (radians). Sets the steering
+        direction.
+    omega : float
+        Angular velocity of the seed Tipler cylinder. Together with
+        R_cylinder, sets the supercriticality parameter a = omega R.
+        Use a > 1/2 for nontrivial CTC bands.
+    R_cylinder : float
+        Radius of the seed Tipler cylinder.
+    alpha_wall : float
+        Wall sharpness of the embedded Krasnikov tube.
+    sigma_shell : float
+        Bubble shell thickness; sets the natural standing-wave
+        frequency f_0 = c/(2 pi sigma).
+    v_s : float
+        Apparent shell velocity along the worldline.
+    R_bubble : float
+        Outer bubble radius.
+    """
+
+    def __init__(
+        self,
+        Q: float = 10.0,
+        epsilon_horn: float = 0.2,
+        theta_0_horn: float = 0.0,
+        omega: float = 1.0,
+        R_cylinder: float = 1.0,
+        alpha_wall: float = 4.0,
+        sigma_shell: float = 4.0,
+        v_s: float = 1.0,
+        R_bubble: float = 1.0,
+    ) -> None:
+        self._cfg = KnoppDriveConfig(
+            omega=float(omega),
+            R_cylinder=float(R_cylinder),
+            alpha_wall=float(alpha_wall),
+            Q=float(Q),
+            sigma_shell=float(sigma_shell),
+            epsilon_horn=float(epsilon_horn),
+            theta_0_horn=float(theta_0_horn),
+            v_s=float(v_s),
+            R_bubble=float(R_bubble),
+        )
+
+    @property
+    def config(self) -> KnoppDriveConfig:
+        """The underlying immutable KnoppDriveConfig."""
+        return self._cfg
+
+    def budget(self, r_orbit: float | None = None) -> KnoppDriveBudget:
+        """Compute the instantaneous Knopp budget at the given orbit
+        radius. If `r_orbit` is None, uses the configured value."""
+        if r_orbit is not None:
+            from dataclasses import replace
+            cfg = replace(self._cfg, r_orbit=float(r_orbit))
+        else:
+            cfg = self._cfg
+        return _knopp_compose(cfg)
+
+    def journey(self, distance: float, n_steps: int = 80):
+        """Run an end-to-end traversal of given distance.
+
+        Returns
+        -------
+        KnoppTraversalReport
+            See `systrophe.knopp_traversal.KnoppTraversalReport`.
+        """
+        # Local import to avoid circular dependency.
+        from .knopp_traversal import knopp_traversal
+        return knopp_traversal(self._cfg, distance=float(distance),
+                                n_steps=int(n_steps))
+
+    def is_pfenning_ford_compatible(
+        self, distance: float = 1.0, n_steps: int = 40,
+    ) -> bool:
+        """True iff the Knopp Drive respects the Pfenning-Ford quantum
+        inequality at every point along a traversal of given distance.
+        """
+        rep = self.journey(distance=distance, n_steps=n_steps)
+        return rep.pfenning_ford_compatible
+
+    def steering_vector(self) -> tuple[float, float]:
+        """(p_x, p_y) of the horn-toroidal steering dipole."""
+        b = self.budget()
+        return b.steering_vector_pxpy
+
+    def is_inside_band(self, r_orbit: float | None = None) -> bool:
+        """True iff the configured orbit lies inside a Tipler CTC band
+        (tipler tilt >= 1)."""
+        r = self._cfg.r_orbit if r_orbit is None else float(r_orbit)
+        from .tipler_krasnikov_hybrid import tipler_tilt_at
+        from .vanstockum import VanStockumInterior
+        vs = VanStockumInterior(omega=self._cfg.omega, R=self._cfg.R_cylinder)
+        return tipler_tilt_at(vs, r) >= 1.0
+
+    def summarise(self, r_orbit: float | None = None) -> str:
+        """One-line summary of the budget at the given orbit."""
+        return summarise_knopp_budget(self.budget(r_orbit))
+
+    def __repr__(self) -> str:
+        return (
+            f"KnoppDrive(Q={self._cfg.Q}, epsilon_horn={self._cfg.epsilon_horn}, "
+            f"omega={self._cfg.omega}, R_cylinder={self._cfg.R_cylinder})"
+        )
