@@ -142,6 +142,95 @@ def scan_novelty_coherent(
 
 
 # ============================================================
+# Variant 1b: Coherence-anomaly (sharp jumps in coherence trajectory)
+#
+# For deterministic physics modules where adjacent components are
+# physically correlated (e.g., energy conditions, dispersion vs
+# momentum), the baseline coherence is high (~0.5). True emergents
+# manifest as sharp DROPS or jumps in coherence at specific parameter
+# values -- regime changes that break the otherwise-smooth flow.
+# ============================================================
+
+@dataclass
+class CoherenceAnomalyResult:
+    parameter_axis: np.ndarray
+    coherence_trajectory: np.ndarray
+    delta_coherence_trajectory: np.ndarray
+    sharp_features: list = field(default_factory=list)
+    max_delta_coherence: float = 0.0
+    max_delta_coherence_parameter: float = 0.0
+    verdict: str = "smooth"
+
+
+def scan_novelty_coherence_anomaly(
+    parameter_values: np.ndarray,
+    output_fn: Callable[[float], np.ndarray],
+    sharp_jump_threshold: float = 0.30,
+    min_components: int = 4,
+) -> CoherenceAnomalyResult:
+    """Detect emergents via SHARP JUMPS in the cross-coordinate
+    coherence trajectory.
+
+    For modules where physically-correlated components cause baseline
+    coherence to be high (~0.5 saturated), true emergents appear as
+    coherence drops/jumps at specific parameter values --
+    discontinuities in the smooth-flow regime.
+
+    sharp_jump_threshold: minimum |delta_coherence| between adjacent
+        transitions to flag a sharp feature. With coherence in
+        [-0.5, +0.5], a jump of 0.30 = 30% of the range.
+    """
+    base = scan_novelty_coherent(parameter_values, output_fn,
+                                   sharp_threshold=1.0,  # never fire on raw
+                                   min_components=min_components)
+    if base.verdict == "no_signal":
+        return CoherenceAnomalyResult(
+            parameter_axis=base.parameter_axis,
+            coherence_trajectory=base.coherence_trajectory,
+            delta_coherence_trajectory=np.zeros(0),
+            verdict="no_signal",
+        )
+
+    coh = base.coherence_trajectory
+    if len(coh) < 2:
+        return CoherenceAnomalyResult(
+            parameter_axis=base.parameter_axis,
+            coherence_trajectory=coh,
+            delta_coherence_trajectory=np.zeros(0),
+            verdict="no_signal",
+        )
+
+    # Detect sharp changes in coherence
+    delta_coh = np.abs(np.diff(coh))
+    p = base.parameter_axis
+    # delta_coh[i] corresponds to transition between coh[i] and coh[i+1]
+    # which is in the parameter region around p[i+2]
+    sharp_features = []
+    for i, d in enumerate(delta_coh):
+        if d >= sharp_jump_threshold:
+            sharp_features.append({
+                "parameter_value": float(p[i + 2]) if i + 2 < len(p) else float(p[-1]),
+                "delta_coherence": float(d),
+                "coherence_before": float(coh[i]),
+                "coherence_after": float(coh[i + 1]),
+            })
+    max_idx = int(np.argmax(delta_coh)) if len(delta_coh) > 0 else 0
+    max_d = float(delta_coh[max_idx]) if len(delta_coh) > 0 else 0.0
+    max_p = (float(p[max_idx + 2]) if (max_idx + 2 < len(p)) else
+             float(p[-1]) if len(p) > 0 else 0.0)
+    verdict = "novel_structure" if sharp_features else "smooth"
+    return CoherenceAnomalyResult(
+        parameter_axis=p,
+        coherence_trajectory=coh,
+        delta_coherence_trajectory=delta_coh,
+        sharp_features=sharp_features,
+        max_delta_coherence=max_d,
+        max_delta_coherence_parameter=max_p,
+        verdict=verdict,
+    )
+
+
+# ============================================================
 # Variant 2: Per-component consensus (z-score above baseline)
 # ============================================================
 

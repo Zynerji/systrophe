@@ -1,0 +1,119 @@
+[
+  {
+    "module": "bms_soft_hair",
+    "coherence": {
+      "verdict": "novel_structure",
+      "max_coherence": 0.5,
+      "max_coherence_parameter": 3.0,
+      "n_sharp": 28
+    },
+    "consensus": {
+      "verdict": "smooth",
+      "max_consensus": 0.2,
+      "max_consensus_parameter": 2.0,
+      "n_sharp": 0
+    },
+    "coherence_anomaly": {
+      "verdict": "smooth",
+      "max_delta_coherence": 0.0,
+      "max_delta_coherence_parameter": 4.0,
+      "n_sharp": 0,
+      "sharps": []
+    }
+  },
+  {
+    "module": "energy_conditions_omega_sweep",
+    "coherence": {
+      "verdict": "novel_structure",
+      "max_coherence": 0.5,
+      "max_coherence_parameter": 0.3894736842105263,
+      "n_sharp": 19
+    },
+    "consensus": {
+      "verdict": "smooth",
+      "max_consensus": 0.0,
+      "max_consensus_parameter": 0.3,
+      "n_sharp": 0
+    },
+    "coherence_anomaly": {
+      "verdict": "smooth",
+      "max_delta_coherence": 0.0,
+      "max_delta_coherence_parameter": 0.4789473684210526,
+      "n_sharp": 0,
+      "sharps": []
+    }
+  },
+  {
+    "module": "dirac_spectrum_omega_sweep",
+    "coherence": {
+      "verdict": "novel_structure",
+      "max_coherence": 0.5,
+      "max_coherence_parameter": 0.6529411764705882,
+      "n_sharp": 17
+    },
+    "consensus": {
+      "verdict": "smooth",
+      "max_consensus": 0.0,
+      "max_consensus_parameter": 0.6,
+      "n_sharp": 0
+    },
+    "coherence_anomaly": {
+      "verdict": "smooth",
+      "max_delta_coherence": 0.0,
+      "max_delta_coherence_parameter": 0.7058823529411764,
+      "n_sharp": 0,
+      "sharps": []
+    }
+  },
+  {
+    "module": "modified_dispersion_radial_sweep",
+    "coherence": {
+      "verdict": "novel_structure",
+      "max_coherence": 0.5,
+      "max_coherence_parameter": 1.2578947368421054,
+      "n_sharp": 19
+    },
+    "consensus": {
+      "verdict": "smooth",
+      "max_consensus": 0.0,
+      "max_consensus_parameter": 1.05,
+      "n_sharp": 0
+    },
+    "coherence_anomaly": {
+      "verdict": "smooth",
+      "max_delta_coherence": 0.0,
+      "max_delta_coherence_parameter": 1.4657894736842105,
+      "n_sharp": 0,
+      "sharps": []
+    }
+  },
+  {
+    "module": "vacuum_polarization_radial_sweep",
+    "coherence": {
+      "verdict": "novel_structure",
+      "max_coherence": 0.5,
+      "max_coherence_parameter": 4.341666666666667,
+      "n_sharp": 5
+    },
+    "consensus": {
+      "verdict": "smooth",
+      "max_consensus": 0.0,
+      "max_consensus_parameter": 1.05,
+      "n_sharp": 0
+    },
+    "coherence_anomaly": {
+      "verdict": "novel_structure",
+      "max_delta_coherence": 0.3333333134651184,
+      "max_delta_coherence_parameter": 4.341666666666667,
+      "n_sharp": 1,
+      "sharps": [
+        {
+          "parameter_value": 4.341666666666667,
+          "delta_coherence": 0.3333333134651184,
+          "coherence_before": 0.1666666865348816,
+          "coherence_after": 0.5
+        }
+      ]
+    }
+  }
+]
