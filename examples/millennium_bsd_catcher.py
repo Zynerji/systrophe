@@ -115,19 +115,34 @@ def partial_log_L(ap: dict[int, int]) -> dict:
 
 
 def main() -> None:
-    # Short Weierstrass curves y^2 = x^3 + a4*x + a6 with known rank.
-    # These are not necessarily exact Cremona curves but are
-    # well-known specimens from the rank-distribution literature.
+    # Extended set of short Weierstrass curves y^2 = x^3 + a4*x + a6.
+    # Ranks are from the literature (Cremona tables, congruent-number
+    # results, twist families). This is still a small sample, but
+    # broader than the initial 6-curve probe.
     curves = [
         # (label, a4, a6, expected_rank)
-        ("y2=x3+1",      0,    1,    0),   # rank 0 (torsion-only Z/6Z)
-        ("y2=x3+x",      1,    0,    0),   # rank 0
-        ("y2=x3+x+1",    1,    1,    0),   # rank 0
-        ("y2=x3-x",     -1,    0,    1),   # rank 1 (congruent-number 1)
-        ("y2=x3-2",      0,   -2,    1),   # rank 1
-        ("y2=x3+17",     0,   17,    2),   # rank 2 (famous specimen)
+        # --- Rank 0 ---
+        ("y2=x3+1",      0,    1,    0),   # j=0 torsion-only
+        ("y2=x3-1",      0,   -1,    0),
+        ("y2=x3+x",      1,    0,    0),   # CM by Z[i]
+        ("y2=x3+x+1",    1,    1,    0),
+        ("y2=x3-x+1",   -1,    1,    0),
+        ("y2=x3+2x+1",   2,    1,    0),
+        ("y2=x3+4",      0,    4,    0),
+        ("y2=x3-4",      0,   -4,    0),
+        # --- Rank 1 ---
+        ("y2=x3-x",     -1,    0,    1),   # congruent-number n=1
+        ("y2=x3-4x",    -4,    0,    1),   # n=2
+        ("y2=x3-9x",    -9,    0,    1),   # n=3
+        ("y2=x3-25x",  -25,    0,    1),   # n=5
+        ("y2=x3-2",      0,   -2,    1),
+        ("y2=x3-7",      0,   -7,    1),
+        # --- Rank 2 ---
+        ("y2=x3+17",     0,   17,    2),
+        ("y2=x3-49x",  -49,    0,    2),   # n=7 (congruent)
+        ("y2=x3-225x",-225,    0,    2),   # n=15 (congruent)
     ]
-    P_MAX = 200
+    P_MAX = 500
     primes = sieve_primes(P_MAX)
     print(f"Computing a_p for primes <= {P_MAX} ({len(primes)} primes)...")
     print()
