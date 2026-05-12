@@ -8,11 +8,12 @@
 [![PyPI](https://img.shields.io/pypi/v/systrophe.svg)](https://pypi.org/project/systrophe/)
 [![Python ≥ 3.10](https://img.shields.io/badge/python-%E2%89%A5%203.10-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 1228 passing](https://img.shields.io/badge/tests-1228%20passing-brightgreen.svg)](#tests)
+[![Tests: 1294 passing](https://img.shields.io/badge/tests-1294%20passing-brightgreen.svg)](#tests)
 [![Papers: 12](https://img.shields.io/badge/papers-12%20PDFs-informational.svg)](#papers)
-[![IBM Marrakesh: 6 batches](https://img.shields.io/badge/IBM%20Marrakesh-6%20batches-purple.svg)](#ibm-marrakesh-hardware-validation)
+[![IBM Quantum: 7 batches](https://img.shields.io/badge/IBM%20Quantum-7%20batches-purple.svg)](#ibm-marrakesh-hardware-validation)
 [![Knopp Drive: live](https://img.shields.io/badge/Knopp%20Drive-live-red.svg)](#the-knopp-drive-headline-composite-warp-engineering-bound)
-[![Version 0.18.0](https://img.shields.io/badge/version-0.18.0-blue.svg)](pyproject.toml)
+[![Millennium: 2/7 explored](https://img.shields.io/badge/Millennium-2%2F7%20explored-orange.svg)](FINDINGS_MILLENNIUM_PROGRESS.md)
+[![Version 0.19.0](https://img.shields.io/badge/version-0.19.0-blue.svg)](pyproject.toml)
 
 *Systrophē* (Greek **Συστροφή**, "twisting-together"): the joint exterior of two co-rotating, dual-positive-mass van Stockum dust cylinders, whose log-periodic Tipler sinusoids superpose with a tunable relative phase offset.
 
@@ -354,9 +355,35 @@ print(summarise_knopp_budget(b))
 # tipler_gate=0.000, Q=100 -> 1/Q^2=0.0001, |steering|=1.000e-01, P-F_ok=True
 ```
 
-The full derivation, six representative engineering configurations, the complete catcher-validated emergent inventory (18 entries at v0.18.x), and the Pfenning–Ford compatibility analysis are in [`paper/knopp_drive.pdf`](paper/knopp_drive.pdf). The end-to-end walkthrough is `examples/knopp_drive_walkthrough.py`.
+The full derivation, six representative engineering configurations, the complete catcher-validated emergent inventory (**22 entries at v0.19.0**), and the Pfenning–Ford compatibility analysis are in [`paper/knopp_drive.pdf`](paper/knopp_drive.pdf). The end-to-end walkthrough is `examples/knopp_drive_walkthrough.py`.
 
 Implementation: `src/systrophe/knopp_drive.py`. Supporting modules: `alcubierre.py`, `lentz_soliton.py`, `bobrick_martire.py`, `krasnikov_tube.py`, `tipler_krasnikov_hybrid.py`, `feedback_amplified_shell.py`, `horn_toroidal_warp.py`.
+
+### Quantitative band-edge fit (`ibm_kingston` batch 7)
+
+A 16-point r-sweep on `ibm_kingston` (Heron-r2, batch 7, job `d81b6rvoha1c73bk5ee0`, 8192 shots/point with dynamical decoupling) pins the Knopp Drive band edges quantitatively from real hardware:
+
+| Quantity | Value | Sigma | Precision |
+|---|---|---|---|
+| r_edge_in   | 2.657 | 0.002 | 0.07% |
+| r_edge_out  | 5.471 | 0.010 | 0.18% |
+| band_width  | 2.815 | 0.010 | 0.4%  |
+| contrast    | 0.594 | 0.003 | SNR 184σ |
+
+The single-step envelope fit gives χ²/dof = 16.2; a two-Lorentzian-internal-resonance fit drops this to **χ²/dof = 1.09** (perfect to shot-noise), revealing two internal modes inside the CTC band (r₁ ≈ 3.01 sharp, r₂ ≈ 4.47 broad). Plot at `paper/figures/knopp_band_edge_kingston.pdf`. Source: `experiments/knopp_band_edge_fit.py` + `experiments/knopp_substructure_fit.py`.
+
+---
+
+## Millennium-problem catcher explorations
+
+Two of the seven Millennium Prize problems now have catcher-explored deliverables in the repo:
+
+| # | Problem | Result |
+|---|---|---|
+| 1 | **Riemann hypothesis** | Third-split catcher returns `smooth` at N=50–500 zeta zeros → consistent with Montgomery-Odlyzko GUE conjecture. Single sharp feature at γ_33 ↔ γ_34 is a Lehmer-pair-like local cluster, **independently rediscovered** by the catcher without number-theoretic input. GUE null reference (`millennium_riemann_null_gue.py`) confirms Riemann observation sits inside finite-N GUE fluctuation distribution. |
+| 2 | **P vs NP (3-SAT phase transition)** | Initial value-level catcher returns `smooth` (sigmoid transition too gradual). New **derivative catcher** (`src/systrophe/derivative_catcher.py`) recovers the transition centre at **α = 4.270 — within 0.001 of conjectured α_c ≈ 4.267**. Pure address-space novelty on a numerical derivative. |
+
+See [`FINDINGS_MILLENNIUM_PROGRESS.md`](FINDINGS_MILLENNIUM_PROGRESS.md) for full interpretation and roadmap. Run with `python examples/run_all_millennium.py`.
 
 ---
 
