@@ -1,0 +1,35 @@
+{
+  "job_id": "d81kqs00bvlc73d187i0",
+  "metadata_per_circuit": [
+    {
+      "d": 7,
+      "kind": "surface",
+      "n_rounds": 8,
+      "duration_dt": 371000,
+      "shots": 8192
+    },
+    {
+      "d": 7,
+      "kind": "bare",
+      "n_rounds": 8,
+      "duration_dt": 371000,
+      "shots": 8192
+    },
+    {
+      "d": 7,
+      "kind": "surface",
+      "n_rounds": 16,
+      "duration_dt": 712800,
+      "shots": 8192
+    },
+    {
+      "d": 7,
+      "kind": "bare",
+      "n_rounds": 16,
+      "duration_dt": 712800,
+      "shots": 8192
+    }
+  ],
+  "shots_actual": 8192,
+  "submitted_unix": 1778601330
+}
