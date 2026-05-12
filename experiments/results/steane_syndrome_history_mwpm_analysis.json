@@ -1,0 +1,50 @@
+{
+  "job_id": "d81k4mfoha1c73bkgjlg",
+  "decoder": "syndrome_history_mwpm",
+  "paired_by_n_rounds": {
+    "1": {
+      "surface": {
+        "logical_zero_rate_old": 0.810791015625,
+        "logical_zero_rate_new": 0.810791015625,
+        "n_shots_total": 4096
+      },
+      "bare": {
+        "physical_zero_rate": 0.827392578125,
+        "n_shots_total": 4096
+      }
+    },
+    "2": {
+      "surface": {
+        "logical_zero_rate_old": 0.717529296875,
+        "logical_zero_rate_new": 0.717529296875,
+        "n_shots_total": 4096
+      },
+      "bare": {
+        "physical_zero_rate": 0.763671875,
+        "n_shots_total": 4096
+      }
+    },
+    "4": {
+      "surface": {
+        "logical_zero_rate_old": 0.649169921875,
+        "logical_zero_rate_new": 0.649169921875,
+        "n_shots_total": 4096
+      },
+      "bare": {
+        "physical_zero_rate": 0.676025390625,
+        "n_shots_total": 4096
+      }
+    },
+    "8": {
+      "surface": {
+        "logical_zero_rate_old": 0.532470703125,
+        "logical_zero_rate_new": 0.532470703125,
+        "n_shots_total": 4096
+      },
+      "bare": {
+        "physical_zero_rate": 0.62353515625,
+        "n_shots_total": 4096
+      }
+    }
+  }
+}

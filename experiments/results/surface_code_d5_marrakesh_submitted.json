@@ -1,0 +1,50 @@
+{
+  "job_id": "d81np3ntjchs73bn5ac0",
+  "backend": "ibm_marrakesh",
+  "metadata_per_circuit": [
+    {
+      "d": 5,
+      "kind": "surface",
+      "n_rounds": 1,
+      "duration_dt": 37600,
+      "backend": "ibm_marrakesh"
+    },
+    {
+      "d": 5,
+      "kind": "bare",
+      "n_rounds": 1,
+      "duration_dt": 37600,
+      "backend": "ibm_marrakesh"
+    },
+    {
+      "d": 5,
+      "kind": "surface",
+      "n_rounds": 2,
+      "duration_dt": 65200,
+      "backend": "ibm_marrakesh"
+    },
+    {
+      "d": 5,
+      "kind": "bare",
+      "n_rounds": 2,
+      "duration_dt": 65200,
+      "backend": "ibm_marrakesh"
+    },
+    {
+      "d": 5,
+      "kind": "surface",
+      "n_rounds": 4,
+      "duration_dt": 111800,
+      "backend": "ibm_marrakesh"
+    },
+    {
+      "d": 5,
+      "kind": "bare",
+      "n_rounds": 4,
+      "duration_dt": 111800,
+      "backend": "ibm_marrakesh"
+    }
+  ],
+  "shots_actual": 8192,
+  "submitted_unix": 1778613392
+}
