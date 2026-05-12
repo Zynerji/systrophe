@@ -87,7 +87,11 @@ def main() -> None:
     # Solve forward: bulk = 0.6 * N - 1 spacings. For bulk=500: N=836.
     targets = [50, 100, 200, 500]
     results_per_seed = {}
-    for seed in (11, 17, 23, 41, 53):
+    # 30 seeds for cleaner finite-N null statistics
+    seeds = (11, 17, 23, 41, 53, 67, 71, 79, 83, 89,
+             97, 101, 103, 107, 109, 113, 127, 131, 137, 139,
+             149, 151, 157, 163, 167, 173, 179, 181, 191, 193)
+    for seed in seeds:
         per_n = []
         for target_n_spacings in targets:
             n_eigs = int(target_n_spacings / 0.6) + 2
@@ -100,21 +104,47 @@ def main() -> None:
         results_per_seed[f"seed_{seed}"] = per_n
         print()
 
+    # Aggregate per-N statistics
+    per_n_stats = {n: {"scan_novel_count": 0, "per_q_novel_count": 0, "total": 0}
+                   for n in targets}
+    for seed_key, runs in results_per_seed.items():
+        for r in runs:
+            n = r["n_spacings"]
+            # Find closest target N (since bulk truncation rounds)
+            target = min(targets, key=lambda t: abs(t - n))
+            per_n_stats[target]["total"] += 1
+            if r["scan_verdict"] == "novel_structure":
+                per_n_stats[target]["scan_novel_count"] += 1
+            if r["per_quantity_verdict"] == "novel_structure":
+                per_n_stats[target]["per_q_novel_count"] += 1
+
     out_path = Path(__file__).parent / "millennium_riemann_null_gue_results.json"
-    out_path.write_text(json.dumps(results_per_seed, indent=2))
+    out_path.write_text(json.dumps({
+        "per_seed": results_per_seed,
+        "summary_per_N": per_n_stats,
+        "n_seeds": len(seeds),
+    }, indent=2))
     print(f"Wrote {out_path}")
     print()
-    print("Interpretation")
-    print("==============")
-    print("Compare the verdict at each N to the actual Riemann result:")
-    print("  N=50:  Riemann scan=smooth/0sharp,  per_q=smooth")
-    print("  N=100: Riemann scan=novel/1sharp,   per_q=smooth")
-    print("  N=200: Riemann scan=novel/1sharp,   per_q=smooth")
-    print("  N=500: Riemann scan=novel/1sharp,   per_q=NOVEL_STRUCTURE/1sharp")
+    print("Summary statistics (n_seeds = 30)")
+    print("=" * 70)
+    print(f"{'N':>6}  {'scan novel':>14}  {'per_q novel':>14}")
+    for n in targets:
+        s = per_n_stats[n]
+        sc_pct = 100.0 * s["scan_novel_count"] / max(s["total"], 1)
+        pq_pct = 100.0 * s["per_q_novel_count"] / max(s["total"], 1)
+        print(f"{n:>6d}  {s['scan_novel_count']:>3d}/{s['total']:>2d} ({sc_pct:5.1f}%)  "
+              f"{s['per_q_novel_count']:>3d}/{s['total']:>2d} ({pq_pct:5.1f}%)")
     print()
-    print("If synthetic GUE shows the same per_quantity verdict trend (smooth")
-    print("at small N, novel at N=500), the Riemann N=500 flag is a finite-N")
-    print("artifact -- not a deviation from GUE/RH.")
+    print("Riemann observation:")
+    print("  N=50:  scan=smooth,  per_q=smooth")
+    print("  N=100: scan=novel,   per_q=smooth")
+    print("  N=200: scan=novel,   per_q=smooth")
+    print("  N=500: scan=novel,   per_q=NOVEL")
+    print()
+    print("Interpretation: Riemann observations should lie within the")
+    print("GUE-simulated finite-N flag-rate distribution. Significant")
+    print("deviation would indicate an actual GUE/RH-inconsistency.")
 
 
 if __name__ == "__main__":
