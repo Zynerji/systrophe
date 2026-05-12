@@ -167,6 +167,42 @@ def channel_lambda_2(superoperator: np.ndarray,
     return float(nontrivial[0])
 
 
+def channel_lambda_2_fast(
+    superoperator: np.ndarray, k: int = 6,
+    tol_trivial: float = 1e-6,
+) -> float:
+    """Fast |lambda_2| extraction via sparse Arnoldi.
+
+    Uses scipy.sparse.linalg.eigs to find the k largest-magnitude
+    eigenvalues, then returns the largest one strictly less than 1
+    (i.e., the largest non-trivial eigenvalue).
+
+    This is correct even when the channel has a multi-dimensional
+    fixed-point subspace (multiple 1-eigenvalues), which a single-
+    vector deflation misses.
+
+    Complexity: O(k * 16^n * iter) matrix-vector products, much
+    cheaper than O((4^n)^3) full eigendecomposition for large n.
+    """
+    from scipy.sparse.linalg import eigs
+
+    dim = superoperator.shape[0]
+    k_use = min(k, dim - 1)
+    if k_use < 2:
+        return channel_lambda_2(superoperator, tol_trivial=tol_trivial)
+    try:
+        eigenvalues, _ = eigs(superoperator, k=k_use, which="LM",
+                               maxiter=1000, tol=1e-10)
+    except Exception:
+        return channel_lambda_2(superoperator, tol_trivial=tol_trivial)
+    abs_eigs = np.sort(np.abs(eigenvalues))[::-1]
+    nontrivial = abs_eigs[abs_eigs < 1.0 - tol_trivial]
+    if len(nontrivial) == 0:
+        # All eigenvalues are trivial; fall back to slow path
+        return channel_lambda_2(superoperator, tol_trivial=tol_trivial)
+    return float(nontrivial[0])
+
+
 def lambda_2_per_code_family(
     p_phys: float,
     families: list[str] = ("repetition", "depolarising"),
