@@ -1,0 +1,113 @@
+[
+  {
+    "module": "chronology_protection",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 0.3,
+    "consensus_sharps": [],
+    "anomaly": "no_signal",
+    "anomaly_max": 0.0,
+    "anomaly_param": 0.0,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "ctc_tunneling",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 1.05,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 1.3224137931034483,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "particle_creation",
+    "consensus": "novel_structure",
+    "consensus_max": 0.3333333333333333,
+    "consensus_param": 0.1,
+    "consensus_sharps": [
+      {
+        "p": 0.1,
+        "z": 6.053629039069232,
+        "frac": 0.3333333333333333
+      },
+      {
+        "p": 0.1333521432163324,
+        "z": 4.285839446035264,
+        "frac": 0.3333333333333333
+      },
+      {
+        "p": 0.1778279410038923,
+        "z": 2.9613298873200677,
+        "frac": 0.3333333333333333
+      }
+    ],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 0.1778279410038923,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "topology_change",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 1.05,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 1.2958333333333334,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "acoustic_hawking_spectrum",
+    "consensus": "novel_structure",
+    "consensus_max": 1.0,
+    "consensus_param": 5.623413251903491,
+    "consensus_sharps": [
+      {
+        "p": 5.623413251903491,
+        "z": 6.136834496928624,
+        "frac": 1.0
+      },
+      {
+        "p": 7.498942093324558,
+        "z": 9.622686450573095,
+        "frac": 1.0
+      },
+      {
+        "p": 10.0,
+        "z": 14.371835249320961,
+        "frac": 1.0
+      }
+    ],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 0.01778279410038923,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "photon_orbits",
+    "consensus": "novel_structure",
+    "consensus_max": 0.75,
+    "consensus_param": 1.05,
+    "consensus_sharps": [
+      {
+        "p": 1.05,
+        "z": 18.77813300992189,
+        "frac": 0.75
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.3333333134651184,
+    "anomaly_param": 2.548275862068966,
+    "anomaly_sharps": [
+      {
+        "p": 2.548275862068966,
+        "delta": 0.3333333134651184,
+        "before": 0.1666666865348816,
+        "after": 0.5
+      }
+    ]
+  }
+]
