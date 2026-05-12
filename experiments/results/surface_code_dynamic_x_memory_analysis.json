@@ -1,0 +1,16 @@
+{
+  "job_id": "d81l2tnoha1c73bkhp70",
+  "shots": 8192,
+  "n1": {
+    "dynamic_x_memory": 0.5018,
+    "bare_x": 0.5609,
+    "diff": -0.0591
+  },
+  "n4": {
+    "dynamic_x_memory": 0.4897,
+    "bare_x": 0.5004,
+    "diff": -0.0106
+  },
+  "verdict": "random for both logical and bare without dynamical decoupling",
+  "cause": "Qiskit Runtime forbids DD+dynamic-circuit combo; bare-X decoheres to ~0.50 quickly without DD, masking any QEC advantage"
+}
