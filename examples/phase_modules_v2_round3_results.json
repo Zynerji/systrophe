@@ -1,0 +1,154 @@
+[
+  {
+    "module": "tidal_forces",
+    "consensus": "novel_structure",
+    "consensus_max": 0.75,
+    "consensus_param": 1.05,
+    "consensus_sharps": [
+      {
+        "p": 1.05,
+        "z": 16.861024332567773,
+        "frac": 0.75
+      },
+      {
+        "p": 1.2206896551724138,
+        "z": 12.920590252658652,
+        "frac": 0.75
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.6666666269302368,
+    "anomaly_param": 1.5620689655172415,
+    "anomaly_sharps": [
+      {
+        "p": 1.5620689655172415,
+        "delta": 0.6666666269302368,
+        "before": 0.5,
+        "after": -0.1666666567325592
+      },
+      {
+        "p": 2.586206896551724,
+        "delta": 0.3333333432674408,
+        "before": -0.1666666567325592,
+        "after": 0.1666666865348816
+      }
+    ]
+  },
+  {
+    "module": "kk_embedding",
+    "consensus": "novel_structure",
+    "consensus_max": 1.0,
+    "consensus_param": 0.3,
+    "consensus_sharps": [
+      {
+        "p": 0.3,
+        "z": 6.108789691996067,
+        "frac": 1.0
+      },
+      {
+        "p": 0.49583333333333335,
+        "z": 3.254959152893716,
+        "frac": 1.0
+      }
+    ],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 0.6916666666666667,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "anec_bound",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 1.05,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 1.4625000000000001,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "dynamical_casimir",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 1.0,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 3.0,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "cosmological_embedding",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 0.1,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 0.5083333333333334,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "lqg_discretization",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 0.5,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 2.125,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "bdg_triple_vortex",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 0.5,
+    "consensus_sharps": [],
+    "anomaly": "no_signal",
+    "anomaly_max": 0.0,
+    "anomaly_param": 0.0,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "penrose_extraction",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 1.05,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 1.4625000000000001,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "page_curve_ctc",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 1.05,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 1.2958333333333334,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "wormhole_throat",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 1.05,
+    "consensus_sharps": [],
+    "anomaly": "novel_structure",
+    "anomaly_max": 1.0,
+    "anomaly_param": 1.903448275862069,
+    "anomaly_sharps": [
+      {
+        "p": 1.903448275862069,
+        "delta": 1.0,
+        "before": -0.5,
+        "after": 0.5
+      }
+    ]
+  }
+]
