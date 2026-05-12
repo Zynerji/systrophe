@@ -1,0 +1,22 @@
+{
+  "job_id": "d81k1s7oha1c73bkggg0",
+  "backend": "ibm_kingston",
+  "n_rounds": 4,
+  "isa_depth": 556,
+  "n_physical_qubits": 13,
+  "shots": 4096,
+  "logical_zero_rate": 0.62353515625,
+  "logical_zero_sigma": 0.007570293394749629,
+  "distance_from_random_sigma": 16.318410635930928,
+  "physical_zero_rates_per_qubit": [
+    0.496826171875,
+    0.50830078125,
+    0.507080078125,
+    0.496337890625,
+    0.4921875,
+    0.511474609375,
+    0.486083984375
+  ],
+  "physical_zero_rate_mean": 0.499755859375,
+  "noiseless_expected_logical_zero_rate": 1.0
+}
