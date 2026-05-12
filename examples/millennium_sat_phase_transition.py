@@ -37,6 +37,7 @@ from systrophe.novelty_catcher import (
     real_array_to_address,
     scan_novelty,
 )
+from systrophe.derivative_catcher import catch_smooth_transition
 
 
 def random_3sat(n_vars: int, n_clauses: int, rng: random.Random) -> list[tuple[int, int, int]]:
@@ -176,6 +177,13 @@ def run_phase_transition(
     scan_adaptive = scan_novelty(alpha_grid, fn, n_bits=32, data_adaptive=True)
     scan_binned = scan_novelty(alpha_grid, fn, n_bits=32, data_adaptive=False)
 
+    # Derivative catcher: scalar SAT fraction vs alpha
+    sat_frac_lookup = {r["alpha"]: r["sat_fraction"] for r in results}
+    def sat_frac_fn(alpha_val):
+        idx = int(np.argmin(np.abs(alpha_grid - alpha_val)))
+        return results[idx]["sat_fraction"]
+    deriv_result = catch_smooth_transition(alpha_grid, sat_frac_fn, n_bits=32)
+
     def _sharps_to_json(sharp_features):
         return [
             {k: int(v) if isinstance(v, np.integer) else v for k, v in s.items()}
@@ -194,6 +202,15 @@ def run_phase_transition(
             "verdict": scan_binned.verdict,
             "sharp_features": _sharps_to_json(scan_binned.sharp_features),
         },
+        "derivative_catcher": {
+            "kind": deriv_result["kind"],
+            "estimated_transition_centre": deriv_result["estimated_transition_centre"],
+            "value_verdict": deriv_result["value_scan"].verdict,
+            "derivative_verdict": deriv_result["derivative_scan"].verdict,
+            "derivative_sharp_features": _sharps_to_json(
+                deriv_result["derivative_scan"].sharp_features
+            ),
+        },
     }
 
 
@@ -211,10 +228,21 @@ def main() -> None:
               f"n_sharp={len(block['sharp_features'])}")
         for sf in block["sharp_features"]:
             a_val = sf["parameter_value"]
-            idx = sf["between_indices"][1]
-            print(f"   sharp at alpha ~ {a_val:.3f}  (index {idx}, "
+            print(f"   sharp at alpha ~ {a_val:.3f}, "
                   f"hamming_step={sf['hamming_step']}, "
-                  f"median_step={sf['median_step']:.1f})")
+                  f"median_step={sf['median_step']:.1f}")
+    dc = out["derivative_catcher"]
+    print(f"[derivative_catcher] kind={dc['kind']}, "
+          f"value_verdict={dc['value_verdict']}, "
+          f"derivative_verdict={dc['derivative_verdict']}")
+    if dc["estimated_transition_centre"] is not None:
+        print(f"   estimated transition centre: alpha ~ "
+              f"{dc['estimated_transition_centre']:.3f}")
+    for sf in dc["derivative_sharp_features"]:
+        a_val = sf["parameter_value"]
+        print(f"   derivative sharp at alpha ~ {a_val:.3f}, "
+              f"hamming_step={sf['hamming_step']}, "
+              f"median_step={sf['median_step']:.1f}")
 
     out_path = Path(__file__).parent / "millennium_sat_phase_transition_results.json"
     out_path.write_text(json.dumps(out, indent=2, default=str))
