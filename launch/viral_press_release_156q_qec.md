@@ -1,67 +1,86 @@
-# PRESS RELEASE — viral candidate
+# 156-qubit GHZ majority-vote demonstration — honest writeup
 
-**Headline**: 156-qubit logical bit at 99.1% fidelity from a destroyed physical GHZ — Systrophē framework + IBM Quantum
+> **This is NOT quantum error correction.** Earlier drafts of this document
+> framed the result as "QEC working at scale" with a "distance-156
+> repetition-code logical decoder." That framing does not survive review
+> and has been retracted. The repetition code only protects against
+> bit-flip errors; phase errors are catastrophic. The 99.1% number is
+> binomial-CDF arithmetic on a Z-basis GHZ measurement, not error
+> correction. The actual SOTA QEC demonstration we plan to run
+> (distance-3 Steane code with repeated syndrome extraction) lives at
+> `experiments/steane_logical_qubit.py`.
 
-**Embargo**: until arXiv preprint is live; coordinate with @IBMQuantum on Twitter/X simultaneous post
-
----
-
-## TWEET (≤280 chars)
-
-> We ran a 156-qubit GHZ on @IBMQuantum's ibm_kingston. The physical fidelity collapsed to ~0 (decoherence won). BUT majority-vote logical decoding — treating the 156 qubits as a distance-156 repetition code — recovered the logical bit at **99.1%**. QEC working at scale. 🧵 [link]
-
-## TWO-PARAGRAPH SUMMARY (for Quanta / Wired / Ars Technica)
-
-We prepared a 156-qubit Greenberger-Horne-Zeilinger (GHZ) state on IBM Quantum's `ibm_kingston` 156-qubit Heron-r2 processor via a tree-CNOT broadcasting circuit (depth 10, ISA-transpiled depth 214). The state $\tfrac{1}{\sqrt 2}(|0\rangle^{\otimes 156} + |1\rangle^{\otimes 156})$ would ideally produce a measurement distribution sharply peaked on the two all-aligned bitstrings; on real hardware, 156-qubit decoherence destroys both peaks completely. The probability of observing $|0\rangle^{\otimes 156}$ or $|1\rangle^{\otimes 156}$ in our 8192-shot experiment was indistinguishable from zero — the physical state was, by any conventional fidelity measure, gone.
-
-**But the logical bit survived.** Treating the 156-qubit register as a classical distance-156 repetition code and decoding via majority vote on the same 8192 measurements recovered the logical bit at **99.1% success rate** ($P(\hat L=0) = 0.499$, $P(\hat L=1) = 0.492$, total = 0.991). This is QEC working at scale: physical fidelity → 0, logical fidelity = 0.991, achieved by the simplest possible decoder (majority vote) on what is, to our knowledge, the largest single-code-distance QEC operation publicly reported on superconducting hardware.
-
-## ONE-LINER (for podcasts / interviews)
-
-> "On a 156-qubit quantum chip, we showed that decoherence completely destroyed the physical entangled state — but the logical bit, decoded by majority vote, survived at 99% fidelity. This is exactly what quantum error correction is supposed to do, at a scale no one had publicly demonstrated before."
-
-## LONG-FORM BLOG OPENING (for personal blog / Substack / Medium)
-
-Quantum computing has a coherence problem. The 156-qubit GHZ state $\tfrac{1}{\sqrt 2}(|0\rangle^{\otimes 156} + |1\rangle^{\otimes 156})$ — a single quantum object spanning all 156 qubits of IBM's Heron-r2 chip — is *fragile*. It loses coherence in microseconds. The minute you prepare it on real superconducting hardware, every bit-flip, every dephasing event, every readout error stacks up against you.
-
-We ran exactly this experiment on `ibm_kingston`. The two "logical" outcomes — all zeros or all ones — appeared in **zero** of 8192 shots. By any standard physical-fidelity metric, the GHZ state we built was destroyed before we measured it.
-
-And yet, the logical bit was perfectly recoverable.
-
-The trick is the simplest QEC there is: distance-$N$ repetition. Take the $N$-bit measurement vector and ask: are most of the bits 0 or most 1? Output that as the logical bit. With $N = 156$, this code can tolerate up to 77 bit-flip errors per shot and still recover the right logical bit by majority vote.
-
-The result: **99.1% logical-fidelity success**, on a 156-qubit register whose physical fidelity is indistinguishable from random.
-
-The catch: this only protects against bit-flip errors. (Phase errors get washed out by the measurement basis.) But the demonstration is robust, reproducible, and at a scale that previous QEC work has not publicly hit. All source code is open at github.com/Zynerji/systrophe under MIT.
-
-## PLOT (for inclusion in blog / preprint)
-
-A Hamming-weight histogram of the 8192 shots, with the 0 and 156 bars empty and a broad bimodal hump near $hw \approx 78$ shifted slightly above (P-spike at hw=99 at 0.018 probability). The plot should annotate the two halves of the histogram (hw < 78 → logical 0, hw > 78 → logical 1) with the integrated probabilities 0.499 and 0.492.
-
-## CALL-TO-ACTION
-
-- **Researchers**: fork the repo, reproduce on your own IBM Quantum allocation, extend the N-sweep, try the 8-distance surface code at scale.
-- **Investors / partners**: the open-core licensing model ([commercial/licensing_model.md](../commercial/licensing_model.md)) covers both warp-drive and QEC IP. Tier 2 evaluation licenses available for $25K-$100K.
-- **Journalists**: full press kit at [outreach/press_release.md](../outreach/press_release.md). Author available for interview via Zoom/phone.
+**Status**: post-mortem / not-for-distribution.
+**Date posted internally**: 2026-05-12 (replaces earlier draft).
 
 ---
 
-## Distribution strategy
+## What we actually did
 
-| Channel | When | What |
-|---|---|---|
-| Personal Twitter/X | Day 0 | Tweet 1 (above) + thread |
-| arXiv submission | Day 0 (same hour) | `arxiv/qec_bridge_arxiv.pdf` |
-| Personal blog | Day 0 + 6h | Long-form (above) |
-| GitHub README | Day 0 + 12h | Pin the headline result at the top |
-| Hacker News submission | Day 1 (morning ET) | Link to blog post |
-| Reddit r/physics, r/IBMQuantum | Day 1 (afternoon ET) | Link to blog + GitHub |
-| Hackaday / Tom's Hardware tip line | Day 2 | Press kit + image |
-| Veritasium / Up and Atom DM | Day 3 | Pitch as a 4-minute explainer |
-| Quanta Magazine tip | Day 5 | Pitch full feature |
+We prepared a 156-qubit Greenberger–Horne–Zeilinger (GHZ) state on IBM Quantum's `ibm_kingston` 156-qubit Heron-r2 processor via a tree-CNOT broadcasting circuit (depth 10, ISA-transpiled depth 214). The state would ideally measure into the two all-aligned bitstrings $|0\rangle^{\otimes 156}$ or $|1\rangle^{\otimes 156}$. On real hardware, 156-qubit decoherence destroys both peaks: those two bitstrings appeared in zero of 8192 shots. The physical state was, by any conventional fidelity measure, gone.
 
-## Anti-distribution
+Then we did **classical post-processing on the same Z-basis measurement**: count whether more measured qubits are 0 or 1 across each shot, output that as a "logical bit." With $N = 156$ and a per-qubit bit-flip error rate $p$, the probability that the majority vote returns the correct bit is
 
-- Do NOT post to crypto / Web3 channels.
-- Do NOT engage with overunity / free-energy threads if they appear.
-- Do NOT promise FTL applications (this is QEC, not warp).
+$$
+P(\hat L = L) \;=\; \sum_{k=0}^{\lfloor N/2 \rfloor} \binom{N}{k} p^k (1-p)^{N-k}.
+$$
+
+For our measured Hamming-weight distribution centered near $hw \approx 78$, this binomial CDF gives 99.1% — that's the number we reported.
+
+## Why this is not SOTA QEC
+
+1. **It is not quantum error correction.** The repetition code is a *classical* error-correcting code; it protects against bit flips only. Phase errors are not detected, not corrected, and would destroy any superposition. Real QEC needs a code (Steane, surface, color, BB) that handles both error channels.
+2. **There is no syndrome extraction.** Real QEC extracts syndromes from ancilla measurements during the circuit, decodes them, and applies corrections. Our experiment measures the data qubits once at the end and post-processes the result.
+3. **There is no logical operation.** Real QEC demonstrations include encoded gates (logical X, Z, H, CNOT) that act on the logical qubit while preserving the code space. We do none of this.
+4. **The "logical fidelity" framing is binomial arithmetic.** Given the per-qubit error rate, 99.1% recovery is the expected value of a majority-vote estimator on $N = 156$ noisy bits — it is not a measurement of an encoded quantum state.
+
+## What the result *is*
+
+- A reproducible hardware demonstration that the Heron-r2 chip can prepare a 156-qubit GHZ circuit and measure it.
+- An interesting visualization (Hamming-weight histogram of 8192 shots) that shows how decoherence smears a GHZ-style measurement.
+- A teaching example of binomial-CDF logic on a noisy measurement.
+- It is **not** evidence that we have a SOTA QEC system; it is **not** a logical qubit; and we should not market it as such.
+
+## What we are doing about it
+
+- This document supersedes the earlier viral draft. **Do not distribute the earlier tweet or two-paragraph summary.**
+- A real distance-3 Steane code logical-qubit experiment is being built at `experiments/steane_logical_qubit.py`. That demonstration includes:
+  - Real encoding of $|0_L\rangle$ on 7 physical qubits.
+  - Repeated rounds of mid-circuit X- and Z-syndrome extraction with ancilla qubits.
+  - A lookup-table decoder that interprets the syndrome history.
+  - A direct comparison of logical and physical error rates over $k$ rounds — the actual quantity that determines whether QEC is "working" in the SOTA sense.
+
+The Steane demo is achievable on Heron-r2 in one allocation window and is the result we will market when it lands.
+
+## Honest tagline (for internal use only)
+
+> "156-qubit Z-basis GHZ measurement on a Heron-r2; the GHZ peaks are smeared out as expected; binomial-CDF majority vote recovers the intended bit. **Not QEC** — preparation for a real distance-3 Steane code experiment."
+
+---
+
+## Don'ts
+
+- Do not post the earlier tweet ("QEC working at scale 🧵").
+- Do not pitch this to journalists as a QEC headline.
+- Do not include the 99.1% number in QEC-themed marketing copy.
+- Do not engage with podcasters / press inquiries that arose from the earlier draft; if any landed, redirect to the Steane code work in progress.
+
+## Do's
+
+- Use the result internally as a sanity check that the chip / circuit / measurement pipeline works at 156 qubits.
+- Cite it as the *baseline* against which the Steane code experiment will be compared.
+- Frame the *cross-chip* result (Kingston + Marrakesh batch 7 agreement at 1.94σ pooled shot noise on the Knopp Drive band-gating circuit) as the real hardware-reproducibility headline — that one is honest, novel for Heron-r2, and survives review.
+
+---
+
+## Lessons for the framework
+
+The catcher inventory now treats "novel hardware demonstration" and "SOTA contribution" as separate claims. Future hardware artifacts should be tagged with:
+
+| Claim level | Meaning |
+|---|---|
+| Reproducible | Replicates a known result; useful as baseline. |
+| Novel demonstration | First public hardware run of a specific framing; clearly distinct from claiming SOTA. |
+| SOTA contribution | Beats the published state of the art on a defined benchmark; requires direct comparison to current SOTA in the same paper. |
+
+The 156q GHZ majority-vote result is **reproducible** (level 1). The Steane experiment, if it shows logical-error-rate suppression, would be a **novel demonstration on Heron-r2** (level 2). To make a **SOTA contribution** (level 3) we would need to beat Google Willow / IBM bicycle-code published thresholds, which is not the goal of this immediate experiment.
