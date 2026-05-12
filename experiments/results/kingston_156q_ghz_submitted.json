@@ -1,0 +1,7 @@
+{
+  "job_id": "d81a8eegbeec73ak9lcg",
+  "backend": "ibm_kingston",
+  "n_qubits": 156,
+  "shots": 8192,
+  "submitted_unix": 1778558010
+}
