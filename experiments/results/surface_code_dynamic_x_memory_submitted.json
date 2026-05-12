@@ -1,0 +1,31 @@
+{
+  "job_id": "d81l2tnoha1c73bkhp70",
+  "metadata_per_circuit": [
+    {
+      "d": 5,
+      "kind": "surface_x_memory_dynamic",
+      "n_rounds": 1,
+      "shots": 8192
+    },
+    {
+      "d": 5,
+      "kind": "bare_x",
+      "n_rounds": 1,
+      "shots": 8192
+    },
+    {
+      "d": 5,
+      "kind": "surface_x_memory_dynamic",
+      "n_rounds": 4,
+      "shots": 8192
+    },
+    {
+      "d": 5,
+      "kind": "bare_x",
+      "n_rounds": 4,
+      "shots": 8192
+    }
+  ],
+  "shots_actual": 8192,
+  "submitted_unix": 1778602360
+}
