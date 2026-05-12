@@ -51,7 +51,7 @@ def get_zeta_zeros(n_zeros: int = 100) -> np.ndarray:
         raise RuntimeError(
             "mpmath is required; install with `pip install mpmath`."
         ) from e
-    mp.dps = 30  # 30 decimal places of precision
+    mp.dps = 15  # 15 dp is plenty for catcher purposes; 30 is overkill
     zeros = []
     for k in range(1, n_zeros + 1):
         z = zetazero(k)
@@ -157,7 +157,15 @@ def main() -> None:
     print("Montgomery-Odlyzko GUE prediction, hence consistent with RH).")
     print()
 
-    for n in (50, 100, 200):
+    # Default ladder up to 500 zeros (1000 is ~30+ min at 15dp)
+    # Use --extended for N=1000 too.
+    import sys as _sys
+    n_values = (50, 100, 200, 500)
+    if "--extended" in _sys.argv:
+        n_values = (50, 100, 200, 500, 1000)
+    elif "--quick" in _sys.argv:
+        n_values = (50, 100)
+    for n in n_values:
         print(f"--- First {n} non-trivial zeros ---")
         try:
             zeros_imag = get_zeta_zeros(n_zeros=n)

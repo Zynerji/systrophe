@@ -132,6 +132,10 @@ class TestZ3QutritMap:
 class TestCatcherSweep:
     def test_runs_and_returns_dict(self):
         res = qec_bridge_catcher_sweep()
-        assert "verdict" in res
-        assert "sharp_features" in res
-        assert res["verdict"] in ("uniform", "smooth", "novel_structure")
+        # The function now returns a per-quantity wrapper dict
+        # (catch_novelty_per_quantity) with aggregate_verdict at the top.
+        assert "aggregate_verdict" in res
+        assert "per_quantity" in res
+        assert res["aggregate_verdict"] in (
+            "uniform", "smooth", "novel_structure", "insufficient",
+        )
