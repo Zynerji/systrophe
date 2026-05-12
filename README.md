@@ -9,7 +9,7 @@
 [![Python ≥ 3.10](https://img.shields.io/badge/python-%E2%89%A5%203.10-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Tests: 1294 passing](https://img.shields.io/badge/tests-1294%20passing-brightgreen.svg)](#tests)
-[![Papers: 12](https://img.shields.io/badge/papers-12%20PDFs-informational.svg)](#papers)
+[![Papers: 13](https://img.shields.io/badge/papers-13%20PDFs-informational.svg)](#papers)
 [![IBM Quantum: 7 batches](https://img.shields.io/badge/IBM%20Quantum-7%20batches-purple.svg)](#ibm-marrakesh-hardware-validation)
 [![Knopp Drive: live](https://img.shields.io/badge/Knopp%20Drive-live-red.svg)](#the-knopp-drive-headline-composite-warp-engineering-bound)
 [![Millennium: 4/7 + Goldbach](https://img.shields.io/badge/Millennium-4%2F7%20%2B%20Goldbach-orange.svg)](FINDINGS_MILLENNIUM_PROGRESS.md)
@@ -392,7 +392,7 @@ Four Millennium Prize problems plus one adjacent (Goldbach / Hilbert's 8th) now 
 | 4 | **Birch–Swinnerton-Dyer (local L-data)** | a_p sequences for primes p ≤ 500 on 17 elliptic curves of known rank (8 rank-0, 6 rank-1, 3 rank-2); partial Euler product approximation of log L(E, 1). Mean by rank: 0 → −1.39, 1 → −0.87, 2 → −2.22 — **non-monotone at this P_MAX**, per-curve variance dominates inter-rank mean separation. Honest null: partial-Euler convergence too slow to expose the BSD rank signal at P=500. Infrastructure in place for future high-P runs. |
 | 5 | **Goldbach (Hilbert 8 adjacent)** | g(n) computed for all even n ∈ [4, 1000]; Goldbach conjecture **verified throughout the range**. Per-quantity catcher (3 bands by n mod 6) independently flags the comet's 3-band structure (`millennium_goldbach_catcher.py`). |
 
-See [`FINDINGS_MILLENNIUM_PROGRESS.md`](FINDINGS_MILLENNIUM_PROGRESS.md) for full interpretation and roadmap. Run with `python examples/run_all_millennium.py`.
+Standalone whitepaper: [`paper/millennium_catcher.pdf`](paper/millennium_catcher.pdf) (7 pages, arXiv-ready). See [`FINDINGS_MILLENNIUM_PROGRESS.md`](FINDINGS_MILLENNIUM_PROGRESS.md) for the markdown progress log. Run with `python examples/run_all_millennium.py`.
 
 ---
 
