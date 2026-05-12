@@ -1,0 +1,54 @@
+{
+  "job_id": "d81kj980bvlc73d17su0",
+  "decoder": "dijkstra_mwpm",
+  "paired_by_d_n": {
+    "d7_n1": {
+      "surface": {
+        "d": 7,
+        "n_rounds": 1,
+        "logical_zero_rate_dijkstra_mwpm": 0.91094970703125,
+        "n_shots_total": 16384
+      },
+      "bare": {
+        "physical_zero_rate": 0.73358154296875,
+        "n_shots_total": 16384
+      }
+    },
+    "d7_n2": {
+      "surface": {
+        "d": 7,
+        "n_rounds": 2,
+        "logical_zero_rate_dijkstra_mwpm": 0.8099365234375,
+        "n_shots_total": 16384
+      },
+      "bare": {
+        "physical_zero_rate": 0.65008544921875,
+        "n_shots_total": 16384
+      }
+    },
+    "d7_n4": {
+      "surface": {
+        "d": 7,
+        "n_rounds": 4,
+        "logical_zero_rate_dijkstra_mwpm": 0.6915283203125,
+        "n_shots_total": 16384
+      },
+      "bare": {
+        "physical_zero_rate": 0.61920166015625,
+        "n_shots_total": 16384
+      }
+    },
+    "d5_n1": {
+      "surface": {
+        "d": 5,
+        "n_rounds": 1,
+        "logical_zero_rate_dijkstra_mwpm": 0.91656494140625,
+        "n_shots_total": 16384
+      },
+      "bare": {
+        "physical_zero_rate": 0.8262939453125,
+        "n_shots_total": 16384
+      }
+    }
+  }
+}

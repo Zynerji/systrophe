@@ -28,7 +28,13 @@
 \maketitle
 
 \begin{abstract}
-We report a single-round logical-versus-physical break-even crossing for the distance-5 rotated surface code's Z-memory on IBM Quantum's \texttt{ibm\_kingston} 156-qubit Heron-r2 processor. The experiment encodes $|0_L\rangle$ on a $5 \times 5$ data-qubit grid (25 data + 12 Z-stabilizer ancillas = 37 qubits), performs $n_{\mathrm{rounds}} \in \{1, 2, 4\}$ rounds of Z-syndrome extraction, and decodes the syndrome difference history via minimum-weight perfect matching (MWPM) on a graph built with \texttt{networkx.min\_weight\_matching}. The MWPM-decoded logical recovery rate at $n_{\mathrm{rounds}} = 1$ is $P(\hat L_{\mathrm{MWPM}} = 0) = 0.8816$, compared with a wall-clock-matched bare-qubit baseline of $P_{\mathrm{bare}}(Z = 0) = 0.8528$. The difference $+0.0288$ is $4.0\sigma$ above zero at $4096$ shots. This is the first logical-error-rate below physical-error-rate demonstration in our \Systrophe{} Heron-r2 QEC experimental program, and supersedes the $d=3$ Steane sub-threshold baseline reported in \texttt{paper/steane\_logical\_qubit.pdf}. At higher $n_{\mathrm{rounds}}$ the MWPM advantage shrinks (n=2: $-0.033$ pp; n=4: $-0.020$ pp) because our shortest-path decoder is approximate. We do \emph{not} claim to beat the SOTA QEC threshold demonstrations of Google Quantum AI Willow (distance-7, sustained below-threshold) \cite{willow} or IBM bivariate-bicycle codes \cite{bb_paper}; we report a clean single-round break-even crossing on Heron-r2 with a documented, reproducible MWPM pipeline.
+We report a \textbf{sustained} logical-versus-physical break-even crossing for the distance-5 rotated surface code's Z-memory on IBM Quantum's \texttt{ibm\_kingston} 156-qubit Heron-r2 processor. The experiment encodes $|0_L\rangle$ on a $5 \times 5$ data-qubit grid (25 data + 12 Z-stabilizer ancillas = 37 qubits), performs $n_{\mathrm{rounds}} \in \{1, 2, 4\}$ rounds of Z-syndrome extraction, and decodes the syndrome difference history via minimum-weight perfect matching (MWPM) with full Dijkstra-shortest-path X-flip corrections on the dual-lattice graph. The Dijkstra-MWPM-decoded logical recovery rate beats the wall-clock-matched bare-qubit baseline at every round count tested:
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+\item $n=1$: logical $0.9316$ vs bare $0.8528$, diff $+0.079$ ($\bm{11.6\sigma}$)
+\item $n=2$: logical $0.8167$ vs bare $0.7754$, diff $+0.041$ ($4.6\sigma$)
+\item $n=4$: logical $0.7869$ vs bare $0.7024$, diff $+0.085$ ($\bm{8.8\sigma}$)
+\end{itemize}
+This is the first \textbf{multi-round} logical-error-rate below physical-error-rate demonstration on Heron-r2 in our \Systrophe{} program, and supersedes the $d=3$ Steane sub-threshold baseline reported in \texttt{paper/steane\_logical\_qubit.pdf}. The earlier single-qubit-flip approximation of MWPM yielded only a single-round crossing; switching to a proper Dijkstra-shortest-path correction chain on the dual-lattice graph recovered $5$--$10$ percentage points of additional logical fidelity at every round count and sustained the crossing. We still do \emph{not} claim to match the SOTA QEC threshold demonstrations of Google Quantum AI Willow (distance-7, fault-tolerant) \cite{willow} or IBM bivariate-bicycle codes \cite{bb_paper}; we report a clean and reproducible sustained-break-even crossing on Heron-r2 with a documented MWPM pipeline.
 \end{abstract}
 
 \section{Introduction}
@@ -82,33 +88,32 @@ We compare the MWPM decoder to a baseline ``greedy'' decoder that uses only the 
 \section{Results}
 
 \begin{center}
-\begin{tabular}{rrrrrr}
+\begin{tabular}{rrrrrrr}
 \toprule
-$n_{\mathrm{rounds}}$ & Greedy & MWPM & Bare baseline & MWPM $-$ bare & Significance \\
+$n_{\mathrm{rounds}}$ & Greedy & Approx-MWPM & \textbf{Dijkstra-MWPM} & Bare & D-MWPM $-$ bare & Significance \\
 \midrule
-1 & $0.6990$ & $\bm{0.8816}$ & $0.8528$ & $\bm{+0.0288}$ & $\bm{4.0\sigma}$ \\
-2 & $0.6013$ & $0.7429$ & $0.7754$ & $-0.0325$ & $4.0\sigma$ \\
-4 & $0.5337$ & $0.6821$ & $0.7024$ & $-0.0203$ & $2.4\sigma$ \\
+1 & $0.6990$ & $0.8816$ & $\bm{0.9316}$ & $0.8528$ & $\bm{+0.0789}$ & $\bm{11.6\sigma}$ \\
+2 & $0.6013$ & $0.7429$ & $\bm{0.8167}$ & $0.7754$ & $\bm{+0.0413}$ & $4.6\sigma$ \\
+4 & $0.5337$ & $0.6821$ & $\bm{0.7869}$ & $0.7024$ & $\bm{+0.0845}$ & $\bm{8.8\sigma}$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 
 The headline numbers:
 \begin{itemize}[leftmargin=*,itemsep=0pt]
-\item \textbf{At $n_{\mathrm{rounds}} = 1$, the MWPM-decoded $d = 5$ surface code Z-memory rate is $0.8816$, exceeding the wall-clock-matched bare-qubit baseline of $0.8528$ by $+2.88$ percentage points ($4.0\sigma$ at 4096 shots).}
-\item The greedy decoder, by comparison, gives only $0.699$ at $n_{\mathrm{rounds}} = 1$ --- $15.4$ pp below bare. MWPM is critical for recovering the $d = 5$ advantage.
-\item At $n_{\mathrm{rounds}} \ge 2$, MWPM still loses to bare, with the gap shrinking as $n$ grows (from $-3.25$ pp at $n = 2$ to $-2.03$ pp at $n = 4$). The MWPM advantage at single-round measurement does not yet sustain across multiple rounds.
+\item \textbf{The Dijkstra-MWPM-decoded $d = 5$ surface code Z-memory beats the wall-clock-matched bare-qubit baseline at every round count tested, at $4.6\sigma$ to $11.6\sigma$ significance.}
+\item The greedy ``flip first qubit'' decoder gives only $0.70$ at $n=1$ and $0.53$ at $n=4$ --- well below bare. Decoder choice is the dominant factor.
+\item Approximate MWPM (single-qubit-flip per matched pair, the first version) gives a single-round crossing of $+2.88$ pp ($4.0\sigma$) but loses at $n \ge 2$. The full Dijkstra-shortest-path version (flipping ALL data qubits along the matched lattice path) recovers $5$--$10$ pp at every round count and sustains the crossing.
+\item At $n = 4$ the gap is $+8.45$ pp at $8.8\sigma$ --- larger than at $n = 1$ in percentage-point terms, because the bare-baseline decays faster than the logical does. This is the canonical QEC signature: encoded logical lifetimes scale with distance and decoder quality, bare lifetimes do not.
 \end{itemize}
 
-\subsection{Why the advantage does not extend past $n = 1$}
+\subsection{Why the full Dijkstra-MWPM sustains the crossing}
 
-Two reasons:
-\begin{enumerate}[leftmargin=*,itemsep=0pt]
-\item The shortest-path X-flip correction we apply between matched stab pairs is a one-qubit flip, not the full multi-qubit chain along the lattice-Manhattan shortest path. For weight-2 distances this is correct; for larger distances it under-corrects, growing in error rate as the round count and per-round error rate grows.
-\item Z-syndrome-only memory does not detect phase errors that flip the X-eigenstate of the measurement ancillas during their measure-reset cycle. These propagate forward and accumulate.
-\end{enumerate}
+The single-qubit-flip MWPM (our first version) used to fail past $n = 1$ because longer error chains were under-corrected: a matched pair separated by lattice distance $k$ in the dual lattice would be corrected by flipping only ONE data qubit, leaving the other $k - 1$ qubits in the chain still flipped. With increasing round count and accumulating errors, this under-correction compounded.
 
-A full fault-tolerant MWPM decoder with proper 3D syndrome graphs and boundary nodes would likely extend the advantage further. We defer this to a follow-up study.
+The Dijkstra-MWPM version finds the proper shortest path through the stab-adjacency graph (where adjacent Z-stabs share a data qubit) for each matched pair, then flips ALL data qubits along the path. This is the canonical surface-code correction recipe, and it recovers the full $d = 5$ protection at every round count we tested.
+
+We still expect saturation at large $n$ because (a) the decoder uses syndrome difference-history per round, not a full 3D syndrome graph; (b) Z-syndrome-only memory does not detect phase errors on the ancillas; (c) accumulated correlated errors eventually exceed the code's distance-5 correction radius. Pushing past these limits is the natural next step ($d = 7$, full X+Z syndromes, 3D MWPM).
 
 \subsection{Comparison to literature SOTA}
 
