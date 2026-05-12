@@ -251,7 +251,7 @@ Figure~\ref{fig:comparison} compares the integrated exotic-matter requirement fo
 
 \section{Catcher-validated emergent inventory}\label{sec:emergents}
 
-The Systroph\=e framework has logged twenty-five address-space-catcher-verified emergents. We collect them in Table~\ref{tab:emergents}.
+The Systroph\=e framework has logged twenty-three Knopp-Drive-relevant address-space-catcher-verified emergents. We collect them in Table~\ref{tab:emergents}. Two additional emergents (3-SAT phase transition recovery and Goldbach 3-band comet) live in the companion Millennium-problem catcher paper \texttt{paper/millennium\_catcher.pdf}.
 \begin{table}[h]
 \centering
 \small
@@ -280,26 +280,14 @@ The Systroph\=e framework has logged twenty-five address-space-catcher-verified 
 19 & Warp ring & \texttt{krasnikov\_ring} & N=2 pair fragile to phase noise at $\sigma\approx 2.058$~rad\\
 20 & HW & Marrakesh batch 6 & Knopp Drive band gating HW-confirmed on \texttt{ibm\_marrakesh}\\
 21 & HW & Kingston batch 7 & Band edges $r_{\mathrm{in}}=2.657 \pm 0.002$, $r_{\mathrm{out}}=5.471 \pm 0.010$ at $\mathrm{SNR}=184\sigma$, 2 internal resonances ($\chi^2/\mathrm{dof}=1.09$)\\
-22 & Millennium & \texttt{millennium\_sat} & Derivative catcher recovers 3-SAT phase transition $\alpha=4.270$ (conjectured $\alpha_c\approx 4.267$)\\
-23 & HW cross-validation & \texttt{knopp\_derivative\_catcher\_validation} & Derivative catcher independently identifies Kingston batch 7 substructure: sharps at $r\in\{3.10,3.90,4.60\}$\\
-24 & Number theory & \texttt{millennium\_goldbach} & Goldbach conjecture verified $n \le 1000$; catcher rediscovers 3-band comet structure by $n \bmod 6$\\
-25 & HW cross-chip & \texttt{knopp\_cross\_chip} & Kingston + Marrakesh batch 7 agree at RMS$=1.94\sigma$ of pooled shot noise; combined-chip fit $r_{\mathrm{in}}=2.654\pm0.002$, $r_{\mathrm{out}}=5.469\pm0.007$\\
+22 & HW cross-validation & \texttt{knopp\_derivative\_catcher\_validation} & Derivative catcher independently identifies Kingston batch 7 substructure: sharps at $r\in\{3.10,3.90,4.60\}$\\
+23 & HW cross-chip & \texttt{knopp\_cross\_chip} & Kingston + Marrakesh batch 7 agree at RMS$=1.94\sigma$ of pooled shot noise; combined-chip fit $r_{\mathrm{in}}=2.654\pm0.002$, $r_{\mathrm{out}}=5.469\pm0.007$\\
 \bottomrule
 \end{tabular}
-\caption{All twenty-five catcher-verified emergents. Items 1--6 are from the Deutsch-CTC family. Items 7 and 20 are hardware-validated on the IBM Quantum \texttt{ibm\_marrakesh} 156-qubit Heron-r2 processor. Items 8--13 are radial sharps in the Systroph\=e LP supercritical exterior; the coincidence of \#11 and \#12 at $r=1.976$ is partially explained by their shared $F/L$ dependence (not truly independent diagnostics). Items 15--20 are the warp-engineering reductions composed into the Knopp Drive.}\label{tab:emergents}
+\caption{The twenty-three Knopp-Drive-relevant catcher-verified emergents. Items 1--6 are from the Deutsch-CTC family. Items 7 and 20 are hardware-validated on the IBM Quantum \texttt{ibm\_marrakesh} 156-qubit Heron-r2 processor. Items 8--13 are radial sharps in the Systroph\=e LP supercritical exterior; the coincidence of \#11 and \#12 at $r=1.976$ is partially explained by their shared $F/L$ dependence (not truly independent diagnostics). Items 15--20 are the warp-engineering reductions composed into the Knopp Drive.}\label{tab:emergents}
 \end{table}
 
 The coincidence of \texttt{kg\_scattering} (\#11) and \texttt{photon\_sphere} (\#12) at the \emph{same} radius $r=1.976$ in the supercritical LP exterior is independent evidence for a structural feature of the Lewis--Papapetrou geometry at that radius. Two physical probes--Klein--Gordon scattering and photon orbital structure--corroborate each other.
-
-\subsection{Millennium-problem catcher explorations}\label{ssec:millennium}
-
-Items \#22 and \#24 in Table~\ref{tab:emergents} are catcher applications to Millennium-Prize-adjacent number-theoretic problems, demonstrating that the Systroph\=e address-space catcher framework generalises beyond GR / warp-drive physics. Figure~\ref{fig:millennium} collects the four current explorations: Riemann zeta-zero spacings (RH-consistent), the 3-SAT P-vs-NP phase transition (catcher recovers $\alpha_c$), the Goldbach comet up to $n=1000$ (conjecture verified, 3-band structure caught), and the GUE null reference distribution validating the Riemann claim.
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.95\textwidth]{figures/millennium_summary.pdf}
-\caption{Systroph\=e Millennium-problem catcher explorations at v0.19.0. Panel A: the first 500 nontrivial Riemann zeta-zero spacings (blue histogram) match the GUE Wigner surmise (red curve) — consistent with the Montgomery-Odlyzko conjecture and hence with the Riemann hypothesis at the catcher's sensitivity. Panel B: 3-SAT $P(\mathrm{SAT})$ as a function of $\alpha=m/n$ at $n=20$ variables (green points); the derivative catcher (`src/systrophe/derivative\_catcher.py') recovers the transition centre at $\alpha=4.270$ (dashed red), within $0.001$ of the conjectured $\alpha_c\approx 4.267$ (dotted purple). Panel C: Goldbach comet up to $n=1000$, coloured by $n\bmod 6$. Conjecture verified ($g(n)\ge 1$ throughout the tested range); the 3-band structure by $n\bmod 6$ is independently caught by the per-quantity catcher. Panel D: GUE null reference (30 random-matrix seeds): flag rates of \texttt{scan\_novelty} and per-quantity catcher as a function of $N$. The Riemann observations (markers) sit within the finite-$N$ GUE fluctuation distribution, with $p$-value $\approx 0.10$ for the $N=500$ per-quantity flag — not statistically anomalous.}\label{fig:millennium}
-\end{figure}
 
 \section{Steerability}\label{sec:steering}
 
