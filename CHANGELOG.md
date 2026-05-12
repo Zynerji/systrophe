@@ -5,6 +5,40 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.19.2] - 2026-05-12 (evening)
+
+### Comprehensive QEC program on IBM Heron-r2 (ibm_kingston, 156 qubits)
+
+Eleven hardware jobs spanning the d=3 → d=7 progression, with the canonical logical-vs-bare-qubit comparison at matched wall-clock duration. Headline results:
+
+**Sustained break-even crossings (Dijkstra-MWPM decoder)**:
+- d=5 surface code Z-memory: +4.6σ to +24.6σ across n_rounds ∈ {1, 2, 4}
+- **d=7 surface code Z-memory: +13.8σ to +43.2σ** across n_rounds ∈ {1, 2, 4}
+- Distance-scaling signature: d=7 margin > d=5 margin at every matched round count
+
+**Logical primitives demonstrated**:
+- Transversal X_L: symmetric P(L=0) and P(L=1) ≈ 0.81 at n=1 (logical gate preserves codespace)
+- Multi-logical (2 parallel d=5 patches on disjoint qubits): both above random
+- d=3 Steane round sweep + bare baseline: T_1,L = 42.15 μs, T_1,phys = 72.81 μs (sub-threshold as expected)
+
+**Decoder advances**:
+- Dijkstra-shortest-path MWPM on syndrome-difference history: +5 to +25 percentage points over naive matching
+- 3D space-time MWPM (DKLP construction): equivalent to per-round Dijkstra at n ≤ 4
+
+**Honest nulls (methodological limits documented)**:
+- d=7 long-rounds (n=8, 16): bare-baseline transpiler artifacts break the comparison
+- Full X+Z syndrome: WORSE than Z-only at Heron-r2 cz_err ≈ 2×10⁻³ (extra CNOTs cost more than they correct)
+- X-memory (static + dynamic-circuit |+_L>): random; Qiskit Runtime forbids DD + dynamic-circuit combo
+
+**Retraction**: earlier 156-qubit GHZ + majority-vote framing as "QEC" is retracted. Repetition code only protects against bit-flip errors; 99.1% recovery rate is binomial-CDF arithmetic on a noisy Z-basis measurement, not error correction. Post-mortem in `launch/viral_press_release_156q_qec.md`.
+
+**Whitepapers shipped**:
+- `paper/surface_code_multidistance_break_even.pdf` (6 pages) — d=5 + d=7 break-even
+- `paper/steane_logical_qubit.pdf` (7 pages) — d=3 round sweep + lifetime fit
+- `paper/figures/qec_heron_r2_summary.{png,pdf}` — 4-panel unified results
+
+**Honest claim-level**: novel demonstration on Heron-r2 (level 2 in the framework taxonomy). NOT a SOTA contribution vs Google Quantum AI Willow (d=7 with cz_err ~5×10⁻⁴) or IBM bivariate-bicycle codes.
+
 ## [0.19.1] - 2026-05-12
 
 ### Cross-chip validation + 3 additional Millennium-adjacent explorations

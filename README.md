@@ -15,7 +15,8 @@
 [![Millennium: 4/7 + Goldbach](https://img.shields.io/badge/Millennium-4%2F7%20%2B%20Goldbach-orange.svg)](FINDINGS_MILLENNIUM_PROGRESS.md)
 [![Emergents: 25](https://img.shields.io/badge/catcher%20emergents-25-yellow.svg)](paper/knopp_drive.pdf)
 [![Cross-chip: 1.94σ](https://img.shields.io/badge/cross--chip-1.94%CF%83%20RMS-purple.svg)](experiments/knopp_cross_chip_comparison.py)
-[![Version 0.19.1](https://img.shields.io/badge/version-0.19.1-blue.svg)](pyproject.toml)
+[![Version 0.19.2](https://img.shields.io/badge/version-0.19.2-blue.svg)](pyproject.toml)
+[![QEC: d=7 break-even](https://img.shields.io/badge/QEC-d%3D7%20%2B43.2%CF%83-darkgreen.svg)](paper/surface_code_multidistance_break_even.pdf)
 
 *Systrophē* (Greek **Συστροφή**, "twisting-together"): the joint exterior of two co-rotating, dual-positive-mass van Stockum dust cylinders, whose log-periodic Tipler sinusoids superpose with a tunable relative phase offset.
 
@@ -393,6 +394,35 @@ Four Millennium Prize problems plus one adjacent (Goldbach / Hilbert's 8th) now 
 | 5 | **Goldbach (Hilbert 8 adjacent)** | g(n) computed for all even n ∈ [4, 1000]; Goldbach conjecture **verified throughout the range**. Per-quantity catcher (3 bands by n mod 6) independently flags the comet's 3-band structure (`millennium_goldbach_catcher.py`). |
 
 Standalone whitepaper: [`paper/millennium_catcher.pdf`](paper/millennium_catcher.pdf) (7 pages, arXiv-ready). See [`FINDINGS_MILLENNIUM_PROGRESS.md`](FINDINGS_MILLENNIUM_PROGRESS.md) for the markdown progress log. Run with `python examples/run_all_millennium.py`.
+
+---
+
+## QEC program on IBM Heron-r2 (v0.19.x)
+
+![QEC summary](paper/figures/qec_heron_r2_summary.png)
+
+Comprehensive quantum-error-correction experimental program on `ibm_kingston` (Heron-r2, 156 qubits), with the canonical logical-vs-bare comparison at matched wall-clock duration:
+
+| Experiment | Result | Best σ |
+|---|---|---|
+| d=3 Steane round sweep + bare baseline | sub-threshold; T_1,L=42 μs vs T_1,phys=73 μs | — |
+| **d=5 surface code Z-memory** (Dijkstra-MWPM) | **sustained break-even** at n_rounds ∈ {1, 2, 4} | **+24.6σ** |
+| **d=7 surface code Z-memory** (Dijkstra-MWPM, 16384 shots) | **sustained break-even** at n_rounds ∈ {1, 2, 4} | **+43.2σ** |
+| Distance scaling d=7 vs d=5 | d=7 margin > d=5 margin at every matched n | — |
+| Transversal logical X_L | symmetric P(L=0) ≈ P(L=1) ≈ 0.81 at n=1 | — |
+| 3D space-time MWPM | matches per-round Dijkstra at n≤4 | — |
+| d=7 long-rounds (n=8, 16) | bare-baseline transpiler artifacts; honest methodological null | — |
+| Multi-logical (2 parallel d=5 patches) | both patches above random, below single-patch | — |
+| Full X+Z d=5 memory | worse than Z-only at Heron-r2 cz_err≈2×10⁻³ | honest null |
+| X-memory (static + dynamic-circuit |+_L>) | random; Qiskit Runtime forbids DD + dynamic-circuit combo | honest null |
+
+**Standalone whitepapers**:
+- [`paper/surface_code_multidistance_break_even.pdf`](paper/surface_code_multidistance_break_even.pdf) (6 pages) — d=5 + d=7 sustained break-even
+- [`paper/steane_logical_qubit.pdf`](paper/steane_logical_qubit.pdf) (7 pages) — d=3 baseline + lifetime fit
+
+**Honest claim-level**: novel demonstrations on Heron-r2 (level 2 in the framework taxonomy). NOT a SOTA contribution vs Google Willow (d=7 fault-tolerant, gate error ~5×10⁻⁴) or IBM bivariate-bicycle codes. The single highest-impact change was the Dijkstra-shortest-path MWPM decoder, which recovered 5–25 percentage points of logical fidelity on existing hardware data.
+
+**Earlier 156-qubit GHZ + majority-vote claim retracted**: the repetition-code framing did not survive review (protects only against bit flips; the 99.1% number is binomial-CDF arithmetic, not error correction). See [`launch/viral_press_release_156q_qec.md`](launch/viral_press_release_156q_qec.md) for the post-mortem.
 
 ---
 
