@@ -1,0 +1,53 @@
+{
+  "job_id": "d81k4mfoha1c73bkgjlg",
+  "n_rounds_list": [
+    1,
+    2,
+    4,
+    8
+  ],
+  "shots": 4096,
+  "metadata_per_circuit": [
+    {
+      "kind": "steane",
+      "n_rounds": 1,
+      "duration_dt": 45800
+    },
+    {
+      "kind": "bare",
+      "n_rounds": 1,
+      "duration_dt": 45800
+    },
+    {
+      "kind": "steane",
+      "n_rounds": 2,
+      "duration_dt": 68600
+    },
+    {
+      "kind": "bare",
+      "n_rounds": 2,
+      "duration_dt": 68600
+    },
+    {
+      "kind": "steane",
+      "n_rounds": 4,
+      "duration_dt": 116000
+    },
+    {
+      "kind": "bare",
+      "n_rounds": 4,
+      "duration_dt": 116000
+    },
+    {
+      "kind": "steane",
+      "n_rounds": 8,
+      "duration_dt": 211000
+    },
+    {
+      "kind": "bare",
+      "n_rounds": 8,
+      "duration_dt": 211000
+    }
+  ],
+  "submitted_unix": 1778598490
+}
