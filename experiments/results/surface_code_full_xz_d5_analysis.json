@@ -1,0 +1,7 @@
+{
+  "d5_z_only_n1": 0.9166,
+  "d5_z_only_n4": 0.7869,
+  "d5_full_xz_n1": 0.7421,
+  "d5_full_xz_n4": 0.5889,
+  "commentary": "At Heron-r2 cz_err ~ 2e-3, X-syndrome extraction adds more errors than it corrects. Z-only is optimal."
+}
