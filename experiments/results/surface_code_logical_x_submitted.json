@@ -1,0 +1,27 @@
+{
+  "job_id": "d81krv00bvlc73d18980",
+  "metadata_per_circuit": [
+    {
+      "n_rounds": 1,
+      "apply_x_l": false,
+      "shots": 8192
+    },
+    {
+      "n_rounds": 1,
+      "apply_x_l": true,
+      "shots": 8192
+    },
+    {
+      "n_rounds": 4,
+      "apply_x_l": false,
+      "shots": 8192
+    },
+    {
+      "n_rounds": 4,
+      "apply_x_l": true,
+      "shots": 8192
+    }
+  ],
+  "shots": 8192,
+  "submitted_unix": 1778601470
+}
