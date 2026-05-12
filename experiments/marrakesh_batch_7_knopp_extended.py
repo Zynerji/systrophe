@@ -103,13 +103,13 @@ def all_experiments() -> list[dict]:
     ]
 
 
-def submit_kingston(instance: str = "Zynerji") -> str:
+def submit_to_backend(backend_name: str, instance: str = "Zynerji") -> str:
     from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2
     from qiskit_ibm_runtime.options import SamplerOptions
 
     service = QiskitRuntimeService(instance=instance)
-    backend = service.backend("ibm_kingston")
-    print(f"\n[knopp-x] kingston pending={backend.status().pending_jobs}",
+    backend = service.backend(backend_name)
+    print(f"\n[knopp-x] {backend_name} pending={backend.status().pending_jobs}",
           flush=True)
     experiments = all_experiments()
     pm = generate_preset_pass_manager(backend=backend, optimization_level=3)
@@ -130,10 +130,11 @@ def submit_kingston(instance: str = "Zynerji") -> str:
     job = sampler.run(isa, shots=SHOTS)
     print(f"[knopp-x] job_id={job.job_id()}", flush=True)
 
-    out_path = RESULTS_DIR / "marrakesh_batch7_kingston_submitted.json"
+    short = backend_name.replace("ibm_", "")
+    out_path = RESULTS_DIR / f"marrakesh_batch7_{short}_submitted.json"
     out_path.write_text(json.dumps({
         "job_id": job.job_id(),
-        "backend": "ibm_kingston",
+        "backend": backend_name,
         "n_r": len(R_GRID),
         "r_grid": R_GRID.tolist(),
         "n_bands": N_BANDS,
@@ -142,6 +143,10 @@ def submit_kingston(instance: str = "Zynerji") -> str:
     }, indent=2))
     print(f"[knopp-x] wrote {out_path}", flush=True)
     return job.job_id()
+
+
+def submit_kingston(instance: str = "Zynerji") -> str:
+    return submit_to_backend("ibm_kingston", instance=instance)
 
 
 def recover_from_job(job_id: str, instance: str = "Zynerji") -> dict:
@@ -189,7 +194,9 @@ def recover_from_job(job_id: str, instance: str = "Zynerji") -> dict:
         "per_circuit": summaries,
         "novelty_catcher": nov,
     }
-    out_path = RESULTS_DIR / "marrakesh_batch7_kingston_hw_analysis.json"
+    # Filename includes backend short-name so cross-chip runs don't clobber.
+    short = str(job.backend().name).replace("ibm_", "")
+    out_path = RESULTS_DIR / f"marrakesh_batch7_{short}_hw_analysis.json"
     out_path.write_text(json.dumps(out, indent=2, default=str))
     print(f"\n  catcher: verdict={nov['verdict']}, "
           f"n_sharp={len(nov['sharp_features'])}")
