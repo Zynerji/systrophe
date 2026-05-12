@@ -1,0 +1,123 @@
+{
+  "feedback_amplified_shell": {
+    "label": "feedback_amplified_shell",
+    "param_name": "Q",
+    "param_min": 1.0,
+    "param_max": 100.0,
+    "n_points": 50,
+    "value_min": 6.718212310422312e-07,
+    "value_max": 0.0067182123104223114,
+    "value_verdict": "smooth",
+    "value_n_sharp": 0,
+    "derivative_verdict": "smooth",
+    "derivative_n_sharp": 0,
+    "kind": "none",
+    "estimated_transition_centre": null,
+    "derivative_sharp_features": []
+  },
+  "optical_fiber_analog": {
+    "label": "optical_fiber_analog",
+    "param_name": "v_end",
+    "param_min": 0.4,
+    "param_max": 0.95,
+    "n_points": 50,
+    "value_min": 4.848484318029313,
+    "value_max": 10.0,
+    "value_verdict": "novel_structure",
+    "value_n_sharp": 3,
+    "derivative_verdict": "novel_structure",
+    "derivative_n_sharp": 5,
+    "kind": "discontinuous",
+    "estimated_transition_centre": 0.46734693877551026,
+    "derivative_sharp_features": [
+      {
+        "between_indices": [
+          2,
+          3
+        ],
+        "parameter_value": 0.43367346938775514,
+        "hamming_step": 12.0,
+        "median_step": 1.0,
+        "mad": 0.0,
+        "excess_over_median": 11.0
+      },
+      {
+        "between_indices": [
+          3,
+          4
+        ],
+        "parameter_value": 0.4448979591836735,
+        "hamming_step": 13.0,
+        "median_step": 1.0,
+        "mad": 0.0,
+        "excess_over_median": 12.0
+      },
+      {
+        "between_indices": [
+          5,
+          6
+        ],
+        "parameter_value": 0.46734693877551026,
+        "hamming_step": 14.0,
+        "median_step": 1.0,
+        "mad": 0.0,
+        "excess_over_median": 13.0
+      },
+      {
+        "between_indices": [
+          15,
+          16
+        ],
+        "parameter_value": 0.5795918367346939,
+        "hamming_step": 9.0,
+        "median_step": 1.0,
+        "mad": 0.0,
+        "excess_over_median": 8.0
+      },
+      {
+        "between_indices": [
+          23,
+          24
+        ],
+        "parameter_value": 0.6693877551020408,
+        "hamming_step": 13.0,
+        "median_step": 1.0,
+        "mad": 0.0,
+        "excess_over_median": 12.0
+      }
+    ]
+  },
+  "krasnikov_ring": {
+    "label": "krasnikov_ring",
+    "param_name": "sigma_phase",
+    "param_min": 0.0,
+    "param_max": 3.141592653589793,
+    "n_points": 30,
+    "value_min": 0.0,
+    "value_max": 0.5496351283363684,
+    "value_verdict": "novel_structure",
+    "value_n_sharp": 1,
+    "derivative_verdict": "novel_structure",
+    "derivative_n_sharp": 1,
+    "kind": "discontinuous",
+    "estimated_transition_centre": 2.058284842007106,
+    "derivative_sharp_features": [
+      {
+        "between_indices": [
+          20,
+          21
+        ],
+        "parameter_value": 2.2749464043236434,
+        "hamming_step": 10.0,
+        "median_step": 2.0,
+        "mad": 1.0,
+        "excess_over_median": 8.0
+      }
+    ]
+  },
+  "berry_phase_lp": {
+    "label": "berry_phase_lp",
+    "skipped": true,
+    "reason": "no scalar radial sweep API"
+  }
+}
