@@ -12,7 +12,7 @@
 [![Papers: 12](https://img.shields.io/badge/papers-12%20PDFs-informational.svg)](#papers)
 [![IBM Quantum: 7 batches](https://img.shields.io/badge/IBM%20Quantum-7%20batches-purple.svg)](#ibm-marrakesh-hardware-validation)
 [![Knopp Drive: live](https://img.shields.io/badge/Knopp%20Drive-live-red.svg)](#the-knopp-drive-headline-composite-warp-engineering-bound)
-[![Millennium: 3/7 + Goldbach](https://img.shields.io/badge/Millennium-3%2F7%20%2B%20Goldbach-orange.svg)](FINDINGS_MILLENNIUM_PROGRESS.md)
+[![Millennium: 4/7 + Goldbach](https://img.shields.io/badge/Millennium-4%2F7%20%2B%20Goldbach-orange.svg)](FINDINGS_MILLENNIUM_PROGRESS.md)
 [![Emergents: 25](https://img.shields.io/badge/catcher%20emergents-25-yellow.svg)](paper/knopp_drive.pdf)
 [![Cross-chip: 1.94σ](https://img.shields.io/badge/cross--chip-1.94%CF%83%20RMS-purple.svg)](experiments/knopp_cross_chip_comparison.py)
 [![Version 0.19.0](https://img.shields.io/badge/version-0.19.0-blue.svg)](pyproject.toml)
@@ -382,14 +382,15 @@ The single-step envelope fit gives χ²/dof = 16.2 on Kingston; a two-Lorentzian
 
 ![Millennium-problem catcher 4-panel summary](paper/figures/millennium_summary.png)
 
-Three Millennium Prize problems plus one adjacent (Goldbach / Hilbert's 8th) now have catcher-explored deliverables:
+Four Millennium Prize problems plus one adjacent (Goldbach / Hilbert's 8th) now have catcher-explored deliverables:
 
 | # | Problem | Result |
 |---|---|---|
 | 1 | **Riemann hypothesis** | Third-split catcher returns `smooth` at N=50–500 zeta zeros → consistent with Montgomery-Odlyzko GUE conjecture. Single sharp feature at γ_33 ↔ γ_34 is a Lehmer-pair-like local cluster, **independently rediscovered** by the catcher without number-theoretic input. 30-seed GUE null reference (`millennium_riemann_null_gue.py`) shows the Riemann observation has p-value ≈ 0.10 — within the GUE fluctuation distribution. |
 | 2 | **P vs NP (3-SAT phase transition)** | Initial value-level catcher returns `smooth` (sigmoid transition too gradual). New **derivative catcher** (`src/systrophe/derivative_catcher.py`) recovers the transition centre at **α = 4.270 — within 0.001 of conjectured α_c ≈ 4.267**. Pure address-space novelty on a numerical derivative. |
 | 3 | **Navier–Stokes existence & smoothness (Burgers' analog)** | 1D viscous Burgers' simulation with IC u(x,0) = −sin(x) at 5 viscosities. Analytic peak finder on d log\|u_x\|/dt recovers the inviscid shock time **t_shock = 0.996 at ν = 0.005** — matching the analytical inviscid result t_shock = 1.000 to 0.4%. Catcher itself returns null on smooth analytic peaks (third documented domain boundary). |
-| 4 | **Goldbach (Hilbert 8 adjacent)** | g(n) computed for all even n ∈ [4, 1000]; Goldbach conjecture **verified throughout the range**. Per-quantity catcher (3 bands by n mod 6) independently flags the comet's 3-band structure (`millennium_goldbach_catcher.py`). |
+| 4 | **Birch–Swinnerton-Dyer (local L-data)** | a_p sequences for primes p ≤ 200 on 6 elliptic curves of known rank; partial Euler product approximation of log L(E, 1). Mean by rank: 0 → −1.01, 1 → −1.30, 2 → −2.96 — **monotone trend in BSD-expected direction** (higher rank ⇒ L vanishes more strongly). Catcher null at n=6 curves; needs more curves for statistical separation. |
+| 5 | **Goldbach (Hilbert 8 adjacent)** | g(n) computed for all even n ∈ [4, 1000]; Goldbach conjecture **verified throughout the range**. Per-quantity catcher (3 bands by n mod 6) independently flags the comet's 3-band structure (`millennium_goldbach_catcher.py`). |
 
 See [`FINDINGS_MILLENNIUM_PROGRESS.md`](FINDINGS_MILLENNIUM_PROGRESS.md) for full interpretation and roadmap. Run with `python examples/run_all_millennium.py`.
 
