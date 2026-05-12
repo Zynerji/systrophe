@@ -97,7 +97,7 @@ Four of the seven Millennium problems (+ Goldbach) now have catcher-explored del
 * **Riemann hypothesis**: RH-consistent third-split + emergent-positive Lehmer-pair-style sharp, plus 30-seed GUE null reference.
 * **P vs NP**: derivative-catcher rediscovers the 3-SAT phase transition centre α = 4.270 (within 0.001 of conjectured α_c).
 * **Navier–Stokes (Burgers' analog)**: analytic peak finder recovers inviscid t_shock = 0.996 at ν = 0.005 (within 0.4% of the analytical t_shock = 1.000). Catcher itself returns null on the smooth analytic peak — third domain boundary documented.
-* **Birch–Swinnerton-Dyer (local L-data)**: 6 elliptic curves with known rank; partial Euler product of L(E, 1) shows the BSD-expected monotone trend (rank 0 → −1.01, rank 1 → −1.30, rank 2 → −2.96). Catcher null at n = 6 curves; needs more curves and higher P_MAX for statistical discrimination.
+* **Birch–Swinnerton-Dyer (local L-data)**: 17 elliptic curves with known rank, P_MAX = 500; partial Euler product log L(E, 1) is NOT monotone in rank at this P_MAX — rank-internal variance (e.g. rank-0 range [−3.06, −0.13]) dominates the rank-to-rank mean separation. Honest null: P_MAX = 500 is too small to expose the BSD signal; infrastructure in place for high-P_MAX runs.
 * **Goldbach (Hilbert 8)**: conjecture verified for all even n ≤ 1000; per-quantity catcher independently identifies the 3-band comet structure.
 
 The initial SAT null result triggered a framework upgrade (`derivative_catcher.py`) that now generalises the catcher's domain to smooth sigmoid transitions. The upgrade is fully tested (8/8 pass) and reusable for all future Millennium-adjacent investigations.
