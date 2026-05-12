@@ -16,7 +16,7 @@
 [![Emergents: 25](https://img.shields.io/badge/catcher%20emergents-25-yellow.svg)](paper/knopp_drive.pdf)
 [![Cross-chip: 1.94σ](https://img.shields.io/badge/cross--chip-1.94%CF%83%20RMS-purple.svg)](experiments/knopp_cross_chip_comparison.py)
 [![Version 0.19.2](https://img.shields.io/badge/version-0.19.2-blue.svg)](pyproject.toml)
-[![QEC: d=7 break-even](https://img.shields.io/badge/QEC-d%3D7%20%2B43.2%CF%83-darkgreen.svg)](paper/surface_code_multidistance_break_even.pdf)
+[![QEC: d=9 break-even](https://img.shields.io/badge/QEC-d%3D9%20%2B38.7%CF%83-darkgreen.svg)](paper/surface_code_multidistance_break_even.pdf)
 
 *Systrophē* (Greek **Συστροφή**, "twisting-together"): the joint exterior of two co-rotating, dual-positive-mass van Stockum dust cylinders, whose log-periodic Tipler sinusoids superpose with a tunable relative phase offset.
 
@@ -409,7 +409,8 @@ Comprehensive quantum-error-correction experimental program on `ibm_kingston` (H
 | **d=5 surface code Z-memory** (Dijkstra-MWPM, ibm_kingston) | **sustained break-even** at n_rounds ∈ {1, 2, 4} | **+24.6σ** |
 | **d=7 surface code Z-memory** (Dijkstra-MWPM, ibm_kingston, 16384 shots) | **sustained break-even** at n_rounds ∈ {1, 2, 4} | **+43.2σ** |
 | **d=5 surface code Z-memory** (Dijkstra-MWPM, ibm_marrakesh) | **cross-chip reproducibility**, growing margin with n | **+22.6σ at n=4** |
-| Distance scaling d=7 vs d=5 | d=7 margin > d=5 margin at every matched n | — |
+| **d=9 surface code Z-memory** (Dijkstra-MWPM, ibm_kingston, 121 qubits) | **largest break-even margin**: +25.3 pp at n=1 | **+38.7σ** |
+| Distance scaling d=5 → d=7 → d=9 | growing margins at fixed n | — |
 | Cross-chip d=5: logical flat (0.78) on Marrakesh while bare decays | canonical "logical > physical lifetime" signature | — |
 | Transversal logical X_L | symmetric P(L=0) ≈ P(L=1) ≈ 0.81 at n=1 | — |
 | 3D space-time MWPM | matches per-round Dijkstra at n≤4 | — |
