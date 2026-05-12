@@ -219,3 +219,224 @@ def validate_knopp_drive_quantum(
 def summarise_quantum_validation(report: KnoppQuantumValidationReport) -> str:
     """One-line summary suitable for logging."""
     return report.summary
+
+
+# ---------------------------------------------------------------------
+# Full Knopp composite stress tensor validation
+# ---------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class KnoppCompositeQuantumPoint:
+    """Renormalised + engineered composite stress-energy at a single
+    radial point."""
+    r: float
+    tipler_gate_factor: float
+    T_tt_tipler_ren: float        # vacuum stress on LP background
+    T_kk_krasnikov_gated: float   # Krasnikov wall, modulated by gate
+    T_shell_qcavity: float        # Q-cavity contribution (|E|/Q^2)
+    horn_amplification: float     # (1 + epsilon * cos(theta - theta_0))
+    T_tt_composite: float         # full composite T_tt
+    pf_lower_bound: float
+    pf_locally_consistent: bool
+    is_finite: bool
+    is_bounded: bool
+
+
+@dataclass(frozen=True)
+class KnoppCompositeValidationReport:
+    """Validation report for the full Knopp composite stress tensor."""
+    cfg: object  # KnoppDriveConfig (forward reference)
+    r_grid: np.ndarray
+    points: list
+    band_max_T_tt_composite: float
+    nonband_max_T_tt_composite: float
+    pfenning_ford_consistent: bool
+    novelty_verdict: str
+    novelty_n_sharp: int
+    novelty_sharp_features: list
+    summary: str
+
+
+def _krasnikov_wall_density_at_zero(alpha_wall: float) -> float:
+    """T_kk for the Krasnikov wall at x=0 (the wall centre).
+    Formula: -alpha^2/(4 pi) sech^4(0) = -alpha^2/(4 pi)."""
+    return -(alpha_wall ** 2) / (4.0 * math.pi)
+
+
+def knopp_composite_quantum_point(
+    cfg, r: float, theta: float = 0.0,
+    eps_renorm: float = 5e-4,
+) -> KnoppCompositeQuantumPoint:
+    """Renormalised + engineered composite T_tt at a single radial point.
+
+    Composite contributions (linearised superposition):
+      T_tt_composite =
+        T_tt_renormalised_Tipler(r)             # vacuum back-reaction
+        + gate(r) * T_kk_Krasnikov              # gated engineered wall
+        + horn(theta) * T_shell_Qcavity         # cavity standing wave
+    """
+    vs = VanStockumInterior(omega=cfg.omega, R=cfg.R_cylinder)
+
+    # 1. Renormalised vacuum stress on the LP background
+    qpoint = knopp_quantum_point(vs, r, eps=eps_renorm,
+                                  sigma_wall=cfg.sigma_shell)
+    T_tt_ren = qpoint.T_tt
+    gate = qpoint.tipler_gate_factor
+
+    # 2. Krasnikov wall NEC, gated by Tipler factor
+    T_kk_base = _krasnikov_wall_density_at_zero(cfg.alpha_wall)
+    T_kk_gated = gate * T_kk_base
+
+    # 3. Q-cavity standing-wave contribution at saturation
+    #    |E_shell| = |E_neg_bare| / Q ; distributed per unit volume
+    #    yields T_shell ~ T_kk_base / Q^2 (sustained-power scaling).
+    T_shell_qcavity = T_kk_base / max(cfg.Q, 1.0) ** 2
+
+    # 4. Horn-toroidal twist angular factor at theta
+    horn_amp = 1.0 + cfg.epsilon_horn * math.cos(theta - cfg.theta_0_horn)
+
+    # Composite T_tt (linearised superposition)
+    T_tt_composite = (
+        T_tt_ren
+        + T_kk_gated * horn_amp
+        + T_shell_qcavity * horn_amp
+    )
+
+    # Pfenning-Ford check at this point: |T_tt_composite| * (1/f_0)
+    # vs the lower bound. We use a coarse local check (proper duration
+    # = 1/f_0(sigma)).
+    f_0 = 1.0 / (2.0 * math.pi * cfg.sigma_shell)
+    pf_bound = pfenning_ford_bound_local(sigma=cfg.sigma_shell)
+    pf_product = abs(T_tt_composite) * (1.0 / max(f_0, 1e-15))
+    pf_ok = pf_product >= pf_bound - 1e-15 or abs(T_tt_composite) < 1e-12
+
+    is_finite = (
+        math.isfinite(T_tt_ren)
+        and math.isfinite(T_kk_gated)
+        and math.isfinite(T_shell_qcavity)
+        and math.isfinite(T_tt_composite)
+    )
+    is_bounded = is_finite and abs(T_tt_composite) < 1e6
+
+    return KnoppCompositeQuantumPoint(
+        r=float(r),
+        tipler_gate_factor=float(gate),
+        T_tt_tipler_ren=float(T_tt_ren),
+        T_kk_krasnikov_gated=float(T_kk_gated),
+        T_shell_qcavity=float(T_shell_qcavity),
+        horn_amplification=float(horn_amp),
+        T_tt_composite=float(T_tt_composite),
+        pf_lower_bound=float(pf_bound),
+        pf_locally_consistent=bool(pf_ok),
+        is_finite=is_finite,
+        is_bounded=is_bounded,
+    )
+
+
+def validate_full_knopp_composite(
+    cfg=None,
+    r_range: tuple[float, float] = (1.05, 12.0),
+    n_r: int = 30, theta: float = 0.0,
+    eps_renorm: float = 5e-4,
+) -> KnoppCompositeValidationReport:
+    """Full-composite quantum back-reaction validation.
+
+    Sweeps r at fixed theta and reports the composite T_tt across the
+    Tipler exterior, including:
+      (a) renormalised LP-background stress (vacuum back-reaction)
+      (b) gated Krasnikov wall contribution
+      (c) Q-cavity standing-wave contribution
+      (d) horn-toroidal angular weighting
+
+    Returns the per-radius decomposition plus a catcher verdict on the
+    composite T_tt sweep.
+    """
+    from .knopp_drive import KnoppDriveConfig
+    if cfg is None:
+        cfg = KnoppDriveConfig()
+
+    r_grid = np.linspace(*r_range, n_r)
+    points = [
+        knopp_composite_quantum_point(cfg, float(r), theta=theta,
+                                        eps_renorm=eps_renorm)
+        for r in r_grid
+    ]
+
+    band_mask = np.array([p.tipler_gate_factor == 0.0 for p in points])
+    T_tt_arr = np.array([p.T_tt_composite for p in points])
+
+    if band_mask.any() and (~band_mask).any():
+        band_max = float(np.max(np.abs(T_tt_arr[band_mask])))
+        nonband_max = float(np.max(np.abs(T_tt_arr[~band_mask])))
+    else:
+        band_max = float(np.max(np.abs(T_tt_arr)))
+        nonband_max = float(np.max(np.abs(T_tt_arr)))
+
+    pf_consistent = all(p.pf_locally_consistent for p in points)
+
+    def fn(rv):
+        idx = int(np.argmin(np.abs(r_grid - rv)))
+        return np.array([float(T_tt_arr[idx])])
+    nov = scan_novelty(r_grid, fn, n_bits=32)
+
+    summary = (
+        f"composite <T_tt>: band-max={band_max:.4e}, "
+        f"nonband-max={nonband_max:.4e}, "
+        f"pf_consistent={pf_consistent}, "
+        f"all_finite={all(p.is_finite for p in points)}, "
+        f"catcher={nov.verdict}, "
+        f"n_sharp={len(nov.sharp_features)}, "
+        f"Q={cfg.Q}, epsilon={cfg.epsilon_horn}"
+    )
+
+    return KnoppCompositeValidationReport(
+        cfg=cfg,
+        r_grid=r_grid,
+        points=points,
+        band_max_T_tt_composite=band_max,
+        nonband_max_T_tt_composite=nonband_max,
+        pfenning_ford_consistent=pf_consistent,
+        novelty_verdict=nov.verdict,
+        novelty_n_sharp=len(nov.sharp_features),
+        novelty_sharp_features=[
+            {k: (int(v) if isinstance(v, np.integer) else v)
+             for k, v in s.items()}
+            for s in nov.sharp_features
+        ],
+        summary=summary,
+    )
+
+
+def composite_parameter_sweep(
+    Q_values: tuple[float, ...] = (1.0, 10.0, 100.0, 1000.0),
+    epsilon_values: tuple[float, ...] = (0.0, 0.3, 0.6, 0.9),
+    r_range: tuple[float, float] = (1.05, 12.0),
+    n_r: int = 30,
+) -> dict:
+    """Sweep (Q, epsilon) and report the composite catcher verdict
+    at each combination. Looks for emergents in the (Q, eps) plane
+    that the per-r sweep alone misses.
+    """
+    from .knopp_drive import KnoppDriveConfig
+    results = []
+    for Q in Q_values:
+        for eps in epsilon_values:
+            cfg = KnoppDriveConfig(Q=float(Q), epsilon_horn=float(eps))
+            report = validate_full_knopp_composite(
+                cfg=cfg, r_range=r_range, n_r=n_r,
+            )
+            results.append({
+                "Q": float(Q),
+                "epsilon": float(eps),
+                "band_max_T_tt": report.band_max_T_tt_composite,
+                "nonband_max_T_tt": report.nonband_max_T_tt_composite,
+                "novelty_verdict": report.novelty_verdict,
+                "n_sharp": report.novelty_n_sharp,
+                "pfenning_ford_consistent": report.pfenning_ford_consistent,
+            })
+    novel_combos = [r for r in results if r["novelty_verdict"] == "novel_structure"]
+    return {
+        "results": results,
+        "n_novel_combinations": len(novel_combos),
+        "novel_combinations": novel_combos,
+    }
