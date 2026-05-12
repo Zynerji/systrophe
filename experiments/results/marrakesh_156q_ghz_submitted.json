@@ -1,0 +1,7 @@
+{
+  "job_id": "d81akjvoha1c73bk4jlg",
+  "backend": "ibm_marrakesh",
+  "n_qubits": 156,
+  "shots": 8192,
+  "submitted_unix": 1778559568
+}
