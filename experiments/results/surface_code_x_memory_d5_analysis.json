@@ -1,0 +1,13 @@
+{
+  "job_id": "d81l0bmgbeec73aknh60",
+  "shots": 8192,
+  "d5_n1": {
+    "surface_x_memory": 0.4988,
+    "bare_x": 0.4962
+  },
+  "d5_n4": {
+    "surface_x_memory": 0.498,
+    "bare_x": 0.5016
+  },
+  "note": "X-memory random because |+_L> preparation requires classical feedback (dynamic circuit if_test) to apply Z-corrections from the Z-stab init round; without it the state is in a random sign sector and logical X gives ~0.5."
+}
