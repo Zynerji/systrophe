@@ -1,0 +1,50 @@
+{
+  "n_zeros": 50,
+  "n_spacings": 49,
+  "mean_normalised_spacing": 0.9970416798397689,
+  "std_normalised_spacing": 0.33304580232692416,
+  "scan_novelty_verdict": "smooth",
+  "scan_n_sharp": 0,
+  "scan_sharp_features": [],
+  "per_quantity_verdict": "smooth",
+  "per_quantity_detail": {
+    "spacings": {
+      "verdict": "smooth",
+      "n_sharp": 0
+    }
+  },
+  "fingerprint_32bit": [
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0
+  ]
+}

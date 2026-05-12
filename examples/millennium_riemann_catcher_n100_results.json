@@ -1,0 +1,62 @@
+{
+  "n_zeros": 100,
+  "n_spacings": 99,
+  "mean_normalised_spacing": 1.0037575666188996,
+  "std_normalised_spacing": 0.3539829881298271,
+  "scan_novelty_verdict": "novel_structure",
+  "scan_n_sharp": 1,
+  "scan_sharp_features": [
+    {
+      "between_indices": [
+        32,
+        33
+      ],
+      "parameter_value": 33.0,
+      "hamming_step": 32,
+      "median_step": 14.0,
+      "mad": 6.0,
+      "excess_over_median": 18.0
+    }
+  ],
+  "per_quantity_verdict": "smooth",
+  "per_quantity_detail": {
+    "spacings": {
+      "verdict": "smooth",
+      "n_sharp": 0
+    }
+  },
+  "fingerprint_32bit": [
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    0
+  ]
+}
