@@ -1,0 +1,19 @@
+{
+  "sat": {
+    "coherence": "novel_structure",
+    "consensus": "smooth",
+    "best_coherence_alpha": 3.3,
+    "best_consensus_alpha": 2.0
+  },
+  "goldbach": {
+    "coherence": "novel_structure",
+    "consensus": "novel_structure"
+  },
+  "bsd": {
+    "consensus": "novel_structure"
+  },
+  "riemann": {
+    "multirun": "novel_structure",
+    "max_coinc": 0.6
+  }
+}
