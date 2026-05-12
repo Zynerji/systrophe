@@ -1,0 +1,63 @@
+{
+  "job_id": "d81kj980bvlc73d17su0",
+  "metadata_per_circuit": [
+    {
+      "d": 7,
+      "kind": "surface",
+      "n_rounds": 1,
+      "duration_dt": 62600,
+      "shots": 4096
+    },
+    {
+      "d": 7,
+      "kind": "bare",
+      "n_rounds": 1,
+      "duration_dt": 62600,
+      "shots": 4096
+    },
+    {
+      "d": 7,
+      "kind": "surface",
+      "n_rounds": 2,
+      "duration_dt": 104000,
+      "shots": 4096
+    },
+    {
+      "d": 7,
+      "kind": "bare",
+      "n_rounds": 2,
+      "duration_dt": 104000,
+      "shots": 4096
+    },
+    {
+      "d": 7,
+      "kind": "surface",
+      "n_rounds": 4,
+      "duration_dt": 201600,
+      "shots": 4096
+    },
+    {
+      "d": 7,
+      "kind": "bare",
+      "n_rounds": 4,
+      "duration_dt": 201600,
+      "shots": 4096
+    },
+    {
+      "d": 5,
+      "kind": "surface",
+      "n_rounds": 1,
+      "duration_dt": 32400,
+      "shots": 16384
+    },
+    {
+      "d": 5,
+      "kind": "bare",
+      "n_rounds": 1,
+      "duration_dt": 32400,
+      "shots": 16384
+    }
+  ],
+  "shots_actual": 16384,
+  "submitted_unix": 1778600359
+}
