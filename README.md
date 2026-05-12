@@ -13,7 +13,8 @@
 [![IBM Quantum: 7 batches](https://img.shields.io/badge/IBM%20Quantum-7%20batches-purple.svg)](#ibm-marrakesh-hardware-validation)
 [![Knopp Drive: live](https://img.shields.io/badge/Knopp%20Drive-live-red.svg)](#the-knopp-drive-headline-composite-warp-engineering-bound)
 [![Millennium: 2/7 + Goldbach](https://img.shields.io/badge/Millennium-2%2F7%20%2B%20Goldbach-orange.svg)](FINDINGS_MILLENNIUM_PROGRESS.md)
-[![Emergents: 24](https://img.shields.io/badge/catcher%20emergents-24-yellow.svg)](paper/knopp_drive.pdf)
+[![Emergents: 25](https://img.shields.io/badge/catcher%20emergents-25-yellow.svg)](paper/knopp_drive.pdf)
+[![Cross-chip: 1.94σ](https://img.shields.io/badge/cross--chip-1.94%CF%83%20RMS-purple.svg)](experiments/knopp_cross_chip_comparison.py)
 [![Version 0.19.0](https://img.shields.io/badge/version-0.19.0-blue.svg)](pyproject.toml)
 
 *Systrophē* (Greek **Συστροφή**, "twisting-together"): the joint exterior of two co-rotating, dual-positive-mass van Stockum dust cylinders, whose log-periodic Tipler sinusoids superpose with a tunable relative phase offset.
@@ -360,18 +361,20 @@ The full derivation, six representative engineering configurations, the complete
 
 Implementation: `src/systrophe/knopp_drive.py`. Supporting modules: `alcubierre.py`, `lentz_soliton.py`, `bobrick_martire.py`, `krasnikov_tube.py`, `tipler_krasnikov_hybrid.py`, `feedback_amplified_shell.py`, `horn_toroidal_warp.py`.
 
-### Quantitative band-edge fit (`ibm_kingston` batch 7)
+### Quantitative band-edge fit (`ibm_kingston` + `ibm_marrakesh` batch 7)
 
-A 16-point r-sweep on `ibm_kingston` (Heron-r2, batch 7, job `d81b6rvoha1c73bk5ee0`, 8192 shots/point with dynamical decoupling) pins the Knopp Drive band edges quantitatively from real hardware:
+A 16-point r-sweep on `ibm_kingston` (job `d81b6rvoha1c73bk5ee0`) and the IDENTICAL circuit on `ibm_marrakesh` (job `d81bq77tjchs73bmm8sg`), both 8192 shots/point with dynamical decoupling, give quantitative band edges:
 
-| Quantity | Value | Sigma | Precision |
-|---|---|---|---|
-| r_edge_in   | 2.657 | 0.002 | 0.07% |
-| r_edge_out  | 5.471 | 0.010 | 0.18% |
-| band_width  | 2.815 | 0.010 | 0.4%  |
-| contrast    | 0.594 | 0.003 | SNR 184σ |
+| Quantity | Kingston-only | Combined (K + M) |
+|---|---|---|
+| r_edge_in   | 2.657 ± 0.002 | **2.6539 ± 0.0015** (0.06%) |
+| r_edge_out  | 5.471 ± 0.010 | **5.4693 ± 0.0067** (0.12%) |
+| band_width  | 2.815 ± 0.010 | 2.815 ± 0.007 |
+| contrast    | 0.594 ± 0.003 | 0.588 ± 0.002 (SNR 256σ) |
 
-The single-step envelope fit gives χ²/dof = 16.2; a two-Lorentzian-internal-resonance fit drops this to **χ²/dof = 1.09** (perfect to shot-noise), revealing two internal modes inside the CTC band (r₁ ≈ 3.01 sharp, r₂ ≈ 4.47 broad). Plot at `paper/figures/knopp_band_edge_kingston.pdf`. Source: `experiments/knopp_band_edge_fit.py` + `experiments/knopp_substructure_fit.py`.
+**Cross-chip RMS difference = 1.94σ of pooled shot noise** — Kingston and Marrakesh produce statistically equivalent band-gating curves. The Knopp Drive signature is reproduced across two independent Heron-r2 chips. Plot at `paper/figures/knopp_cross_chip.pdf`. Source: `experiments/knopp_cross_chip_comparison.py`.
+
+The single-step envelope fit gives χ²/dof = 16.2 on Kingston; a two-Lorentzian-internal-resonance fit drops this to **χ²/dof = 1.09** (perfect to shot-noise), revealing two internal modes inside the CTC band (r₁ ≈ 3.01 sharp, r₂ ≈ 4.47 broad). Plots in `paper/figures/`. Source: `experiments/knopp_band_edge_fit.py` + `experiments/knopp_substructure_fit.py`.
 
 ---
 
