@@ -12,7 +12,8 @@
 [![Papers: 12](https://img.shields.io/badge/papers-12%20PDFs-informational.svg)](#papers)
 [![IBM Quantum: 7 batches](https://img.shields.io/badge/IBM%20Quantum-7%20batches-purple.svg)](#ibm-marrakesh-hardware-validation)
 [![Knopp Drive: live](https://img.shields.io/badge/Knopp%20Drive-live-red.svg)](#the-knopp-drive-headline-composite-warp-engineering-bound)
-[![Millennium: 2/7 explored](https://img.shields.io/badge/Millennium-2%2F7%20explored-orange.svg)](FINDINGS_MILLENNIUM_PROGRESS.md)
+[![Millennium: 2/7 + Goldbach](https://img.shields.io/badge/Millennium-2%2F7%20%2B%20Goldbach-orange.svg)](FINDINGS_MILLENNIUM_PROGRESS.md)
+[![Emergents: 24](https://img.shields.io/badge/catcher%20emergents-24-yellow.svg)](paper/knopp_drive.pdf)
 [![Version 0.19.0](https://img.shields.io/badge/version-0.19.0-blue.svg)](pyproject.toml)
 
 *Systrophē* (Greek **Συστροφή**, "twisting-together"): the joint exterior of two co-rotating, dual-positive-mass van Stockum dust cylinders, whose log-periodic Tipler sinusoids superpose with a tunable relative phase offset.
@@ -355,7 +356,7 @@ print(summarise_knopp_budget(b))
 # tipler_gate=0.000, Q=100 -> 1/Q^2=0.0001, |steering|=1.000e-01, P-F_ok=True
 ```
 
-The full derivation, six representative engineering configurations, the complete catcher-validated emergent inventory (**22 entries at v0.19.0**), and the Pfenning–Ford compatibility analysis are in [`paper/knopp_drive.pdf`](paper/knopp_drive.pdf). The end-to-end walkthrough is `examples/knopp_drive_walkthrough.py`.
+The full derivation, six representative engineering configurations, the complete catcher-validated emergent inventory (**24 entries at v0.19.0+**), and the Pfenning–Ford compatibility analysis are in [`paper/knopp_drive.pdf`](paper/knopp_drive.pdf). The end-to-end walkthrough is `examples/knopp_drive_walkthrough.py`.
 
 Implementation: `src/systrophe/knopp_drive.py`. Supporting modules: `alcubierre.py`, `lentz_soliton.py`, `bobrick_martire.py`, `krasnikov_tube.py`, `tipler_krasnikov_hybrid.py`, `feedback_amplified_shell.py`, `horn_toroidal_warp.py`.
 
@@ -376,12 +377,15 @@ The single-step envelope fit gives χ²/dof = 16.2; a two-Lorentzian-internal-re
 
 ## Millennium-problem catcher explorations
 
-Two of the seven Millennium Prize problems now have catcher-explored deliverables in the repo:
+![Millennium-problem catcher 4-panel summary](paper/figures/millennium_summary.png)
+
+Two Millennium Prize problems plus one adjacent (Goldbach / Hilbert's 8th) now have catcher-explored deliverables:
 
 | # | Problem | Result |
 |---|---|---|
-| 1 | **Riemann hypothesis** | Third-split catcher returns `smooth` at N=50–500 zeta zeros → consistent with Montgomery-Odlyzko GUE conjecture. Single sharp feature at γ_33 ↔ γ_34 is a Lehmer-pair-like local cluster, **independently rediscovered** by the catcher without number-theoretic input. GUE null reference (`millennium_riemann_null_gue.py`) confirms Riemann observation sits inside finite-N GUE fluctuation distribution. |
+| 1 | **Riemann hypothesis** | Third-split catcher returns `smooth` at N=50–500 zeta zeros → consistent with Montgomery-Odlyzko GUE conjecture. Single sharp feature at γ_33 ↔ γ_34 is a Lehmer-pair-like local cluster, **independently rediscovered** by the catcher without number-theoretic input. 30-seed GUE null reference (`millennium_riemann_null_gue.py`) shows the Riemann observation has p-value ≈ 0.10 — within the GUE fluctuation distribution. |
 | 2 | **P vs NP (3-SAT phase transition)** | Initial value-level catcher returns `smooth` (sigmoid transition too gradual). New **derivative catcher** (`src/systrophe/derivative_catcher.py`) recovers the transition centre at **α = 4.270 — within 0.001 of conjectured α_c ≈ 4.267**. Pure address-space novelty on a numerical derivative. |
+| 3 | **Goldbach (Hilbert 8 adjacent)** | g(n) computed for all even n ∈ [4, 1000]; Goldbach conjecture **verified throughout the range**. Per-quantity catcher (3 bands by n mod 6) independently flags the comet's 3-band structure (`millennium_goldbach_catcher.py`). |
 
 See [`FINDINGS_MILLENNIUM_PROGRESS.md`](FINDINGS_MILLENNIUM_PROGRESS.md) for full interpretation and roadmap. Run with `python examples/run_all_millennium.py`.
 
