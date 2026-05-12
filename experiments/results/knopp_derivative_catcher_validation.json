@@ -1,0 +1,46 @@
+{
+  "kind": "smooth_sigmoid",
+  "estimated_transition_centre": 3.1,
+  "value_verdict": "smooth",
+  "derivative_verdict": "novel_structure",
+  "ls_fit_r_edge_in": 2.657,
+  "ls_fit_r_edge_in_sigma": 0.002,
+  "ls_fit_r_edge_out": 5.471,
+  "ls_fit_r_edge_out_sigma": 0.01,
+  "value_sharp_features": [],
+  "derivative_sharp_features": [
+    {
+      "between_indices": [
+        9,
+        10
+      ],
+      "parameter_value": 3.1,
+      "hamming_step": 21.0,
+      "median_step": 4.0,
+      "mad": 1.0,
+      "excess_over_median": 17.0
+    },
+    {
+      "between_indices": [
+        11,
+        12
+      ],
+      "parameter_value": 3.9000000000000004,
+      "hamming_step": 13.0,
+      "median_step": 4.0,
+      "mad": 1.0,
+      "excess_over_median": 9.0
+    },
+    {
+      "between_indices": [
+        12,
+        13
+      ],
+      "parameter_value": 4.6,
+      "hamming_step": 15.0,
+      "median_step": 4.0,
+      "mad": 1.0,
+      "excess_over_median": 11.0
+    }
+  ]
+}
