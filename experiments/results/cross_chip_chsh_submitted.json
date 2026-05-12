@@ -1,0 +1,14 @@
+{
+  "job_ids": {
+    "ibm_marrakesh": "d819g9ntjchs73bmj5mg",
+    "ibm_fez": "d819gag0bvlc73d0pkcg",
+    "ibm_kingston": "d819gbmgbeec73ak8pdg"
+  },
+  "settings": [
+    "AB",
+    "AB_prime",
+    "A_primeB",
+    "A_primeB_prime"
+  ],
+  "submitted_unix": 1778554926
+}

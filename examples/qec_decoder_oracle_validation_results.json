@@ -1,0 +1,57 @@
+{
+  "rows": [
+    {
+      "p": 0.001,
+      "lambda_2": 0.9980000000000024,
+      "predicted_iter": 9201.126958427983,
+      "measured_iter": 5000
+    },
+    {
+      "p": 0.005,
+      "lambda_2": 0.9900000000000007,
+      "predicted_iter": 1832.842306213677,
+      "measured_iter": 1448
+    },
+    {
+      "p": 0.01,
+      "lambda_2": 0.9800000000000009,
+      "predicted_iter": 911.7926847348361,
+      "measured_iter": 755
+    },
+    {
+      "p": 0.02,
+      "lambda_2": 0.960000000000001,
+      "predicted_iter": 451.2440158898364,
+      "measured_iter": 392
+    },
+    {
+      "p": 0.05,
+      "lambda_2": 0.900000000000001,
+      "predicted_iter": 174.83476261426455,
+      "measured_iter": 161
+    },
+    {
+      "p": 0.1,
+      "lambda_2": 0.8000000000000009,
+      "predicted_iter": 82.5508092681298,
+      "measured_iter": 80
+    },
+    {
+      "p": 0.15,
+      "lambda_2": 0.7000000000000011,
+      "predicted_iter": 51.64556988650329,
+      "measured_iter": 52
+    },
+    {
+      "p": 0.2,
+      "lambda_2": 0.6000000000000016,
+      "predicted_iter": 36.060604415550976,
+      "measured_iter": 37
+    }
+  ],
+  "pearson_r_log_log": 0.9992263636434788,
+  "log_log_slope": 0.8992651834908771,
+  "log_log_intercept": 0.18704596979853094,
+  "n_qubits": 3,
+  "tol": 1e-08
+}

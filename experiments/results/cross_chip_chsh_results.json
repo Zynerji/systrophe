@@ -1,0 +1,32 @@
+{
+  "ibm_marrakesh": {
+    "E": {
+      "AB": 0.66748046875,
+      "AB_prime": 0.67431640625,
+      "A_primeB": 0.671875,
+      "A_primeB_prime": -0.673095703125
+    },
+    "S_CHSH": -0.008056640625,
+    "bell_violated": false
+  },
+  "ibm_fez": {
+    "E": {
+      "AB": 0.69189453125,
+      "AB_prime": 0.6572265625,
+      "A_primeB": 0.689453125,
+      "A_primeB_prime": -0.676025390625
+    },
+    "S_CHSH": 0.048095703125,
+    "bell_violated": false
+  },
+  "ibm_kingston": {
+    "E": {
+      "AB": 0.676513671875,
+      "AB_prime": 0.667724609375,
+      "A_primeB": 0.685546875,
+      "A_primeB_prime": -0.6689453125
+    },
+    "S_CHSH": 0.025390625,
+    "bell_violated": false
+  }
+}

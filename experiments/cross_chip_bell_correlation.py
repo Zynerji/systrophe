@@ -76,6 +76,63 @@ def bell_circuit(meas_setting: str) -> QuantumCircuit:
     return qc
 
 
+def chsh_violating_bell_circuit(meas_label: str) -> QuantumCircuit:
+    """Bell |Phi+> with CHSH-violating rotated bases.
+
+    CHSH-violating measurement angles:
+      Alice (q0): angle 0 (A) or pi/2 (A')
+      Bob   (q1): angle pi/4 (B) or 3 pi/4 (B')
+
+    The four settings 'AB', 'AB_prime', 'A_primeB', 'A_primeB_prime'
+    give CHSH parameter
+      S = E(A,B) - E(A,B') + E(A',B) + E(A',B')
+    with maximum 2 sqrt(2) at the Tsirelson bound for an ideal |Phi+>.
+
+    `meas_label` in {'AB', 'AB_prime', 'A_primeB', 'A_primeB_prime'}.
+    """
+    qr = QuantumRegister(2, "q")
+    cr = ClassicalRegister(2, "c")
+    qc = QuantumCircuit(qr, cr, name=f"chsh_{meas_label}")
+    qc.h(qr[0])
+    qc.cx(qr[0], qr[1])
+
+    if meas_label == "AB":
+        # A = Z (angle 0), B = (Z + X)/sqrt 2 (angle pi/4 about y)
+        qc.ry(-math.pi / 4, qr[1])
+    elif meas_label == "AB_prime":
+        # A = Z, B' = (Z - X)/sqrt 2 (angle -pi/4)
+        qc.ry(+math.pi / 4, qr[1])
+    elif meas_label == "A_primeB":
+        # A' = X (angle pi/2), B = (Z + X)/sqrt 2
+        qc.ry(-math.pi / 2, qr[0])
+        qc.ry(-math.pi / 4, qr[1])
+    elif meas_label == "A_primeB_prime":
+        # A' = X, B' = (Z - X)/sqrt 2
+        qc.ry(-math.pi / 2, qr[0])
+        qc.ry(+math.pi / 4, qr[1])
+    else:
+        raise ValueError(f"Unknown CHSH setting: {meas_label}")
+    qc.measure(qr, cr)
+    return qc
+
+
+def all_chsh_settings() -> list[str]:
+    return ["AB", "AB_prime", "A_primeB", "A_primeB_prime"]
+
+
+def chsh_violating_S(E: dict[str, float]) -> float:
+    """CHSH parameter with the rotated-basis convention:
+        S = E_AB - E_AB' + E_A'B + E_A'B'
+    Bell violation: |S| > 2; Tsirelson bound 2 sqrt 2 = 2.828.
+    """
+    return (
+        E["AB"]
+        - E["AB_prime"]
+        + E["A_primeB"]
+        + E["A_primeB_prime"]
+    )
+
+
 def chsh_from_counts(counts: dict[str, int]) -> float:
     """Expectation value <A B> from a 2-qubit measurement.
 

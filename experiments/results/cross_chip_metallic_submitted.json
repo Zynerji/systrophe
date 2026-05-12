@@ -1,0 +1,18 @@
+{
+  "job_ids": {
+    "ibm_marrakesh": "d819hio0bvlc73d0plk0",
+    "ibm_fez": "d819hjntjchs73bmj71g",
+    "ibm_kingston": "d819hk00bvlc73d0plm0"
+  },
+  "metals": [
+    "bronze",
+    "copper"
+  ],
+  "metallic_means": {
+    "bronze": 3.302775637731995,
+    "copper": 4.23606797749979,
+    "golden": 1.618033988749895,
+    "silver": 2.414213562373095
+  },
+  "submitted_unix": 1778555089
+}
