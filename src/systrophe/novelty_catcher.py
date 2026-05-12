@@ -148,7 +148,10 @@ def _rank_thermometer_address(
     """For a single component's values across the scan, produce a
     thermometer-coded address for the requested point's rank.
     """
-    ranks = np.argsort(np.argsort(column_values))  # [0, n-1]
+    # Use stable sort so ties are broken deterministically across platforms
+    # (numpy's default 'quicksort' is not stable and can disagree across
+    # OS/version, breaking CI on quantised data with many tied values).
+    ranks = np.argsort(np.argsort(column_values, kind="stable"), kind="stable")
     n = max(len(column_values) - 1, 1)
     bin_idx = int(ranks[point_index] / n * bits_per_comp)
     bits = np.zeros(bits_per_comp, dtype=int)
