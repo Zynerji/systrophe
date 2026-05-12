@@ -158,11 +158,50 @@ def fig_warp_comparison_bar() -> None:
     print(f"wrote {out_path}")
 
 
+def fig_renormalized_T_tt() -> None:
+    """Figure 5: renormalised <T_{tt}>_ren on the Tipler exterior,
+    showing finite-bounded behaviour everywhere + chronology-horizon
+    catcher transition."""
+    from systrophe.knopp_drive_quantum_validation import (
+        validate_knopp_drive_quantum,
+    )
+
+    report = validate_knopp_drive_quantum(
+        r_range=(1.05, 12.0), n_r=30,
+    )
+    r = np.array([p.r for p in report.points])
+    T_tt = np.array([p.T_tt for p in report.points])
+    gate = np.array([p.tipler_gate_factor for p in report.points])
+
+    fig, ax = plt.subplots(figsize=(7.5, 3.6))
+    ax.semilogy(r, np.abs(T_tt) + 1e-12,
+                 color="C0", linewidth=1.8,
+                 label="$|\\langle T_{tt} \\rangle_{\\mathrm{ren}}|$ (Hadamard off-trace)")
+    ax.fill_between(r, 1e-12, 1.0, where=(gate == 0),
+                     color="C0", alpha=0.15, label="inside CTC band")
+    # Mark the chronology horizon at r ~ 2.18 (catcher-flagged)
+    ax.axvline(2.18, color="C3", linestyle="--", linewidth=1.0,
+                label="chronology horizon (F=0)")
+    ax.set_xlabel("orbit radius $r$")
+    ax.set_ylabel("$|\\langle T_{tt}\\rangle_{\\mathrm{ren}}|$")
+    ax.set_title("Renormalised stress-energy on the Tipler exterior "
+                  "(quantum back-reaction validation)")
+    ax.set_ylim(1e-10, 1e-3)
+    ax.legend(loc="upper right", fontsize=8)
+    ax.grid(True, alpha=0.3, which="both")
+    fig.tight_layout()
+    out_path = FIG_DIR / "knopp_renormalized_T_tt.pdf"
+    fig.savefig(out_path)
+    plt.close(fig)
+    print(f"wrote {out_path}")
+
+
 def main() -> None:
     fig_tipler_gate_factor()
     fig_knopp_drive_E_neg_vs_r()
     fig_marrakesh_batch_6_hw()
     fig_warp_comparison_bar()
+    fig_renormalized_T_tt()
 
 
 if __name__ == "__main__":
