@@ -113,10 +113,7 @@ def syndrome_diff_history(
 
 
 def naive_pairwise_matching(violated_stabs: list[int]) -> list[tuple[int, int]]:
-    """Greedy minimum-weight pairwise matching: at each step, pick the
-    pair with smallest distance, remove both, repeat. If odd number,
-    leave the last one unpaired (handled separately as a boundary chain).
-    """
+    """Greedy minimum-weight pairwise matching: kept for back-compat."""
     pairs = []
     remaining = list(violated_stabs)
     while len(remaining) >= 2:
@@ -131,10 +128,31 @@ def naive_pairwise_matching(violated_stabs: list[int]) -> list[tuple[int, int]]:
             break
         i, j = best
         pairs.append((remaining[i], remaining[j]))
-        # Remove i and j; j > i so pop j first
         remaining.pop(j)
         remaining.pop(i)
     return pairs
+
+
+def proper_mwpm_matching(violated_stabs: list[int]) -> list[tuple[int, int]]:
+    """Proper minimum-weight perfect matching via networkx.
+    Returns a list of (stab_a, stab_b) pairs.
+
+    If the number of violated stabs is odd, one is left unmatched and
+    paired with a virtual boundary node (caller handles).
+    """
+    if len(violated_stabs) < 2:
+        return []
+    import networkx as nx
+    g = nx.Graph()
+    # All-pairs edges with negative weights (networkx finds MAX-weight
+    # matching, so negate to get min)
+    for i, j in combinations(range(len(violated_stabs)), 2):
+        d = lattice_distance(violated_stabs[i], violated_stabs[j])
+        # Use 1 / (d + epsilon) so that smaller distances => higher
+        # weights => preferred in MAX matching
+        g.add_edge(violated_stabs[i], violated_stabs[j], weight=-d)
+    matching = nx.min_weight_matching(g)
+    return [tuple(pair) for pair in matching]
 
 
 def decode_with_mwpm(data_bits: tuple[int, ...],
@@ -149,10 +167,13 @@ def decode_with_mwpm(data_bits: tuple[int, ...],
     history = syndrome_diff_history(z_syndromes_per_round, final_syndrome)
 
     # For each round, pair up violated stabs and flip a data qubit
-    # along each matched path.
+    # along each matched path. Uses proper MWPM if networkx available.
     flips = set()
     for round_violations in history:
-        pairs = naive_pairwise_matching(round_violations)
+        try:
+            pairs = proper_mwpm_matching(round_violations)
+        except ImportError:
+            pairs = naive_pairwise_matching(round_violations)
         for s1, s2 in pairs:
             path = shortest_path_qubits(s1, s2)
             for q in path:

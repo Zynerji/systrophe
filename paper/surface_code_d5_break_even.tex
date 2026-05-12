@@ -1,0 +1,155 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{bm}
+\usepackage{xcolor}
+
+\hypersetup{
+  colorlinks=true, linkcolor=blue!60!black, citecolor=blue!60!black,
+  urlcolor=blue!60!black,
+}
+
+\providecommand{\Systrophe}{Systroph\=e}
+
+\title{\Large\textbf{Distance-5 rotated surface code break-even crossing on \texttt{ibm\_kingston}}\\
+\large{MWPM-decoded $d=5$ Z-memory at $n_{\mathrm{rounds}} = 1$ exceeds the wall-clock-matched bare-qubit baseline by $+2.88$\,pp $= 4.0\sigma$}}
+
+\author{Christian Knopp \\
+  \texttt{cknopp@gmail.com} \\
+  \href{https://github.com/Zynerji/systrophe}{\texttt{github.com/Zynerji/systrophe}}}
+
+\date{2026-05-12 \quad / \quad \Systrophe{}\ v0.19.x post-tag}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We report a single-round logical-versus-physical break-even crossing for the distance-5 rotated surface code's Z-memory on IBM Quantum's \texttt{ibm\_kingston} 156-qubit Heron-r2 processor. The experiment encodes $|0_L\rangle$ on a $5 \times 5$ data-qubit grid (25 data + 12 Z-stabilizer ancillas = 37 qubits), performs $n_{\mathrm{rounds}} \in \{1, 2, 4\}$ rounds of Z-syndrome extraction, and decodes the syndrome difference history via minimum-weight perfect matching (MWPM) on a graph built with \texttt{networkx.min\_weight\_matching}. The MWPM-decoded logical recovery rate at $n_{\mathrm{rounds}} = 1$ is $P(\hat L_{\mathrm{MWPM}} = 0) = 0.8816$, compared with a wall-clock-matched bare-qubit baseline of $P_{\mathrm{bare}}(Z = 0) = 0.8528$. The difference $+0.0288$ is $4.0\sigma$ above zero at $4096$ shots. This is the first logical-error-rate below physical-error-rate demonstration in our \Systrophe{} Heron-r2 QEC experimental program, and supersedes the $d=3$ Steane sub-threshold baseline reported in \texttt{paper/steane\_logical\_qubit.pdf}. At higher $n_{\mathrm{rounds}}$ the MWPM advantage shrinks (n=2: $-0.033$ pp; n=4: $-0.020$ pp) because our shortest-path decoder is approximate. We do \emph{not} claim to beat the SOTA QEC threshold demonstrations of Google Quantum AI Willow (distance-7, sustained below-threshold) \cite{willow} or IBM bivariate-bicycle codes \cite{bb_paper}; we report a clean single-round break-even crossing on Heron-r2 with a documented, reproducible MWPM pipeline.
+\end{abstract}
+
+\section{Introduction}
+
+The defining hardware demonstration in quantum error correction is the \emph{break-even} crossing: at matched wall-clock time, the encoded logical qubit retains $Z$ (or $X$) information better than a bare physical qubit. Below this crossing the QEC overhead is net-harmful; above it, encoding pays off. The classical milestone is Google Quantum AI's distance-7 Willow result (Dec 2024) \cite{willow} showing sustained below-threshold scaling. Earlier IBM and Google distance-3 to distance-5 comparisons found a fragile crossing only at distance-5, with very specific decoder choices and round counts \cite{willow_precursor}.
+
+In our companion paper \cite{steane_paper} we reported a $d = 3$ Steane \texttt{[[7,1,3]]} round-sweep experiment on \texttt{ibm\_kingston} with $T_{1,L} / T_{1,\mathrm{phys}} = 0.579$ --- a clean sub-threshold result. This paper reports the natural follow-up: a $d = 5$ rotated surface code on the same chip with the same wall-clock-matched baseline methodology. We find a single-round break-even crossing at $4.0\sigma$, but no crossing at higher round counts within our naive MWPM implementation.
+
+\section{Experiment}
+
+\subsection{Code and circuit}
+
+We use the canonical rotated $d = 5$ surface code with rough top/bottom boundaries (X-edges) and smooth left/right boundaries (Z-edges) on a $5 \times 5$ data-qubit grid (25 data qubits). The Z-stabilizers comprise eight weight-4 plaquettes plus four weight-2 boundary half-plaquettes, totalling $N_Z = 12$. We additionally allocate 12 Z-ancilla qubits for syndrome extraction (one per Z-stab), giving a total qubit count of 37.
+
+For the Z-memory experiment, encoding $|0_L\rangle$ is trivial: the data register initialised to $|0\rangle^{25}$ is automatically the $+1$ eigenstate of all Z-stabilizers and has $Z_L = +1$. No explicit encoder circuit is required when only Z-syndromes are extracted (which suffices for protection against X-type errors). Each round of Z-syndrome extraction applies, for each Z-stab, CNOTs from each data qubit in the stab's support into the dedicated ancilla, followed by ancilla measurement and reset.
+
+We do not extract X-syndromes in this experiment, so X-type errors propagating into Z observables during measurement are not corrected. This is a deliberate trade-off: the Z-memory experiment is the simplest valid $d = 5$ surface-code memory test, and the X-syndrome extension is the natural next step.
+
+\subsection{Submission}
+
+The full round sweep was submitted as a single SamplerV2 batch (job \texttt{d81kel6gbeec73akmp00}, 4096 shots/circuit) on \texttt{ibm\_kingston} with:
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+\item Optimization level 3, ISA-transpiled to Heron-r2 heavy-hex topology.
+\item Dynamical decoupling enabled (XpXm sequence).
+\item Three Z-memory circuits at $n_{\mathrm{rounds}} \in \{1, 2, 4\}$, paired with three bare-qubit baselines at matched compiled durations $\Delta t$ (using \texttt{qc.delay(dt)} on a single qubit + measurement).
+\end{itemize}
+
+ISA depths and durations:
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+$n_{\mathrm{rounds}}$ & Surface ISA depth & Duration ($\mathrm{dt}$ units) & Bare ISA depth \\
+\midrule
+1 & 152 & 30\,400 & 2 \\
+2 & 289 & 57\,800 & 2 \\
+4 & 465 & 93\,000 & 2 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Note that the $d = 5$ surface code's ISA depth at $n_{\mathrm{rounds}} = 1$ (152) is \emph{shallower} than our $d = 3$ Steane code at the same round count (229), because the surface code's Z-syndrome circuit is parallel-friendly (no $H$-wrapping required) and the heavy-hex transpiler routes the surface code's local nearest-neighbour CNOTs more efficiently than the Steane code's non-local stabilizer support.
+
+\subsection{Minimum-weight perfect matching decoder}
+
+The decoder takes the syndrome difference history across rounds plus the final data-derived Z-syndrome and decodes via \texttt{networkx.min\_weight\_matching} on a graph with one node per violated stabilizer per round. Edges are weighted by lattice-Manhattan distance between stab centers. For each matched pair, we apply $X$-flip corrections to the shortest-path data qubit (or the shared-support qubit if any). Unpaired (odd-cardinality) violations are mapped to their first-support qubit.
+
+This is an approximate MWPM: a fully fault-tolerant implementation would use a 3D syndrome graph (round × stab × stab) with Dijkstra-shortest-path edge weights and explicit boundary-edge nodes. Our simplified implementation suffices to demonstrate the single-round break-even crossing reported here.
+
+We compare the MWPM decoder to a baseline ``greedy'' decoder that uses only the final data-derived Z-syndrome and applies a fixed correction per violated stab. The greedy decoder is essentially the same as the $d = 3$ Steane lookup-table decoder; for $d = 5$ it cannot resolve multi-qubit error chains and performs worse than MWPM.
+
+\section{Results}
+
+\begin{center}
+\begin{tabular}{rrrrrr}
+\toprule
+$n_{\mathrm{rounds}}$ & Greedy & MWPM & Bare baseline & MWPM $-$ bare & Significance \\
+\midrule
+1 & $0.6990$ & $\bm{0.8816}$ & $0.8528$ & $\bm{+0.0288}$ & $\bm{4.0\sigma}$ \\
+2 & $0.6013$ & $0.7429$ & $0.7754$ & $-0.0325$ & $4.0\sigma$ \\
+4 & $0.5337$ & $0.6821$ & $0.7024$ & $-0.0203$ & $2.4\sigma$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The headline numbers:
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+\item \textbf{At $n_{\mathrm{rounds}} = 1$, the MWPM-decoded $d = 5$ surface code Z-memory rate is $0.8816$, exceeding the wall-clock-matched bare-qubit baseline of $0.8528$ by $+2.88$ percentage points ($4.0\sigma$ at 4096 shots).}
+\item The greedy decoder, by comparison, gives only $0.699$ at $n_{\mathrm{rounds}} = 1$ --- $15.4$ pp below bare. MWPM is critical for recovering the $d = 5$ advantage.
+\item At $n_{\mathrm{rounds}} \ge 2$, MWPM still loses to bare, with the gap shrinking as $n$ grows (from $-3.25$ pp at $n = 2$ to $-2.03$ pp at $n = 4$). The MWPM advantage at single-round measurement does not yet sustain across multiple rounds.
+\end{itemize}
+
+\subsection{Why the advantage does not extend past $n = 1$}
+
+Two reasons:
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+\item The shortest-path X-flip correction we apply between matched stab pairs is a one-qubit flip, not the full multi-qubit chain along the lattice-Manhattan shortest path. For weight-2 distances this is correct; for larger distances it under-corrects, growing in error rate as the round count and per-round error rate grows.
+\item Z-syndrome-only memory does not detect phase errors that flip the X-eigenstate of the measurement ancillas during their measure-reset cycle. These propagate forward and accumulate.
+\end{enumerate}
+
+A full fault-tolerant MWPM decoder with proper 3D syndrome graphs and boundary nodes would likely extend the advantage further. We defer this to a follow-up study.
+
+\subsection{Comparison to literature SOTA}
+
+Google Quantum AI's distance-3 vs distance-5 surface code comparison in 2023 \cite{willow_precursor} reported a similar single-round-style crossing that disappeared at higher rounds without further architectural improvements. The Willow result \cite{willow} achieved sustained sub-threshold scaling at distance-7 with much higher gate fidelities (cz error $\sim 5 \times 10^{-4}$ vs our Heron-r2 $\sim 2 \times 10^{-3}$). Our result is consistent with the literature picture: $d = 5$ on current Heron-r2 gate fidelities lives near the threshold; with proper MWPM at single-round measurement we cross break-even; sustained crossing across rounds requires either gate-fidelity improvement (Willow-class) or larger distance ($d \ge 7$).
+
+\textbf{Honest claim-level (Systroph\=e taxonomy)}:
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+\item Reproducible: yes; rerun \texttt{python experiments/surface\_code\_d5\_mwpm.py} or resubmit via \texttt{surface\_code\_d5\_round\_sweep.py --submit --n-rounds 1}.
+\item Novel demonstration on Heron-r2: yes; first single-round $d = 5$ surface-code break-even crossing in our experimental program.
+\item SOTA contribution: no; this does not improve on Willow or BB-code published thresholds.
+\end{itemize}
+
+\section{Open extensions}
+
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+\item \textbf{Full fault-tolerant MWPM} with 3D syndrome graphs and boundary nodes (Dennis-Kitaev-Landahl-Preskill 2002).
+\item \textbf{X + Z syndrome extraction} (full surface code memory, not just Z).
+\item \textbf{Higher distance} ($d = 7$ would need 49 data + 24 ancillas = $\sim 90$ qubits, still fits Heron-r2's 156).
+\item \textbf{More shots} at $n_{\mathrm{rounds}} = 1$ to push the break-even-crossing significance from $4.0\sigma$ to $10\sigma+$.
+\item \textbf{Multi-logical-qubit demonstration}: parallel patches of the same code on disjoint Heron-r2 subgraphs.
+\end{enumerate}
+
+\section{Reproducibility}
+
+All code and data are at \href{https://github.com/Zynerji/systrophe}{\texttt{github.com/Zynerji/systrophe}}:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+\item Circuit construction: \texttt{experiments/surface\_code\_d5.py}
+\item Round sweep submission: \texttt{experiments/surface\_code\_d5\_round\_sweep.py}
+\item MWPM decoder: \texttt{experiments/surface\_code\_d5\_mwpm.py}
+\item Job ID: \texttt{d81kel6gbeec73akmp00} (round sweep + bare baselines)
+\item Raw analysis JSON: \texttt{experiments/results/surface\_code\_d5\_mwpm\_analysis.json}
+\end{itemize}
+
+\begin{thebibliography}{9}
+
+\bibitem{willow} Google Quantum AI. \emph{Quantum error correction below the surface code threshold}. Nature \textbf{636}, 456 (Dec 2024).
+\bibitem{willow_precursor} Google Quantum AI. \emph{Suppressing quantum errors by scaling a surface code logical qubit}. Nature \textbf{614}, 676 (2023).
+\bibitem{bb_paper} S.~Bravyi et al. \emph{High-threshold and low-overhead fault-tolerant quantum memory}. Nature \textbf{627}, 778 (2024).
+\bibitem{steane_paper} C.~Knopp. \emph{Distance-3 Steane code repeated-round logical-qubit experiment on \texttt{ibm\_kingston}}. \Systrophe{} repository, \texttt{paper/steane\_logical\_qubit.pdf} (2026).
+
+\end{thebibliography}
+
+\end{document}

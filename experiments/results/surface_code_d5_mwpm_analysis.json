@@ -4,7 +4,7 @@
     "1": {
       "surface": {
         "logical_zero_rate_greedy": 0.698974609375,
-        "logical_zero_rate_mwpm": 0.884521484375,
+        "logical_zero_rate_mwpm": 0.881591796875,
         "n_shots_total": 4096
       },
       "bare": {
@@ -15,7 +15,7 @@
     "2": {
       "surface": {
         "logical_zero_rate_greedy": 0.601318359375,
-        "logical_zero_rate_mwpm": 0.74755859375,
+        "logical_zero_rate_mwpm": 0.742919921875,
         "n_shots_total": 4096
       },
       "bare": {
@@ -26,7 +26,7 @@
     "4": {
       "surface": {
         "logical_zero_rate_greedy": 0.53369140625,
-        "logical_zero_rate_mwpm": 0.64453125,
+        "logical_zero_rate_mwpm": 0.68212890625,
         "n_shots_total": 4096
       },
       "bare": {
