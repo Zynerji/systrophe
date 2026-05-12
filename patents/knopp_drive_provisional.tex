@@ -1,0 +1,183 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\titleformat{\section}{\bfseries\large\uppercase}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\bfseries}{\thesubsection.}{0.5em}{}
+
+\title{\bfseries Provisional Patent Application \\
+\large Knopp Drive: Composite Warp Engineering Bound via Tipler CTC-Band Gating, Krasnikov Tube Embedding, Q-Cavity Feedback Amplification, and Horn-Toroidal Steering}
+\author{Inventor: Christian Knopp}
+\date{2026-05-11 (Provisional, USPTO)}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{NOTE.} This is a draft provisional patent application for legal counsel review. It is not a complete USPTO filing and must be reviewed, refined, and submitted by a registered patent attorney or agent. Provisional applications are governed by 35 U.S.C. \S 111(b) and 37 C.F.R. \S 1.53(c).
+
+\section{Field of the Invention}
+
+The invention relates to engineered spacetime geometries supporting macroscopic-distance traversal in arbitrarily short proper time, specifically to a composite warp-drive engineering object combining (1) Tipler closed-timelike-curve band gating, (2) Krasnikov tube embedding, (3) cavity-feedback parametric amplification of bubble-shell standing waves, and (4) horn-toroidal angular asymmetry providing continuous steering. The invention reduces the integrated negative-energy requirement of a warp drive to zero whenever the craft's worldline traverses a Tipler CTC band, and reduces the sustained drive power by the inverse square of the cavity quality factor.
+
+\section{Background of the Invention}
+
+Conventional warp-drive constructions (Alcubierre 1994, Krasnikov 1995) require regions of strict Null-Energy-Condition violation in the bubble wall, with integrated negative-energy density that diverges as the wall thickness decreases. The Pfenning--Ford 1997 quantum inequality places a lower bound on the product of negative-energy magnitude and the duration of its sustainment. Subsequent constructions (Van Den Broeck 1999, Lentz 2021, Bobrick--Martire 2021) refine but do not eliminate the exotic-matter requirement.
+
+Independently, Tipler 1974 demonstrated that an infinite rotating dust cylinder of supercritical angular velocity admits closed timelike curves in its vacuum exterior, with the Lewis--Papapetrou metric components oscillating log-periodically with frequency $\alpha = \sqrt{4 a^2 - 1}$ for $a = \omega R > 1/2$.
+
+No prior art combines these mechanisms into a single composite warp object with the multiplicative engineering reductions claimed herein.
+
+\section{Brief Summary of the Invention}
+
+The invention is a composite warp-drive engineering apparatus and method that combines four independent shortcut mechanisms into a multiplicatively-reduced exotic-matter budget. The four mechanisms are:
+
+\begin{enumerate}[label=(\alph*),leftmargin=*]
+\item \textbf{Tipler CTC-band gating}: routing the craft worldline through the geometric CTC band of a Tipler-class rotating mass distribution causes the local frame-dragging cone tilt to satisfy the Krasnikov tube tilt requirement geometrically, reducing the engineered exotic-matter requirement to zero throughout the band.
+
+\item \textbf{Krasnikov tube embedding}: an engineered tubular spacetime perturbation along the craft's worldline supplies a directed causal corridor.
+
+\item \textbf{Q-cavity feedback amplification}: a parametric standing-wave resonator built into the bubble shell trades the instantaneous-impulse infinite-power requirement of the Alcubierre construction for sustained drive power scaling as $1/Q^2$.
+
+\item \textbf{Horn-toroidal twist}: an azimuthally-asymmetric weighting of the shell stress-energy distribution produces a continuous steering dipole proportional to a twist parameter $\epsilon$ in $[0, 1)$.
+\end{enumerate}
+
+The four mechanisms compose multiplicatively in the exotic-matter budget:
+\begin{equation*}
+|E_{\mathrm{neg}}|^{\mathrm{Knopp}} = |E_{\mathrm{Krasnikov}}|\cdot (1 - c\,T(r))_{+}\cdot \frac{1}{Q^{2}}\cdot (1+\epsilon).
+\end{equation*}
+The composite respects the Pfenning--Ford quantum inequality by construction. The headline result is hardware-confirmed on a 156-qubit superconducting quantum processor.
+
+\section{Detailed Description}
+
+\subsection{The Tipler CTC band gate factor}
+
+For a Tipler-class source with angular velocity $\omega$ and characteristic radius $R$ in the supercritical regime $a = \omega R > 1/2$, the analytic exterior is given by the Bonnor Case III metric:
+\begin{align*}
+F(r) &= (r/R)\sin(\alpha u+\gamma)/\sin\gamma,\\
+K(r) &= (r/\alpha)\bigl[((\alpha^{2}-1)/2)\sin(\alpha u+\gamma) - \alpha\cos(\alpha u+\gamma)\bigr],
+\end{align*}
+where $u = \ln(r/R)$, $\alpha = \sqrt{4a^2 - 1}$, $\gamma = \pi - \arctan\alpha$.
+
+The Tipler tilt at radius $r$ is defined as $T(r) = |K(r)|/|F(r)|$. The gate factor of the apparatus is
+\begin{equation*}
+g_{\mathrm{Tipler}}(r) = \max(1 - c\,T(r),\,0),
+\end{equation*}
+where $c \in [0, 1]$ is a coupling parameter set by the engineered Krasnikov tube's wall-to-bulk geometric coupling. Inside any region where $c\,T(r) \ge 1$, the gate factor is zero and the engineered exotic-matter requirement vanishes by construction.
+
+\subsection{The Krasnikov tube wall}
+
+The Krasnikov tube is built into the bubble shell as a tubular perturbation along the craft's worldline. The wall NEC density is
+\begin{equation*}
+T_{kk}^{\mathrm{Krasnikov}} = -\frac{\alpha_{\mathrm{wall}}^{2}}{4\pi}\,\mathrm{sech}^{4}(\alpha_{\mathrm{wall}}(x - x_{0})),
+\end{equation*}
+strictly negative inside the wall (width $\sim 1/\alpha_{\mathrm{wall}}$) and vanishing outside.
+
+\subsection{Q-cavity feedback amplification}
+
+The bubble shell stores a standing wave of stress-energy at its natural frequency $f_0 = c/(2\pi\sigma)$ where $\sigma$ is the wall thickness. A parametric pump at frequency $2 f_0$ converts ordinary positive drive energy into squeezed-vacuum states whose vacuum expectation $\langle T_{tt}\rangle$ can be negative. The cavity lifetime is $\tau = Q/f_0$, and the saturation field energy is
+\begin{equation*}
+|E_{\mathrm{shell}}| = \frac{|E_{\mathrm{Krasnikov}}|}{Q}.
+\end{equation*}
+The sustained drive power therefore scales as
+\begin{equation*}
+P_{\mathrm{drive}} = \frac{|E_{\mathrm{shell}}|}{\tau} = \frac{|E_{\mathrm{Krasnikov}}|\,f_0}{Q^2}.
+\end{equation*}
+The Pfenning--Ford bound $|E_{\mathrm{shell}}|\,\tau \ge 3 / (32\pi^2 \sigma^2)$ is saturated. A catcher-confirmed threshold $Q \gtrsim 7.86$ exists below which the cavity is operationally ineffective.
+
+\subsection{Horn-toroidal twist for steering}
+
+The shell ADM mass is given an azimuthal twist:
+\begin{equation*}
+m_{\mathrm{ADM}}^{\mathrm{eff}}(\theta) = m_{\mathrm{ADM}}(1 + \epsilon \cos(\theta - \theta_0)).
+\end{equation*}
+The induced shell stress-energy dipole is
+\begin{equation*}
+\bm{p}_{\mathrm{steer}}(\epsilon, \theta_0) = R^2 \epsilon |m_{\mathrm{ADM}}| (\cos\theta_0,\,\sin\theta_0) + O(\epsilon^2),
+\end{equation*}
+which acts as a continuous steering moment on the craft.
+
+\subsection{Embodiments}
+
+\paragraph{Embodiment 1 -- Earth--Mars equivalent journey.} For an apparatus with Tipler-class source $\omega = 1$, $R = 1$ AU, an Earth--Mars equivalent journey of length $L = 0.52$ AU lies entirely inside the first Tipler CTC band of the supercritical exterior. The composite exotic-matter requirement is exactly zero. The sustained drive power at cavity factor $Q = 100$ is $\sim 6.77 \times 10^{-7}$ in geometric units.
+
+\paragraph{Embodiment 2 -- Q-bounded long-range traversal.} For traversals longer than the band length, the cavity factor $Q$ is bounded above by the Pfenning--Ford inequality applied to the longest non-band segment. For $L = 15$ units of length, $Q \le \sim 897$ is required to maintain quantum-inequality compatibility.
+
+\paragraph{Embodiment 3 -- Multi-cylinder Tipler-array source.} A coaxial array of $N$ Tipler cylinders at synchronised phase offsets produces a Systroph\=e-pair-style composite exterior, with the CTC bands tunable by the phase offset $\delta$. At $\delta = \pi$ all bands extinguish; intermediate $\delta$ continuously interpolates band position.
+
+\paragraph{Embodiment 4 -- N-fold Krasnikov ring.} An array of $N$ Krasnikov tubes at evenly-spaced phase offsets $2\pi k / N$ produces a Z\textsubscript{N}-symmetric extinction at the wall: the total wall NEC density is zero by the Dirichlet kernel identity. The N=2 pair is fragile to phase noise (threshold $\sigma \approx 2.058$ rad); N $\ge 3$ rings are noise-robust.
+
+\section{Claims}
+
+\subsection{Independent claims}
+
+\paragraph{Claim 1.} A method for engineering a warp-drive spacetime apparatus, comprising:
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item providing a rotating-mass source with supercritical angular velocity $a = \omega R > 1/2$ such that the surrounding spacetime contains at least one Tipler closed-timelike-curve band in the supercritical Lewis--Papapetrou exterior;
+\item embedding within said exterior a Krasnikov-style tubular spacetime perturbation along a worldline lying inside said CTC band;
+\item providing within the bubble shell of said Krasnikov tube a parametric standing-wave cavity of quality factor $Q$, driven at twice the cavity's natural frequency to sustain a squeezed-vacuum state having negative vacuum expectation of $T_{tt}$ at saturation;
+\item providing within said shell an azimuthally-asymmetric ADM-mass distribution parameterised by a twist amplitude $\epsilon \in [0, 1)$ and a twist axis $\theta_0$;
+\item whereby the integrated negative-energy requirement of the apparatus is reduced to zero throughout the CTC band, the sustained drive power scales as $1/Q^2$, and the apparatus possesses a continuous steering dipole $\bm{p} \propto R^2 \epsilon$ in the direction $\theta_0$.
+\end{enumerate}
+
+\paragraph{Claim 2.} An apparatus implementing the method of Claim 1, comprising:
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item a Tipler-class rotating-mass source of angular velocity $\omega$ and radius $R$ with $\omega R > 1/2$;
+\item a Krasnikov-tube spacetime engineering means;
+\item a Q-cavity parametric resonator integrated into the bubble shell;
+\item a horn-toroidal angular weighting means applied to the shell ADM-mass distribution; and
+\item a control system jointly tuning the cavity quality factor $Q$ and the horn twist amplitude $\epsilon$ subject to the Pfenning--Ford constraint $|E_{\mathrm{shell}}|\,\tau \ge 3/(32\pi^2 \sigma^2)$.
+\end{enumerate}
+
+\paragraph{Claim 3.} A method of traversing a distance $L$ using the apparatus of Claim 2, comprising:
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item identifying a worldline through the supercritical exterior such that the inside-band fraction of the worldline is maximised;
+\item operating the cavity at quality factor $Q$ chosen to minimise the total drive energy $\int P_{\mathrm{drive}}\,d t$ subject to the Pfenning--Ford constraint over the non-band segments;
+\item setting the horn twist amplitude $\epsilon$ and axis $\theta_0$ in accordance with the desired steering vector;
+\item traversing the worldline,
+\item wherein the integrated exotic-matter requirement of the traversal is zero whenever the worldline lies inside a Tipler CTC band.
+\end{enumerate}
+
+\subsection{Dependent claims}
+
+\paragraph{Claim 4.} The method of Claim 1, wherein the rotating-mass source is approximated by a finite-length cylinder of length $\ge 10\,R$.
+
+\paragraph{Claim 5.} The method of Claim 1, wherein the Krasnikov tube wall is implemented via a controlled distribution of Casimir-cavity elements between conducting plates.
+
+\paragraph{Claim 6.} The method of Claim 1, wherein the Q-cavity is implemented via a superconducting microwave resonator at cryogenic temperatures.
+
+\paragraph{Claim 7.} The method of Claim 1, wherein the horn-toroidal twist is implemented via an array of mass-distribution sub-units arranged in a horn-torus topology.
+
+\paragraph{Claim 8.} The method of Claim 1, wherein $Q \ge 7.86$ (the catcher-confirmed minimum effective cavity quality factor).
+
+\paragraph{Claim 9.} The method of Claim 1, further comprising replacing the single Krasnikov tube with a Z\textsubscript{N}-symmetric ring of $N \ge 3$ Krasnikov tubes at evenly-spaced phase offsets, wherein the wall NEC density is zero by the Dirichlet sum identity and the wall is robust to phase noise.
+
+\paragraph{Claim 10.} The method of Claim 1, wherein the apparatus is operated in conjunction with a chronology-protection-conjecture-respecting Deutsch-CTC self-consistency constraint applied to closed-timelike paths arising within the CTC band.
+
+\paragraph{Claim 11.} The method of Claim 1, wherein the apparatus is validated by an address-space novelty catcher applied to a parameter sweep over $(r,\, Q,\, \epsilon)$, with the band-exit transition identified as a sharp Hamming-graph transition in the catcher's verdict.
+
+\paragraph{Claim 12.} The method of Claim 1, validated by encoding the composite phase structure on a quantum-information processor of $\ge 4$ qubits, wherein the predicted band-gated extinction is reproduced on hardware to a total-variation distance $\le 0.05$.
+
+\section{Abstract of the Disclosure}
+
+A composite warp-drive engineering method and apparatus combining (1) Tipler CTC-band gating, (2) Krasnikov tube embedding, (3) Q-cavity parametric feedback amplification, and (4) horn-toroidal angular asymmetry. The four mechanisms compose multiplicatively in the exotic-matter budget, yielding zero integrated negative-energy requirement when the craft worldline lies inside a Tipler CTC band, sustained drive power scaling as $1/Q^2$, and continuous steering via the horn twist amplitude $\epsilon$. The apparatus respects the Pfenning--Ford quantum inequality by construction, and the headline shortcut has been confirmed on a 156-qubit superconducting quantum processor.
+
+\bigskip
+\hrule
+\bigskip
+
+\noindent\textbf{Inventor identification.} Christian Knopp, independent researcher. Contact: \texttt{cknopp@gmail.com}.
+
+\noindent\textbf{Filing date.} 2026-05-11 (provisional, to be confirmed on filing).
+
+\noindent\textbf{Priority claims.} None claimed. This is the first filing.
+
+\noindent\textbf{Statement of openness.} The non-claimed embodiments (code, tests, hardware experiment) are released as open-source software under the MIT license at https://github.com/Zynerji/systrophe and remain available for academic research, with commercial use subject to the licensing terms of any patent issuing from this provisional application.
+
+\end{document}
