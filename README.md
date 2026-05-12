@@ -15,7 +15,7 @@
 [![Millennium: 4/7 + Goldbach](https://img.shields.io/badge/Millennium-4%2F7%20%2B%20Goldbach-orange.svg)](FINDINGS_MILLENNIUM_PROGRESS.md)
 [![Emergents: 25](https://img.shields.io/badge/catcher%20emergents-25-yellow.svg)](paper/knopp_drive.pdf)
 [![Cross-chip: 1.94σ](https://img.shields.io/badge/cross--chip-1.94%CF%83%20RMS-purple.svg)](experiments/knopp_cross_chip_comparison.py)
-[![Version 0.19.0](https://img.shields.io/badge/version-0.19.0-blue.svg)](pyproject.toml)
+[![Version 0.19.1](https://img.shields.io/badge/version-0.19.1-blue.svg)](pyproject.toml)
 
 *Systrophē* (Greek **Συστροφή**, "twisting-together"): the joint exterior of two co-rotating, dual-positive-mass van Stockum dust cylinders, whose log-periodic Tipler sinusoids superpose with a tunable relative phase offset.
 

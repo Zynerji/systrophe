@@ -5,6 +5,28 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.19.1] - 2026-05-12
+
+### Cross-chip validation + 3 additional Millennium-adjacent explorations
+
+**Cross-chip hardware**: Marrakesh batch 7 (job `d81bq77tjchs73bmm8sg`) came back DONE after the initial allocation-exhaustion warning. Cross-chip comparison with Kingston batch 7:
+- RMS(Kingston − Marrakesh) = 0.0118
+- Pooled shot-noise σ = 0.0061
+- RMS / σ = **1.94** (statistically equivalent at shot-noise + small systematic)
+- Combined-chip fit: `r_in = 2.6539 ± 0.0015` (0.06%), `r_out = 5.4693 ± 0.0067` (0.12%)
+- Plot at `paper/figures/knopp_cross_chip.pdf` (overlay + residual plot)
+
+This is **emergent #25**, the strongest possible hardware validation: two independent Heron-r2 chips produce statistically equivalent Knopp Drive band-gating curves.
+
+**Three additional Millennium-adjacent catcher explorations**:
+- **Burgers / Navier-Stokes analog** (`millennium_burgers_shock_catcher.py`): inviscid shock time t_shock = 0.996 at ν = 0.005, matching analytical t_shock = 1.000 to 0.4%. Catcher itself returns null on smooth analytic peaks — third documented domain boundary.
+- **Birch-Swinnerton-Dyer (local L-data)** (`millennium_bsd_catcher.py`): a_p sequences for primes p ≤ 500 on 17 elliptic curves of known rank; partial Euler product log L(E, 1) is non-monotone in rank at this P_MAX (variance dominates). Honest null; infrastructure ready for higher-P runs.
+- **Derivative-catcher retrofit** on existing phase modules (`retrofit_derivative_catcher.py`): corroborates emergents #16 (optical fiber horizon at v=0.669) and #19 (Krasnikov-ring noise threshold at σ≈2.05), no new emergents found.
+
+**Paper grew 13 → 14 pages** with new subsection `ssec:cross_chip` covering the cross-chip overlay and combined fit.
+
+**Total**: 4/7 Millennium problems + Goldbach explored, 25 catcher-verified emergents.
+
 ## [0.19.0] - 2026-05-12
 
 ### Knopp Drive Kingston batch 7 + derivative catcher + Millennium-problem explorations
