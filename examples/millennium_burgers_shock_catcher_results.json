@@ -1,0 +1,102 @@
+{
+  "nu_0.005": {
+    "simulation": {
+      "nu": 0.005,
+      "n_x": 200,
+      "t_max": 2.0,
+      "dx": 0.031415926535897934,
+      "dt": 0.0001
+    },
+    "detection": {
+      "scan_verdict": "smooth",
+      "scan_n_sharp": 0,
+      "scan_sharp_t_values": [],
+      "derivative_log_kind": "none",
+      "derivative_log_centre": null,
+      "max_ux_overall": 25.828643446068234,
+      "t_of_max_ux": 1.6268,
+      "t_of_max_dlog_uxdt": 0.996,
+      "max_dlog_uxdt": 3.9636623642279094
+    }
+  },
+  "nu_0.01": {
+    "simulation": {
+      "nu": 0.01,
+      "n_x": 200,
+      "t_max": 2.0,
+      "dx": 0.031415926535897934,
+      "dt": 0.0001
+    },
+    "detection": {
+      "scan_verdict": "smooth",
+      "scan_n_sharp": 0,
+      "scan_sharp_t_values": [],
+      "derivative_log_kind": "none",
+      "derivative_log_centre": null,
+      "max_ux_overall": 21.19194476544897,
+      "t_of_max_ux": 1.6600000000000001,
+      "t_of_max_dlog_uxdt": 0.996,
+      "max_dlog_uxdt": 3.236701739632566
+    }
+  },
+  "nu_0.02": {
+    "simulation": {
+      "nu": 0.02,
+      "n_x": 200,
+      "t_max": 2.0,
+      "dx": 0.031415926535897934,
+      "dt": 0.0001
+    },
+    "detection": {
+      "scan_verdict": "smooth",
+      "scan_n_sharp": 0,
+      "scan_sharp_t_values": [],
+      "derivative_log_kind": "none",
+      "derivative_log_centre": null,
+      "max_ux_overall": 14.563364321624471,
+      "t_of_max_ux": 1.6932,
+      "t_of_max_dlog_uxdt": 0.9794,
+      "max_dlog_uxdt": 2.3413304456338633
+    }
+  },
+  "nu_0.05": {
+    "simulation": {
+      "nu": 0.05,
+      "n_x": 200,
+      "t_max": 2.0,
+      "dx": 0.031415926535897934,
+      "dt": 0.0001
+    },
+    "detection": {
+      "scan_verdict": "smooth",
+      "scan_n_sharp": 0,
+      "scan_sharp_t_values": [],
+      "derivative_log_kind": "none",
+      "derivative_log_centre": null,
+      "max_ux_overall": 6.723350879792838,
+      "t_of_max_ux": 1.7264000000000002,
+      "t_of_max_dlog_uxdt": 0.8798,
+      "max_dlog_uxdt": 1.2632867773523597
+    }
+  },
+  "nu_0.1": {
+    "simulation": {
+      "nu": 0.1,
+      "n_x": 200,
+      "t_max": 2.0,
+      "dx": 0.031415926535897934,
+      "dt": 0.0001
+    },
+    "detection": {
+      "scan_verdict": "smooth",
+      "scan_n_sharp": 0,
+      "scan_sharp_t_values": [],
+      "derivative_log_kind": "none",
+      "derivative_log_centre": null,
+      "max_ux_overall": 3.3533079769591314,
+      "t_of_max_ux": 1.5770000000000002,
+      "t_of_max_dlog_uxdt": 0.6308,
+      "max_dlog_uxdt": 0.719798930028183
+    }
+  }
+}
