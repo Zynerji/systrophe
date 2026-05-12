@@ -1,0 +1,20 @@
+{
+  "n_min": 4,
+  "n_max": 200,
+  "n_evens": 99,
+  "min_g": 1,
+  "max_g": 14,
+  "median_g": 5.0,
+  "scan_verdict": "novel_structure",
+  "scan_n_sharp": 11,
+  "per_quantity_verdict": "novel_structure",
+  "per_mod_6_verdicts": {
+    "goldbach_count": {
+      "verdict": "novel_structure",
+      "n_sharp": 1
+    }
+  },
+  "derivative_verdict": "smooth",
+  "derivative_kind": "discontinuous",
+  "derivative_centre": 128.0
+}

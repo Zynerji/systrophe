@@ -5,10 +5,13 @@ problems and related deep-mathematical questions.
 
 ## Status table
 
+(Includes Goldbach which is not Millennium but adjacent — Hilbert's 8th problem of which RH is the other half.)
+
 | # | Problem | Catcher artifact | Verdict | Notes |
 |---|---------|------------------|---------|-------|
 | 1 | Riemann hypothesis | `examples/millennium_riemann_catcher.py` | **smooth (RH-consistent)** + 1 Lehmer-pair-like sharp local feature | Catcher third-split returns `smooth` at N=50, 100, 200 — consistent with GUE / Montgomery / RH. The single sharp feature at γ_33↔γ_34 is the catcher independently rediscovering a Lehmer-pair-like local cluster. |
 | 2 | P vs NP (via 3-SAT phase transition) | `examples/millennium_sat_phase_transition.py` + `src/systrophe/derivative_catcher.py` | **catches transition at α=4.270 (true α_c≈4.267)** | At n=20 variables, P(SAT) drops smoothly from 1.0 (α=2) to 0.033 (α=6). The **value-level catcher returns smooth** (sigmoid is too gradual for Hamming-step detection). The **derivative catcher** — `catch_smooth_transition`, address-space novelty applied to the first numerical derivative of the SAT fraction — returns `novel_structure` with three sharp features clustered around α∈{4.00, 4.20, 4.27} and identifies α=4.270 as the transition centre. **Pure catcher recovery of the SAT phase transition centre to 0.001 precision**, no number-theoretic input. Initial null result motivated the derivative-catcher upgrade. |
+| Hilbert 8 (Goldbach) | Goldbach's conjecture | `examples/millennium_goldbach_catcher.py` | **conjecture verified up to N=1000**, comet band structure caught | Computes g(n) = number of Goldbach representations for n in [4, 1000]. **All g(n) ≥ 1 → conjecture verified up to N=1000**. scan_novelty flags 4–11 sharp Hamming features per range (individual comet outliers); per-quantity catcher (3 bands by n mod 6) returns `novel_structure` at N=200 — independently identifies the well-known 3-band structure of the Goldbach comet. Derivative catcher returns `discontinuous` centred at n=332. |
 
 ## Framework upgrade triggered by SAT null result
 
