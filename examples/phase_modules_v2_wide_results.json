@@ -1,0 +1,376 @@
+[
+  {
+    "module": "aharonov_bohm",
+    "coherence": "novel_structure",
+    "coherence_max": -0.5,
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 1.05,
+    "consensus_sharps": [],
+    "anomaly": "novel_structure",
+    "anomaly_max": 1.0,
+    "anomaly_param": 1.7310344827586208,
+    "anomaly_sharps": [
+      {
+        "p": 1.4586206896551723,
+        "delta": 0.5,
+        "before": 0.0,
+        "after": -0.5
+      },
+      {
+        "p": 1.7310344827586208,
+        "delta": 1.0,
+        "before": -0.5,
+        "after": 0.5
+      },
+      {
+        "p": 2.275862068965517,
+        "delta": 1.0,
+        "before": 0.5,
+        "after": -0.5
+      }
+    ]
+  },
+  {
+    "module": "anyonic_ctc",
+    "coherence": "novel_structure",
+    "coherence_max": 0.5,
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 1.0,
+    "consensus_sharps": [],
+    "anomaly": "novel_structure",
+    "anomaly_max": 1.0,
+    "anomaly_param": 17.0,
+    "anomaly_sharps": [
+      {
+        "p": 3.0,
+        "delta": 0.5,
+        "before": 0.5,
+        "after": 0.0
+      },
+      {
+        "p": 5.0,
+        "delta": 0.5,
+        "before": 0.0,
+        "after": -0.5
+      },
+      {
+        "p": 6.0,
+        "delta": 0.5,
+        "before": -0.5,
+        "after": 0.0
+      }
+    ]
+  },
+  {
+    "module": "berry_phase_lp",
+    "coherence": "novel_structure",
+    "coherence_max": 0.5,
+    "consensus": "novel_structure",
+    "consensus_max": 1.0,
+    "consensus_param": 6.160294117647059,
+    "consensus_sharps": [
+      {
+        "p": 1.05,
+        "z": 20.516984800883172,
+        "frac": 0.3333333333333333
+      },
+      {
+        "p": 5.3426470588235295,
+        "z": 2.7492894982572835,
+        "frac": 0.3333333333333333
+      },
+      {
+        "p": 5.547058823529412,
+        "z": 4.044095640140144,
+        "frac": 0.3333333333333333
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.5,
+    "anomaly_param": 2.072058823529412,
+    "anomaly_sharps": [
+      {
+        "p": 2.072058823529412,
+        "delta": 0.5,
+        "before": 0.0,
+        "after": 0.5
+      },
+      {
+        "p": 6.160294117647059,
+        "delta": 0.5,
+        "before": 0.5,
+        "after": 0.0
+      }
+    ]
+  },
+  {
+    "module": "bh_pair_production",
+    "coherence": "novel_structure",
+    "coherence_max": 0.5,
+    "consensus": "novel_structure",
+    "consensus_max": 1.0,
+    "consensus_param": 1.05,
+    "consensus_sharps": [
+      {
+        "p": 1.05,
+        "z": 18.147651778678327,
+        "frac": 1.0
+      },
+      {
+        "p": 5.06206896551724,
+        "z": 2.819629116176179,
+        "frac": 0.3333333333333333
+      },
+      {
+        "p": 5.370689655172413,
+        "z": 5.126144568053949,
+        "frac": 0.6666666666666666
+      }
+    ],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 1.6672413793103447,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "er_epr_pair",
+    "coherence": "novel_structure",
+    "coherence_max": 0.5,
+    "consensus": "novel_structure",
+    "consensus_max": 0.5,
+    "consensus_param": 0.9749770304244186,
+    "consensus_sharps": [
+      {
+        "p": 0.9749770304244186,
+        "z": 2.7003148153114953,
+        "frac": 0.5
+      },
+      {
+        "p": 1.0833078115826873,
+        "z": 3.052885366409145,
+        "frac": 0.5
+      },
+      {
+        "p": 1.191638592740956,
+        "z": 3.3459827813912812,
+        "frac": 0.5
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.3333333134651184,
+    "anomaly_param": 1.7332924985322997,
+    "anomaly_sharps": [
+      {
+        "p": 1.7332924985322997,
+        "delta": 0.3333333134651184,
+        "before": 0.1666666865348816,
+        "after": 0.5
+      }
+    ]
+  },
+  {
+    "module": "holographic_complexity",
+    "coherence": "novel_structure",
+    "coherence_max": -0.5,
+    "consensus": "novel_structure",
+    "consensus_max": 0.5,
+    "consensus_param": 0.1,
+    "consensus_sharps": [
+      {
+        "p": 0.1,
+        "z": 4.722454749171276,
+        "frac": 0.5
+      },
+      {
+        "p": 0.22083333333333333,
+        "z": 4.363725649107649,
+        "frac": 0.5
+      },
+      {
+        "p": 1.4291666666666667,
+        "z": 14.837957563212854,
+        "frac": 0.5
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 1.0,
+    "anomaly_param": 0.5833333333333334,
+    "anomaly_sharps": [
+      {
+        "p": 0.5833333333333334,
+        "delta": 1.0,
+        "before": -0.5,
+        "after": 0.5
+      },
+      {
+        "p": 0.825,
+        "delta": 1.0,
+        "before": 0.5,
+        "after": -0.5
+      },
+      {
+        "p": 0.9458333333333333,
+        "delta": 1.0,
+        "before": -0.5,
+        "after": 0.5
+      }
+    ]
+  },
+  {
+    "module": "lp_dualities",
+    "coherence": "novel_structure",
+    "coherence_max": -0.5,
+    "consensus": "novel_structure",
+    "consensus_max": 0.3333333333333333,
+    "consensus_param": 0.3,
+    "consensus_sharps": [
+      {
+        "p": 0.3,
+        "z": 3.271230081091999,
+        "frac": 0.3333333333333333
+      }
+    ],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 0.4517241379310345,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "monopole_on_cylinder",
+    "coherence": "novel_structure",
+    "coherence_max": 0.5,
+    "consensus": "novel_structure",
+    "consensus_max": 1.0,
+    "consensus_param": 0.3,
+    "consensus_sharps": [
+      {
+        "p": 0.3,
+        "z": 2.733448810844535,
+        "frac": 1.0
+      }
+    ],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 0.44166666666666665,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "one_loop_backreaction",
+    "coherence": "novel_structure",
+    "coherence_max": -0.5,
+    "consensus": "novel_structure",
+    "consensus_max": 0.3333333333333333,
+    "consensus_param": 1.05,
+    "consensus_sharps": [
+      {
+        "p": 1.05,
+        "z": 2.773816905348758,
+        "frac": 0.3333333333333333
+      },
+      {
+        "p": 1.8672413793103448,
+        "z": 4.673703313795302,
+        "frac": 0.3333333333333333
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.5,
+    "anomaly_param": 1.4586206896551723,
+    "anomaly_sharps": [
+      {
+        "p": 1.4586206896551723,
+        "delta": 0.5,
+        "before": -0.5,
+        "after": 0.0
+      },
+      {
+        "p": 2.003448275862069,
+        "delta": 0.5,
+        "before": 0.0,
+        "after": -0.5
+      },
+      {
+        "p": 3.501724137931034,
+        "delta": 0.5,
+        "before": -0.5,
+        "after": 0.0
+      }
+    ]
+  },
+  {
+    "module": "twistor_lp",
+    "coherence": "novel_structure",
+    "coherence_max": 0.5,
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 1.05,
+    "consensus_sharps": [],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.6666666269302368,
+    "anomaly_param": 3.501724137931034,
+    "anomaly_sharps": [
+      {
+        "p": 1.3224137931034483,
+        "delta": 0.3333333432674408,
+        "before": -0.1666666567325592,
+        "after": 0.1666666865348816
+      },
+      {
+        "p": 1.4586206896551723,
+        "delta": 0.3333333432674408,
+        "before": 0.1666666865348816,
+        "after": -0.1666666567325592
+      },
+      {
+        "p": 2.003448275862069,
+        "delta": 0.3333333432674408,
+        "before": -0.1666666567325592,
+        "after": 0.1666666865348816
+      }
+    ]
+  },
+  {
+    "module": "unruh_effect",
+    "coherence": "novel_structure",
+    "coherence_max": 0.5,
+    "consensus": "novel_structure",
+    "consensus_max": 0.6666666666666666,
+    "consensus_param": 1.05,
+    "consensus_sharps": [
+      {
+        "p": 1.05,
+        "z": 6.744906464825628e+17,
+        "frac": 0.6666666666666666
+      },
+      {
+        "p": 1.1862068965517243,
+        "z": 6.744906277930854e+17,
+        "frac": 0.6666666666666666
+      },
+      {
+        "p": 1.3224137931034483,
+        "z": 6.744906022482702e+17,
+        "frac": 0.6666666666666666
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 1.0,
+    "anomaly_param": 1.8672413793103448,
+    "anomaly_sharps": [
+      {
+        "p": 1.8672413793103448,
+        "delta": 1.0,
+        "before": 0.5,
+        "after": -0.5
+      },
+      {
+        "p": 2.003448275862069,
+        "delta": 1.0,
+        "before": -0.5,
+        "after": 0.5
+      }
+    ]
+  }
+]
