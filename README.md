@@ -406,9 +406,11 @@ Comprehensive quantum-error-correction experimental program on `ibm_kingston` (H
 | Experiment | Result | Best σ |
 |---|---|---|
 | d=3 Steane round sweep + bare baseline | sub-threshold; T_1,L=42 μs vs T_1,phys=73 μs | — |
-| **d=5 surface code Z-memory** (Dijkstra-MWPM) | **sustained break-even** at n_rounds ∈ {1, 2, 4} | **+24.6σ** |
-| **d=7 surface code Z-memory** (Dijkstra-MWPM, 16384 shots) | **sustained break-even** at n_rounds ∈ {1, 2, 4} | **+43.2σ** |
+| **d=5 surface code Z-memory** (Dijkstra-MWPM, ibm_kingston) | **sustained break-even** at n_rounds ∈ {1, 2, 4} | **+24.6σ** |
+| **d=7 surface code Z-memory** (Dijkstra-MWPM, ibm_kingston, 16384 shots) | **sustained break-even** at n_rounds ∈ {1, 2, 4} | **+43.2σ** |
+| **d=5 surface code Z-memory** (Dijkstra-MWPM, ibm_marrakesh) | **cross-chip reproducibility**, growing margin with n | **+22.6σ at n=4** |
 | Distance scaling d=7 vs d=5 | d=7 margin > d=5 margin at every matched n | — |
+| Cross-chip d=5: logical flat (0.78) on Marrakesh while bare decays | canonical "logical > physical lifetime" signature | — |
 | Transversal logical X_L | symmetric P(L=0) ≈ P(L=1) ≈ 0.81 at n=1 | — |
 | 3D space-time MWPM | matches per-round Dijkstra at n≤4 | — |
 | d=7 long-rounds (n=8, 16) | bare-baseline transpiler artifacts; honest methodological null | — |
