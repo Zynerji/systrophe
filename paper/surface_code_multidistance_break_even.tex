@@ -142,6 +142,68 @@ The Dijkstra-MWPM version finds the proper shortest path through the stab-adjace
 
 We still expect saturation at large $n$ because (a) the decoder uses syndrome difference-history per round, not a full 3D syndrome graph; (b) Z-syndrome-only memory does not detect phase errors on the ancillas; (c) accumulated correlated errors eventually exceed the code's distance-5 correction radius. Pushing past these limits is the natural next step ($d = 7$, full X+Z syndromes, 3D MWPM).
 
+\subsection{Logical $X_L$ gate and multi-logical scaling}\label{ssec:logical_gates}
+
+To round out the QEC primitives, we ran two additional experiments on the $d = 5$ code:
+
+\textbf{Transversal logical $X_L$} (apply $X$ on all 25 data qubits before $n_{\mathrm{rounds}}$ of $Z$-syndrome extraction; job \texttt{d81krv00bvlc73d18980}, 8192 shots):
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule
+$n_{\mathrm{rounds}}$ & apply $X_L$? & $P(\hat L = 0)$ & $P(\hat L = 1)$ \\
+\midrule
+1 & no  & $\bm{0.8257}$ & $0.1743$ \\
+1 & yes & $0.1898$ & $\bm{0.8102}$ \\
+4 & no  & $\bm{0.6157}$ & $0.3843$ \\
+4 & yes & $0.3564$ & $\bm{0.6436}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The symmetric fidelities ($P(\hat L = 0) \approx P(\hat L = 1) \approx 0.82$ at $n = 1$) demonstrate that transversal $X_L$ correctly flips the logical state without breaking the codespace. This is the simplest non-trivial logical gate; we have not yet attempted transversal $H_L$, $S_L$, or two-logical $\mathrm{CNOT}_L$.
+
+\textbf{Multi-logical-qubit memory} (two parallel $d = 5$ patches on disjoint Heron-r2 qubit subsets, 74 qubits total; job \texttt{d81krhftjchs73bn1mig}, 8192 shots, $n_{\mathrm{rounds}} = 1$):
+
+\begin{center}
+\begin{tabular}{rr}
+\toprule
+Patch & $P(\hat L = 0)$ \\
+\midrule
+0 & $0.7249$ \\
+1 & $0.7825$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Both patches show logical signal above random ($0.5$) but below the single-patch high-shots reference ($0.9166$). The transpiler must route both patches through different physical qubits, which forces sub-optimal placements when 74 qubits compete for the best heavy-hex region. This is the canonical multi-logical scaling tradeoff: putting more patches on the same chip reduces individual patch fidelity.
+
+\subsection{Long-rounds saturation: bare-baseline artifact at large $\Delta t$}\label{ssec:long_rounds}
+
+We tested $d = 7$ at $n_{\mathrm{rounds}} \in \{8, 16\}$ (job \texttt{d81kqs00bvlc73d187i0}, 8192 shots):
+
+\begin{center}
+\begin{tabular}{rrr}
+\toprule
+$n_{\mathrm{rounds}}$ & logical $Z = 0$ & bare $Z = 0$ \\
+\midrule
+8 & $0.5842$ & $0.7212$ \\
+16 & $0.5305$ & $\bm{0.8827}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The logical decays smoothly ($0.69 \to 0.58 \to 0.53$ as $n$ grows from 4 to 16). The bare baseline at $n = 16$ ($0.8827$) is anomalously HIGHER than at $n = 8$ ($0.7212$) --- which is physically impossible from pure decoherence. The transpiler picks different physical qubits per circuit, and dynamical decoupling interacts non-monotonically with the delay duration. As a result, the bare-vs-logical comparison breaks down at long durations on Heron-r2: the baseline is not a faithful representation of "single-qubit idle for the same wall-clock time." Future work should pin the bare-baseline qubit selection to a single fixed pair of high-quality qubits and validate with calibration data.
+
+\subsection{Z-only vs full X+Z memory: extra syndromes hurt at current gate fidelity}\label{ssec:full_xz}
+
+We extended the $d = 5$ Z-memory to a full X+Z syndrome extraction (job \texttt{d81ktimgbeec73akndi0}, 8192 shots). The Z-only result at $n_{\mathrm{rounds}} = 1$ was $0.9166$ (Dijkstra-MWPM, high shots). The full X+Z circuit at the same $n_{\mathrm{rounds}} = 1$ gave $0.7421$. Adding 96 CNOTs per round of X-syndrome extraction injected more errors than the extra X-syndromes could correct, at Heron-r2's $\mathrm{cz}_{\mathrm{err}} \approx 2 \times 10^{-3}$. \textbf{For Heron-r2 Z-memory, the Z-only configuration is the optimal QEC scheme.} Achieving an X+Z advantage requires either better gates (Heron-r3 / Loon) or a code with lower-overhead X-syndromes (e.g., bivariate-bicycle codes \cite{bb_paper}).
+
+\subsection{$X$-memory: requires dynamic-circuit FT preparation}\label{ssec:x_memory}
+
+A direct quantum-memory test prepares $|+_L\rangle$, runs $n_{\mathrm{rounds}}$ of X+Z syndromes, and measures logical $X$ (via $H$ on all data + $Z$ measurement). At our preparation (Hadamard on all data + one initial Z-stab round) without classical feedback, the post-init state lives in a random $\pm 1$ Z-stab sign sector. The logical $X$ measurement is therefore random ($\sim 0.5$). This is an honest null at $n = 1$ ($P_{X,L} = 0.4988 \pm 0.0055$) and $n = 4$ ($P_{X,L} = 0.4980 \pm 0.0055$).
+
+A proper fault-tolerant $|+_L\rangle$ preparation requires dynamic-circuit \texttt{if\_test()}-based classical Z-corrections applied during preparation, conditioned on the init Z-syndrome bits. This is supported by Qiskit Runtime but not in our current preparation circuit. \textbf{We defer the proper X-memory measurement to a follow-up.}
+
 \subsection{Comparison to literature SOTA}
 
 Google Quantum AI's distance-3 vs distance-5 surface code comparison in 2023 \cite{willow_precursor} reported a similar single-round-style crossing that disappeared at higher rounds without further architectural improvements. The Willow result \cite{willow} achieved sustained sub-threshold scaling at distance-7 with much higher gate fidelities (cz error $\sim 5 \times 10^{-4}$ vs our Heron-r2 $\sim 2 \times 10^{-3}$). Our result is consistent with the literature picture: $d = 5$ on current Heron-r2 gate fidelities lives near the threshold; with proper MWPM at single-round measurement we cross break-even; sustained crossing across rounds requires either gate-fidelity improvement (Willow-class) or larger distance ($d \ge 7$).
