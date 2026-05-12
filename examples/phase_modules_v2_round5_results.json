@@ -1,0 +1,197 @@
+[
+  {
+    "module": "acoustic_metric",
+    "consensus": "novel_structure",
+    "consensus_max": 0.3333333333333333,
+    "consensus_param": 1.05,
+    "consensus_sharps": [
+      {
+        "p": 1.05,
+        "z": 2.9607961614375973,
+        "frac": 0.3333333333333333
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.40000003576278687,
+    "anomaly_param": 2.003448275862069,
+    "anomaly_sharps": [
+      {
+        "p": 2.003448275862069,
+        "delta": 0.40000003576278687,
+        "before": -0.30000001192092896,
+        "after": 0.10000002384185791
+      }
+    ]
+  },
+  {
+    "module": "frame_dragging",
+    "consensus": "novel_structure",
+    "consensus_max": 0.75,
+    "consensus_param": 1.1862068965517243,
+    "consensus_sharps": [
+      {
+        "p": 1.1862068965517243,
+        "z": 2.5086346008212423,
+        "frac": 0.75
+      },
+      {
+        "p": 1.3224137931034483,
+        "z": 3.4863342910170445,
+        "frac": 0.75
+      },
+      {
+        "p": 1.4586206896551723,
+        "z": 3.814319022849913,
+        "frac": 0.75
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.3333333134651184,
+    "anomaly_param": 1.5948275862068966,
+    "anomaly_sharps": [
+      {
+        "p": 1.5948275862068966,
+        "delta": 0.3333333134651184,
+        "before": 0.5,
+        "after": 0.1666666865348816
+      }
+    ]
+  },
+  {
+    "module": "geodesic_completeness",
+    "consensus": "novel_structure",
+    "consensus_max": 0.5,
+    "consensus_param": 1.05,
+    "consensus_sharps": [
+      {
+        "p": 1.05,
+        "z": 18.77813300992189,
+        "frac": 0.5
+      }
+    ],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 1.3224137931034483,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "higher_spin_fields",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 0.3,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 0.6176470588235294,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "lensing_image",
+    "consensus": "smooth",
+    "consensus_max": 0.25,
+    "consensus_param": 1.05,
+    "consensus_sharps": [],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.3333333432674408,
+    "anomaly_param": 1.8672413793103448,
+    "anomaly_sharps": [
+      {
+        "p": 1.8672413793103448,
+        "delta": 0.3333333432674408,
+        "before": 0.1666666865348816,
+        "after": -0.1666666567325592
+      },
+      {
+        "p": 2.003448275862069,
+        "delta": 0.3333333432674408,
+        "before": -0.1666666567325592,
+        "after": 0.1666666865348816
+      }
+    ]
+  },
+  {
+    "module": "quantum_diagnostics",
+    "consensus": "novel_structure",
+    "consensus_max": 0.5,
+    "consensus_param": 1.7310344827586208,
+    "consensus_sharps": [
+      {
+        "p": 1.7310344827586208,
+        "z": NaN,
+        "frac": 0.5
+      },
+      {
+        "p": 1.8672413793103448,
+        "z": NaN,
+        "frac": 0.5
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.6666666865348816,
+    "anomaly_param": 2.139655172413793,
+    "anomaly_sharps": [
+      {
+        "p": 1.3224137931034483,
+        "delta": 0.6666666269302368,
+        "before": -0.1666666567325592,
+        "after": 0.5
+      },
+      {
+        "p": 1.4586206896551723,
+        "delta": 0.6666666269302368,
+        "before": 0.5,
+        "after": -0.1666666567325592
+      },
+      {
+        "p": 1.5948275862068966,
+        "delta": 0.6666666269302368,
+        "before": -0.1666666567325592,
+        "after": 0.5
+      }
+    ]
+  },
+  {
+    "module": "exotic_matter_accounting",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 0.3,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 0.6916666666666667,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "krasnikov_tube",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 0.05,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 0.3913793103448276,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "lentz_soliton",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 0.05,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 0.3913793103448276,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "multi_cylinder_dynamics",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 2.0,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 4.0,
+    "anomaly_sharps": []
+  }
+]
