@@ -1,0 +1,8 @@
+{
+  "summaries": [
+    "ibm_marrakesh n_q=156  T1=194.7 us, T2=105.3 us, sx_err=3.58e-04, cz_err=2.83e-03, readout_err=1.10e-02",
+    "ibm_fez n_q=156  T1=153.8 us, T2=110.8 us, sx_err=3.11e-04, cz_err=2.55e-03, readout_err=1.44e-02",
+    "ibm_kingston n_q=156  T1=280.1 us, T2=154.6 us, sx_err=2.23e-04, cz_err=1.97e-03, readout_err=9.40e-03"
+  ],
+  "snapshot_unix": 1778554375
+}

@@ -1,0 +1,15 @@
+{
+  "job_ids": {
+    "ibm_marrakesh": "d819bhfoha1c73bk33eg",
+    "ibm_fez": "d819biegbeec73ak8ju0",
+    "ibm_kingston": "d819bj00bvlc73d0pemg"
+  },
+  "submitted_unix": 1778554317,
+  "settings": [
+    "ZZ",
+    "ZX",
+    "XZ",
+    "XX"
+  ],
+  "shots": 8192
+}

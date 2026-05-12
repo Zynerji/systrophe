@@ -289,6 +289,87 @@ def z3_qutrit_stabilizer_map(
 # Catcher across the QEC mappings
 # ----------------------------------------------------------------------
 
+# ----------------------------------------------------------------------
+# Mapping 6: surface-code distance scaling
+# ----------------------------------------------------------------------
+
+def surface_code_logical_error_rate(
+    d: int, p_phys: float, p_th: float = 0.0107,
+) -> float:
+    """Logical error rate for a distance-d surface code.
+
+    Threshold theorem (Dennis et al. 2002; Stephens 2014):
+        p_L  =  A (p_phys / p_th)^((d+1) / 2)
+    with the dimensionless prefactor A ~ 0.1 for the standard 2D
+    rotated surface code under depolarising noise.
+
+    Returns the logical error rate per syndrome cycle.
+    """
+    if p_phys <= 0:
+        return 0.0
+    if p_phys >= p_th:
+        return float(min(1.0, p_phys * (p_phys / p_th) ** 0.5))
+    return 0.1 * (p_phys / p_th) ** ((d + 1) / 2)
+
+
+def surface_code_resource_cost(d: int) -> dict:
+    """Physical qubit + cycle count for a distance-d surface code.
+
+    Standard rotated surface code:
+      n_phys_per_logical = 2 d^2 - 1
+      n_syndrome_cycles  ~ d (one round per code distance for FT)
+    """
+    return {
+        "distance": int(d),
+        "n_physical_qubits": 2 * d * d - 1,
+        "n_syndrome_cycles": int(d),
+        "n_stabilizer_measurements": (d ** 2 - 1) * d,
+    }
+
+
+def surface_code_distance_scaling(
+    p_phys_range: tuple[float, float] = (1e-4, 5e-2),
+    n_p: int = 30,
+    d_values: tuple[int, ...] = (3, 5, 7, 9, 11),
+    p_th: float = 0.0107,
+) -> dict:
+    """Sweep (d, p_phys) and report the logical-error and resource
+    surfaces.
+
+    Catcher target: the threshold-theorem prediction is a smooth
+    polynomial in the suppression regime (p_phys < p_th) and a
+    discontinuity at the threshold p_phys = p_th. The catcher should
+    flag the threshold crossing as a sharp Hamming transition.
+    """
+    p_grid = np.logspace(
+        np.log10(p_phys_range[0]),
+        np.log10(p_phys_range[1]),
+        n_p,
+    )
+    per_d_arrays = {}
+    for d in d_values:
+        p_L = np.array([
+            surface_code_logical_error_rate(int(d), float(p), p_th=p_th)
+            for p in p_grid
+        ])
+        # log-rescale for catcher visibility
+        per_d_arrays[f"d{d}"] = np.log10(p_L + 1e-30)
+
+    nov = catch_novelty_in_named_arrays(per_d_arrays, n_bins=32)
+    return {
+        "p_phys_grid": p_grid.tolist(),
+        "d_values": list(d_values),
+        "p_th": p_th,
+        "log10_p_L_per_d": {k: v.tolist() for k, v in per_d_arrays.items()},
+        "novelty_verdict": nov["verdict"],
+        "novelty_n_sharp": len(nov["sharp_features"]),
+        "novelty_sharp_features": nov["sharp_features"],
+        "resource_cost_table": {
+            d: surface_code_resource_cost(d) for d in d_values
+        },
+    }
+
+
 def qec_bridge_catcher_sweep() -> dict:
     """Run the catcher across the QEC mapping outputs to identify
     QEC-relevant emergent transitions.
