@@ -1,0 +1,49 @@
+{
+  "job_id": "d81nshegbeec73akr2qg",
+  "metadata_per_circuit": [
+    {
+      "d": 9,
+      "kind": "surface",
+      "n_rounds": 1,
+      "duration_dt": 140000,
+      "backend": "ibm_kingston"
+    },
+    {
+      "d": 9,
+      "kind": "bare",
+      "n_rounds": 1,
+      "duration_dt": 140000,
+      "backend": "ibm_kingston"
+    },
+    {
+      "d": 9,
+      "kind": "surface",
+      "n_rounds": 2,
+      "duration_dt": 214000,
+      "backend": "ibm_kingston"
+    },
+    {
+      "d": 9,
+      "kind": "bare",
+      "n_rounds": 2,
+      "duration_dt": 214000,
+      "backend": "ibm_kingston"
+    },
+    {
+      "d": 9,
+      "kind": "surface",
+      "n_rounds": 4,
+      "duration_dt": 308800,
+      "backend": "ibm_kingston"
+    },
+    {
+      "d": 9,
+      "kind": "bare",
+      "n_rounds": 4,
+      "duration_dt": 308800,
+      "backend": "ibm_kingston"
+    }
+  ],
+  "shots_actual": 8192,
+  "submitted_unix": 1778613832
+}
