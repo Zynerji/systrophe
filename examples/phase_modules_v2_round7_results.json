@@ -1,0 +1,295 @@
+[
+  {
+    "module": "anomaly_inflow",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 0.0,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 0.16666666666666666,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "dynamical_cylinder",
+    "consensus": "novel_structure",
+    "consensus_max": 0.5,
+    "consensus_param": 0.3,
+    "consensus_sharps": [
+      {
+        "p": 0.3,
+        "z": 674490759476.5952,
+        "frac": 0.5
+      },
+      {
+        "p": 0.37083333333333335,
+        "z": 674490759476.5952,
+        "frac": 0.5
+      },
+      {
+        "p": 0.44166666666666665,
+        "z": 674490759476.5952,
+        "frac": 0.5
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.3333333134651184,
+    "anomaly_param": 0.9375,
+    "anomaly_sharps": [
+      {
+        "p": 0.9375,
+        "delta": 0.3333333134651184,
+        "before": 0.5,
+        "after": 0.1666666865348816
+      },
+      {
+        "p": 1.4333333333333333,
+        "delta": 0.3333333134651184,
+        "before": 0.1666666865348816,
+        "after": 0.5
+      },
+      {
+        "p": 2.0,
+        "delta": 0.3333333134651184,
+        "before": 0.5,
+        "after": 0.1666666865348816
+      }
+    ]
+  },
+  {
+    "module": "floquet_engineering",
+    "consensus": "novel_structure",
+    "consensus_max": 0.75,
+    "consensus_param": 1.25,
+    "consensus_sharps": [
+      {
+        "p": 1.1458333333333335,
+        "z": 2.894199869374235,
+        "frac": 0.5
+      },
+      {
+        "p": 1.25,
+        "z": 2.939319152122706,
+        "frac": 0.75
+      },
+      {
+        "p": 1.3541666666666667,
+        "z": 3.2189671367929735,
+        "frac": 0.75
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.3333333432674408,
+    "anomaly_param": 0.8333333333333334,
+    "anomaly_sharps": [
+      {
+        "p": 0.8333333333333334,
+        "delta": 0.3333333432674408,
+        "before": 0.1666666865348816,
+        "after": -0.1666666567325592
+      },
+      {
+        "p": 2.1875,
+        "delta": 0.3333333432674408,
+        "before": -0.1666666567325592,
+        "after": 0.1666666865348816
+      }
+    ]
+  },
+  {
+    "module": "g_renormalization",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 1.05,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 1.3224137931034483,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "kg_scattering",
+    "consensus": "novel_structure",
+    "consensus_max": 0.6666666666666666,
+    "consensus_param": 1.8729166666666668,
+    "consensus_sharps": [
+      {
+        "p": 1.05,
+        "z": 3.6008489125091874,
+        "frac": 0.3333333333333333
+      },
+      {
+        "p": 1.2145833333333333,
+        "z": 3.6008489125091874,
+        "frac": 0.3333333333333333
+      },
+      {
+        "p": 1.3791666666666667,
+        "z": 3.6008489125091874,
+        "frac": 0.3333333333333333
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 1.0,
+    "anomaly_param": 1.5437500000000002,
+    "anomaly_sharps": [
+      {
+        "p": 1.5437500000000002,
+        "delta": 1.0,
+        "before": 0.5,
+        "after": -0.5
+      },
+      {
+        "p": 1.8729166666666668,
+        "delta": 0.5,
+        "before": -0.5,
+        "after": 0.0
+      },
+      {
+        "p": 2.0375,
+        "delta": 0.5,
+        "before": 0.0,
+        "after": -0.5
+      }
+    ]
+  },
+  {
+    "module": "gw_emission",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 0.6,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 0.7583333333333333,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "qi_channel",
+    "consensus": "novel_structure",
+    "consensus_max": 0.6666666666666666,
+    "consensus_param": 1.05,
+    "consensus_sharps": [
+      {
+        "p": 1.05,
+        "z": NaN,
+        "frac": 0.6666666666666666
+      },
+      {
+        "p": 1.2145833333333333,
+        "z": NaN,
+        "frac": 0.6666666666666666
+      },
+      {
+        "p": 1.3791666666666667,
+        "z": NaN,
+        "frac": 0.6666666666666666
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.5,
+    "anomaly_param": 1.8729166666666668,
+    "anomaly_sharps": [
+      {
+        "p": 1.8729166666666668,
+        "delta": 0.5,
+        "before": -0.5,
+        "after": 0.0
+      },
+      {
+        "p": 2.0375,
+        "delta": 0.5,
+        "before": 0.0,
+        "after": 0.5
+      }
+    ]
+  },
+  {
+    "module": "optical_fiber_analog",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 0.3,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 0.3575,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "hawking_budget",
+    "consensus": "novel_structure",
+    "consensus_max": 0.4,
+    "consensus_param": 1.05,
+    "consensus_sharps": [
+      {
+        "p": 1.05,
+        "z": 5.948134597013436,
+        "frac": 0.4
+      },
+      {
+        "p": 1.2145833333333333,
+        "z": 2.9041041872848417,
+        "frac": 0.4
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.75,
+    "anomaly_param": 2.6958333333333333,
+    "anomaly_sharps": [
+      {
+        "p": 2.0375,
+        "delta": 0.5,
+        "before": 0.0,
+        "after": 0.5
+      },
+      {
+        "p": 2.6958333333333333,
+        "delta": 0.75,
+        "before": 0.5,
+        "after": -0.25
+      },
+      {
+        "p": 3.51875,
+        "delta": 0.25,
+        "before": -0.25,
+        "after": 0.0
+      }
+    ]
+  },
+  {
+    "module": "holographic",
+    "consensus": "novel_structure",
+    "consensus_max": 0.5,
+    "consensus_param": 2.0,
+    "consensus_sharps": [
+      {
+        "p": 2.0,
+        "z": 3.6862666434827593,
+        "frac": 0.5
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.6666666269302368,
+    "anomaly_param": 0.8210526315789473,
+    "anomaly_sharps": [
+      {
+        "p": 0.8210526315789473,
+        "delta": 0.6666666269302368,
+        "before": -0.1666666567325592,
+        "after": 0.5
+      },
+      {
+        "p": 0.894736842105263,
+        "delta": 0.6666666269302368,
+        "before": 0.5,
+        "after": -0.1666666567325592
+      },
+      {
+        "p": 1.7789473684210524,
+        "delta": 0.6666666269302368,
+        "before": -0.1666666567325592,
+        "after": 0.5
+      }
+    ]
+  }
+]
