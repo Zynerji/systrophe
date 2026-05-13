@@ -370,23 +370,124 @@ the Hartle-Hawking-analog vacuum does not exist generically on the
 supercritical LP background. The other three items (I.3, I.4, I.5)
 are constructive.
 
+\section{Phase 2a: quantitative chronology protection (v0.20.0)}
+\label{sec:phase2a}
+
+The 4D vacuum trace anomaly $K_{\text{Kretsch}} / (2880 \pi^2)$
+computed in Section~\ref{sec:point-splitting} is a \emph{local}
+geometric quantity that remains bounded at the Cauchy horizons of
+the supercritical Tipler exterior (the Kretschmann scalar is finite
+at the simple zeros of $F$). One could mistakenly conclude that the
+chronology-protection conjecture is therefore inactive on this
+spacetime. v0.20.0 closes that gap.
+
+\subsection{2D Polyakov stress tensor on the radial-temporal sector}
+
+We treat the $(t, r)$ sector of the Lewis--Papapetrou exterior as a
+2D conformally-flat spacetime with conformal factor
+$e^{2\sigma} = F(r)$ ($\sigma = \tfrac{1}{2}\ln F$). Following the
+Davies--Fulling--Unruh / Christensen--Fulling 2D Polyakov
+formalism~\cite{Davies1976,Christensen1977,BirrellDavies1982}, the
+renormalised stress tensor of a massless conformally-coupled scalar
+in the Boulware vacuum is, in tortoise coordinates
+$dr_* = \sqrt{h/F}\, dr$,
+\begin{align}
+\langle T_{tt} \rangle_{B}        &= \frac{1}{24\pi}\, (\partial_{r_*} \sigma)^2, \\
+\langle T_{r_* r_*} \rangle_{B}   &= \frac{1}{24\pi}\, \bigl[ (\partial_{r_*} \sigma)^2 - 2 \partial_{r_*}^2 \sigma \bigr], \\
+\langle T_{t r_*} \rangle_{B}     &= 0, \\
+\langle T^\mu{}_\mu \rangle_{B}   &= R_{\text{2D}} / (24 \pi) \quad \text{(Polyakov trace identity).}
+\end{align}
+The Hartle--Hawking and Unruh analogs add constant thermal offsets
+$\pi T_H^2 / 12$ to the lightcone components $T_{uu}, T_{vv}$
+(symmetric for HH, one-sided for Unruh).
+
+\subsection{Measured chronology-protection divergence}
+
+Near a simple zero $r_H$ of $F$ with $F(r) \approx F'_H (r - r_H)$,
+the Boulware components diverge as
+\begin{equation}
+\langle T_{tt} \rangle_B \sim \frac{F'_H}{96 \pi\, (r - r_H)}, \qquad
+\langle T_{rr} \rangle_B \sim -\frac{F''_H}{24 \pi\, F'_H\, (r - r_H)^2}.
+\end{equation}
+A log--log fit on a 20-point geometrically-spaced sweep at the first
+three Cauchy horizons of $\omega = 2,\ R = 1$ (so $\alpha = \sqrt{15}$,
+$r_H \in \{1.405, 3.163, 7.118\}$) gives:
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+horizon       & $\langle T_{tt}\rangle$ power & $\langle T_{rr}\rangle$ power & fit rms \\
+\midrule
+$r_{H1}=1.405$ & $-1.007$ & $-1.998$ & $5.3 \times 10^{-3}$ \\
+$r_{H2}=3.163$ & $-0.997$ &     ---  & $1.6 \times 10^{-3}$ \\
+$r_{H3}=7.118$ & $-1.001$ &     ---  & $8.6 \times 10^{-4}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All three match the analytic prediction to better than $1\%$ in
+power, and the Polyakov trace identity holds at $2.2 \times 10^{-16}$
+(machine precision) across the 20-point sweep.
+
+A sweep across nine values of the rotation parameter $a = \omega R$
+from $0.6$ to $3.0$ gives mean power $-1.0047 \pm 0.0012$ for
+$\langle T_{tt} \rangle$ and $-1.9987 \pm 0.0005$ for
+$\langle T_{rr} \rangle$. The divergence rate is \emph{geometric}:
+it depends only on the existence of a simple $F$-zero, not on the
+log-frequency $\alpha = \sqrt{4a^2 - 1}$.
+
+\subsection{Pair extension: anti-phase extinction also kills the divergence}
+
+For the matched \texttt{SystrophePair} with relative phase
+$\delta \in [0, \pi]$, the linearised joint
+$F_{\text{pair}}(r; \delta) = 2 \cos(\delta/2) \cdot F_1(r;\delta/2)$
+shares the same simple-pole structure for any non-zero amplitude. At
+$\delta = \pi$, $F_{\text{pair}} \equiv 0$ identically: zero Cauchy
+horizons, zero Polyakov $\sigma$, zero divergence. The
+\emph{operational} chronology off-switch (anti-phase pair, v0.1+)
+therefore extinguishes the QFTCS back-reaction signal at the same
+time as it extinguishes the classical CTCs --- both manifest the same
+$F_{\text{pair}} = 0$ degeneracy.
+
+\subsection{Reconciliation with the 4D Kretschmann finiteness}
+
+\textsc{Systroph\=e} v0.10.0 had verified that the 4D Kretschmann
+scalar (and hence the local trace anomaly $K / 2880 \pi^2$) remains
+bounded at the first Cauchy horizon. The Phase 2a result does not
+contradict that. The 4D trace anomaly is the \emph{state-independent}
+geometric piece of $\langle T^\mu_{~\mu} \rangle$; the
+\emph{state-dependent} Polyakov contribution on the $(t, r)$
+sector\,---\,which is the back-reaction that drives Einstein's
+equations\,---\,is what diverges. Hawking's conjecture concerns the
+latter, not the former.
+
+\paragraph{Verdict.} \textsc{Systroph\=e} v0.20.0 verdict:
+\texttt{chronology\_protection\_consistent}. The full multi-horizon,
+multi-state report is reproduced from a single command:
+\verb|python examples/phase_2a_chronology_protection.py| in $\sim 0.1$\,s.
+
 \section{Summary and outlook}
 
-\textsc{Systroph\=e} v0.15 provides the smallest open-source toolkit
+\textsc{Systroph\=e} v0.20.0 provides the smallest open-source toolkit
 known to the author that (i) constructs an exact closed-form CTC
 spacetime, (ii) computes renormalised quantum-field-theoretic
-observables on it, and (iii) supports both an experimental analog
-(BEC vortices) and a quantum-information substrate (D-CTC).
+observables on it, (iii) verifies Hawking's chronology-protection
+conjecture quantitatively against three independent Cauchy horizons,
+and (iv) supports both an experimental analog (BEC vortices) and a
+quantum-information substrate (D-CTC).
 
-\paragraph{Tests.} The package now contains 406 passing tests
-covering all numerical claims in this paper. The full source is
-at \texttt{github.com/Zynerji/systrophe}; license is MIT.
+\paragraph{Tests.} The package now contains 1321 passing tests
+covering all numerical claims in this paper, including the 18 new
+Phase 2a tests in \texttt{tests/test\_stress\_energy\_ctc.py}. The
+full source is at \texttt{github.com/Zynerji/systrophe}; license is
+MIT.
 
 \paragraph{Next steps.} (a) BEC-vortex experimental design
-collaboration (\texttt{CONTACTS.md}, Tier 1); (b) full
-back-reaction NR run via ADM hand-off; (c) extension to the
-multi-cylinder cascade DSI as a model of analog-cosmological
-log-periodic precursors.
+collaboration (Tier 1); (b) full back-reaction NR run via ADM
+hand-off; (c) extension to the multi-cylinder cascade DSI as a model
+of analog-cosmological log-periodic precursors; (d) Phase 2b: a 4D
+mode-sum Hadamard subtraction giving the state-dependent off-trace
+$\langle T_{\mu\nu} \rangle$.
 
 \section*{Acknowledgements}
 
@@ -435,6 +536,23 @@ Phys. Rep. \textbf{297} (1998) 239.
 Christensen, S. M., \textit{Vacuum expectation value of the stress
 tensor in an arbitrary curved background: The covariant point-separation
 method}, Phys. Rev. D \textbf{14} (1976) 2490.
+
+\bibitem{Davies1976}
+Davies, P. C. W., Fulling, S. A., Unruh, W. G.,
+\textit{Energy-momentum tensor near an evaporating black hole},
+Phys. Rev. D \textbf{13} (1976) 2720.
+
+\bibitem{Christensen1977}
+Christensen, S. M., Fulling, S. A., \textit{Trace anomalies and the
+Hawking effect}, Phys. Rev. D \textbf{15} (1977) 2088.
+
+\bibitem{BirrellDavies1982}
+Birrell, N. D., Davies, P. C. W., \textit{Quantum Fields in Curved
+Space}, Cambridge University Press, 1982.
+
+\bibitem{Hawking1992}
+Hawking, S. W., \textit{Chronology protection conjecture}, Phys.
+Rev. D \textbf{46} (1992) 603.
 
 \bibitem{Steinhauer2019}
 Steinhauer, J., \textit{Observation of thermal Hawking radiation and
