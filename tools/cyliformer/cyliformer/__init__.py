@@ -32,6 +32,11 @@ from .loss import (
     cyliformer_loss,
 )
 from .kv_cache import SelectiveKVCache
+from .resonance_adapter import (
+    ResonanceAdapter,
+    augment_with_adapter,
+    matched_mlp_adapter,
+)
 
 __all__ = [
     "CylinderBlock",
@@ -40,6 +45,9 @@ __all__ = [
     "TorsionalResonanceLoss",
     "cyliformer_loss",
     "SelectiveKVCache",
+    "ResonanceAdapter",
+    "matched_mlp_adapter",
+    "augment_with_adapter",
 ]
 
 __version__ = "0.1.0"
