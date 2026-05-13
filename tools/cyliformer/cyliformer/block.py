@@ -81,13 +81,16 @@ class CylinderBlock(nn.Module):
         )
 
         # Cylinder phasors: learnable angles, one per cylinder.
-        # Init spread evenly across [-pi/2, pi/2] so cylinders are
-        # phase-distinct from the start (analog of v0.4 phase comb).
-        init_phases = torch.linspace(
-            -torch.pi / 2 + 1e-3,
-            torch.pi / 2 - 1e-3,
-            self.cfg.n_cylinders,
-        )
+        # Init: small random perturbations near 0 so the block starts
+        # close to a no-op rotation (beam_gain ~ 1 at init -- preserves
+        # any pretrained behaviour of a shared FFN) and gradients break
+        # the symmetry during training.
+        #
+        # NOTE: linspace[-pi/2, pi/2] is degenerate at n=2: the two
+        # phases give +-90 deg channel rotations that CANCEL under
+        # averaging (beam_gain ~ 0, signal destroyed). Verified against
+        # Qwen2.5-7B FFN-only conversion 2026-05-13.
+        init_phases = torch.randn(self.cfg.n_cylinders) * 0.05
         self.phasors = nn.Parameter(init_phases)
 
         self.backreaction_scale = nn.Parameter(

@@ -89,13 +89,14 @@ class CylinderFFN(nn.Module):
         self.n_cylinders = int(n_cylinders)
         self.lambda_target = float(lambda_target)
 
-        # Phasors initialised on an evenly-spaced phase comb so the
-        # cylinders are phase-distinct from the start.
-        init_phases = torch.linspace(
-            -torch.pi / 2 + 1e-3,
-            torch.pi / 2 - 1e-3,
-            n_cylinders,
-        )
+        # Phasors initialised at small random angles near zero so the
+        # converted model starts ~identical to the pretrained baseline
+        # (rotation matrix is near-identity), then symmetry-breaking
+        # gradients can drive cylinders apart during fine-tune. A wider
+        # phase comb (like linspace[-pi/2, pi/2]) destroys the signal
+        # for small n_cylinders: at n=2 the +/- pi/2 rotations are exact
+        # anti-rotations that cancel under averaging (beam_gain ~ 0).
+        init_phases = torch.randn(n_cylinders) * 0.05
         self.phasors = nn.Parameter(init_phases)
 
         self.backreaction_scale = nn.Parameter(
