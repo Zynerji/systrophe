@@ -8,14 +8,15 @@
 [![PyPI](https://img.shields.io/pypi/v/systrophe.svg)](https://pypi.org/project/systrophe/)
 [![Python ≥ 3.10](https://img.shields.io/badge/python-%E2%89%A5%203.10-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 1294 passing](https://img.shields.io/badge/tests-1294%20passing-brightgreen.svg)](#tests)
+[![Tests: 1321 passing](https://img.shields.io/badge/tests-1321%20passing-brightgreen.svg)](#tests)
 [![Papers: 13](https://img.shields.io/badge/papers-13%20PDFs-informational.svg)](#papers)
 [![IBM Quantum: 7 batches](https://img.shields.io/badge/IBM%20Quantum-7%20batches-purple.svg)](#ibm-marrakesh-hardware-validation)
 [![Knopp Drive: live](https://img.shields.io/badge/Knopp%20Drive-live-red.svg)](#the-knopp-drive-headline-composite-warp-engineering-bound)
 [![Millennium: 4/7 + Goldbach](https://img.shields.io/badge/Millennium-4%2F7%20%2B%20Goldbach-orange.svg)](FINDINGS_MILLENNIUM_PROGRESS.md)
-[![Emergents: 25](https://img.shields.io/badge/catcher%20emergents-25-yellow.svg)](paper/knopp_drive.pdf)
+[![Emergents: 26](https://img.shields.io/badge/catcher%20emergents-26-yellow.svg)](paper/knopp_drive.pdf)
 [![Cross-chip: 1.94σ](https://img.shields.io/badge/cross--chip-1.94%CF%83%20RMS-purple.svg)](experiments/knopp_cross_chip_comparison.py)
-[![Version 0.19.2](https://img.shields.io/badge/version-0.19.2-blue.svg)](pyproject.toml)
+[![Version 0.20.0](https://img.shields.io/badge/version-0.20.0-blue.svg)](pyproject.toml)
+[![Phase 2a: CP consistent](https://img.shields.io/badge/Phase%202a-CP%20consistent-success.svg)](FINDINGS_PHASE2A.md)
 [![QEC: d=9 break-even](https://img.shields.io/badge/QEC-d%3D9%20%2B38.7%CF%83-darkgreen.svg)](paper/surface_code_multidistance_break_even.pdf)
 
 *Systrophē* (Greek **Συστροφή**, "twisting-together"): the joint exterior of two co-rotating, dual-positive-mass van Stockum dust cylinders, whose log-periodic Tipler sinusoids superpose with a tunable relative phase offset.
