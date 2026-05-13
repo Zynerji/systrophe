@@ -11,18 +11,24 @@ primitive.
 ```
 tools/
 ├── README.md            <- you are here
-└── systroformer/        <- catcher-modulated transformer block
+├── systroformer/        <- λ₂-modulated FFN transformer (single-cylinder)
+│   ├── README.md
+│   ├── systroformer/    <- python package
+│   │   ├── catcher.py   <- thin torch wrapper around systrophe.novelty_catcher
+│   │   ├── block.py     <- SystroformerBlock
+│   │   ├── model.py     <- MiniSystroformer
+│   │   └── utils.py     <- LSH subsample + LearnedAddressNet
+│   ├── experiments/
+│   └── tests/
+└── cyliformer/          <- Resonant Cylinder Transformer (N-cylinder, beam-form)
     ├── README.md
-    ├── systroformer/    <- python package
-    │   ├── __init__.py
-    │   ├── catcher.py   <- thin torch wrapper around systrophe.novelty_catcher
-    │   ├── block.py     <- SystroformerBlock (attention + FFN + λ₂ modulation)
-    │   ├── model.py     <- MiniSystroformer (stacked blocks)
-    │   └── utils.py     <- LSH approximation, learned-address-net
+    ├── cyliformer/      <- python package
+    │   ├── catcher.py   <- LearnedAddressCatcher (differentiable λ₂)
+    │   ├── block.py     <- CylinderBlock (N phase-shifted views + soft prune)
+    │   ├── model.py     <- Cyliformer LM + param breakdown
+    │   ├── loss.py      <- cyliformer_loss + TorsionalResonanceLoss
+    │   └── kv_cache.py  <- SelectiveKVCache
     ├── experiments/
-    │   ├── train_copy.py
-    │   ├── emergence_test.py
-    │   └── scalability_test.py
     └── tests/
 ```
 

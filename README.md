@@ -17,7 +17,7 @@
 [![Cross-chip: 1.94σ](https://img.shields.io/badge/cross--chip-1.94%CF%83%20RMS-purple.svg)](experiments/knopp_cross_chip_comparison.py)
 [![Version 0.21.0](https://img.shields.io/badge/version-0.21.0-blue.svg)](pyproject.toml)
 [![Phases 2a, 2b, 3a, 3b: shipped](https://img.shields.io/badge/Phases%202a%E2%80%933b-shipped-success.svg)](ROADMAP.md)
-[![Derived tools: 1](https://img.shields.io/badge/derived%20tools-Systroformer-blueviolet.svg)](tools/)
+[![Derived tools: 2](https://img.shields.io/badge/derived%20tools-Systroformer%20%2B%20Cyliformer-blueviolet.svg)](tools/)
 [![QEC: d=9 break-even](https://img.shields.io/badge/QEC-d%3D9%20%2B38.7%CF%83-darkgreen.svg)](paper/surface_code_multidistance_break_even.pdf)
 
 *Systrophē* (Greek **Συστροφή**, "twisting-together"): the joint exterior of two co-rotating, dual-positive-mass van Stockum dust cylinders, whose log-periodic Tipler sinusoids superpose with a tunable relative phase offset.
@@ -59,9 +59,15 @@ and a collection of **derived tools** (`tools/`) that build on it:
 The core stays minimal so `pip install systrophe` pulls only numpy +
 scipy. Each derived tool has its own `requirements.txt` and lives in
 its own subdirectory. See [`tools/README.md`](tools/README.md) for the
-layout convention; the first inhabitant is
-[`tools/systroformer/`](tools/systroformer/) (catcher-modulated
-transformer for LLM-architecture research).
+layout convention. Current derived tools:
+
+- [`tools/systroformer/`](tools/systroformer/) — λ₂-modulated FFN
+  transformer (single-cylinder analog of the Systrophe catcher).
+- [`tools/cyliformer/`](tools/cyliformer/) — **Resonant Cylinder
+  Transformer**: N phase-shifted "virtual cylinders" per layer
+  sharing one FFN, λ₂ coherence gating, back-reaction soft pruning.
+  Derives directly from Phases 2a/2b (stress-energy + Hadamard
+  back-reaction) and 3a/3b (N-cylinder beam-forming + topology).
 
 ---
 

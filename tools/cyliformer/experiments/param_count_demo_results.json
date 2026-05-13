@@ -1,0 +1,47 @@
+{
+  "tool": "cyliformer",
+  "task": "param_count_comparison",
+  "rows": [
+    {
+      "n_cylinders": 1,
+      "cyliformer_total": 4909928,
+      "cyliformer_shared_ffn": 526848,
+      "vanilla_transformer_total": 4896384,
+      "n_ffn_baseline_ffn_only": 526848,
+      "savings_vs_n_ffn_baseline_pct": 0.0
+    },
+    {
+      "n_cylinders": 2,
+      "cyliformer_total": 4909932,
+      "cyliformer_shared_ffn": 526848,
+      "vanilla_transformer_total": 4896384,
+      "n_ffn_baseline_ffn_only": 1053696,
+      "savings_vs_n_ffn_baseline_pct": 50.0
+    },
+    {
+      "n_cylinders": 4,
+      "cyliformer_total": 4909940,
+      "cyliformer_shared_ffn": 526848,
+      "vanilla_transformer_total": 4896384,
+      "n_ffn_baseline_ffn_only": 2107392,
+      "savings_vs_n_ffn_baseline_pct": 75.0
+    },
+    {
+      "n_cylinders": 6,
+      "cyliformer_total": 4909948,
+      "cyliformer_shared_ffn": 526848,
+      "vanilla_transformer_total": 4896384,
+      "n_ffn_baseline_ffn_only": 3161088,
+      "savings_vs_n_ffn_baseline_pct": 83.33333333333334
+    },
+    {
+      "n_cylinders": 8,
+      "cyliformer_total": 4909956,
+      "cyliformer_shared_ffn": 526848,
+      "vanilla_transformer_total": 4896384,
+      "n_ffn_baseline_ffn_only": 4214784,
+      "savings_vs_n_ffn_baseline_pct": 87.5
+    }
+  ],
+  "note": "The Cyliformer's shared FFN is parameterised identically to a vanilla transformer's single FFN. The 'savings' line is *vs* an N-independent-FFNs-per-layer baseline -- the architecture whose effective representational capacity Cyliformer approximates via N rotated views. Comparing against vanilla (single-FFN) gives ~0% savings -- the Cyliformer is not fewer-FFN-params; it is the same FFN params reused for N rotated computations."
+}
