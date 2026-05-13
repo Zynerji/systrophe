@@ -284,6 +284,23 @@ from .vacuum_states import (
     natural_vacuum_verdict,
     vacuum_selection_summary,
 )
+from .stress_energy_ctc import (
+    ChronologyProtectionReport,
+    DivergenceFit,
+    StressEnergyState,
+    boulware_stress_tensor,
+    chronology_protection_novelty_scan,
+    chronology_protection_report,
+    divergence_rate_at_horizon,
+    hartle_hawking_stress_tensor,
+    polyakov_sigma,
+    polyakov_sigma_derivatives,
+    ricci_scalar_2d,
+    stress_tensor,
+    tortoise_coordinate,
+    trace_anomaly_2d,
+    unruh_stress_tensor,
+)
 
 __all__ = [
     "VanStockumInterior",
@@ -326,4 +343,4 @@ __all__ = [
     "z3_cover_mode_density",
     "z3_cover_regularised_zeta_sum",
 ]
-__version__ = "0.17.0"
+__version__ = "0.20.0"

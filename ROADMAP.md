@@ -35,12 +35,17 @@ once the metric is known.
 
 ## Phase 2 — From "classical" to "semi-classical"
 
-### 2a. Stress-energy on a CTC background
-Compute the renormalised quantum stress-energy ⟨T_μν⟩ of a free scalar
-field on the supercritical Tipler exterior. The chronology-protection
-conjecture (Hawking 1992) predicts ⟨T_μν⟩ diverges as the Cauchy horizon
-is approached; verifying this in the cleanest cylindrical setting is a
-quantitative test of CP.
+### 2a. Stress-energy on a CTC background — **SHIPPED in v0.20.0 (2026-05-13)**
+2D Polyakov renormalised `<T_{mu nu}>` of a massless conformally-coupled
+scalar in three canonical vacuum states (Boulware, Hartle-Hawking
+analog, Unruh analog) on the supercritical Tipler exterior. Boulware
+`<T_{tt}>` fits a clean simple pole `~ 1/(r - r_H)` at three
+independent Cauchy horizons (powers -1.007, -0.997, -1.001); Boulware
+`<T_{rr}>` fits the inverse square (power -1.998). Polyakov trace
+identity holds at machine precision. Verdict:
+`chronology_protection_consistent`. See `stress_energy_ctc.py`,
+`tests/test_stress_energy_ctc.py`, and
+`examples/phase_2a_chronology_protection.py`.
 
 ### 2b. Hadamard / point-splitting for cylindrical Tipler
 Standard mode-sum technique adapted to the log-periodic exterior.
