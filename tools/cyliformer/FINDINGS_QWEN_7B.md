@@ -24,6 +24,8 @@
 | **v4 baseline (no adapter)**       | 150   | 8.948         | **7.064** | 80    | —       | repro of control |
 | **v4 mlp_adapter (matched 6.5M)**  | 150   | 8.965         | 7.078     | 78    | dense MLP | -0.20% vs baseline |
 | **v4 resonance_adapter (matched)** | 150   | 8.983         | 7.092     | 57    | λ₂-gated | -0.40% vs baseline; **=** MLP within 0.20%; -29% tok/s |
+| **v5 ssm (frozen log_A)**          | 150   | 8.948         | 7.106     | 58    | Mamba S6, log_A frozen | -0.60% vs baseline |
+| **v5 ssm (log_A @ lr=1e-5)**       | 150   | 8.948         | 7.120     | 58    | Mamba S6, log_A trainable, per-group LR | -0.80% vs baseline; **=** frozen within 0.20% |
 
 ## Verdict (post-v4 with matched-parameter MLP control)
 
@@ -110,6 +112,55 @@ The 300-step baseline+LoRA regressed from 7.051 (@150) to 8.036
 (@300) — this is overfitting WikiText-2 train. Cyliformer v3
 avoided the regression. Whether this generalises to other corpora is
 untested.
+
+### v5 (Mamba S6 inside the same Dianoia pattern)
+
+Dianoia's FINDINGS pointed at *input-dependent state dynamics* as the
+specific primitive that linear SSMs / wave-basis cannot supply.
+SelectiveSSMAdapter ports the minimal Mamba S6 form into the v4
+insertion pattern: an additive residual after each transformer layer,
+with the inner block being
+
+    state[t] = exp(Δ[t] · A) · state[t-1] + Δ[t] · B[t] · x[t]
+    y[t]     = C[t] · state[t]
+
+Δ, B, C are all input-dependent (the *selective* part); A is a static
+diagonal parameterised as `A = -softplus(log_A)`.
+
+Three numerical issues had to be fixed before the SSM trained at all:
+
+  1. **Init-time forward NaN**: default `nn.Linear` init produces Δ
+     values too large for Qwen2.5-7B's residual-stream magnitudes in
+     BF16. Fix: Mamba-style small init (up_proj 0.02/√d_model, dt_proj
+     0.01, B/C 0.05) + `clamp(Δ ≤ 10)` + `clamp(Δ·A ≥ -30)`.
+  2. **Backward NaN at step 25**: sequential 512-step scan + BF16 +
+     gradient checkpointing was numerically unstable. Fix: cast x, Δ,
+     A, B, C, state to fp32 inside the scan; return BF16.
+  3. **log_A gradient explosion**: even with the fp32 scan, the
+     gradient through the cumulative product `Π_t exp(Δ_t · A)` over
+     T=512 timesteps amplifies any LR update. At lr=2e-4 (the LoRA
+     setting), log_A NaN by step 25 again.
+
+Two recipes for (3) were tested:
+
+  * **Freeze log_A + D**: leave only the input-dependent Δ, B, C
+    trainable. Stable. post-LoRA ppl 7.106.
+  * **log_A in dedicated low-LR group** (`lr_sensitive=1e-5`, 20×
+    smaller than `lr=2e-4`): also stable. post-LoRA ppl 7.120.
+
+Both stable variants land within 0.20% of each other (single-seed
+noise) and 0.60-0.80% *worse* than the no-adapter baseline+LoRA.
+The matched-parameter MLP adapter (v4) is at 7.078; ResonanceAdapter
+at 7.092; SSM at 7.106-7.120. None of the four adapter variants
+(MLP, λ₂-gated, frozen-A SSM, low-LR-A SSM) help WikiText-2 perplexity
+at this 150-step training budget; they all introduce a slight
+regression relative to vanilla LoRA-only.
+
+The Dianoia-pointed primitive (input-dependent state dynamics) was
+tested *honestly* at 7B with a matched-parameter control. It did not
+beat the dense MLP control. The verdict from v4 stands: at this
+scale and budget on this eval, none of these architectural primitives
+move the needle.
 
 ### v4 (Dianoia-pattern pivot — pull DOWN the wave basis)
 
