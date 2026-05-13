@@ -1,0 +1,69 @@
+{
+  "features": {
+    "F = 0 (chronology horizon)": [
+      1.8305193983698251
+    ],
+    "K = 0": [
+      3.3508014936925155
+    ],
+    "L = 0": [],
+    "dF/dr = 0 (F extremum)": [],
+    "dK/dr = 0 (K extremum)": [
+      1.8305196257853047
+    ],
+    "dL/dr = 0 (L extremum)": [
+      3.350801590909224
+    ],
+    "d2F/dr2 = 0 (F inflection)": [
+      2.4766328155218322
+    ],
+    "d2K/dr2 = 0 (K inflection)": [
+      4.533523884457785
+    ],
+    "d2L/dr2 = 0 (L inflection)": [
+      1.3529676864001534
+    ],
+    "F*L - K^2 = 0 (sectoral flip)": [
+      2.2903214937451444,
+      4.902311816629015
+    ]
+  },
+  "catcher_peak_mapping": {
+    "1.62": {
+      "locus_r": 1.8305193983698251,
+      "feature": "F = 0 (chronology horizon)",
+      "gap": 0.21051939836982503,
+      "match": "unclear"
+    },
+    "1.84": {
+      "locus_r": 1.8305196257853047,
+      "feature": "dK/dr = 0 (K extremum)",
+      "gap": 0.009480374214695386,
+      "match": "EXACT"
+    },
+    "1.86": {
+      "locus_r": 1.8305196257853047,
+      "feature": "dK/dr = 0 (K extremum)",
+      "gap": 0.029480374214695404,
+      "match": "near"
+    },
+    "2.0": {
+      "locus_r": 1.8305196257853047,
+      "feature": "dK/dr = 0 (K extremum)",
+      "gap": 0.1694803742146953,
+      "match": "unclear"
+    },
+    "2.2": {
+      "locus_r": 2.2903214937451444,
+      "feature": "F*L - K^2 = 0 (sectoral flip)",
+      "gap": 0.0903214937451442,
+      "match": "unclear"
+    },
+    "2.5": {
+      "locus_r": 2.4766328155218322,
+      "feature": "d2F/dr2 = 0 (F inflection)",
+      "gap": 0.02336718447816777,
+      "match": "near"
+    }
+  }
+}
