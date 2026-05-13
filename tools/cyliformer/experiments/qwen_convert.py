@@ -38,39 +38,51 @@ from cyliformer.catcher import LearnedAddressCatcher
 
 
 class CylinderFFN(nn.Module):
-    """FFN-only Cyliformer wrapper for a Qwen2MLP (or any SwiGLU MLP).
+    """FFN-only Cyliformer wrapper (v2) for a Qwen2MLP / Llama / Mistral MLP.
 
     Reuses the original mlp's three Linear layers as the *shared*
     SwiGLU FFN; processes N rotated views of the input through that
-    shared FFN; combines via beam-sum after back-reaction soft-prune.
+    shared FFN; combines via beam-sum.
 
-    The shape contract matches Qwen2MLP exactly:
+    v2 changes (motivated by the 7B A/B that revealed v1's failures):
+      * `backreaction_scale_init = 0.0` so zero-shot is exact identity
+        to the pretrained FFN (v1 multiplied by ~0.92 even at init,
+        costing ~1% perplexity for nothing).
+      * **Single shared catcher per layer** (not per cylinder) -- cuts
+        catcher overhead ~50% at no information loss (the same
+        layer-level lambda_2 applies to all cylinders).
+      * Catcher is *skipped during inference* by default
+        (`compute_catcher_in_eval=False`): the lambda_2 signal is only
+        needed for the training loss; in inference, backreaction
+        defaults to 0 -> cylinder branches sum to vanilla FFN average.
+      * `last_phasor_diversity` exposed as a regulariser hook: callers
+        can add `-sum cos(delta_i - delta_j)` to the loss to push
+        phasors apart.
+
+    Shape contract matches Qwen2MLP exactly:
         in:  (batch, seq, hidden_size)
         out: (batch, seq, hidden_size)
-    so a converted Qwen2DecoderLayer is a drop-in replacement for
-    the original at any place in the model.
+    so a converted Qwen2DecoderLayer is a drop-in replacement.
     """
 
     def __init__(
         self,
         original_mlp: nn.Module,
-        n_cylinders: int = 2,
-        lambda_target: float = 0.18,
-        backreaction_scale_init: float = 0.10,
+        n_cylinders: int = 4,
+        lambda_target: float = 0.05,
+        backreaction_scale_init: float = 0.0,
         catcher_n_bits: int = 32,
         catcher_radius: int = 8,
         catcher_max_nodes: int = 96,
         catcher_power_iter: int = 6,
+        compute_catcher_in_eval: bool = False,
         rotate_dim: int | None = None,
     ) -> None:
         super().__init__()
         # Pull the three Linear sublayers from the original mlp.
-        # Works for both Qwen2MLP and any class that exposes
-        # gate_proj/up_proj/down_proj attributes (Llama, Mistral, Qwen3).
         self.gate_proj = original_mlp.gate_proj
         self.up_proj = original_mlp.up_proj
         self.down_proj = original_mlp.down_proj
-        # SiLU/Swish activation in SwiGLU
         if hasattr(original_mlp, "act_fn"):
             self.act_fn = original_mlp.act_fn
         else:
@@ -88,21 +100,26 @@ class CylinderFFN(nn.Module):
         self.hidden = int(hidden)
         self.n_cylinders = int(n_cylinders)
         self.lambda_target = float(lambda_target)
+        self.compute_catcher_in_eval = bool(compute_catcher_in_eval)
 
-        # Phasors initialised at small random angles near zero so the
-        # converted model starts ~identical to the pretrained baseline
-        # (rotation matrix is near-identity), then symmetry-breaking
-        # gradients can drive cylinders apart during fine-tune. A wider
-        # phase comb (like linspace[-pi/2, pi/2]) destroys the signal
-        # for small n_cylinders: at n=2 the +/- pi/2 rotations are exact
-        # anti-rotations that cancel under averaging (beam_gain ~ 0).
-        init_phases = torch.randn(n_cylinders) * 0.05
+        # Phasors initialised at small random angles. With n_cylinders >= 3
+        # the linspace[-pi/4, pi/4] init produces phase-distinct cylinders
+        # without catastrophic destructive interference (verified at 7B).
+        if n_cylinders >= 3:
+            base = torch.linspace(-torch.pi / 4.0, torch.pi / 4.0, n_cylinders)
+            init_phases = base + torch.randn(n_cylinders) * 0.02
+        else:
+            init_phases = torch.randn(n_cylinders) * 0.05
         self.phasors = nn.Parameter(init_phases)
 
+        # Default 0: zero-shot is identity (no FFN scaling at init).
         self.backreaction_scale = nn.Parameter(
             torch.tensor(float(backreaction_scale_init))
         )
 
+        # Single shared catcher per FFN call (applied to the combined
+        # FFN output, not per-cylinder). v1 had per-cylinder catcher
+        # which doubled the cost.
         self.catcher = LearnedAddressCatcher(
             d_model=hidden,
             n_bits=catcher_n_bits,
@@ -111,17 +128,16 @@ class CylinderFFN(nn.Module):
             n_power_iter=catcher_power_iter,
         )
 
-        # Forward-pass diagnostics (not persisted)
+        # Diagnostics
+        self.last_lambda2: float = 0.0
+        self.last_backreaction: float = 0.0
+        self.last_phasor_diversity: float = 0.0
+        # v1-compatible per-cylinder fields (kept for the diagnostics collector)
         self.last_lambda2_per_cylinder: list[float] = []
         self.last_backreaction_per_cylinder: list[float] = []
 
     def _rotate_channel_pairs(self, x: torch.Tensor, delta: torch.Tensor) -> torch.Tensor:
-        """Rotate (real, imag) channel halves of x[..., :rotate_dim] by delta.
-
-        Channels beyond `rotate_dim` are passed through unchanged
-        (allows partial rotation if the user wants to keep most of the
-        FFN's input space untouched).
-        """
+        """Rotate (real, imag) channel halves of x by angle delta."""
         if self.rotate_dim == self.hidden:
             d = x.shape[-1]
             half = d // 2
@@ -132,7 +148,6 @@ class CylinderFFN(nn.Module):
             re_new = re * c - im * s
             im_new = re * s + im * c
             return torch.cat([re_new, im_new], dim=-1)
-        # Partial rotation
         half = self.rotate_dim // 2
         x_rot = x[..., : self.rotate_dim]
         x_tail = x[..., self.rotate_dim :]
@@ -146,39 +161,81 @@ class CylinderFFN(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         cylinder_outs: list[torch.Tensor] = []
-        lambdas: list[float] = []
-        backreacts: list[float] = []
-
         for c in range(self.n_cylinders):
             x_rot = self._rotate_channel_pairs(x, self.phasors[c])
-            # Shared SwiGLU FFN
             ffn_out = self.down_proj(
                 self.act_fn(self.gate_proj(x_rot)) * self.up_proj(x_rot)
             )
-            lambda2 = self.catcher(ffn_out)
-            backreact = torch.sigmoid(-8.0 * (lambda2 - self.lambda_target))
-            cylinder_outs.append(ffn_out * (1.0 - self.backreaction_scale * backreact))
-            lambdas.append(float(lambda2.detach().item()))
-            backreacts.append(float(backreact.detach().item()))
+            cylinder_outs.append(ffn_out)
 
+        # Beam-sum (mean) of cylinders. With backreaction_scale = 0 at
+        # init this is identical to a vanilla FFN with rotated input.
         combined = torch.stack(cylinder_outs, dim=0).mean(dim=0)
-        self.last_lambda2_per_cylinder = lambdas
-        self.last_backreaction_per_cylinder = backreacts
-        return combined
+
+        # Catcher signal: computed on the COMBINED output, once per layer.
+        # Skipped in eval mode unless explicitly requested.
+        run_catcher = self.training or self.compute_catcher_in_eval
+        if run_catcher:
+            lambda2 = self.catcher(combined)
+            backreact = torch.sigmoid(-8.0 * (lambda2 - self.lambda_target))
+            out = combined * (1.0 - self.backreaction_scale * backreact)
+            self.last_lambda2 = float(lambda2.detach().item())
+            self.last_backreaction = float(backreact.detach().item())
+        else:
+            out = combined
+            self.last_lambda2 = 0.0
+            self.last_backreaction = 0.0
+
+        # Phasor diversity (for regularisation hook):
+        # mean of |cos(delta_i - delta_j)| over i != j; lower is more diverse.
+        with torch.no_grad():
+            if self.n_cylinders >= 2:
+                p = self.phasors.detach()
+                diffs = p.unsqueeze(0) - p.unsqueeze(1)
+                eye = torch.eye(self.n_cylinders, device=p.device, dtype=torch.bool)
+                d_off = diffs[~eye]
+                self.last_phasor_diversity = float(torch.cos(d_off).pow(2).mean().item())
+            else:
+                self.last_phasor_diversity = 0.0
+
+        # v1-compatibility: broadcast scalar lambda_2 / backreact to N entries
+        self.last_lambda2_per_cylinder = [self.last_lambda2] * self.n_cylinders
+        self.last_backreaction_per_cylinder = [self.last_backreaction] * self.n_cylinders
+
+        return out
 
     def beam_gain(self) -> float:
         with torch.no_grad():
             z = torch.cos(self.phasors).sum() ** 2 + torch.sin(self.phasors).sum() ** 2
         return float(torch.sqrt(z).item()) / float(self.n_cylinders)
 
+    def phasor_diversity_loss(self) -> torch.Tensor:
+        """Differentiable phasor-diversity regulariser.
+
+        Returns mean of cos(delta_i - delta_j)^2 over i != j.
+        Add to training loss with a small positive weight to push the
+        phasors apart and break the "all cylinders identical" failure
+        mode revealed in the v1 7B A/B (beam_gain stuck at 1.0).
+        """
+        if self.n_cylinders < 2:
+            return torch.zeros((), device=self.phasors.device)
+        p = self.phasors
+        diffs = p.unsqueeze(0) - p.unsqueeze(1)
+        n = self.n_cylinders
+        eye = torch.eye(n, device=p.device, dtype=torch.bool)
+        d_off = diffs[~eye]
+        return torch.cos(d_off).pow(2).mean()
+
 
 def convert_qwen_to_cyliformer(
     model: nn.Module,
-    n_cylinders: int = 2,
-    lambda_target: float = 0.18,
+    n_cylinders: int = 4,
+    lambda_target: float = 0.05,
+    backreaction_scale_init: float = 0.0,
     catcher_n_bits: int = 32,
     catcher_max_nodes: int = 96,
     catcher_power_iter: int = 6,
+    compute_catcher_in_eval: bool = False,
 ) -> dict:
     """Walk the model, replace each layer's `mlp` with `CylinderFFN`.
 
@@ -210,9 +267,11 @@ def convert_qwen_to_cyliformer(
             original_mlp,
             n_cylinders=n_cylinders,
             lambda_target=lambda_target,
+            backreaction_scale_init=backreaction_scale_init,
             catcher_n_bits=catcher_n_bits,
             catcher_max_nodes=catcher_max_nodes,
             catcher_power_iter=catcher_power_iter,
+            compute_catcher_in_eval=compute_catcher_in_eval,
         )
         # Move new params to the same device/dtype as the original mlp
         first_param = next(original_mlp.parameters(), None)

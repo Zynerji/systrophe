@@ -67,9 +67,10 @@ def measure_all(model, tok, eval_text, args, label: str) -> dict:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--base", type=str, default="Qwen/Qwen2.5-7B-Instruct")
-    parser.add_argument("--n_cylinders", type=int, default=2)
-    parser.add_argument("--lambda_target", type=float, default=0.18)
-    parser.add_argument("--lambda_weight", type=float, default=0.10)
+    parser.add_argument("--n_cylinders", type=int, default=4)
+    parser.add_argument("--lambda_target", type=float, default=0.05)
+    parser.add_argument("--lambda_weight", type=float, default=0.05)
+    parser.add_argument("--phasor_diversity_weight", type=float, default=0.10)
     parser.add_argument("--dtype", choices=["bfloat16", "float16"], default="bfloat16")
     parser.add_argument("--device_map", type=str, default="auto")
     parser.add_argument("--seq_len", type=int, default=512)
@@ -179,27 +180,41 @@ def main():
                 logits.reshape(-1, logits.size(-1)),
                 y.reshape(-1),
             )
-            if args.lambda_weight > 0:
+            # Collect cylinder modules
+            cur = model
+            for _ in range(5):
+                if hasattr(cur, "layers"):
+                    break
+                for a in ("base_model", "model", "transformer"):
+                    if hasattr(cur, a):
+                        cur = getattr(cur, a)
+                        break
+                else:
+                    break
+            cyl_mlps = []
+            for layer in getattr(cur, "layers", []):
+                mlp = getattr(layer, "mlp", None)
+                if mlp is not None and hasattr(mlp, "last_lambda2_per_cylinder"):
+                    cyl_mlps.append(mlp)
+
+            if args.lambda_weight > 0 and cyl_mlps:
                 lam_list = []
-                # Find decoder layers
-                cur = model
-                for _ in range(5):
-                    if hasattr(cur, "layers"):
-                        break
-                    for a in ("base_model", "model", "transformer"):
-                        if hasattr(cur, a):
-                            cur = getattr(cur, a)
-                            break
-                    else:
-                        break
-                for layer in getattr(cur, "layers", []):
-                    mlp = getattr(layer, "mlp", None)
-                    if mlp is not None and hasattr(mlp, "last_lambda2_per_cylinder"):
-                        lam_list.extend(mlp.last_lambda2_per_cylinder)
+                for mlp in cyl_mlps:
+                    lam_list.extend(mlp.last_lambda2_per_cylinder)
                 if lam_list:
                     lam_t = torch.tensor(lam_list, dtype=loss.dtype, device=loss.device)
                     floor = F.relu(args.lambda_target - lam_t).pow(2).mean()
                     loss = loss + args.lambda_weight * floor
+
+            if args.phasor_diversity_weight > 0 and cyl_mlps:
+                # Differentiable phasor-diversity penalty (push apart)
+                pdivs = []
+                for mlp in cyl_mlps:
+                    if hasattr(mlp, "phasor_diversity_loss"):
+                        pdivs.append(mlp.phasor_diversity_loss())
+                if pdivs:
+                    pdiv = torch.stack(pdivs).mean()
+                    loss = loss + args.phasor_diversity_weight * pdiv
             (loss / args.grad_accum).backward()
             if (step + 1) % args.grad_accum == 0:
                 torch.nn.utils.clip_grad_norm_(trainable, 1.0)
