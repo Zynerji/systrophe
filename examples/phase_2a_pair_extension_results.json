@@ -1,0 +1,162 @@
+{
+  "phase": "2a-pair",
+  "title": "Phase 2a applied to a matched SystrophePair",
+  "spacetime": {
+    "omega": 2.0,
+    "R": 1.0,
+    "matched": true
+  },
+  "rows": [
+    {
+      "delta": 0.0,
+      "delta_over_pi": 0.0,
+      "amplitude_factor": 2.0,
+      "n_horizons": 3,
+      "horizons": [
+        1.405419881607395,
+        3.162907948961279,
+        7.118147981626959
+      ],
+      "r_H1": 1.405419881607395,
+      "tt_power": -1.0053437335558557,
+      "tt_fit_rms": 0.0030485290304854856,
+      "rr_power": -1.9985221821625176,
+      "rr_fit_rms": 0.0009516978085188768,
+      "T_tt_midpoint": 0.004073257284098547,
+      "ctc_extinction": false
+    },
+    {
+      "delta": 0.39269908169872414,
+      "delta_over_pi": 0.125,
+      "amplitude_factor": 1.9615705608064609,
+      "n_horizons": 3,
+      "horizons": [
+        1.3359449548538838,
+        3.006554106982884,
+        6.766272491521767
+      ],
+      "r_H1": 1.3359449548538838,
+      "tt_power": -1.005650880398146,
+      "tt_fit_rms": 0.0032346928827923743,
+      "rr_power": -1.9984225826871653,
+      "rr_fit_rms": 0.0010229090188466567,
+      "T_tt_midpoint": 0.01800037232037624,
+      "ctc_extinction": false
+    },
+    {
+      "delta": 0.7853981633974483,
+      "delta_over_pi": 0.25,
+      "amplitude_factor": 1.8477590650225735,
+      "n_horizons": 3,
+      "horizons": [
+        1.2699044219854836,
+        2.8579293941146386,
+        6.431791464253868
+      ],
+      "r_H1": 1.2699044219854836,
+      "tt_power": -1.0059771961669202,
+      "tt_fit_rms": 0.0034335880962866874,
+      "rr_power": -1.9983153103907088,
+      "rr_fit_rms": 0.0011002224053264808,
+      "T_tt_midpoint": 0.04333272323352849,
+      "ctc_extinction": false
+    },
+    {
+      "delta": 1.5707963267948966,
+      "delta_over_pi": 0.5,
+      "amplitude_factor": 1.4142135623730951,
+      "n_horizons": 3,
+      "horizons": [
+        1.1474558330097553,
+        2.58235792933113,
+        5.811615822883414
+      ],
+      "r_H1": 1.1474558330097553,
+      "tt_power": -1.0066928476900465,
+      "tt_fit_rms": 0.0038736841638042216,
+      "rr_power": -1.9980750365764248,
+      "rr_fit_rms": 0.001275526272128411,
+      "T_tt_midpoint": 0.1498820201084131,
+      "ctc_extinction": false
+    },
+    {
+      "delta": 2.356194490192345,
+      "delta_over_pi": 0.75,
+      "amplitude_factor": 0.7653668647301797,
+      "n_horizons": 2,
+      "horizons": [
+        2.333358020989607,
+        5.251239667905962
+      ],
+      "r_H1": 2.333358020989607,
+      "tt_power": -0.9972800577648793,
+      "tt_fit_rms": 0.0013728779512218608,
+      "rr_power": -2.0005029576247955,
+      "rr_fit_rms": 0.0002137584131549691,
+      "T_tt_midpoint": NaN,
+      "ctc_extinction": false
+    },
+    {
+      "delta": 2.641592653589793,
+      "delta_over_pi": 0.8408450569081046,
+      "amplitude_factor": 0.494807918509046,
+      "n_horizons": 2,
+      "horizons": [
+        2.24895057497993,
+        5.061280079722121
+      ],
+      "r_H1": 2.24895057497993,
+      "tt_power": -0.9971850390482905,
+      "tt_fit_rms": 0.0014179571761108207,
+      "rr_power": -2.000516371981285,
+      "rr_fit_rms": 0.0002169552515212577,
+      "T_tt_midpoint": NaN,
+      "ctc_extinction": false
+    },
+    {
+      "delta": 3.041592653589793,
+      "delta_over_pi": 0.9681690113816209,
+      "amplitude_factor": 0.09995833854135687,
+      "n_horizons": 2,
+      "horizons": [
+        2.135762911275355,
+        4.806550396485699
+      ],
+      "r_H1": 2.135762911275355,
+      "tt_power": -0.9970467451319086,
+      "tt_fit_rms": 0.0014831745865783413,
+      "rr_power": -2.0005353252685447,
+      "rr_fit_rms": 0.0002211485972736809,
+      "T_tt_midpoint": NaN,
+      "ctc_extinction": false
+    },
+    {
+      "delta": 3.1315926535897933,
+      "delta_over_pi": 0.9968169011381621,
+      "amplitude_factor": 0.009999958333385326,
+      "n_horizons": 2,
+      "horizons": [
+        2.111091195984727,
+        4.7510265168050365
+      ],
+      "r_H1": 2.111091195984727,
+      "tt_power": -0.9970147873181557,
+      "tt_fit_rms": 0.0014981784640097965,
+      "rr_power": -2.0005395965056176,
+      "rr_fit_rms": 0.00022201194540868915,
+      "T_tt_midpoint": NaN,
+      "ctc_extinction": false
+    },
+    {
+      "delta": 3.141592653589793,
+      "delta_over_pi": 1.0,
+      "amplitude_factor": 1.2246467991473532e-16,
+      "n_horizons": 0,
+      "horizons": [],
+      "tt_power": null,
+      "rr_power": null,
+      "ctc_extinction": true
+    }
+  ],
+  "elapsed_seconds": 0.06799435615539551
+}
