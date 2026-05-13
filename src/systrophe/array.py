@@ -38,6 +38,7 @@ Caveats
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from typing import Iterable
 
@@ -164,3 +165,170 @@ class SystropheArray:
             raise ValueError("N must be >= 2")
         offsets = tuple(2.0 * np.pi * i / N for i in range(N))
         return cls.from_cylinders([cylinder] * N, offsets=offsets)
+
+    # -----------------------------------------------------------------
+    # Phase 3a: beamforming + extinction diagnostics
+    # -----------------------------------------------------------------
+
+    def phasor_field(self, r: float | np.ndarray) -> dict:
+        """Complex phasor sum sum_i A_i exp(i (alpha_i u_i + delta_i)) at r.
+
+        For matched cylinders this is the geometric "antenna" phasor whose
+        magnitude controls L(r) and whose phase controls the CTC band
+        position. For unmatched arrays each term carries its own log-
+        frequency and the sum is a multi-frequency beat.
+
+        Returns dict with 'phasor' (complex array), 'magnitude', 'phase'.
+        """
+        r_arr = np.asarray(r, dtype=float)
+        z = np.zeros_like(r_arr, dtype=complex)
+        for s in self.sinusoids:
+            u = np.log(r_arr / s.R)
+            arg = s.alpha * u + s.delta
+            z = z + s.A * np.exp(1j * arg)
+        return {
+            "phasor": z,
+            "magnitude": np.abs(z),
+            "phase": np.angle(z),
+        }
+
+    def array_factor(self, r: float | np.ndarray) -> np.ndarray:
+        """Magnitude of the phasor sum at radius r.
+
+        Maximum N * A at constructive interference, zero at extinction.
+        Direct analog of antenna-array array factor (linear-phase-progression
+        steering).
+        """
+        return np.asarray(self.phasor_field(r)["magnitude"])
+
+    def extinction_check(self, r_min: float = None, r_max: float = None,
+                            n_grid: int = 4001, atol: float = 1e-10) -> dict:
+        """Verify N-fold topological extinction: max |phasor| < atol.
+
+        For a uniform_phase_comb, the phasor sum is geometric N-th root
+        of unity sum = 0 identically. Numerically this means
+        max(|phasor(r)|) over [r_min, r_max] is ~ 0 (limited by FD noise).
+        """
+        if r_min is None:
+            r_min = 1.05 * self.sinusoids[0].R
+        if r_max is None:
+            r_max = 10.0 * self.sinusoids[0].R
+        r_grid = np.linspace(r_min, r_max, n_grid)
+        af = self.array_factor(r_grid)
+        max_af = float(np.max(np.abs(af)))
+        is_extinguished = bool(max_af < atol * self.N * max(s.A for s in self.sinusoids))
+        return {
+            "max_array_factor": max_af,
+            "is_extinguished": is_extinguished,
+            "r_max": float(r_max),
+            "atol": float(atol),
+            "N": int(self.N),
+        }
+
+    def dirichlet_pattern(self, r: float | np.ndarray, delta_step: float = None
+                            ) -> np.ndarray:
+        """Dirichlet-kernel array factor for linear-ramp phasing.
+
+        For matched sinusoids with delta_i = i * delta_step, the array
+        factor is the geometric sum
+            sum_{i=0}^{N-1} exp(i alpha u + i delta_step)
+                = exp(i (N-1)(alpha u + delta_step)/2)
+                  * sin(N (alpha u + delta_step) / 2)
+                  / sin((alpha u + delta_step) / 2)
+
+        Direct analog of the antenna-array Dirichlet kernel; useful for
+        beam-steering CTC location.
+        """
+        if not self.all_matched:
+            raise ValueError("Dirichlet pattern requires matched array")
+        r_arr = np.asarray(r, dtype=float)
+        first = self.sinusoids[0]
+        if delta_step is None:
+            # Infer delta_step from second sinusoid
+            if self.N < 2:
+                raise ValueError("need N >= 2 to infer delta_step")
+            delta_step = self.sinusoids[1].delta - first.delta
+        u = np.log(r_arr / first.R)
+        psi = first.alpha * u + delta_step
+        denom = np.sin(psi / 2.0)
+        denom_safe = np.where(np.abs(denom) > 1e-12, denom, 1e-12)
+        return np.asarray(np.abs(np.sin(self.N * psi / 2.0) / denom_safe))
+
+    @staticmethod
+    def beam_steer(r_target: float, cylinder, N: int = 2) -> "SystropheArray":
+        """Solve inverse problem: choose offsets to place an L-node at r_target.
+
+        The TiplerSinusoid stores L(r) = r (r/R)^p A cos(alpha u + delta_L)
+        where delta_L = gamma - psi is the *intrinsic* matching phase of
+        the L-mode for this cylinder. For a pair with offsets
+        (0, delta_aim) the joint L at r_target is
+
+            A [cos(alpha u_t + delta_L) + cos(alpha u_t + delta_L + delta_aim)]
+              = 2 A cos(delta_aim/2) cos(alpha u_t + delta_L + delta_aim/2)
+
+        Setting the second factor to zero gives the local node:
+
+            delta_aim = pi - 2 alpha ln(r_target / R) - 2 delta_L   (mod 2 pi)
+
+        Returns the resulting SystropheArray of N cylinders with
+        alternating delta = 0 and delta = delta_aim phases. (For N > 2
+        the simple alternation still produces a local L-node at r_target;
+        the depth of the node deepens with N.)
+        """
+        cyl_sin = cylinder.tipler_sinusoid()
+        alpha = cyl_sin.alpha
+        R = cyl_sin.R
+        delta_L = cyl_sin.delta
+        u_target = math.log(r_target / R)
+        delta_aim = float(math.pi - 2.0 * alpha * u_target - 2.0 * delta_L)
+        offsets = tuple(0.0 if (i % 2 == 0) else delta_aim for i in range(N))
+        return SystropheArray.from_cylinders([cylinder] * N, offsets=offsets)
+
+    def beam_pattern(self, r_min: float, r_max: float, n_grid: int = 200,
+                       normalise: bool = True) -> dict:
+        """Beam-pattern array factor across r in [r_min, r_max].
+
+        Returns the array factor (and optionally normalised to its maximum)
+        on a log-spaced radial grid -- the natural geometry for log-periodic
+        sources.
+        """
+        r_grid = np.geomspace(r_min, r_max, n_grid)
+        af = self.array_factor(r_grid)
+        if normalise and np.max(af) > 0:
+            af_n = af / np.max(af)
+        else:
+            af_n = af
+        return {
+            "r_grid": r_grid,
+            "array_factor": af,
+            "array_factor_normalised": af_n,
+            "main_lobe_r": float(r_grid[int(np.argmax(af))]),
+            "main_lobe_amplitude": float(np.max(af)),
+        }
+
+    def array_factor_sidelobe_level(self, r_min: float = None, r_max: float = None,
+                                       n_grid: int = 4001) -> float:
+        """Ratio of strongest side-lobe to main lobe.
+
+        For an unsteered uniform-amplitude array, this is the standard
+        antenna-side-lobe-level diagnostic. Lower (more negative dB) is
+        sharper beam.
+        """
+        if r_min is None:
+            r_min = 1.05 * self.sinusoids[0].R
+        if r_max is None:
+            r_max = 100.0 * self.sinusoids[0].R
+        bp = self.beam_pattern(r_min, r_max, n_grid=n_grid, normalise=True)
+        af = bp["array_factor_normalised"]
+        # Find local maxima (strictly between neighbours)
+        peaks = []
+        for i in range(1, len(af) - 1):
+            if af[i] > af[i - 1] and af[i] > af[i + 1]:
+                peaks.append(float(af[i]))
+        if not peaks:
+            return 0.0
+        peaks.sort(reverse=True)
+        # Main lobe is peaks[0]; biggest side-lobe is peaks[1] if it exists
+        if len(peaks) < 2:
+            return 0.0
+        return float(peaks[1] / peaks[0])

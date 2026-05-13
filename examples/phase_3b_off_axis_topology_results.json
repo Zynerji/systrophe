@@ -1,0 +1,146 @@
+{
+  "phase": "3b",
+  "title": "OffAxisPair quantitative orbits + topology",
+  "spacetime": {
+    "cyl1": {
+      "omega": 1.0,
+      "R": 1.0
+    },
+    "cyl2": {
+      "omega": 1.0,
+      "R": 1.0
+    },
+    "separation": 3.0
+  },
+  "ergoregion_fraction": 0.993676603432701,
+  "topology_resolution_sweep": [
+    {
+      "nx": 41,
+      "ny": 21,
+      "n_components": 1,
+      "n_holes": 2,
+      "ctc_fraction": 0.9744483159117305,
+      "component_areas": [
+        839
+      ],
+      "topology_summary": "with_holes"
+    },
+    {
+      "nx": 81,
+      "ny": 41,
+      "n_components": 1,
+      "n_holes": 2,
+      "ctc_fraction": 0.976513098464318,
+      "component_areas": [
+        3243
+      ],
+      "topology_summary": "with_holes"
+    },
+    {
+      "nx": 121,
+      "ny": 61,
+      "n_components": 1,
+      "n_holes": 2,
+      "ctc_fraction": 0.9772388565235063,
+      "component_areas": [
+        7213
+      ],
+      "topology_summary": "with_holes"
+    }
+  ],
+  "trace_anomaly_along_probe_line": [
+    {
+      "x": 1.5,
+      "y": -2.5,
+      "trace_anomaly_2d_sector": 0.0031567363901889595
+    },
+    {
+      "x": 1.5,
+      "y": -2.0,
+      "trace_anomaly_2d_sector": 0.003638215965943924
+    },
+    {
+      "x": 1.5,
+      "y": -1.5,
+      "trace_anomaly_2d_sector": 0.00395202737668846
+    },
+    {
+      "x": 1.5,
+      "y": -1.0,
+      "trace_anomaly_2d_sector": 0.00677470951266525
+    },
+    {
+      "x": 1.5,
+      "y": -0.5,
+      "trace_anomaly_2d_sector": 0.6740832429994575
+    },
+    {
+      "x": 1.5,
+      "y": 0.0,
+      "trace_anomaly_2d_sector": 0.15403979331259154
+    },
+    {
+      "x": 1.5,
+      "y": 0.5,
+      "trace_anomaly_2d_sector": 0.6740832429994575
+    },
+    {
+      "x": 1.5,
+      "y": 1.0,
+      "trace_anomaly_2d_sector": 0.00677470951266525
+    },
+    {
+      "x": 1.5,
+      "y": 1.5,
+      "trace_anomaly_2d_sector": 0.00395202737668846
+    },
+    {
+      "x": 1.5,
+      "y": 2.0,
+      "trace_anomaly_2d_sector": 0.003638215965943924
+    },
+    {
+      "x": 1.5,
+      "y": 2.5,
+      "trace_anomaly_2d_sector": 0.0031567363901889595
+    }
+  ],
+  "geodesic_completeness": [
+    {
+      "x0": 5.0,
+      "y0": 0.5,
+      "reaches_escape": false,
+      "final_radius": NaN,
+      "enters_ctc": false,
+      "success": false,
+      "error": "off-axis test particle integration failed: Required step size is less than spacing between numbers."
+    },
+    {
+      "x0": -2.0,
+      "y0": 1.5,
+      "reaches_escape": false,
+      "final_radius": NaN,
+      "enters_ctc": false,
+      "success": false,
+      "error": "off-axis test particle integration failed: Required step size is less than spacing between numbers."
+    },
+    {
+      "x0": 4.0,
+      "y0": -1.0,
+      "reaches_escape": false,
+      "final_radius": NaN,
+      "enters_ctc": false,
+      "success": false,
+      "error": "off-axis test particle integration failed: Required step size is less than spacing between numbers."
+    },
+    {
+      "x0": 1.5,
+      "y0": 2.0,
+      "reaches_escape": true,
+      "final_radius": 17079.59029999496,
+      "enters_ctc": true,
+      "success": true
+    }
+  ],
+  "elapsed_seconds": 53.833001375198364
+}

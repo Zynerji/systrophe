@@ -301,6 +301,21 @@ from .stress_energy_ctc import (
     trace_anomaly_2d,
     unruh_stress_tensor,
 )
+from .hadamard_modesum import (
+    HadamardChronologyFit,
+    HadamardChronologyReport,
+    fit_4d_quantity_at_horizon,
+    hadamard_chronology_report,
+    hadamard_modesum_novelty_scan,
+    hadamard_subtraction_residual,
+    hadamard_V_0,
+    hadamard_V_1,
+    phi_squared_wkb_partial_sum,
+    squared_geodesic_distance_radial,
+    trace_anomaly_via_V_1,
+    wkb_mode_density,
+    wkb_radial_mode,
+)
 
 __all__ = [
     "VanStockumInterior",
@@ -343,4 +358,4 @@ __all__ = [
     "z3_cover_mode_density",
     "z3_cover_regularised_zeta_sum",
 ]
-__version__ = "0.20.0"
+__version__ = "0.21.0"

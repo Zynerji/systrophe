@@ -1,0 +1,113 @@
+{
+  "phase": "3a",
+  "title": "SystropheArray beam-forming + extinction diagnostics",
+  "single_cylinder": {
+    "omega": 1.0,
+    "R": 1.0,
+    "alpha": 1.7320508075688772
+  },
+  "extinction_sweep": [
+    {
+      "N": 2,
+      "max_array_factor": 1.2947314098277873e-15,
+      "is_extinguished": true
+    },
+    {
+      "N": 3,
+      "max_array_factor": 1.6300346472626374e-15,
+      "is_extinguished": true
+    },
+    {
+      "N": 4,
+      "max_array_factor": 1.9389211565826713e-15,
+      "is_extinguished": true
+    },
+    {
+      "N": 5,
+      "max_array_factor": 2.3103911863283375e-15,
+      "is_extinguished": true
+    },
+    {
+      "N": 6,
+      "max_array_factor": 2.3714374201337737e-15,
+      "is_extinguished": true
+    },
+    {
+      "N": 7,
+      "max_array_factor": 3.2524987315186165e-15,
+      "is_extinguished": true
+    },
+    {
+      "N": 8,
+      "max_array_factor": 2.437438961788735e-15,
+      "is_extinguished": true
+    }
+  ],
+  "beam_steering": [
+    {
+      "r_target": 2.0,
+      "delta_aim": -2.4011322677058873,
+      "L_at_target": 0.0,
+      "L_near": -0.14811503480436272
+    },
+    {
+      "r_target": 3.0,
+      "delta_aim": -3.805704603585384,
+      "L_at_target": 0.0,
+      "L_near": 0.2001642788898086
+    },
+    {
+      "r_target": 4.0,
+      "delta_aim": -4.802264535411775,
+      "L_at_target": -4.440892098500626e-16,
+      "L_near": 0.6043296221931245
+    },
+    {
+      "r_target": 5.0,
+      "delta_aim": -5.575256471926902,
+      "L_at_target": -4.440892098500626e-16,
+      "L_near": 0.9599312431608982
+    },
+    {
+      "r_target": 7.0,
+      "delta_aim": -6.740830490255459,
+      "L_at_target": -4.440892098500626e-15,
+      "L_near": 1.3953789366653253
+    }
+  ],
+  "dirichlet_pattern": {
+    "N": 5,
+    "delta_step_over_pi": 0.3333333333333333,
+    "main_lobe_r": 20.0,
+    "main_lobe_value": 4.988854978745095,
+    "min_pattern_value": 0.009206186901524076
+  },
+  "sidelobe_level_sweep": [
+    {
+      "N": 2,
+      "sidelobe_level": 1.0,
+      "sidelobe_dB": 0.0
+    },
+    {
+      "N": 3,
+      "sidelobe_level": 1.0,
+      "sidelobe_dB": 0.0
+    },
+    {
+      "N": 4,
+      "sidelobe_level": 1.0,
+      "sidelobe_dB": 0.0
+    },
+    {
+      "N": 5,
+      "sidelobe_level": 1.0,
+      "sidelobe_dB": 0.0
+    },
+    {
+      "N": 6,
+      "sidelobe_level": 1.0,
+      "sidelobe_dB": 0.0
+    }
+  ],
+  "elapsed_seconds": 0.024001359939575195
+}

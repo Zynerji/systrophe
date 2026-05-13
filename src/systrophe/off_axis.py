@@ -351,3 +351,152 @@ class OffAxisPair:
             "g_phiphi_cyl1": g_phiphi,
             "is_ctc": g_phiphi < 0.0,
         }
+
+    # -----------------------------------------------------------------
+    # Phase 3b: quantitative orbit + topology diagnostics
+    # -----------------------------------------------------------------
+
+    def ergosurface_2d(
+        self,
+        x_min: float, x_max: float, y_min: float, y_max: float,
+        nx: int = 121, ny: int = 121,
+    ) -> dict:
+        """Locate the joint ergosurface g_tt = 0 in the (x, y) plane.
+
+        Returns dict with grid + g_tt scalar + is_ergoregion boolean
+        (g_tt > 0 means t-Killing vector spacelike: inside ergoregion).
+        """
+        x = np.linspace(x_min, x_max, nx)
+        y = np.linspace(y_min, y_max, ny)
+        X, Y = np.meshgrid(x, y, indexing="xy")
+        g = self.cartesian_metric(X, Y)
+        return {
+            "x": x,
+            "y": y,
+            "g_tt": np.asarray(g["g_tt"]),
+            "is_ergoregion": np.asarray(g["g_tt"]) > 0.0,
+        }
+
+    def ctc_region_topology(
+        self,
+        x_min: float, x_max: float, y_min: float, y_max: float,
+        nx: int = 121, ny: int = 121,
+    ) -> dict:
+        """Classify the 2D CTC region topology.
+
+        Counts connected components, identifies whether each component
+        is simply-connected or contains holes (genus 0 vs > 0 in 2D),
+        and reports per-component areas (in grid units).
+
+        Strategy: floodfill on the boolean CTC mask via scipy.ndimage.
+        """
+        from scipy.ndimage import label
+        ctc_map = self.ctc_map_2d(x_min, x_max, y_min, y_max, nx=nx, ny=ny)
+        mask = np.asarray(ctc_map["is_ctc"])
+        labels, n_components = label(mask)
+        component_areas = []
+        for k in range(1, n_components + 1):
+            area = int(np.sum(labels == k))
+            component_areas.append(area)
+
+        # Detect simply-connectedness by flooding the *complement*: components
+        # of NOT(ctc) that don't touch the boundary indicate holes.
+        outer = np.zeros_like(mask, dtype=bool)
+        outer[0, :] = True
+        outer[-1, :] = True
+        outer[:, 0] = True
+        outer[:, -1] = True
+        non_ctc = ~mask
+        non_ctc_labels, n_non = label(non_ctc)
+        boundary_touching = set()
+        for k in range(1, n_non + 1):
+            if np.any((non_ctc_labels == k) & outer):
+                boundary_touching.add(k)
+        n_holes = max(0, n_non - len(boundary_touching))
+
+        return {
+            "n_components": int(n_components),
+            "component_areas": component_areas,
+            "n_holes": int(n_holes),
+            "ctc_fraction": float(np.mean(mask)),
+            "topology_summary": (
+                "empty" if n_components == 0
+                else "simply_connected" if (n_components == 1 and n_holes == 0)
+                else "multi_component" if (n_components > 1 and n_holes == 0)
+                else "with_holes" if n_holes > 0
+                else "complex"
+            ),
+        }
+
+    def trace_anomaly_2d_sector(self, x: float, y: float, eps: float = 1e-3) -> float:
+        """4D trace anomaly proxy at (x, y) using only the 2D (t, x or y) sector.
+
+        Builds a 2D effective metric from the joint Cartesian metric and
+        evaluates R_2D / (24 pi). This is a *leading-order* indicator of
+        local QFTCS back-reaction in the off-axis pair; the full 4D
+        Hadamard subtraction would require a substantial extension.
+        """
+        # Choose the radial direction along the y axis (perpendicular to
+        # the separation axis x) as the "2D" coordinate.
+        def F_at(yy: float) -> float:
+            g = self.cartesian_metric(np.atleast_1d(x), np.atleast_1d(yy))
+            return float(-g["g_tt"][0])
+        F = F_at(y)
+        F_p = (F_at(y + eps) - F_at(y - eps)) / (2.0 * eps)
+        F_pp = (F_at(y + eps) - 2.0 * F + F_at(y - eps)) / (eps * eps)
+        if abs(F) < 1e-9:
+            return float("inf")
+        # 2D Ricci scalar of ds^2 = -F dt^2 + dy^2 (assuming h_yy = 1 at this order)
+        R_2D = -F_pp / F + (F_p * F_p) / (2.0 * F * F)
+        return float(R_2D / (24.0 * np.pi))
+
+    def geodesic_completeness_test(
+        self,
+        x_starts: tuple,
+        y_starts: tuple,
+        vx0: float = 0.1,
+        vy0: float = 0.1,
+        t_max: float = 100.0,
+        n_samples: int = 501,
+        escape_radius: float = 100.0,
+    ) -> list:
+        """Test whether timelike test particles escape to infinity from
+        several initial conditions.
+
+        Returns a list of dicts (one per starting condition) with:
+          - 'reaches_escape': bool, whether sqrt(x^2 + y^2) > escape_radius
+          - 'final_radius'  : maximum radius reached
+          - 'enters_ctc'   : whether the path enters the CTC region
+          - 'success'       : whether the integration completed
+        """
+        results = []
+        for x0, y0 in zip(x_starts, y_starts):
+            try:
+                traj = self.integrate_test_particle(
+                    x0=float(x0), y0=float(y0), vx0=vx0, vy0=vy0,
+                    t_max=t_max, n_samples=n_samples, kappa=1.0,
+                )
+                final_r = float(np.max(np.sqrt(traj["x"] ** 2 + traj["y"] ** 2)))
+                # Check if path enters CTC by sampling has_local_ctc at intervals
+                ctc_hit = False
+                for i in range(0, len(traj["x"]), max(1, len(traj["x"]) // 20)):
+                    if self.has_local_ctc(float(traj["x"][i]), float(traj["y"][i])):
+                        ctc_hit = True
+                        break
+                results.append({
+                    "x0": float(x0), "y0": float(y0),
+                    "reaches_escape": bool(final_r >= escape_radius),
+                    "final_radius": final_r,
+                    "enters_ctc": ctc_hit,
+                    "success": True,
+                })
+            except Exception as exc:
+                results.append({
+                    "x0": float(x0), "y0": float(y0),
+                    "reaches_escape": False,
+                    "final_radius": float("nan"),
+                    "enters_ctc": False,
+                    "success": False,
+                    "error": str(exc),
+                })
+        return results

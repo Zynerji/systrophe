@@ -47,22 +47,32 @@ identity holds at machine precision. Verdict:
 `tests/test_stress_energy_ctc.py`, and
 `examples/phase_2a_chronology_protection.py`.
 
-### 2b. Hadamard / point-splitting for cylindrical Tipler
-Standard mode-sum technique adapted to the log-periodic exterior.
-Scientifically the most interesting extension; adds a few hundred
-lines and a real physics result.
+### 2b. Hadamard / point-splitting for cylindrical Tipler — **SHIPPED in v0.21.0 (2026-05-13)**
+4D Hadamard biparametrix module `hadamard_modesum.py`: V_0(x) = 0
+(vacuum + massless + conformal), V_1(x) = K_Kretsch / 720, 2 V_1 /
+(8 pi^2) = K / (2880 pi^2) cross-validates `point_splitting`. WKB
+radial mode-sum + Hadamard UV subtraction. 4D chronology-protection
+scan: V_1 BOUNDED at every Cauchy horizon (powers ~ 0), confirming
+v0.10.0 -- the divergence is state-dependent (Phase 2a), not local.
+14 tests, example in `examples/phase_2b_hadamard_modesum.py`.
 
 ## Phase 3 — From "pair" to "array"
 
-### 3a. N-cylinder phased array
-Generalise `SystrophePair` to `SystropheArray(cylinders, offsets)`.
-Phasor superposition of N log-periodic sinusoids; CTC band structure
-becomes the result of multi-source interference. Beam-forming analogues
-become natural.
+### 3a. N-cylinder phased array — **SHIPPED in v0.21.0 (2026-05-13)**
+`SystropheArray` (v0.4.0) extended with beam-forming + extinction
+diagnostics: `phasor_field`, `array_factor`, `extinction_check`
+(N=2..8 uniform-phase comb verified to machine precision),
+`dirichlet_pattern`, `beam_steer` (analytic placement of L-node at
+chosen r_target to machine zero), `beam_pattern`, side-lobe-level
+diagnostic. 9 new tests, example in `examples/phase_3a_beam_steering.py`.
 
-### 3b. Off-axis pair quantitative orbits
-Current `OffAxisPair` is a leading-order CTC-region detector; extend
-with full geodesic integration in the joint metric (numerical).
+### 3b. Off-axis pair quantitative orbits — **SHIPPED in v0.21.0 (2026-05-13)**
+`OffAxisPair` (v0.2.0) extended with topology + quantitative
+diagnostics: `ergosurface_2d`, `ctc_region_topology` (NEW FINDING:
+canonical separation-3 pair has CTC = 1 component + 2 holes,
+resolution-stable), `trace_anomaly_2d_sector`,
+`geodesic_completeness_test`. 6 new tests, example in
+`examples/phase_3b_off_axis_topology.py`.
 
 ## Phase 4 — From "implementation" to "observation"
 

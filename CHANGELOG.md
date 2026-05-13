@@ -5,6 +5,76 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.21.0] - 2026-05-13
+
+### Phases 2b + 3a + 3b — Hadamard, beamforming, off-axis topology
+
+Closes three more roadmap items in a single release.
+
+#### Phase 2b — 4D Hadamard biparametrix + WKB mode-sum
+New module `src/systrophe/hadamard_modesum.py`:
+- `hadamard_V_0(vs, r, mass, xi)`: V_0 = (m^2 + (xi - 1/6) R)/2 (= 0 in
+  vacuum + massless + conformal).
+- `hadamard_V_1(vs, r)`: V_1 = K_Kretsch(r) / 720 (vacuum-conformal form).
+- `trace_anomaly_via_V_1`: 2 V_1 / (8 pi^2) = K / (2880 pi^2). Cross-
+  validates the `point_splitting` module at relative diff 0.
+- `squared_geodesic_distance_radial`: world function for radial point-
+  splitting.
+- `wkb_radial_mode`, `wkb_mode_density`: WKB radial KG modes.
+- `phi_squared_wkb_partial_sum`, `hadamard_subtraction_residual`:
+  partial mode-sum with UV scaling subtracted.
+- `fit_4d_quantity_at_horizon`, `hadamard_chronology_report`: 4D
+  chronology-protection scan analog of Phase 2a. Confirms v0.10.0:
+  V_1 stays BOUNDED at three independent Cauchy horizons (powers
+  +0.022, -0.009, +0.004) -- the chronology-protection divergence is
+  state-dependent (Phase 2a 2D Polyakov), NOT in the local 4D
+  biparametrix.
+- `hadamard_modesum_novelty_scan`: always-on catcher.
+
+Tests: 14 in `tests/test_hadamard_modesum.py`, all pass.
+Example: `examples/phase_2b_hadamard_modesum.py` (0.8 s).
+
+#### Phase 3a — SystropheArray beamforming + extinction
+Extended `src/systrophe/array.py`:
+- `phasor_field(r)`: complex phasor sum + magnitude + phase.
+- `array_factor(r)`: antenna-array-analog magnitude.
+- `extinction_check`: verifies N-fold topological extinction
+  numerically. Confirmed at machine precision (~ 4e-15 max array
+  factor) for N = 2..8.
+- `dirichlet_pattern(r, delta_step)`: Dirichlet kernel for linear-ramp
+  phasing.
+- `beam_steer(r_target, cylinder, N)`: STATIC analytic placement of an
+  L-node at chosen r_target via delta_aim = pi - 2*alpha*ln(r_t/R) -
+  2*delta_L. L(r_target) = 0 at machine precision.
+- `beam_pattern(r_min, r_max)`: log-spaced array factor sweep.
+- `array_factor_sidelobe_level`: SLL diagnostic.
+
+Tests: 9 in `tests/test_array_phase_3a.py`, all pass.
+Example: `examples/phase_3a_beam_steering.py` (0.02 s).
+
+#### Phase 3b — OffAxisPair topology + quantitative orbits
+Extended `src/systrophe/off_axis.py`:
+- `ergosurface_2d(x_min, x_max, ...)`: locate g_tt = 0 surface in 2D.
+- `ctc_region_topology(...)`: classify connected components + holes
+  via scipy.ndimage.label. **New finding**: for an omega=1, R=1 pair
+  at separation d=3, the joint CTC region is one connected component
+  with TWO HOLES (stable across grid resolutions 41x21, 81x41,
+  121x61). Non-trivial 2D topology of the off-axis CTC.
+- `trace_anomaly_2d_sector(x, y)`: leading-order 2D-effective trace
+  anomaly at a 2D point.
+- `geodesic_completeness_test`: timelike test-particle escape from
+  multiple initial conditions. For the canonical separation=3 pair,
+  most starts hit integrator instabilities near F=0; one start at
+  (1.5, 2.0) enters CTC and escapes to r = 17080 in t = 30 (relativistic
+  amplification through the CTC band).
+
+Tests: 6 in `tests/test_off_axis_phase_3b.py`, all pass.
+Example: `examples/phase_3b_off_axis_topology.py` (54 s).
+
+### Suite total
+1350 passed, 2 skipped (was 1321).
+Emergents: 26 -> 28 (off-axis CTC has 2 holes; beam-steered L-node at machine zero).
+
 ## [0.20.0] - 2026-05-13
 
 ### Phase 2a — Renormalised stress-energy on a CTC background (quantitative chronology protection)
