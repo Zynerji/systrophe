@@ -1,0 +1,1261 @@
+{
+  "r_grid": [
+    1.4,
+    1.41,
+    1.42,
+    1.43,
+    1.44,
+    1.45,
+    1.46,
+    1.47,
+    1.48,
+    1.49,
+    1.5,
+    1.51,
+    1.52,
+    1.53,
+    1.54,
+    1.5499999999999998,
+    1.56,
+    1.5699999999999998,
+    1.58,
+    1.5899999999999999,
+    1.5999999999999999,
+    1.6099999999999999,
+    1.6199999999999999,
+    1.63,
+    1.64,
+    1.65,
+    1.66,
+    1.67,
+    1.68,
+    1.69,
+    1.7,
+    1.71,
+    1.72,
+    1.73,
+    1.74,
+    1.75,
+    1.76,
+    1.77,
+    1.78,
+    1.79,
+    1.8,
+    1.81,
+    1.82,
+    1.83,
+    1.8399999999999999,
+    1.85,
+    1.8599999999999999,
+    1.87,
+    1.88,
+    1.8900000000000001,
+    1.9,
+    1.9100000000000001,
+    1.92,
+    1.9300000000000002,
+    1.94,
+    1.9500000000000002,
+    1.96,
+    1.97,
+    1.98,
+    1.99,
+    2.0,
+    2.01,
+    2.02,
+    2.0300000000000002,
+    2.04,
+    2.05,
+    2.06,
+    2.0700000000000003,
+    2.08,
+    2.09,
+    2.1,
+    2.1100000000000003,
+    2.12,
+    2.13,
+    2.14,
+    2.15,
+    2.16,
+    2.17,
+    2.18,
+    2.19,
+    2.2,
+    2.21,
+    2.22,
+    2.23,
+    2.24,
+    2.25,
+    2.2600000000000002,
+    2.27,
+    2.2800000000000002,
+    2.29,
+    2.3,
+    2.31,
+    2.3200000000000003,
+    2.33,
+    2.34,
+    2.35,
+    2.3600000000000003,
+    2.37,
+    2.38,
+    2.39,
+    2.4000000000000004,
+    2.41,
+    2.42,
+    2.43,
+    2.4400000000000004,
+    2.45,
+    2.46,
+    2.47,
+    2.4800000000000004,
+    2.49,
+    2.5,
+    2.5100000000000002,
+    2.52,
+    2.5300000000000002,
+    2.54,
+    2.55,
+    2.56,
+    2.5700000000000003,
+    2.58,
+    2.59,
+    2.6
+  ],
+  "per_module": {
+    "one_loop_backreaction": {
+      "error": "cannot import name 'anomaly_radial_pattern' from 'systrophe.one_loop_backreaction' (C:\\Users\\cknop\\.local\\bin\\Systrophe\\src\\systrophe\\one_loop_backreaction.py)"
+    },
+    "tidal_forces": {
+      "verdict": "novel_structure",
+      "max_delta": 0.3333333432674408,
+      "max_at": 2.49,
+      "sharps": [
+        {
+          "r": 2.49,
+          "delta": 0.3333333432674408
+        }
+      ]
+    },
+    "aharonov_bohm": {
+      "verdict": "smooth",
+      "max_delta": 0.0,
+      "max_at": 1.42,
+      "sharps": []
+    },
+    "frame_dragging": {
+      "verdict": "smooth",
+      "max_delta": 0.0,
+      "max_at": 1.42,
+      "sharps": []
+    },
+    "cauchy_stability": {
+      "verdict": "smooth",
+      "max_delta": 0.0,
+      "max_at": 1.42,
+      "sharps": []
+    },
+    "unruh_effect": {
+      "verdict": "smooth",
+      "max_delta": 0.0,
+      "max_at": 1.42,
+      "sharps": []
+    },
+    "wormhole_throat": {
+      "verdict": "novel_structure",
+      "max_delta": 1.0,
+      "max_at": 1.8399999999999999,
+      "sharps": [
+        {
+          "r": 1.8399999999999999,
+          "delta": 1.0
+        }
+      ]
+    },
+    "kg_scattering": {
+      "verdict": "novel_structure",
+      "max_delta": 1.0,
+      "max_at": 1.54,
+      "sharps": [
+        {
+          "r": 1.54,
+          "delta": 1.0
+        },
+        {
+          "r": 1.5499999999999998,
+          "delta": 1.0
+        },
+        {
+          "r": 1.56,
+          "delta": 1.0
+        },
+        {
+          "r": 1.58,
+          "delta": 1.0
+        },
+        {
+          "r": 1.5899999999999999,
+          "delta": 0.5
+        },
+        {
+          "r": 1.5999999999999999,
+          "delta": 0.5
+        },
+        {
+          "r": 1.6099999999999999,
+          "delta": 1.0
+        },
+        {
+          "r": 1.6199999999999999,
+          "delta": 0.5
+        },
+        {
+          "r": 1.63,
+          "delta": 0.5
+        },
+        {
+          "r": 1.65,
+          "delta": 0.5
+        },
+        {
+          "r": 1.66,
+          "delta": 0.5
+        },
+        {
+          "r": 1.67,
+          "delta": 1.0
+        },
+        {
+          "r": 1.68,
+          "delta": 0.5
+        },
+        {
+          "r": 1.7,
+          "delta": 0.5
+        },
+        {
+          "r": 1.71,
+          "delta": 1.0
+        },
+        {
+          "r": 1.72,
+          "delta": 0.5
+        },
+        {
+          "r": 1.73,
+          "delta": 0.5
+        },
+        {
+          "r": 1.74,
+          "delta": 1.0
+        },
+        {
+          "r": 1.75,
+          "delta": 0.5
+        },
+        {
+          "r": 1.76,
+          "delta": 0.5
+        },
+        {
+          "r": 1.77,
+          "delta": 1.0
+        },
+        {
+          "r": 1.78,
+          "delta": 0.5
+        },
+        {
+          "r": 1.8,
+          "delta": 0.5
+        },
+        {
+          "r": 1.81,
+          "delta": 0.5
+        },
+        {
+          "r": 1.83,
+          "delta": 0.5
+        },
+        {
+          "r": 1.8399999999999999,
+          "delta": 1.0
+        },
+        {
+          "r": 1.85,
+          "delta": 0.5
+        },
+        {
+          "r": 1.8599999999999999,
+          "delta": 0.5
+        },
+        {
+          "r": 1.87,
+          "delta": 0.5
+        },
+        {
+          "r": 1.9,
+          "delta": 0.5
+        },
+        {
+          "r": 1.9100000000000001,
+          "delta": 0.5
+        },
+        {
+          "r": 1.9300000000000002,
+          "delta": 0.5
+        },
+        {
+          "r": 1.94,
+          "delta": 0.5
+        },
+        {
+          "r": 1.96,
+          "delta": 0.5
+        },
+        {
+          "r": 1.97,
+          "delta": 0.5
+        },
+        {
+          "r": 1.99,
+          "delta": 0.5
+        },
+        {
+          "r": 2.0,
+          "delta": 0.5
+        },
+        {
+          "r": 2.02,
+          "delta": 0.5
+        },
+        {
+          "r": 2.0300000000000002,
+          "delta": 0.5
+        },
+        {
+          "r": 2.05,
+          "delta": 0.5
+        },
+        {
+          "r": 2.06,
+          "delta": 0.5
+        },
+        {
+          "r": 2.09,
+          "delta": 0.5
+        },
+        {
+          "r": 2.1,
+          "delta": 0.5
+        },
+        {
+          "r": 2.12,
+          "delta": 0.5
+        },
+        {
+          "r": 2.13,
+          "delta": 0.5
+        }
+      ]
+    },
+    "lensing_image": {
+      "verdict": "novel_structure",
+      "max_delta": 0.3333333432674408,
+      "max_at": 1.8399999999999999,
+      "sharps": [
+        {
+          "r": 1.8399999999999999,
+          "delta": 0.3333333432674408
+        },
+        {
+          "r": 1.85,
+          "delta": 0.3333333432674408
+        }
+      ]
+    },
+    "acoustic_metric": {
+      "verdict": "novel_structure",
+      "max_delta": 0.40000003576278687,
+      "max_at": 1.8399999999999999,
+      "sharps": [
+        {
+          "r": 1.8399999999999999,
+          "delta": 0.40000003576278687
+        }
+      ]
+    },
+    "quantum_diagnostics": {
+      "verdict": "novel_structure",
+      "max_delta": 0.6666666865348816,
+      "max_at": 1.85,
+      "sharps": [
+        {
+          "r": 1.43,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.44,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.47,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.49,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.5,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.51,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.52,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.54,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.5699999999999998,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.58,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.5999999999999999,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.6099999999999999,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.6199999999999999,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.63,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.65,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.66,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.68,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.69,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.7,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.73,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.75,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.76,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.77,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.78,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.81,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.83,
+          "delta": 0.6666666269302368
+        },
+        {
+          "r": 1.8399999999999999,
+          "delta": 0.3333333134651184
+        },
+        {
+          "r": 1.85,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 1.8599999999999999,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 1.87,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 1.88,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 1.8900000000000001,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 1.9100000000000001,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 1.92,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 1.9300000000000002,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 1.96,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 1.98,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 1.99,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.0,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.01,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.0300000000000002,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.05,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.06,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.08,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.09,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.1100000000000003,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.13,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.17,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.19,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.21,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.22,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.23,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.24,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.25,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.27,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.2800000000000002,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.29,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.3,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.3200000000000003,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.33,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.34,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.3600000000000003,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.37,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.38,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.39,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.41,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.43,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.4400000000000004,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.45,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.4800000000000004,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.49,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.5,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.5100000000000002,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.54,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.56,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.58,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.59,
+          "delta": 0.6666666865348816
+        },
+        {
+          "r": 2.6,
+          "delta": 0.6666666865348816
+        }
+      ]
+    },
+    "berry_phase_lp": {
+      "verdict": "smooth",
+      "max_delta": 0.0,
+      "max_at": 1.42,
+      "sharps": []
+    },
+    "photon_orbits": {
+      "verdict": "novel_structure",
+      "max_delta": 0.3333333134651184,
+      "max_at": 2.49,
+      "sharps": [
+        {
+          "r": 2.49,
+          "delta": 0.3333333134651184
+        }
+      ]
+    },
+    "dirac_sea": {
+      "verdict": "novel_structure",
+      "max_delta": 0.5,
+      "max_at": 1.8399999999999999,
+      "sharps": [
+        {
+          "r": 1.8399999999999999,
+          "delta": 0.5
+        },
+        {
+          "r": 1.85,
+          "delta": 0.5
+        }
+      ]
+    },
+    "hadamard_offtrace": {
+      "verdict": "novel_structure",
+      "max_delta": 0.3333333134651184,
+      "max_at": 1.8399999999999999,
+      "sharps": [
+        {
+          "r": 1.8399999999999999,
+          "delta": 0.3333333134651184
+        }
+      ]
+    },
+    "spinor_monodromy": {
+      "verdict": "novel_structure",
+      "max_delta": 0.3333333432674408,
+      "max_at": 1.8399999999999999,
+      "sharps": [
+        {
+          "r": 1.8399999999999999,
+          "delta": 0.3333333432674408
+        }
+      ]
+    },
+    "stochastic_lp": {
+      "verdict": "novel_structure",
+      "max_delta": 1.0,
+      "max_at": 1.63,
+      "sharps": [
+        {
+          "r": 1.63,
+          "delta": 1.0
+        },
+        {
+          "r": 2.49,
+          "delta": 0.5
+        }
+      ]
+    },
+    "qftcs_backreaction": {
+      "verdict": "smooth",
+      "max_delta": 0.0,
+      "max_at": 1.42,
+      "sharps": []
+    },
+    "casimir_polder": {
+      "verdict": "novel_structure",
+      "max_delta": 0.25,
+      "max_at": 1.8399999999999999,
+      "sharps": [
+        {
+          "r": 1.8399999999999999,
+          "delta": 0.25
+        }
+      ]
+    },
+    "qi_channel": {
+      "verdict": "novel_structure",
+      "max_delta": 0.5,
+      "max_at": 1.8399999999999999,
+      "sharps": [
+        {
+          "r": 1.8399999999999999,
+          "delta": 0.5
+        },
+        {
+          "r": 1.85,
+          "delta": 0.5
+        }
+      ]
+    },
+    "vacuum_states": {
+      "verdict": "novel_structure",
+      "max_delta": 0.3333333432674408,
+      "max_at": 2.49,
+      "sharps": [
+        {
+          "r": 2.49,
+          "delta": 0.3333333432674408
+        }
+      ]
+    },
+    "solitons_on_lp": {
+      "verdict": "novel_structure",
+      "max_delta": 0.3333333134651184,
+      "max_at": 1.81,
+      "sharps": [
+        {
+          "r": 1.81,
+          "delta": 0.3333333134651184
+        },
+        {
+          "r": 1.82,
+          "delta": 0.3333333134651184
+        },
+        {
+          "r": 1.83,
+          "delta": 0.3333333134651184
+        },
+        {
+          "r": 1.8399999999999999,
+          "delta": 0.3333333134651184
+        },
+        {
+          "r": 1.98,
+          "delta": 0.3333333134651184
+        },
+        {
+          "r": 1.99,
+          "delta": 0.3333333134651184
+        },
+        {
+          "r": 2.0,
+          "delta": 0.3333333134651184
+        },
+        {
+          "r": 2.01,
+          "delta": 0.3333333134651184
+        },
+        {
+          "r": 2.2,
+          "delta": 0.3333333134651184
+        },
+        {
+          "r": 2.21,
+          "delta": 0.3333333134651184
+        }
+      ]
+    }
+  },
+  "bin_centers": [
+    1.4,
+    1.42,
+    1.44,
+    1.46,
+    1.48,
+    1.5,
+    1.52,
+    1.54,
+    1.56,
+    1.58,
+    1.6,
+    1.62,
+    1.6400000000000001,
+    1.6600000000000001,
+    1.6800000000000002,
+    1.7000000000000002,
+    1.7200000000000002,
+    1.7400000000000002,
+    1.7600000000000002,
+    1.7800000000000002,
+    1.8000000000000003,
+    1.8200000000000003,
+    1.8400000000000003,
+    1.8600000000000003,
+    1.8800000000000003,
+    1.9000000000000004,
+    1.9200000000000004,
+    1.9400000000000004,
+    1.9600000000000004,
+    1.9800000000000004,
+    2.0000000000000004,
+    2.0200000000000005,
+    2.0400000000000005,
+    2.0600000000000005,
+    2.0800000000000005,
+    2.1000000000000005,
+    2.1200000000000006,
+    2.1400000000000006,
+    2.1600000000000006,
+    2.1800000000000006,
+    2.2000000000000006,
+    2.2200000000000006,
+    2.2400000000000007,
+    2.2600000000000007,
+    2.2800000000000007,
+    2.3000000000000007,
+    2.3200000000000007,
+    2.3400000000000007,
+    2.3600000000000008,
+    2.380000000000001,
+    2.400000000000001,
+    2.420000000000001,
+    2.440000000000001,
+    2.460000000000001,
+    2.480000000000001,
+    2.500000000000001,
+    2.520000000000001,
+    2.540000000000001,
+    2.560000000000001,
+    2.580000000000001,
+    2.600000000000001
+  ],
+  "hist": [
+    0.0,
+    0.0,
+    2.0,
+    0.0,
+    1.0,
+    2.0,
+    2.0,
+    3.0,
+    2.0,
+    3.0,
+    4.0,
+    5.0,
+    2.0,
+    2.0,
+    3.0,
+    3.0,
+    2.0,
+    3.0,
+    4.0,
+    4.0,
+    1.0,
+    4.0,
+    14.0,
+    7.0,
+    3.0,
+    2.0,
+    3.0,
+    3.0,
+    2.0,
+    3.0,
+    8.0,
+    1.0,
+    4.0,
+    2.0,
+    3.0,
+    1.0,
+    4.0,
+    0.0,
+    1.0,
+    0.0,
+    4.0,
+    1.0,
+    2.0,
+    1.0,
+    2.0,
+    2.0,
+    1.0,
+    2.0,
+    1.0,
+    2.0,
+    1.0,
+    1.0,
+    2.0,
+    1.0,
+    1.0,
+    6.0,
+    1.0,
+    1.0,
+    1.0,
+    2.0,
+    1.0
+  ],
+  "modules_per_bin": [
+    [],
+    [],
+    [
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [],
+    [
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "kg_scattering",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "kg_scattering",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "kg_scattering",
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "kg_scattering",
+      "quantum_diagnostics",
+      "quantum_diagnostics",
+      "stochastic_lp"
+    ],
+    [
+      "kg_scattering",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "kg_scattering",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "kg_scattering"
+    ],
+    [
+      "kg_scattering",
+      "kg_scattering",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "kg_scattering",
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "kg_scattering",
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering"
+    ],
+    [
+      "kg_scattering",
+      "quantum_diagnostics",
+      "solitons_on_lp",
+      "solitons_on_lp"
+    ],
+    [
+      "wormhole_throat",
+      "kg_scattering",
+      "kg_scattering",
+      "lensing_image",
+      "acoustic_metric",
+      "quantum_diagnostics",
+      "quantum_diagnostics",
+      "dirac_sea",
+      "hadamard_offtrace",
+      "spinor_monodromy",
+      "casimir_polder",
+      "qi_channel",
+      "solitons_on_lp",
+      "solitons_on_lp"
+    ],
+    [
+      "kg_scattering",
+      "kg_scattering",
+      "lensing_image",
+      "quantum_diagnostics",
+      "quantum_diagnostics",
+      "dirac_sea",
+      "qi_channel"
+    ],
+    [
+      "kg_scattering",
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "kg_scattering",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "quantum_diagnostics",
+      "solitons_on_lp"
+    ],
+    [
+      "kg_scattering",
+      "kg_scattering",
+      "quantum_diagnostics",
+      "quantum_diagnostics",
+      "quantum_diagnostics",
+      "solitons_on_lp",
+      "solitons_on_lp",
+      "solitons_on_lp"
+    ],
+    [
+      "kg_scattering"
+    ],
+    [
+      "kg_scattering",
+      "kg_scattering",
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering",
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [
+      "kg_scattering"
+    ],
+    [
+      "kg_scattering",
+      "kg_scattering",
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [],
+    [
+      "quantum_diagnostics"
+    ],
+    [],
+    [
+      "quantum_diagnostics",
+      "quantum_diagnostics",
+      "solitons_on_lp",
+      "solitons_on_lp"
+    ],
+    [
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics"
+    ],
+    [
+      "tidal_forces",
+      "quantum_diagnostics",
+      "quantum_diagnostics",
+      "photon_orbits",
+      "stochastic_lp",
+      "vacuum_states"
+    ],
+    [
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics",
+      "quantum_diagnostics"
+    ],
+    [
+      "quantum_diagnostics"
+    ]
+  ]
+}
