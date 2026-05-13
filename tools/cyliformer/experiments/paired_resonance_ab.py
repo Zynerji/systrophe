@@ -40,7 +40,7 @@ from cyliformer.resonance_adapter import (
     augment_with_adapter,
     matched_mlp_adapter,
 )
-from cyliformer.ssm_adapter import SelectiveSSMAdapter
+from cyliformer.ssm_adapter import SelectiveSSMAdapter, is_ssm_sensitive_param
 
 
 def count_adapter_params(adapter: torch.nn.Module) -> int:
@@ -126,10 +126,28 @@ def train_arm(model, tok, args, log_prefix: str = "") -> dict:
     print(f"{log_prefix} corpus: {len(blocks)} blocks of {args.seq_len + 1}")
 
     device = next(model.parameters()).device
-    trainable = [p for p in model.parameters() if p.requires_grad]
-    n_train = sum(p.numel() for p in trainable)
-    print(f"{log_prefix} trainable params: {n_train:,}")
-    optim = torch.optim.AdamW(trainable, lr=args.lr, weight_decay=0.0)
+    # Split trainable params into a sensitive group (small LR) and the
+    # rest. The sensitive group currently captures log_A from the SSM
+    # adapter (Mamba's gradient-amplifying parameter); other adapter
+    # types have no entries here so this becomes a no-op for them.
+    sensitive = []
+    standard = []
+    for name, p in model.named_parameters():
+        if not p.requires_grad:
+            continue
+        if is_ssm_sensitive_param(name):
+            sensitive.append(p)
+        else:
+            standard.append(p)
+    n_train = sum(p.numel() for p in standard) + sum(p.numel() for p in sensitive)
+    print(f"{log_prefix} trainable params: {n_train:,}  "
+          f"(standard {sum(p.numel() for p in standard):,}, "
+          f"sensitive {sum(p.numel() for p in sensitive):,})")
+    param_groups = [{"params": standard, "lr": args.lr}]
+    if sensitive:
+        param_groups.append({"params": sensitive, "lr": args.lr_sensitive})
+        print(f"{log_prefix} sensitive param group (e.g. log_A) lr = {args.lr_sensitive}")
+    optim = torch.optim.AdamW(param_groups, lr=args.lr, weight_decay=0.0)
 
     model.train()
     log = []
@@ -191,6 +209,9 @@ def main():
     parser.add_argument("--max_steps", type=int, default=150)
     parser.add_argument("--grad_accum", type=int, default=4)
     parser.add_argument("--lr", type=float, default=2e-4)
+    parser.add_argument("--lr_sensitive", type=float, default=1e-5,
+                          help="LR for gradient-sensitive params (SSM log_A). "
+                          "10-50x smaller than --lr is Mamba's recipe.")
     parser.add_argument("--corpus_chars", type=int, default=200_000)
     parser.add_argument("--r", type=int, default=32,
                           help="ResonanceAdapter bottleneck width")

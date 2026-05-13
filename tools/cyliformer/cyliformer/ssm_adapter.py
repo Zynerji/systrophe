@@ -120,25 +120,21 @@ class SelectiveSSMAdapter(nn.Module):
         # A spans a reasonable range of timescales (Mamba uses HiPPO init;
         # we use a simpler log-spaced fallback).
         #
-        # FROZEN by default. Reason: in the 7B + LoRA setting we
-        # observed gradient explosion through the cumulative product
-        # of A_bar = exp(Δ*A) over T=512 timesteps; even modest LoRA
-        # learning rates (2e-4) drive log_A NaN within 25 optimizer
-        # steps. Mamba's official kernels train log_A with a much
-        # smaller LR and a custom init, neither of which we replicate
-        # here. Freezing log_A leaves the *selective* part of the SSM
-        # (input-dependent Δ, B, C) trainable -- the part Dianoia's
-        # FINDINGS specifically pointed to.
+        # `log_A` is trainable but the training script is expected to
+        # put it in a SEPARATE optimizer group with a much smaller
+        # learning rate (Mamba's recipe). Reason: gradient through
+        # the cumulative product `prod_t exp(Δ_t * A)` over T=512
+        # timesteps amplifies any LR update, and at 7B + LoRA we
+        # observed log_A NaN within 25 steps at lr=2e-4. A 10-50x
+        # smaller LR for log_A stabilises training while keeping the
+        # SSM's `A` adaptive. See `ssm_sensitive_param_names` below.
         log_A_init = torch.linspace(
             math.log(0.1), math.log(1.0), state_dim,
         )
-        self.log_A = nn.Parameter(log_A_init, requires_grad=False)
+        self.log_A = nn.Parameter(log_A_init)
 
-        # Skip-connection scalar D (Mamba's D term).
-        # Also frozen by default for the same gradient-stability reason
-        # (D's gradient is unconditioned by the recurrence so it's less
-        # explosive, but easier to keep the policy uniform).
-        self.D = nn.Parameter(torch.zeros(state_dim), requires_grad=False)
+        # Skip-connection scalar D (Mamba's D term). Trainable, normal LR.
+        self.D = nn.Parameter(torch.zeros(state_dim))
 
         # Back-projection: near zero at init -> adapter is identity at start
         self.out_proj = nn.Linear(state_dim, d_model)
@@ -213,3 +209,19 @@ class SelectiveSSMAdapter(nn.Module):
 
 def count_params(m: nn.Module) -> int:
     return sum(int(p.numel()) for p in m.parameters())
+
+
+# Substring matchers for parameters that should be in a small-LR group.
+# At Mamba scale + 7B + LoRA, `log_A` is the gradient amplifier (cumulative
+# product of A_bar across T=512 timesteps). Putting it in its own group
+# with LR ~10-50x smaller than the main LR stabilises training.
+SSM_SENSITIVE_PARAM_NAME_TOKENS = ("log_A",)
+
+
+def is_ssm_sensitive_param(name: str) -> bool:
+    """True if this parameter should go in the small-LR group.
+
+    Match by name substring so it works after PEFT renames the model
+    (peft prepends 'base_model.model.' to parameter names).
+    """
+    return any(token in name for token in SSM_SENSITIVE_PARAM_NAME_TOKENS)
