@@ -1,5 +1,13 @@
 torch>=2.0
 numpy>=1.24
 scipy>=1.11
+# Required for the Qwen2.5-7B A/B benchmark (experiments/*.py):
+#   transformers>=4.46
+#   peft>=0.13
+#   datasets>=2.20
+#   accelerate>=1.0
+#   safetensors
+# Install with `pip install -r requirements.txt -r requirements-ab.txt`
+# (see requirements-ab.txt).
 # systrophe is imported from the parent repo's src/; for a standalone
 # install of just this tool, add: systrophe>=0.21
