@@ -119,13 +119,26 @@ class SelectiveSSMAdapter(nn.Module):
         # Static negative diagonal A: A_i = -softplus(log_A_i). Init so
         # A spans a reasonable range of timescales (Mamba uses HiPPO init;
         # we use a simpler log-spaced fallback).
+        #
+        # FROZEN by default. Reason: in the 7B + LoRA setting we
+        # observed gradient explosion through the cumulative product
+        # of A_bar = exp(Δ*A) over T=512 timesteps; even modest LoRA
+        # learning rates (2e-4) drive log_A NaN within 25 optimizer
+        # steps. Mamba's official kernels train log_A with a much
+        # smaller LR and a custom init, neither of which we replicate
+        # here. Freezing log_A leaves the *selective* part of the SSM
+        # (input-dependent Δ, B, C) trainable -- the part Dianoia's
+        # FINDINGS specifically pointed to.
         log_A_init = torch.linspace(
             math.log(0.1), math.log(1.0), state_dim,
         )
-        self.log_A = nn.Parameter(log_A_init)
+        self.log_A = nn.Parameter(log_A_init, requires_grad=False)
 
-        # Skip-connection scalar D (Mamba's D term)
-        self.D = nn.Parameter(torch.zeros(state_dim))
+        # Skip-connection scalar D (Mamba's D term).
+        # Also frozen by default for the same gradient-stability reason
+        # (D's gradient is unconditioned by the recurrence so it's less
+        # explosive, but easier to keep the policy uniform).
+        self.D = nn.Parameter(torch.zeros(state_dim), requires_grad=False)
 
         # Back-projection: near zero at init -> adapter is identity at start
         self.out_proj = nn.Linear(state_dim, d_model)
