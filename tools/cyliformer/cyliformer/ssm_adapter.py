@@ -143,34 +143,41 @@ class SelectiveSSMAdapter(nn.Module):
             return F.softplus(self.dt_up(self.dt_low(x)))
 
     def forward(self, h: torch.Tensor) -> torch.Tensor:
-        """h: (B, T, d_model). Returns same shape."""
-        # 1. Project to bottleneck.
+        """h: (B, T, d_model). Returns same shape.
+
+        The SSM scan is done in fp32 internally for numerical stability;
+        the input and output dtypes are preserved (BF16 in -> BF16 out).
+        Sequential recurrence + BF16 + gradient checkpointing was found
+        to produce NaN gradients within 25 LoRA steps; promoting the
+        scan to fp32 stabilises it. The cost is roughly 2x activation
+        memory for the scan -- still small at state_dim=32.
+        """
+        in_dtype = h.dtype
+        # 1. Project to bottleneck (in whatever dtype the model uses).
         x = self.up_proj(h)                       # (B, T, state_dim)
-        bs, T, sd = x.shape
 
-        # 2. Input-dependent Δ, B, C. Clamp Δ to a BF16-safe upper bound
-        # so even an out-of-distribution input cannot produce exp(Δ * A)
-        # values that underflow to 0 or overflow.
-        delta = self._delta(x)                    # (B, T, state_dim) > 0
+        # 2. Promote SSM internals to fp32 for numerical stability.
+        x_f = x.float()
+        bs, T, sd = x_f.shape
+
+        # 3. Input-dependent Δ, B, C. Clamp Δ <= 10 to prevent runaway
+        # under out-of-distribution input.
+        delta = self._delta(x).float()            # (B, T, state_dim) > 0
         delta = torch.clamp(delta, max=10.0)
-        B = self.B_proj(x)                        # (B, T, state_dim)
-        C = self.C_proj(x)                        # (B, T, state_dim)
+        B = self.B_proj(x).float()                # (B, T, state_dim)
+        C = self.C_proj(x).float()                # (B, T, state_dim)
 
-        # 3. Discretise A: A_bar = exp(Δ * A_diag), diagonal so element-wise.
-        # A is negative (= -softplus(log_A)), so Δ*A is negative and
-        # exp is bounded in (0, 1]. We add an explicit clamp on the
-        # exponent argument to avoid BF16 underflow corner cases that
-        # were observed in the v5 first run (NaN at zero-shot due to
-        # delta * A being too negative under default Linear init).
-        A = -F.softplus(self.log_A)               # (state_dim,) negative
+        # 4. Discretise A: A_bar = exp(Δ * A_diag).
+        # A < 0 -> Δ*A <= 0 -> exp(Δ*A) in (0, 1].
+        A = -F.softplus(self.log_A).float()       # (state_dim,) negative
         exponent = delta * A.unsqueeze(0).unsqueeze(0)
         exponent = torch.clamp(exponent, min=-30.0, max=0.0)
         A_bar = torch.exp(exponent)               # (B, T, sd), in (0, 1]
         # Discretised B: B_bar = Δ * B (zero-order hold simplification)
-        B_bar_x = delta * B * x                   # (B, T, sd); element-wise
+        B_bar_x = delta * B * x_f                 # (B, T, sd); element-wise
 
-        # 4. Sequential scan: state[t] = A_bar[t] * state[t-1] + B_bar_x[t]
-        state = torch.zeros(bs, sd, device=x.device, dtype=x.dtype)
+        # 5. Sequential scan in fp32: state[t] = A_bar[t] * state[t-1] + B_bar_x[t]
+        state = torch.zeros(bs, sd, device=x_f.device, dtype=torch.float32)
         ys = []
         for t in range(T):
             state = A_bar[:, t, :] * state + B_bar_x[:, t, :]
@@ -178,8 +185,9 @@ class SelectiveSSMAdapter(nn.Module):
             ys.append(y_t)
         y = torch.stack(ys, dim=1)               # (B, T, sd)
 
-        # 5. Add D skip and project back
-        y = y + self.D.unsqueeze(0).unsqueeze(0) * x
+        # 6. Add D skip (in fp32), cast back to model dtype, project to d_model.
+        y = y + self.D.float().unsqueeze(0).unsqueeze(0) * x_f
+        y = y.to(in_dtype)
         delta_h = self.out_proj(y)               # (B, T, d_model)
 
         # Diagnostics
