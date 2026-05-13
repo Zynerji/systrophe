@@ -139,6 +139,7 @@ def train_arm(model, tok, args, log_prefix: str = "") -> dict:
             sensitive.append(p)
         else:
             standard.append(p)
+    trainable = standard + sensitive   # used below for clip_grad_norm
     n_train = sum(p.numel() for p in standard) + sum(p.numel() for p in sensitive)
     print(f"{log_prefix} trainable params: {n_train:,}  "
           f"(standard {sum(p.numel() for p in standard):,}, "
