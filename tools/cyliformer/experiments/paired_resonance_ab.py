@@ -40,6 +40,7 @@ from cyliformer.resonance_adapter import (
     augment_with_adapter,
     matched_mlp_adapter,
 )
+from cyliformer.ssm_adapter import SelectiveSSMAdapter
 
 
 def count_adapter_params(adapter: torch.nn.Module) -> int:
@@ -77,6 +78,12 @@ def make_arm_model(arm: str, base_id: str, dtype, device_map,
         summary = augment_with_adapter(model, factory, every=every)
         summary["adapter"] = "mlp"
         summary["target_params_per_block"] = int(target)
+    elif arm == "ssm_adapter":
+        d_model = model.config.hidden_size
+        def factory(_i):
+            return SelectiveSSMAdapter(d_model=d_model, state_dim=r)
+        summary = augment_with_adapter(model, factory, every=every)
+        summary["adapter"] = "ssm"
     else:
         raise ValueError(f"unknown arm: {arm}")
 
@@ -180,7 +187,7 @@ def main():
                           help="Insert adapter every Nth layer")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--arms", type=str,
-                          default="baseline,mlp_adapter,resonance_adapter",
+                          default="baseline,mlp_adapter,resonance_adapter,ssm_adapter",
                           help="Comma-separated arms to run")
     parser.add_argument("--out", type=str, default="/tmp/paired_resonance_ab.json")
     args = parser.parse_args()

@@ -37,6 +37,7 @@ from .resonance_adapter import (
     augment_with_adapter,
     matched_mlp_adapter,
 )
+from .ssm_adapter import SelectiveSSMAdapter
 
 __all__ = [
     "CylinderBlock",
@@ -48,6 +49,7 @@ __all__ = [
     "ResonanceAdapter",
     "matched_mlp_adapter",
     "augment_with_adapter",
+    "SelectiveSSMAdapter",
 ]
 
 __version__ = "0.1.0"
