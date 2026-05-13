@@ -1,0 +1,46 @@
+{
+  "args": {
+    "base": "Qwen/Qwen2.5-7B-Instruct",
+    "dtype": "bfloat16",
+    "device_map": "auto",
+    "seq_len": 512,
+    "gen_new": 32,
+    "max_eval_blocks": 4,
+    "prompt": "Explain the second law of thermodynamics in three sentences.",
+    "lora_r": 8,
+    "lora_alpha": 16,
+    "max_steps": 300,
+    "grad_accum": 4,
+    "lr": 0.0002,
+    "corpus_chars": 200000,
+    "seed": 0,
+    "out": "/root/Systrophe/results_baseline_lora_300.json"
+  },
+  "pre_lora_perplexity": {
+    "loss": 2.19140625,
+    "perplexity": 8.947787097150577,
+    "n_blocks": 4,
+    "n_tokens": 2048
+  },
+  "post_lora_perplexity": {
+    "loss": 2.083984375,
+    "perplexity": 8.036425341044335,
+    "n_blocks": 4,
+    "n_tokens": 2048
+  },
+  "vram": {
+    "peak_vram_bytes": 15831815168,
+    "peak_vram_gb": 14.744526863098145,
+    "seq_len": 512
+  },
+  "throughput": {
+    "tokens_generated": 32,
+    "elapsed_seconds": 0.3994603157043457,
+    "tokens_per_second": 80.10808268545078
+  },
+  "training": {
+    "elapsed_seconds": 32.26416277885437,
+    "final_loss": 1.1796875,
+    "n_steps": 300
+  }
+}

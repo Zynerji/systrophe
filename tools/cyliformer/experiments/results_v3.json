@@ -1,0 +1,877 @@
+{
+  "args": {
+    "base": "Qwen/Qwen2.5-7B-Instruct",
+    "n_cylinders": 2,
+    "lambda_target": 0.05,
+    "lambda_weight": 0.0,
+    "phasor_diversity_weight": 0.0,
+    "dtype": "bfloat16",
+    "device_map": "auto",
+    "seq_len": 512,
+    "gen_new": 32,
+    "max_eval_blocks": 4,
+    "catcher_max_nodes": 64,
+    "prompt": "Explain the second law of thermodynamics in three sentences.",
+    "lora_r": 8,
+    "lora_alpha": 16,
+    "max_steps": 300,
+    "grad_accum": 4,
+    "lr": 0.0002,
+    "corpus_chars": 200000,
+    "seed": 0,
+    "out": "/root/Systrophe/results_v3.json"
+  },
+  "conversion": {
+    "n_layers_converted": 28,
+    "n_layers_total": 28,
+    "converted_layer_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27
+    ],
+    "new_params_added": 3212244,
+    "n_cylinders": 2,
+    "lambda_target": 0.05
+  },
+  "baseline": {
+    "label": "BASELINE Qwen2.5-7B",
+    "perplexity": {
+      "loss": 2.19140625,
+      "perplexity": 8.947787097150577,
+      "n_blocks": 4,
+      "n_tokens": 2048
+    },
+    "vram": {
+      "peak_vram_bytes": 15454060544,
+      "peak_vram_gb": 14.392715454101562,
+      "seq_len": 512
+    },
+    "throughput": {
+      "tokens_generated": 32,
+      "elapsed_seconds": 0.36238932609558105,
+      "tokens_per_second": 88.30282156699042
+    },
+    "diagnostics": {
+      "available": false,
+      "reason": "no CylinderFFN found"
+    }
+  },
+  "cyliformer_zero_shot": {
+    "label": "CYLIFORMER zero-shot (n=2)",
+    "perplexity": {
+      "loss": 2.19140625,
+      "perplexity": 8.947787097150577,
+      "n_blocks": 4,
+      "n_tokens": 2048
+    },
+    "vram": {
+      "peak_vram_bytes": 15460526080,
+      "peak_vram_gb": 14.398736953735352,
+      "seq_len": 512
+    },
+    "throughput": {
+      "tokens_generated": 32,
+      "elapsed_seconds": 0.7802376747131348,
+      "tokens_per_second": 41.013143862561165
+    },
+    "diagnostics": {
+      "available": true,
+      "n_converted_layers": 28,
+      "lambda_2_mean": 0.0,
+      "lambda_2_std": 0.0,
+      "backreaction_mean": 0.0,
+      "backreaction_std": 0.0,
+      "beam_gain_mean": 0.9998604910714286,
+      "per_layer": [
+        {
+          "layer": 0,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 1,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 2,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 3,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 4,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 5,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 6,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 7,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 8,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 9,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 10,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 11,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 12,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 13,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 14,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 15,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 0.99609375
+        },
+        {
+          "layer": 16,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 17,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 18,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 19,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 20,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 21,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 22,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 23,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 24,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 25,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 26,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 27,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        }
+      ]
+    }
+  },
+  "cyliformer_lora": {
+    "label": "CYLIFORMER + LoRA r=8",
+    "perplexity": {
+      "loss": 2.072265625,
+      "perplexity": 7.942798149877931,
+      "n_blocks": 4,
+      "n_tokens": 2048
+    },
+    "vram": {
+      "peak_vram_bytes": 15851736064,
+      "peak_vram_gb": 14.763079643249512,
+      "seq_len": 512
+    },
+    "throughput": {
+      "tokens_generated": 32,
+      "elapsed_seconds": 0.8640167713165283,
+      "tokens_per_second": 37.03631811595583
+    },
+    "diagnostics": {
+      "available": true,
+      "n_converted_layers": 28,
+      "lambda_2_mean": 0.0,
+      "lambda_2_std": 0.0,
+      "backreaction_mean": 0.0,
+      "backreaction_std": 0.0,
+      "beam_gain_mean": 0.9998604910714286,
+      "per_layer": [
+        {
+          "layer": 0,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 1,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 2,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 3,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 4,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 5,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 6,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 7,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 8,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 9,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 10,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 11,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 12,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 13,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 14,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 15,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 0.99609375
+        },
+        {
+          "layer": 16,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 17,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 18,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 19,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 20,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 21,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 22,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 23,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 24,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 25,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 26,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        },
+        {
+          "layer": 27,
+          "n_cylinders": 2,
+          "lambda_2_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "backreaction_per_cylinder": [
+            0.0,
+            0.0
+          ],
+          "beam_gain": 1.0
+        }
+      ]
+    }
+  },
+  "training": {
+    "elapsed_seconds": 76.8016505241394,
+    "final_loss": 1.1796875,
+    "n_steps": 300
+  }
+}

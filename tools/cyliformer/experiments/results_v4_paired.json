@@ -1,0 +1,235 @@
+{
+  "args": {
+    "base": "Qwen/Qwen2.5-7B-Instruct",
+    "dtype": "bfloat16",
+    "device_map": "auto",
+    "seq_len": 512,
+    "gen_new": 32,
+    "max_eval_blocks": 4,
+    "prompt": "Explain the second law of thermodynamics in three sentences.",
+    "lora_r": 8,
+    "lora_alpha": 16,
+    "max_steps": 150,
+    "grad_accum": 4,
+    "lr": 0.0002,
+    "corpus_chars": 200000,
+    "r": 32,
+    "every": 1,
+    "seed": 0,
+    "arms": "baseline,mlp_adapter,resonance_adapter",
+    "out": "/root/Systrophe/results_v4_paired.json"
+  },
+  "arms": {
+    "baseline": {
+      "summary": {
+        "adapter": "none",
+        "added_params": 0
+      },
+      "pre": {
+        "perplexity": {
+          "loss": 2.19140625,
+          "perplexity": 8.947787097150577,
+          "n_blocks": 4,
+          "n_tokens": 2048
+        },
+        "vram": {
+          "peak_vram_bytes": 15454060544,
+          "peak_vram_gb": 14.392715454101562,
+          "seq_len": 512
+        },
+        "throughput": {
+          "tokens_generated": 32,
+          "elapsed_seconds": 0.36208009719848633,
+          "tokens_per_second": 88.37823522362271
+        }
+      },
+      "post": {
+        "perplexity": {
+          "loss": 1.955078125,
+          "perplexity": 7.064470913932868,
+          "n_blocks": 4,
+          "n_tokens": 2048
+        },
+        "vram": {
+          "peak_vram_bytes": 15608725504,
+          "peak_vram_gb": 14.536758422851562,
+          "seq_len": 512
+        },
+        "throughput": {
+          "tokens_generated": 32,
+          "elapsed_seconds": 0.3987884521484375,
+          "tokens_per_second": 80.24304572412474
+        }
+      },
+      "training": {
+        "elapsed_seconds": 15.777246236801147,
+        "final_loss": 1.7421875,
+        "n_steps": 150,
+        "n_trainable": 15138816
+      }
+    },
+    "mlp_adapter": {
+      "summary": {
+        "layers_attr": "model.layers",
+        "inserted_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27
+        ],
+        "n_inserted": 28,
+        "n_layers_total": 28,
+        "added_params": 6523776,
+        "adapter": "mlp",
+        "target_params_per_block": 234050
+      },
+      "pre": {
+        "perplexity": {
+          "loss": 2.193359375,
+          "perplexity": 8.965280321490647,
+          "n_blocks": 4,
+          "n_tokens": 2048
+        },
+        "vram": {
+          "peak_vram_bytes": 15500675072,
+          "peak_vram_gb": 14.436128616333008,
+          "seq_len": 512
+        },
+        "throughput": {
+          "tokens_generated": 32,
+          "elapsed_seconds": 0.3704657554626465,
+          "tokens_per_second": 86.37775429482716
+        }
+      },
+      "post": {
+        "perplexity": {
+          "loss": 1.95703125,
+          "perplexity": 7.07828219187227,
+          "n_blocks": 4,
+          "n_tokens": 2048
+        },
+        "vram": {
+          "peak_vram_bytes": 15634845696,
+          "peak_vram_gb": 14.561084747314453,
+          "seq_len": 512
+        },
+        "throughput": {
+          "tokens_generated": 32,
+          "elapsed_seconds": 0.4077882766723633,
+          "tokens_per_second": 78.47209405117435
+        }
+      },
+      "training": {
+        "elapsed_seconds": 16.063140153884888,
+        "final_loss": 1.7109375,
+        "n_steps": 150,
+        "n_trainable": 21662592
+      }
+    },
+    "resonance_adapter": {
+      "summary": {
+        "layers_attr": "model.layers",
+        "inserted_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27
+        ],
+        "n_inserted": 28,
+        "n_layers_total": 28,
+        "added_params": 6553400,
+        "adapter": "resonance"
+      },
+      "pre": {
+        "perplexity": {
+          "loss": 2.1953125,
+          "perplexity": 8.982807745671918,
+          "n_blocks": 4,
+          "n_tokens": 2048
+        },
+        "vram": {
+          "peak_vram_bytes": 15500775424,
+          "peak_vram_gb": 14.436222076416016,
+          "seq_len": 512
+        },
+        "throughput": {
+          "tokens_generated": 32,
+          "elapsed_seconds": 0.47971200942993164,
+          "tokens_per_second": 66.70668936978954
+        }
+      },
+      "post": {
+        "perplexity": {
+          "loss": 1.958984375,
+          "perplexity": 7.092120471323977,
+          "n_blocks": 4,
+          "n_tokens": 2048
+        },
+        "vram": {
+          "peak_vram_bytes": 15648006144,
+          "peak_vram_gb": 14.573341369628906,
+          "seq_len": 512
+        },
+        "throughput": {
+          "tokens_generated": 32,
+          "elapsed_seconds": 0.5587050914764404,
+          "tokens_per_second": 57.27529691099903
+        }
+      },
+      "training": {
+        "elapsed_seconds": 19.215877771377563,
+        "final_loss": 1.7109375,
+        "n_steps": 150,
+        "n_trainable": 23312184
+      }
+    }
+  }
+}
