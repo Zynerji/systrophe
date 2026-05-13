@@ -79,24 +79,42 @@ class SelectiveSSMAdapter(nn.Module):
         self.d_model = int(d_model)
         self.state_dim = int(state_dim)
 
-        # Bottleneck up-projection
+        # Bottleneck up-projection. SMALL init so the bottleneck activation
+        # x = up_proj(h) stays in a bounded BF16-safe range even when the
+        # surrounding residual stream is large (Qwen2.5-7B post-block
+        # residuals can be on the order of ±50 in BF16).
         self.up_proj = nn.Linear(d_model, state_dim)
+        nn.init.normal_(self.up_proj.weight, mean=0.0, std=0.02 / math.sqrt(d_model))
+        nn.init.zeros_(self.up_proj.bias)
 
-        # Δ_t = softplus(dt_proj(x_t)); input-dependent step size
+        # Δ_t = softplus(dt_proj(x_t)); input-dependent step size.
+        # Default nn.Linear init gives weights ~ ±sqrt(1/state_dim) which,
+        # combined with a bottleneck activation of magnitude O(1), would
+        # produce Δ on the order of softplus(state_dim * weight * x) which
+        # is unbounded. We init dt_proj with tiny weights and a small
+        # bias so Δ ≈ softplus(delta_bias_init) at construction.
         if dt_rank is None:
             self.dt_proj = nn.Linear(state_dim, state_dim)
+            nn.init.normal_(self.dt_proj.weight, mean=0.0, std=0.01)
+            nn.init.constant_(self.dt_proj.bias, float(delta_bias_init))
         else:
             self.dt_rank = int(dt_rank)
             self.dt_low = nn.Linear(state_dim, dt_rank)
             self.dt_up = nn.Linear(dt_rank, state_dim)
             self.dt_proj = None  # marker
-        # Push Δ to a positive bias so the recurrence is non-trivial at init
-        if self.dt_proj is not None:
-            nn.init.constant_(self.dt_proj.bias, float(delta_bias_init))
+            nn.init.normal_(self.dt_low.weight, mean=0.0, std=0.01)
+            nn.init.normal_(self.dt_up.weight, mean=0.0, std=0.01)
+            nn.init.zeros_(self.dt_low.bias)
+            nn.init.constant_(self.dt_up.bias, float(delta_bias_init))
 
-        # Input-dependent B and C projections
+        # Input-dependent B and C projections. Small init for the same
+        # reason: keep state magnitude bounded at construction.
         self.B_proj = nn.Linear(state_dim, state_dim)
         self.C_proj = nn.Linear(state_dim, state_dim)
+        nn.init.normal_(self.B_proj.weight, mean=0.0, std=0.05)
+        nn.init.zeros_(self.B_proj.bias)
+        nn.init.normal_(self.C_proj.weight, mean=0.0, std=0.05)
+        nn.init.zeros_(self.C_proj.bias)
 
         # Static negative diagonal A: A_i = -softplus(log_A_i). Init so
         # A spans a reasonable range of timescales (Mamba uses HiPPO init;
@@ -130,14 +148,24 @@ class SelectiveSSMAdapter(nn.Module):
         x = self.up_proj(h)                       # (B, T, state_dim)
         bs, T, sd = x.shape
 
-        # 2. Input-dependent Δ, B, C
+        # 2. Input-dependent Δ, B, C. Clamp Δ to a BF16-safe upper bound
+        # so even an out-of-distribution input cannot produce exp(Δ * A)
+        # values that underflow to 0 or overflow.
         delta = self._delta(x)                    # (B, T, state_dim) > 0
+        delta = torch.clamp(delta, max=10.0)
         B = self.B_proj(x)                        # (B, T, state_dim)
         C = self.C_proj(x)                        # (B, T, state_dim)
 
         # 3. Discretise A: A_bar = exp(Δ * A_diag), diagonal so element-wise.
+        # A is negative (= -softplus(log_A)), so Δ*A is negative and
+        # exp is bounded in (0, 1]. We add an explicit clamp on the
+        # exponent argument to avoid BF16 underflow corner cases that
+        # were observed in the v5 first run (NaN at zero-shot due to
+        # delta * A being too negative under default Linear init).
         A = -F.softplus(self.log_A)               # (state_dim,) negative
-        A_bar = torch.exp(delta * A.unsqueeze(0).unsqueeze(0))   # (B, T, sd)
+        exponent = delta * A.unsqueeze(0).unsqueeze(0)
+        exponent = torch.clamp(exponent, min=-30.0, max=0.0)
+        A_bar = torch.exp(exponent)               # (B, T, sd), in (0, 1]
         # Discretised B: B_bar = Δ * B (zero-order hold simplification)
         B_bar_x = delta * B * x                   # (B, T, sd); element-wise
 
