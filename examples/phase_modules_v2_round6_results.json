@@ -1,0 +1,302 @@
+[
+  {
+    "module": "casimir_throat",
+    "consensus": "novel_structure",
+    "consensus_max": 0.5,
+    "consensus_param": 1.05,
+    "consensus_sharps": [
+      {
+        "p": 1.05,
+        "z": 12.808590005745424,
+        "frac": 0.5
+      },
+      {
+        "p": 1.1862068965517243,
+        "z": 7.592375111512995,
+        "frac": 0.5
+      },
+      {
+        "p": 1.3224137931034483,
+        "z": 4.667667509327316,
+        "frac": 0.5
+      }
+    ],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 1.3224137931034483,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "casimir_polder",
+    "consensus": "novel_structure",
+    "consensus_max": 0.6,
+    "consensus_param": 1.05,
+    "consensus_sharps": [
+      {
+        "p": 1.05,
+        "z": 53.059941535027214,
+        "frac": 0.6
+      },
+      {
+        "p": 1.1862068965517243,
+        "z": 22.009220171549323,
+        "frac": 0.6
+      },
+      {
+        "p": 1.3224137931034483,
+        "z": 10.43169920486356,
+        "frac": 0.6
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.25,
+    "anomaly_param": 2.003448275862069,
+    "anomaly_sharps": [
+      {
+        "p": 2.003448275862069,
+        "delta": 0.25,
+        "before": 0.5,
+        "after": 0.25
+      }
+    ]
+  },
+  {
+    "module": "dirac_sea",
+    "consensus": "novel_structure",
+    "consensus_max": 0.6666666666666666,
+    "consensus_param": 1.4586206896551723,
+    "consensus_sharps": [
+      {
+        "p": 1.4586206896551723,
+        "z": NaN,
+        "frac": 0.6666666666666666
+      },
+      {
+        "p": 1.5948275862068966,
+        "z": NaN,
+        "frac": 0.6666666666666666
+      },
+      {
+        "p": 1.7310344827586208,
+        "z": NaN,
+        "frac": 0.6666666666666666
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.5,
+    "anomaly_param": 1.8672413793103448,
+    "anomaly_sharps": [
+      {
+        "p": 1.8672413793103448,
+        "delta": 0.5,
+        "before": 0.5,
+        "after": 0.0
+      },
+      {
+        "p": 2.003448275862069,
+        "delta": 0.5,
+        "before": 0.0,
+        "after": -0.5
+      }
+    ]
+  },
+  {
+    "module": "dm_scalar_coupling",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 1.05,
+    "consensus_sharps": [],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 1.3791666666666667,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "hadamard_offtrace",
+    "consensus": "novel_structure",
+    "consensus_max": 0.5,
+    "consensus_param": 1.05,
+    "consensus_sharps": [
+      {
+        "p": 1.05,
+        "z": NaN,
+        "frac": 0.5
+      },
+      {
+        "p": 1.2145833333333333,
+        "z": NaN,
+        "frac": 0.5
+      },
+      {
+        "p": 1.3791666666666667,
+        "z": NaN,
+        "frac": 0.5
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.3333333134651184,
+    "anomaly_param": 1.8729166666666668,
+    "anomaly_sharps": [
+      {
+        "p": 1.8729166666666668,
+        "delta": 0.3333333134651184,
+        "before": 0.5,
+        "after": 0.1666666865348816
+      }
+    ]
+  },
+  {
+    "module": "point_splitting",
+    "consensus": "novel_structure",
+    "consensus_max": 1.0,
+    "consensus_param": 1.05,
+    "consensus_sharps": [
+      {
+        "p": 1.05,
+        "z": 12.97727795336425,
+        "frac": 1.0
+      },
+      {
+        "p": 1.2145833333333333,
+        "z": 6.937870484934493,
+        "frac": 1.0
+      },
+      {
+        "p": 1.3791666666666667,
+        "z": 3.893053230070961,
+        "frac": 0.75
+      }
+    ],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 1.3791666666666667,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "spinor_monodromy",
+    "consensus": "novel_structure",
+    "consensus_max": 0.75,
+    "consensus_param": 1.5437500000000002,
+    "consensus_sharps": [
+      {
+        "p": 1.05,
+        "z": 43.61541311517649,
+        "frac": 0.5
+      },
+      {
+        "p": 1.2145833333333333,
+        "z": 20.431273706076265,
+        "frac": 0.5
+      },
+      {
+        "p": 1.5437500000000002,
+        "z": 20909213543774.45,
+        "frac": 0.75
+      }
+    ],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.3333333432674408,
+    "anomaly_param": 2.0375,
+    "anomaly_sharps": [
+      {
+        "p": 2.0375,
+        "delta": 0.3333333432674408,
+        "before": 0.1666666865348816,
+        "after": -0.1666666567325592
+      },
+      {
+        "p": 4.341666666666667,
+        "delta": 0.3333333432674408,
+        "before": -0.1666666567325592,
+        "after": 0.1666666865348816
+      }
+    ]
+  },
+  {
+    "module": "stochastic_lp",
+    "consensus": "smooth",
+    "consensus_max": 0.25,
+    "consensus_param": 1.05,
+    "consensus_sharps": [],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.3333333432674408,
+    "anomaly_param": 1.5437500000000002,
+    "anomaly_sharps": [
+      {
+        "p": 1.5437500000000002,
+        "delta": 0.3333333432674408,
+        "before": 0.1666666865348816,
+        "after": -0.1666666567325592
+      },
+      {
+        "p": 1.8729166666666668,
+        "delta": 0.3333333432674408,
+        "before": -0.1666666567325592,
+        "after": 0.1666666865348816
+      },
+      {
+        "p": 2.6958333333333333,
+        "delta": 0.3333333432674408,
+        "before": 0.1666666865348816,
+        "after": -0.1666666567325592
+      }
+    ]
+  },
+  {
+    "module": "qftcs_backreaction",
+    "consensus": "novel_structure",
+    "consensus_max": 1.0,
+    "consensus_param": 1.5948275862068966,
+    "consensus_sharps": [
+      {
+        "p": 1.5948275862068966,
+        "z": 3.494602479793848,
+        "frac": 1.0
+      },
+      {
+        "p": 1.7310344827586208,
+        "z": 19.496396424584262,
+        "frac": 1.0
+      },
+      {
+        "p": 1.8672413793103448,
+        "z": 135.00435818377773,
+        "frac": 1.0
+      }
+    ],
+    "anomaly": "smooth",
+    "anomaly_max": 0.0,
+    "anomaly_param": 1.3224137931034483,
+    "anomaly_sharps": []
+  },
+  {
+    "module": "synchrotron_analog",
+    "consensus": "smooth",
+    "consensus_max": 0.0,
+    "consensus_param": 1.05,
+    "consensus_sharps": [],
+    "anomaly": "novel_structure",
+    "anomaly_max": 0.75,
+    "anomaly_param": 2.820689655172414,
+    "anomaly_sharps": [
+      {
+        "p": 2.820689655172414,
+        "delta": 0.75,
+        "before": 0.5,
+        "after": -0.25
+      },
+      {
+        "p": 3.36551724137931,
+        "delta": 0.25,
+        "before": -0.25,
+        "after": -0.5
+      },
+      {
+        "p": 3.501724137931034,
+        "delta": 0.5,
+        "before": -0.5,
+        "after": 0.0
+      }
+    ]
+  }
+]
