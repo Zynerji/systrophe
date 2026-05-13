@@ -1,0 +1,5 @@
+torch>=2.0
+numpy>=1.24
+scipy>=1.11
+# systrophe is imported from the parent repo's src/; for a standalone
+# install of just this tool, add: systrophe>=0.21

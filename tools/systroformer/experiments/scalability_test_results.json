@@ -1,0 +1,47 @@
+{
+  "tool": "systroformer",
+  "task": "scalability_test",
+  "rows": [
+    {
+      "batch_size": 1,
+      "seq_len": 8,
+      "nodes_in_graph": 8,
+      "t_with_catcher_s": 0.004335959752400716,
+      "t_lambda_zero_s": 0.0043335755666097,
+      "overhead_factor": 1.0005501659667333
+    },
+    {
+      "batch_size": 2,
+      "seq_len": 16,
+      "nodes_in_graph": 32,
+      "t_with_catcher_s": 0.013666152954101562,
+      "t_lambda_zero_s": 0.014331579208374023,
+      "overhead_factor": 0.9535692302573572
+    },
+    {
+      "batch_size": 2,
+      "seq_len": 32,
+      "nodes_in_graph": 64,
+      "t_with_catcher_s": 0.03866807619730631,
+      "t_lambda_zero_s": 0.03899701436360677,
+      "overhead_factor": 0.9915650423072533
+    },
+    {
+      "batch_size": 4,
+      "seq_len": 32,
+      "nodes_in_graph": 128,
+      "t_with_catcher_s": 0.13299973805745444,
+      "t_lambda_zero_s": 0.12366684277852376,
+      "overhead_factor": 1.075468048421395
+    },
+    {
+      "batch_size": 4,
+      "seq_len": 64,
+      "nodes_in_graph": 256,
+      "t_with_catcher_s": 0.4683357874552409,
+      "t_lambda_zero_s": 0.46033501625061035,
+      "overhead_factor": 1.017380322856593
+    }
+  ],
+  "note": "t_lambda_zero still computes the graph but zeros the modulation; for a true catcher-off baseline, replace SystroformerBlock with a vanilla TransformerEncoderLayer."
+}

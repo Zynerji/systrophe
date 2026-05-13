@@ -8,15 +8,16 @@
 [![PyPI](https://img.shields.io/pypi/v/systrophe.svg)](https://pypi.org/project/systrophe/)
 [![Python ≥ 3.10](https://img.shields.io/badge/python-%E2%89%A5%203.10-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 1321 passing](https://img.shields.io/badge/tests-1321%20passing-brightgreen.svg)](#tests)
+[![Tests: 1350 passing](https://img.shields.io/badge/tests-1350%20passing-brightgreen.svg)](#tests)
 [![Papers: 13](https://img.shields.io/badge/papers-13%20PDFs-informational.svg)](#papers)
 [![IBM Quantum: 7 batches](https://img.shields.io/badge/IBM%20Quantum-7%20batches-purple.svg)](#ibm-marrakesh-hardware-validation)
 [![Knopp Drive: live](https://img.shields.io/badge/Knopp%20Drive-live-red.svg)](#the-knopp-drive-headline-composite-warp-engineering-bound)
 [![Millennium: 4/7 + Goldbach](https://img.shields.io/badge/Millennium-4%2F7%20%2B%20Goldbach-orange.svg)](FINDINGS_MILLENNIUM_PROGRESS.md)
-[![Emergents: 26](https://img.shields.io/badge/catcher%20emergents-26-yellow.svg)](paper/knopp_drive.pdf)
+[![Emergents: 28](https://img.shields.io/badge/catcher%20emergents-28-yellow.svg)](paper/knopp_drive.pdf)
 [![Cross-chip: 1.94σ](https://img.shields.io/badge/cross--chip-1.94%CF%83%20RMS-purple.svg)](experiments/knopp_cross_chip_comparison.py)
-[![Version 0.20.0](https://img.shields.io/badge/version-0.20.0-blue.svg)](pyproject.toml)
-[![Phase 2a: CP consistent](https://img.shields.io/badge/Phase%202a-CP%20consistent-success.svg)](FINDINGS_PHASE2A.md)
+[![Version 0.21.0](https://img.shields.io/badge/version-0.21.0-blue.svg)](pyproject.toml)
+[![Phases 2a, 2b, 3a, 3b: shipped](https://img.shields.io/badge/Phases%202a%E2%80%933b-shipped-success.svg)](ROADMAP.md)
+[![Derived tools: 1](https://img.shields.io/badge/derived%20tools-Systroformer-blueviolet.svg)](tools/)
 [![QEC: d=9 break-even](https://img.shields.io/badge/QEC-d%3D9%20%2B38.7%CF%83-darkgreen.svg)](paper/surface_code_multidistance_break_even.pdf)
 
 *Systrophē* (Greek **Συστροφή**, "twisting-together"): the joint exterior of two co-rotating, dual-positive-mass van Stockum dust cylinders, whose log-periodic Tipler sinusoids superpose with a tunable relative phase offset.
@@ -38,6 +39,29 @@ The five canonical layers:
 5. **IBM Marrakesh hardware validation** — 4 batches on the IBM Quantum `ibm_marrakesh` 156-qubit Heron-r2 device, demonstrating KK escape interference cancellation at the supercritical threshold, Page-curve recovery from the LP cover, and a log-periodic LP quantum walk with phase-by-phase α recovery to <1% relative error at the theoretical α_LP = √3.
 
 Every phase module ships with a **mandatory novelty catcher** (address-space λ₂ on the Hamming graph of bit-hashed distributions) that flags surprises before any "validated" / "null" verdict is issued.
+
+## Repository structure: core + derived tools
+
+The repo is split into a small **core framework** (`src/systrophe/`)
+and a collection of **derived tools** (`tools/`) that build on it:
+
+```
+.
+├── src/systrophe/      <- core framework (numpy + scipy only)
+├── tests/              <- framework tests
+├── examples/           <- framework reproducibility scripts
+├── paper/              <- whitepapers (PDF + LaTeX)
+├── experiments/        <- IBM Quantum hardware experiments
+└── tools/              <- derived tools that import systrophe
+    └── systroformer/   <- transformer block with λ₂-modulated FFN
+```
+
+The core stays minimal so `pip install systrophe` pulls only numpy +
+scipy. Each derived tool has its own `requirements.txt` and lives in
+its own subdirectory. See [`tools/README.md`](tools/README.md) for the
+layout convention; the first inhabitant is
+[`tools/systroformer/`](tools/systroformer/) (catcher-modulated
+transformer for LLM-architecture research).
 
 ---
 
