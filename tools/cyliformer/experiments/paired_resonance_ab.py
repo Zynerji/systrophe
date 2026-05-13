@@ -98,6 +98,14 @@ def train_arm(model, tok, args, log_prefix: str = "") -> dict:
     # All-trainable: adapter params + LoRA over gate/up/down
     # (PEFT injects LoRA in place; we mark the adapter modules as
     # trainable via a name-pattern after PEFT freezes everything.)
+    #
+    # Snapshot which params were trainable BEFORE PEFT freezes them so we
+    # can respect any module-level requires_grad=False decisions (e.g.
+    # the SSM adapter freezes log_A and D explicitly to avoid the
+    # cumulative-product gradient explosion observed at 7B + LoRA).
+    pre_lora_trainable = {
+        name for name, p in model.named_parameters() if p.requires_grad
+    }
     model = setup_lora(model, lora_r=args.lora_r, lora_alpha=args.lora_alpha)
     n_set = 0
     for name, p in model.named_parameters():
@@ -105,8 +113,11 @@ def train_arm(model, tok, args, log_prefix: str = "") -> dict:
             ".adapter.",
             "gate_alpha", "gate_target",  # ResonanceAdapter gate scalars
         )):
-            p.requires_grad = True
-            n_set += 1
+            # Strip PEFT name prefix (peft prepends "base_model.model.")
+            stripped = name.replace("base_model.model.", "")
+            if stripped in pre_lora_trainable:
+                p.requires_grad = True
+                n_set += 1
     print(f"{log_prefix} marked {n_set} adapter tensors trainable")
     model.print_trainable_parameters()
 
