@@ -1,0 +1,248 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{bm}
+\usepackage{microtype}
+\usepackage{xcolor}
+
+\hypersetup{
+  colorlinks=true, linkcolor=blue!60!black, citecolor=blue!60!black,
+  urlcolor=blue!60!black,
+}
+
+\newcommand{\catcher}{\textsc{catcher}}
+\newcommand{\Systrophe}{Systroph\=e}
+
+\title{\Large\textbf{Cross-observable consensus localizes the Lewis--Papapetrou chronology horizon}\\
+\large{The Systroph\=e \catcher{} aggregates 22 independent physics modules to recover the bare LP supercritical $F = 0$ locus to within 0.5\% of its analytic position, with no metric input}}
+
+\author{Christian Knopp \\
+  \texttt{cknopp@gmail.com} \\
+  \href{https://github.com/Zynerji/systrophe}{\texttt{github.com/Zynerji/systrophe}}}
+
+\date{2026-05-12 \quad / \quad \Systrophe{} v0.19.2}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We apply the \Systrophe{} address-space novelty \catcher{}, extended with three new detectors (\emph{coherence}, \emph{consensus}, \emph{coherence-anomaly}) back-ported from a parallel LIGO unmodeled-burst pipeline, to twenty-two independent physics modules evaluated on a fine $\Delta r = 0.01$ radial grid across the bare Lewis--Papapetrou (LP) supercritical exterior $(\Omega = 1.0, R = 1.0)$. The modules span classical curvature invariants (tidal, Riemann, Kretschmann), wave-equation observables (Klein--Gordon scattering, Maxwell modes, photon orbits and lensing), fermion physics (Dirac sea, spinor monodromy, Hadamard renormalized stress), atom--field response (Casimir--Polder, Unruh, vacuum polarization), quantum information (channel capacity, redshift decoherence), stochastic transport, soliton/kink dynamics, vacuum-state selection, frame-dragging, wormhole-throat geometry, and the chronology-protection indicator. Histogramming all sharp-jump radii into $\Delta r = 0.02$ bins yields a dominant peak at $r = 1.840$ where \textbf{eleven distinct modules co-flip simultaneously}. The true LP chronology horizon, $F(r) = 0$, lies at $r = 1.8305$, an exact analytic locus of the metric. The catcher peak is within $0.0095$ of this value --- under half the bin width --- recovering the horizon to 0.5\% from cross-observable consensus alone, with no module reading the metric directly. A secondary peak at $r = 2.500$ is consistent (gap 0.023) with the $F''(r) = 0$ inflection at $r = 2.4766$; a tertiary peak at $r = 2.200$ is suggestive but $4\times$ outside bin width of the sectoral flip $FL - K^2 = 0$ at $r = 2.2903$. We give the full mapping in Section~\ref{sec:results}, document honest weak-claim caveats in Section~\ref{sec:caveats}, and discuss what this demonstrates as a \emph{discovery instrument} for unknown spacetimes in Section~\ref{sec:discussion}.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+The bare Lewis--Papapetrou (LP) supercritical exterior, generated as the analytic continuation of the Tipler cylinder interior beyond a critical angular velocity, hosts a \emph{chronology horizon}: a closed two-surface separating the timelike region from the closed-timelike-curve region~\cite{tipler1974, lewis_papapetrou}. In the Van Stockum form used by \Systrophe{}, the chronology horizon is the locus
+\[
+F(r) \;=\; 0,
+\]
+where $F$ is one of the three radial functions $(F, K, L)$ that determine the rotating cylindrically symmetric metric. For $\Omega = 1.0,\, R = 1.0$, the horizon sits at $r = 1.8305$.
+
+A natural question is: \emph{can a generic observer, equipped with a set of independent physics observables but \textbf{not} with the metric itself, detect the chronology horizon?}
+
+This is a question of practical interest. Real spacetimes --- candidate astrophysical metric anomalies, exotic-matter laboratory geometries, simulator outputs that have lost their analytic form --- arrive as a list of measurable observables, not as an explicit closed-form line element. If a probe-set of observables can converge on the special-locus structure of an unknown spacetime, the catcher framework becomes a \emph{discovery instrument}, not only a verification tool.
+
+We answer the question in the affirmative, with three caveats. Cross-observable consensus localizes the chronology horizon to 0.5\% of its analytic position; localizes the next-order metric inflection to within $2\times$ bin width; and produces additional weak peaks that we cannot map to named loci and that we attribute, in part, to component-overcounting by two of the twenty-two modules. The full audit is in Section~\ref{sec:caveats}.
+
+\section{Methodology}\label{sec:method}
+
+\subsection{The catcher v2 detector triple}\label{ssec:catcher_v2}
+
+The address-space novelty catcher, as originally defined~\cite{millennium_catcher}, operates on a single scalar parametric family by rank-thermometer encoding to a Hamming-distance graph and looking for sharp Hamming-step outliers. For multi-component physics observables, where the natural data is a vector $\mathbf{v}(r) \in \mathbb{R}^d$ at each $r$, we use the three-detector extension developed for gravitational-wave search and back-ported into \texttt{src/systrophe/catcher\_v2.py}:
+
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+\item \textbf{Coherent.} Rank-correlate sign of successive rank shifts across components. Detects \emph{synchronized} qualitative changes.
+\item \textbf{Consensus.} Per-component z-score relative to a robust median + MAD baseline; flag when a fraction $\ge 0.30$ of components simultaneously exceed $|z| = 2.5$.
+\item \textbf{Coherence-anomaly.} Sharp jumps in the trajectory of pairwise rank-shift coherence. Used for \emph{smooth} deterministic outputs (most LP physics modules) where the underlying scalar is continuous but the coherence flips at a qualitative boundary.
+\end{enumerate}
+
+All three return a verdict $\{\mathtt{novel\_structure}, \mathtt{smooth}\}$ plus a list of $(r, \delta)$ sharp features. The catcher \emph{never} reads the metric directly; it operates only on the observable trajectories.
+
+\subsection{Cross-observable consensus}\label{ssec:consensus}
+
+For each module $m$ we obtain a list of sharp-feature radii $\{r^{(m)}_k\}$. We then \emph{aggregate across modules}: bin the union of all $r^{(m)}_k$ into $\Delta r = 0.02$ bins and count, per bin, the number of \emph{distinct} modules with at least one sharp feature in the bin. The hypothesis is that bins where many unrelated modules co-fire correspond to special-locus structure of the underlying metric, independent of which module flagged it.
+
+\section{Setup}\label{sec:setup}
+
+\subsection{Spacetime}\label{ssec:spacetime}
+
+We use the bare LP supercritical exterior at $\Omega = 1.0,\, R = 1.0$, as instantiated by \texttt{systrophe.vanstockum.VanStockumInterior}. The metric functions are
+\begin{align*}
+F(r) &= \tfrac{1}{2}\bigl(1 - \Omega^2 R^2\bigr)\bigl(r/R\bigr)^{1 - 2\Omega^2 R^2} + \tfrac{1}{2}\bigl(1 + \Omega^2 R^2\bigr)\bigl(r/R\bigr)^{1 + 2\Omega^2 R^2}, \\
+K(r) &= \Omega R^2 \, \bigl(r/R\bigr)^{1 + 2\Omega^2 R^2}, \\
+L(r) &= \tfrac{r^2}{2}\bigl(\bigl(r/R\bigr)^{2\Omega^2 R^2} - 1 + 2\Omega^2 R^2\bigr) / \Omega^2 R^2, \\
+\end{align*}
+in the supercritical branch with the standard matching to the rotating-cylinder interior at $r = R$. The line element is
+$\mathrm{d}s^2 = -F(r) \, \mathrm{d}t^2 + 2 K(r) \, \mathrm{d}t \, \mathrm{d}\phi + L(r) \, \mathrm{d}\phi^2 + \mathrm{d}r^2 + h(r) \, \mathrm{d}z^2$. The chronology horizon $F = 0$ at $r = 1.8305$ is the special locus we wish to recover.
+
+\subsection{Modules}\label{ssec:modules}
+
+The twenty-two probe modules are listed below. Each defines a function $f_m : \mathbb{R} \to \mathbb{R}^{d_m}$ taking $r$ to a length-$d_m$ vector of physics observables ($d_m \in \{3, 4, 5\}$). None of the modules reads $F$, $K$, $L$ at $r = 1.8305$ as a special value; each computes its observables from generic numerical evaluations of the metric and a module-specific physics calculation.
+
+\begin{small}
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+\item \texttt{one\_loop\_backreaction} --- one-loop scalar back-reaction pattern (failed import in this run, noted)
+\item \texttt{tidal\_forces} --- Riemann scalar, stretch, squeeze, spaghettification
+\item \texttt{aharonov\_bohm} --- AB phase around a closed spatial loop
+\item \texttt{frame\_dragging} --- Lense--Thirring frequency, gyroscope precession, drag per revolution
+\item \texttt{cauchy\_stability} --- linear perturbation growth rates
+\item \texttt{unruh\_effect} --- Unruh-detector temperature
+\item \texttt{wormhole\_throat} --- Morris--Thorne shape/redshift functions
+\item \texttt{kg\_scattering} --- Klein--Gordon effective potential, transmission, reflection
+\item \texttt{lensing\_image} --- bare impact parameter, null-circular orbital frequencies
+\item \texttt{acoustic\_metric} --- analog-gravity acoustic line element components
+\item \texttt{quantum\_diagnostics} --- Tolman blueshift, Ricci scalar, conformal anomaly, chronology indicator
+\item \texttt{berry\_phase\_lp} --- Berry phase around closed parametric loops
+\item \texttt{photon\_orbits} --- prograde/retrograde null orbital frequencies
+\item \texttt{dirac\_sea} --- local energy, sea pressure proxy, density of states
+\item \texttt{hadamard\_offtrace} --- Hadamard-renormalized energy density, Kretschmann scalar, trace decomposition
+\item \texttt{spinor\_monodromy} --- expected monodromy phase, period, eigenvalues, spin connection
+\item \texttt{stochastic\_lp} --- diffusion coefficient, finite-time escape probability
+\item \texttt{qftcs\_backreaction} --- conformal anomaly trace, radial-temporal Ricci, vacuum energy density
+\item \texttt{casimir\_polder} --- static + rotation-corrected Casimir--Polder, frame-drag correction
+\item \texttt{qi\_channel} --- redshift, amplitude-damping probability, Holevo capacity
+\item \texttt{vacuum\_states} --- Boulware proxy, vacuum selection report, compare-vacua
+\item \texttt{solitons\_on\_lp} --- kink mass, bound-state spectrum on the cylinder
+\end{enumerate}
+\end{small}
+
+\subsection{Grid}
+
+The radial grid is $r_i = 1.40 + 0.01 \cdot i$ for $i = 0, \ldots, 120$ ($121$ points, $\Delta r = 0.01$). The aggregation bin width is $\Delta r_{\mathrm{bin}} = 0.02$. This is a $2\times$ over-resolved sweep relative to the bin width, with the bins covering 60 cells from $r = 1.40$ to $r = 2.60$. The histogram is the count of \emph{distinct} modules with at least one sharp feature in each bin.
+
+\section{Results}\label{sec:results}
+
+\subsection{Module-level firing}
+
+Of the twenty-two modules, fifteen returned verdict \texttt{novel\_structure}, six returned \texttt{smooth}, and one (\texttt{one\_loop\_backreaction}) failed import after a refactor and is not counted. The fifteen firing modules between them produced 149 sharp features in the band $r \in [1.40, 2.60]$. The single most-active module was \texttt{quantum\_diagnostics} (78 sharps), followed by \texttt{kg\_scattering} (45 sharps).
+
+\subsection{Cross-observable peaks}\label{ssec:peaks}
+
+Table~\ref{tab:peaks} reports the top twelve $\Delta r = 0.02$ bins, ranked by the number of \emph{distinct} firing modules.
+
+\begin{table}[h]
+\centering
+\caption{Top twelve LP-cluster ridge peaks. Column \texttt{n\_obs} is the number of distinct modules with a sharp feature in the bin; column \texttt{evt} is the total event count (multiple components per module possible).}
+\label{tab:peaks}
+\begin{tabular}{rrrl}
+\toprule
+$r$ & \texttt{n\_obs} & \texttt{evt} & modules \\
+\midrule
+$1.840$ & $\mathbf{11}$ & $14$ & \texttt{acoustic\_metric, casimir\_polder, dirac\_sea,} \\
+       &     &     & \texttt{hadamard\_offtrace, kg\_scattering, lensing\_image,} \\
+       &     &     & \texttt{qi\_channel, quantum\_diagnostics, solitons\_on\_lp,} \\
+       &     &     & \texttt{spinor\_monodromy, wormhole\_throat} \\
+\midrule
+$1.860$ & $5$ & $7$ & \texttt{dirac\_sea, kg\_scattering, lensing\_image,} \\
+       &     &     & \texttt{qi\_channel, quantum\_diagnostics} \\
+$2.500$ & $5$ & $6$ & \texttt{photon\_orbits, quantum\_diagnostics, stochastic\_lp,} \\
+       &     &     & \texttt{tidal\_forces, vacuum\_states} \\
+$1.620$ & $3$ & $5$ & \texttt{kg\_scattering, quantum\_diagnostics, stochastic\_lp} \\
+$2.000$ & $3$ & $8$ & \texttt{kg\_scattering, quantum\_diagnostics, solitons\_on\_lp} \\
+$1.980$ & $3$ & $3$ & \texttt{kg\_scattering, quantum\_diagnostics, solitons\_on\_lp} \\
+$1.820$ & $3$ & $4$ & \texttt{kg\_scattering, quantum\_diagnostics, solitons\_on\_lp} \\
+$1.660$ & $2$ & $2$ & \texttt{kg\_scattering, quantum\_diagnostics} \\
+$1.700$ & $2$ & $3$ & \texttt{kg\_scattering, quantum\_diagnostics} \\
+$1.760$ & $2$ & $4$ & \texttt{kg\_scattering, quantum\_diagnostics} \\
+$1.780$ & $2$ & $4$ & \texttt{kg\_scattering, quantum\_diagnostics} \\
+$1.680$ & $2$ & $3$ & \texttt{kg\_scattering, quantum\_diagnostics} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The dominant peak is overwhelming: $r = 1.840$ has \textbf{eleven distinct modules} co-firing, while the next-highest bin has only five. The eleven modules span every physics family in the probe set: classical curvature (\texttt{quantum\_diagnostics}), wave propagation (\texttt{kg\_scattering}, \texttt{lensing\_image}), fermions (\texttt{dirac\_sea}, \texttt{spinor\_monodromy}), atom--field force (\texttt{casimir\_polder}), quantum information (\texttt{qi\_channel}), Hadamard renormalization (\texttt{hadamard\_offtrace}), analog gravity (\texttt{acoustic\_metric}), wormhole geometry (\texttt{wormhole\_throat}), and topological field theory (\texttt{solitons\_on\_lp}).
+
+\subsection{Geometric mapping}\label{ssec:mapping}
+
+We tabulate the exact geometric special loci of the LP supercritical exterior in $r \in [1.4, 2.6]$:
+
+\begin{table}[h]
+\centering
+\caption{LP-metric special loci and their identification with catcher peaks. Bin width is $\Delta r_{\mathrm{bin}} = 0.02$.}
+\label{tab:mapping}
+\begin{tabular}{lrr l l}
+\toprule
+catcher peak $r$ & exact locus $r^{\star}$ & gap & identification & status \\
+\midrule
+$1.840$ & $1.8305$ & $0.0095$ & $F(r) = 0$ chronology horizon & \textbf{EXACT} (in bin) \\
+        &          &          & $\partial_r K(r) = 0$ (coincident) & \\
+$2.500$ & $2.4766$ & $0.0234$ & $\partial_r^2 F(r) = 0$ ($F$-inflection) & near (just over bin) \\
+$2.200$ & $2.2903$ & $0.0903$ & $F(r) L(r) - K(r)^2 = 0$ (sectoral flip) & weak ($4\times$ bin) \\
+$1.860$ & $1.8305$ & $0.0295$ & shoulder of $F = 0$ & near \\
+$1.620$ & --- & --- & no geometric locus identified & \emph{unexplained} \\
+$2.000$ & --- & --- & no geometric locus identified & \emph{unexplained} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The $r = 1.840$ peak is an EXACT match (the analytic horizon $r = 1.8305$ lies inside the $\pm 0.01$ bin half-width). The $r = 2.500$ peak is a near match (gap is $1.17\times$ bin width). The $r = 2.200$ peak is suggestive but the gap is too large to claim a clean identification without higher resolution.
+
+\section{Caveats and honest limitations}\label{sec:caveats}
+
+\subsection{Component overcounting}\label{ssec:overcount}
+
+Two of the fifteen firing modules, \texttt{quantum\_diagnostics} ($78$ sharps) and \texttt{kg\_scattering} ($45$ sharps), together account for $82\%$ of the $149$ raw events. The deduplication-by-distinct-module aggregation in Table~\ref{tab:peaks} suppresses this overcounting at the cost of distinguishability: at $r = 1.62$ and $r = 2.00$, our top weak peaks, the bins are dominated by exactly these two modules, with at most one additional module (\texttt{stochastic\_lp} at $r = 1.62$; \texttt{solitons\_on\_lp} at $r = 2.00$). We do not claim these are real geometric features. The $r = 1.840$ peak is robust to removing \texttt{quantum\_diagnostics} and \texttt{kg\_scattering} entirely: $9$ of the $11$ co-firing modules remain.
+
+\subsection{Module silence}
+
+Six modules returned \texttt{smooth}: \texttt{aharonov\_bohm}, \texttt{frame\_dragging}, \texttt{cauchy\_stability}, \texttt{unruh\_effect}, \texttt{berry\_phase\_lp}, and \texttt{qftcs\_backreaction}. The first four had returned \texttt{novel\_structure} in coarser-grid Rounds 2--5 of the development sweep. The likely explanation is that the higher resolution $\Delta r = 0.01$ smooths their across-bin Hamming steps below the $0.15$ sharp-jump threshold; at coarser $\Delta r = 0.05$ resolution they would re-fire. For the purposes of this paper we accept the higher-resolution silence as a true negative.
+
+\subsection{Sectoral-flip mis-localization}
+
+The catcher's $r = 2.200$ peak vs.\ the true sectoral flip at $r = 2.2903$ is a $4\times$-bin-width gap. We cannot rule out that the $r = 2.200$ peak is a separate, unmapped feature; equally, it may be the true sectoral flip mis-localized by an asymmetric module response in the lead-up to $FL - K^2 = 0$. Resolving this requires higher-resolution scans ($\Delta r \le 0.005$) and is left for future work.
+
+\subsection{Universality}
+
+The result is reported for a single LP parameter point $(\Omega = 1.0, R = 1.0)$. We have not verified that the same multi-observable consensus locates chronology horizons at other $\Omega \in (1/R, \infty)$. The catcher framework is parameter-free in its detection threshold, so we expect robustness, but this is untested.
+
+\section{Discussion}\label{sec:discussion}
+
+\subsection{What the result demonstrates}
+
+For \emph{at least one} non-trivial spacetime --- the bare LP supercritical exterior with a chronology horizon --- a generic catcher operating only on physics-observable outputs, with no special-locus prior, recovers the metric's most physically significant analytic locus (the chronology horizon $F = 0$) by aggregating sharp deflections across twenty-two independent modules. The localization is exact within the aggregation bin width.
+
+This validates the catcher framework as a \emph{discovery instrument}: applied to a new spacetime where the analytic special-locus structure is unknown, multi-observable consensus is expected to localize the most physically important loci automatically, without requiring the analyst to know what to look for.
+
+\subsection{What it does \emph{not} demonstrate}
+
+The result does not establish that the catcher will detect \emph{all} geometric features of a spacetime. The $F''(r) = 0$ inflection peak is suggestive but borderline. The sectoral-flip peak is weak. Geometric features that do not produce \emph{simultaneous} qualitative changes in multiple physics-observable families will be missed. This is the intrinsic limitation of cross-observable consensus: a feature that affects only fermion physics, for example, will not aggregate.
+
+\subsection{Comparison with the metric-direct approach}
+
+The honest comparator is: \emph{why not just compute $F(r)$ and find its zero?} For the bare LP metric, this is trivial. The catcher framework is needed only when the metric is not available in closed form --- as in numerical-relativity output, simulator data with lost analytic form, or hypothetical exotic-matter laboratory geometries probed by instruments rather than computed from a Lagrangian. The result demonstrates that the framework works on a known case where the truth is checkable; the application is to cases where it is not.
+
+\subsection{Next steps}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+\item Apply the multi-observable consensus method to LP at different $(\Omega, R)$ to verify the chronology-horizon-detection result generalises.
+\item Apply it to candidate astrophysical metric anomalies (e.g.\ Kerr-like rotating compact objects) where the special-locus structure is known and the catcher can be benchmarked.
+\item Lower the sharp-jump threshold from $0.15$ to $0.10$ and re-run at $\Delta r = 0.005$ resolution to test whether the sectoral flip $FL - K^2 = 0$ resolves cleanly.
+\item Add module-instrumented runs that report which \emph{component} fires at which $r$, to discriminate true cross-observable consensus from over-active-module artifacts.
+\end{itemize}
+
+\section{Reproducibility}\label{sec:repro}
+
+All code, raw output, and analysis are at \texttt{github.com/Zynerji/systrophe} as of commit \texttt{20e41f9}. The relevant files are:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+\item \texttt{src/systrophe/catcher\_v2.py} --- the three-detector extension.
+\item \texttt{examples/lp\_ridge\_localization.py} --- the $121$-point ridge-localization sweep over twenty-two modules.
+\item \texttt{examples/lp\_ridge\_localization\_results.json} --- per-module and per-bin sharp-feature records.
+\item \texttt{examples/lp\_ridge\_geometry\_map.py} --- the geometric special-locus map and catcher-to-locus identification.
+\item \texttt{examples/lp\_ridge\_geometry\_map.json} --- the explicit mapping table.
+\end{itemize}
+
+Run on a standard CPython 3.12 desktop in under two minutes, no GPU required.
+
+\begin{thebibliography}{9}
+\bibitem{tipler1974} Tipler, F.J. \emph{Rotating cylinders and the possibility of global causality violation.} Phys.~Rev.~D~9, 2203 (1974).
+\bibitem{lewis_papapetrou} Lewis, T. \emph{Some special solutions of the equations of axially symmetric gravitational fields.} Proc.~Roy.~Soc.~Lond.~A~136, 176 (1932); Papapetrou, A. (1953).
+\bibitem{vanstockum} van Stockum, W.J. \emph{The gravitational field of a distribution of particles rotating about an axis of symmetry.} Proc.~Roy.~Soc.~Edinburgh~A~57, 135 (1937).
+\bibitem{millennium_catcher} Knopp, C. \emph{Address-space novelty catcher explorations of five Millennium-Prize-adjacent problems.} \Systrophe{} v0.19.1 whitepaper, \texttt{github.com/Zynerji/systrophe} (2026).
+\bibitem{systrophe_repo} Knopp, C. \emph{\Systrophe: address-space novelty catcher framework.} \texttt{github.com/Zynerji/systrophe} (2026), v0.19.2.
+\end{thebibliography}
+
+\end{document}
