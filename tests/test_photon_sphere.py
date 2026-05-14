@@ -120,12 +120,22 @@ def test_engineer_photon_sphere_via_mass_returns_M_or_none(vs):
 
 
 def test_engineered_M_actually_creates_sphere(vs):
-    """If we find an M, the resulting hybrid actually has a photon sphere there."""
-    r_target = 2.5
-    M = engineer_photon_sphere_via_mass(vs, r_target=r_target, M_range=(0.05, 2.0))
-    if M is None:
-        pytest.skip("No engineered solution found in range")
-    # Compute hybrid db/dr at r_target with this M; should be near 0
+    """If we find an M, the resulting hybrid actually has a photon sphere there.
+
+    The fixture's omega=1, R=1 admits engineered M solutions at small
+    r_target only -- at r_target=2.5 there is no Schwarzschild mass in
+    any reasonable range that creates a photon sphere there. Use
+    r_target=1.5 (M ~ 0.617 for this fixture) so the assertion fires
+    deterministically rather than skipping.
+    """
+    r_target = 1.5
+    M = engineer_photon_sphere_via_mass(vs, r_target=r_target, M_range=(0.01, 5.0))
+    assert M is not None, (
+        f"engineer_photon_sphere_via_mass found no solution for "
+        f"r_target={r_target} on the canonical vs fixture; "
+        f"this should be a stable property of the VS(omega=1, R=1) "
+        f"exterior + Tipler-Krasnikov-hybrid geometry."
+    )
     from systrophe.photon_sphere import _db_dr_hybrid
     d = _db_dr_hybrid(vs, r_target, M)
     assert abs(d) < 0.1
