@@ -48,23 +48,44 @@ from .vanstockum import VanStockumInterior
 def _ensure_dinos_import() -> None:
     """Verify the dinos package is importable.
 
-    Caller is responsible for having Dinos on sys.path (either pip-installed
-    or via PYTHONPATH). The optional environment variable SYSTROPHE_DINOS_PATH
-    is consulted as a fallback: if set, it is prepended to sys.path.
+    Resolution order:
+      1. If `dinos` is already importable on `sys.path` (e.g. pip-
+         installed or SYSTROPHE_DINOS_PATH set externally), use that.
+      2. Otherwise, add the vendored subset shipped in
+         `systrophe/_dinos_vendored/` to `sys.path` and use that. The
+         vendored copy contains only `kerr_corrections` +
+         `mobius_z3_cover` -- the subset the bridge unit tests exercise.
+         Bridge functions that need the full Dinos surface (e.g.
+         `evolve_mobius_temporal_loop`, which depends on `temporal_loop`
+         + `closure` + `casimir` + `geodesic` + `constants`) will fail
+         with a clear ImportError pointing the user at the upstream
+         dinos-DKN repo.
+      3. If even the vendored fallback fails, raise an ImportError
+         (this would indicate the systrophe install itself is broken).
     """
     import os
+    import pathlib
 
     extra = os.environ.get("SYSTROPHE_DINOS_PATH")
     if extra and extra not in sys.path:
         sys.path.insert(0, extra)
     try:
         import dinos  # noqa: F401
-    except ImportError as e:
+        return
+    except ImportError:
+        pass
+
+    # Fall back to the vendored subset
+    vendored_dir = str(pathlib.Path(__file__).parent / "_dinos_vendored")
+    if vendored_dir not in sys.path:
+        sys.path.insert(0, vendored_dir)
+    try:
+        import dinos  # noqa: F401
+    except ImportError as e:  # pragma: no cover
         raise ImportError(
-            "Dinos-DKN is required for the Systrophe bridge module. Install "
-            "via `pip install dinos-dkn` (when available) or set the "
-            "SYSTROPHE_DINOS_PATH environment variable to the directory "
-            f"containing the dinos package. Underlying error: {e}"
+            "Dinos-DKN bridge fallback failed: neither the upstream "
+            "`dinos` package nor the vendored subset at "
+            f"{vendored_dir} could be imported. Underlying error: {e}"
         )
 
 
