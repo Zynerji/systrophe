@@ -33,23 +33,50 @@ class FundedAddressSet:
     def __init__(self, addresses: Iterable[str] = ()) -> None:
         self._addrs: set[str] = set(addresses)
         self._bloom: _Bloom | None = None
+        self._bloom_only: bool = False  # True -> skip exact-set check
+        self._bloom_only_count: int = 0
 
     def __contains__(self, address: str) -> bool:
         if self._bloom is not None:
+            if self._bloom_only:
+                # Bloom-only mode: may return false positives at the
+                # configured fpr; verify externally before acting on hits.
+                return address in self._bloom
             return address in self._bloom and address in self._addrs
         return address in self._addrs
 
     def __len__(self) -> int:
+        if self._bloom_only:
+            return self._bloom_only_count
         return len(self._addrs)
 
     def add(self, address: str) -> None:
-        self._addrs.add(address)
+        if not self._bloom_only:
+            self._addrs.add(address)
         if self._bloom is not None:
             self._bloom.add(address)
+            if self._bloom_only:
+                self._bloom_only_count += 1
 
     def add_many(self, addresses: Iterable[str]) -> None:
         for a in addresses:
             self.add(a)
+
+    @classmethod
+    def from_bloom_only(cls, bloom: "_Bloom", n_added: int) -> "FundedAddressSet":
+        """Wrap a pre-built _Bloom in Bloom-only mode.
+
+        Use when the underlying snapshot is too large to hold in a
+        Python set alongside. `__contains__` will then admit
+        false positives at the Bloom's configured fpr; callers must
+        verify hits externally (e.g. via a Bitcoin node) before
+        acting on them.
+        """
+        s = cls()
+        s._bloom = bloom
+        s._bloom_only = True
+        s._bloom_only_count = int(n_added)
+        return s
 
     @classmethod
     def from_iterable(cls, addresses: Iterable[str]) -> "FundedAddressSet":
