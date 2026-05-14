@@ -26,6 +26,17 @@ jurisdictions) wire fraud. See `tools/brain-wallet-auditor/README.md`.
 
 ## Round summary
 
+### `audit_offline_combined_results.json` (2026-05-14T23:01:26+00:00 UTC)
+
+* candidates: 1070190
+* addresses queried: ?
+* successful API responses: ?
+* addresses EVER funded: **2**
+* addresses CURRENTLY funded: **0**
+* lifetime BTC funneled: **0.00030108 BTC (30,108 sat)**
+* currently-recoverable balance: **0**
+* wall clock: 0.0s
+
 ### `audit_real_snapshot_large_results.json` (2026-05-14T10:50:08+00:00 UTC)
 
 * candidates: 1810
@@ -59,6 +70,17 @@ jurisdictions) wire fraud. See `tools/brain-wallet-auditor/README.md`.
 * currently-recoverable balance: **0**
 * wall clock: 20421.6s
 
+### `audit_round3_results.json` (2026-05-14T17:42:21+00:00 UTC)
+
+* candidates: 6857
+* addresses queried: 6560
+* successful API responses: 25
+* addresses EVER funded: **1**
+* addresses CURRENTLY funded: **0**
+* lifetime BTC funneled: **0.02773589 BTC (2,773,589 sat)**
+* currently-recoverable balance: **0**
+* wall clock: 3938.6s
+
 
 ## Currently-funded brain wallets discovered
 
@@ -67,7 +89,7 @@ _No currently-funded brain-wallet addresses found across any completed round._
 
 ## Top historically-funded brain-wallet addresses
 
-Across all rounds: **123** distinct addresses have received at least 1 satoshi over their lifetime.
+Across all rounds: **125** distinct addresses have received at least 1 satoshi over their lifetime.
 
 | address | lifetime funded | tx count | passphrase | form |
 |---|---|---|---|---|
@@ -94,6 +116,7 @@ Across all rounds: **123** distinct addresses have received at least 1 satoshi o
 | `1HUBHMij46Hae75JPdWjeZ5Q7KaL7EFRSD` | 0.03259756 BTC (3,259,756 sat) | 20 | `'a'` | uncompressed |
 | `1NShccdrbaFbGFWyY2Z1bGWjekA6STrY2N` | 0.03174301 BTC (3,174,301 sat) | 4 | `'asdfghjkl'` | uncompressed |
 | `1LdgTMX2MEqdfT3VcDpX4GyD1mqCP8LkYe` | 0.02917436 BTC (2,917,436 sat) | 20 | `'fuckyou'` | uncompressed |
+| `1JryTePceSiWVpoNBU8SbwiT7J4ghzijzW` | 0.02773589 BTC (2,773,589 sat) | 72 | `'Satoshi Nakamoto'` | uncompressed |
 | `19eA3hUfKRt7aZymavdQFXg5EZ6KCVKxr8` | 0.01919268 BTC (1,919,268 sat) | 16 | `'test'` | compressed |
 | `162ZamkWtU4MjmayDqfZiZ8YDWha1cBqDz` | 0.01669793 BTC (1,669,793 sat) | 4 | `'7'` | uncompressed |
 | `14452uS9MprpjiBcS3gPx1WYyER2c7cCo8` | 0.01602000 BTC (1,602,000 sat) | 9 | `'zaq12wsx'` | uncompressed |
@@ -120,12 +143,11 @@ Across all rounds: **123** distinct addresses have received at least 1 satoshi o
 | `19cWMMprtsnhy3Vrv7uFkRoTfUb1r9CdMf` | 0.00150000 BTC (150,000 sat) | 5 | `'football'` | uncompressed |
 | `19XK3iPQSBGn5W3TLhwgWNA7xsH22erJuK` | 0.00131182 BTC (131,182 sat) | 4 | `'1234567890'` | compressed |
 | `1K28ZrQ9wGAUeEnz4wxmoecU3qoiyyyNjv` | 0.00125000 BTC (125,000 sat) | 4 | `'1234567890'` | uncompressed |
-| `1F1mazRFEUxE1X4dcugxdf2TWRMVp2cMLL` | 0.00111947 BTC (111,947 sat) | 6 | `'Password'` | uncompressed |
 
 
 ## Cross-round totals
 
-* total distinct ever-funded addresses: **123**
+* total distinct ever-funded addresses: **125**
 * total distinct currently-funded addresses: **0**
-* total lifetime BTC funneled across all hits: **573.90046008 BTC (57,390,046,008 sat)**
+* total lifetime BTC funneled across all hits: **573.92839705 BTC (57,392,839,705 sat)**
 * total currently-recoverable balance across all hits: **0**
