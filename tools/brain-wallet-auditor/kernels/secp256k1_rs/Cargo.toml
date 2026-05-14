@@ -1,0 +1,33 @@
+[package]
+name = "secp256k1-cuda"
+version = "0.1.0"
+edition = "2021"
+description = "GPU-accelerated secp256k1 scalar multiplication for the brain-wallet auditor"
+license = "MIT"
+
+[lib]
+name = "secp256k1_cuda"
+crate-type = ["rlib"]
+
+[[bin]]
+name = "smoke"
+path = "src/bin/smoke.rs"
+
+[[bin]]
+name = "verify"
+path = "src/bin/verify.rs"
+
+[[bin]]
+name = "bench"
+path = "src/bin/bench.rs"
+
+[dependencies]
+# cudarc: Rust bindings to CUDA driver + runtime + NVRTC.
+# Mature crate; what most Rust+CUDA projects use.
+cudarc = { version = "0.19", default-features = false, features = ["std", "cuda-version-from-build-system", "driver", "nvrtc", "dynamic-loading"] }
+# secp256k1 reference implementation for correctness verification.
+secp256k1 = { version = "0.30", features = ["rand"] }
+hex = "0.4"
+rand = "0.8"
+anyhow = "1.0"
+sha2 = "0.10"

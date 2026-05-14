@@ -128,8 +128,23 @@ On a single laptop CPU thread (Windows 11, Python 3.12):
 
 For 10K candidates of plain brainwallet_sha256, the audit completes
 in 10 seconds. Larger pools scale linearly. Multi-core / GPU
-parallelisation is straightforward (each derivation is independent)
-but not included here.
+parallelisation is straightforward (each derivation is independent).
+
+### GPU kernels (optional, Blackwell)
+
+For very large brainwallet sweeps (millions of candidates) the
+`kernels/` subdir provides two independent GPU primitives:
+
+* `kernels/triton_sha256.py` — Triton kernel for batched SHA-256 of
+  L ≤ 55 byte inputs. ~136 M hashes/sec on RTX PRO 6000 Blackwell.
+* `kernels/secp256k1_rs/` — Rust + cudarc (CUDA 13.x via NVRTC) kernel
+  for batched scalar multiplication `pub = priv * G`. Sustained
+  ~8.6 M keys/sec at batch ≥ 256 k. Verified bit-exact against
+  libsecp256k1 on 1024 random keys.
+
+The two are independent benchmark crates; the end-to-end Python
+`audit_passphrases` API does not call them yet (PyO3 binding is the
+remaining glue work).
 
 ## Funded-address snapshot
 
