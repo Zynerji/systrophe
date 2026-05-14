@@ -14,6 +14,7 @@ framework primitive.
 | `dijkstra-mwpm/`      | active            | the Heron-r2 QEC decoder (Dijkstra-shortest-path MWPM on syndrome-difference history; +5-25pp over naive matching) |
 | `lp-analyser/`        | active            | analytic-CTC physics: LP exterior + CTC bands + Phase 2a/2b/3a/3b stress-energy / Hadamard / arrays / off-axis |
 | `gw-burst-catcher/`   | active            | unmodeled GW-burst detector: PSD-whiten → Q-transform → catcher; synthetic-injection mode for offline tests, optional GWOSC fetcher for real events |
+| `brain-wallet-auditor/` | active          | Bitcoin brain-wallet passphrase strength auditor (SHA256 / WarpWallet / BIP-39); catcher diagnostic on the candidate pool; personal-recovery + custodial-audit + Vasek-paper reproduction |
 | `cyliformer/`         | **research artifact (falsified)** | catcher-as-compute-gate in transformer FFN; 5 iterations, didn't beat matched-MLP control. See `cyliformer/STATUS.md` + `FINDINGS_QWEN_7B.md`. |
 | `systroformer/`       | **research artifact (superseded)** | earlier prototype of the same idea; falsified by Cyliformer's matched-MLP A/B. See `systroformer/STATUS.md`. |
 
@@ -33,6 +34,7 @@ tools/
 ├── dijkstra-mwpm/           <- standalone QEC decoder
 ├── lp-analyser/             <- analytic-CTC physics public API
 ├── gw-burst-catcher/        <- unmodeled GW-burst detection on whitened strain
+├── brain-wallet-auditor/    <- Bitcoin brain-wallet passphrase strength auditor
 ├── cyliformer/              <- ARTIFACT: catcher as LLM compute-gate
 └── systroformer/            <- ARTIFACT: simpler earlier sibling of cyliformer
 ```

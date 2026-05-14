@@ -1,0 +1,5 @@
+numpy>=1.24
+coincurve>=20.0
+base58>=2.1
+# systrophe is imported from the parent repo's src/. For a standalone
+# install of just this tool, add: systrophe>=0.21
