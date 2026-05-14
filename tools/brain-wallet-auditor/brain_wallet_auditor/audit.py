@@ -6,6 +6,7 @@ import time
 from dataclasses import dataclass, field
 from typing import Iterable
 
+from .backends import DerivationBackend, get_backend
 from .catcher import PoolDiagnostic, diagnose_candidate_pool
 from .derivation import AddressDerivation, Scheme
 from .snapshot import FundedAddressSet
@@ -51,6 +52,8 @@ def audit_passphrases(
     funded_set: FundedAddressSet | None = None,
     derivation_kwargs: dict | None = None,
     run_diagnostic: bool = True,
+    backend: str | DerivationBackend = "cpu_single",
+    backend_kwargs: dict | None = None,
 ) -> AuditReport:
     """Audit a list of candidate passphrases against a funded-address set.
 
@@ -74,28 +77,42 @@ def audit_passphrases(
         If True (default), run the catcher pool diagnostic on the
         first scheme's derived addresses. The diagnostic is purely
         informative -- it does not accelerate the audit.
+    backend
+        Either a backend name (``"cpu_single"`` / ``"cpu_mp"`` /
+        ``"gpu_cuda"``) or a constructed `DerivationBackend`. Default
+        is ``"cpu_single"`` for backwards compatibility; switch to
+        ``"cpu_mp"`` for a multi-core speedup on large candidate
+        pools.
+    backend_kwargs
+        Forwarded to the backend constructor when `backend` is a
+        string (e.g. ``{"n_workers": 4}`` for ``cpu_mp``).
     """
     pps = list(passphrases)
     schemes = list(schemes)
     derivation_kwargs = derivation_kwargs or {}
+    backend_kwargs = backend_kwargs or {}
     funded_set = funded_set if funded_set is not None else FundedAddressSet()
+
+    if isinstance(backend, str):
+        backend = get_backend(backend, **backend_kwargs)
 
     t0 = time.time()
     results: list[AuditResult] = []
     pool_diag: PoolDiagnostic | None = None
 
     for scheme in schemes:
-        deriv = AddressDerivation(scheme=scheme, **derivation_kwargs)
-        scheme_addresses = []
-        for p in pps:
-            addr = deriv.derive(p)
-            scheme_addresses.append(addr)
+        addresses = backend.derive_batch(scheme, pps, derivation_kwargs)
+        for p, addr in zip(pps, addresses):
             results.append(AuditResult(
                 passphrase=p, scheme=scheme, address=addr,
                 found_in_funded_set=(addr in funded_set),
             ))
         if run_diagnostic and pool_diag is None:
             try:
+                # Diagnostic always uses single-thread CPU; it's
+                # ~tens of pubkey derivations, not worth subprocess
+                # spawn overhead.
+                deriv = AddressDerivation(scheme=scheme, **derivation_kwargs)
                 pool_diag = diagnose_candidate_pool(pps, deriv.derive)
             except Exception:
                 pool_diag = None

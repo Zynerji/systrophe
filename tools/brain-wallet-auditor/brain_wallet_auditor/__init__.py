@@ -38,6 +38,14 @@ addresses is theft and probably wire fraud in your jurisdiction.
 The repository ships it as a research / personal-audit instrument.
 """
 
+from .backends import (
+    CPUMultiprocessingBackend,
+    CPUSingleBackend,
+    CPUThreadsBackend,
+    DerivationBackend,
+    GPUCudaBackend,
+    get_backend,
+)
 from .derivation import (
     AddressDerivation,
     bip39_address,
@@ -59,13 +67,19 @@ __all__ = [
     "AddressDerivation",
     "AuditReport",
     "AuditResult",
+    "CPUMultiprocessingBackend",
+    "CPUSingleBackend",
+    "CPUThreadsBackend",
+    "DerivationBackend",
     "FundedAddressSet",
+    "GPUCudaBackend",
     "PoolDiagnostic",
     "audit_passphrases",
     "bip39_address",
     "brainwallet_address",
     "warpwallet_address",
     "diagnose_candidate_pool",
+    "get_backend",
 ]
 
 __version__ = "0.1.0"
