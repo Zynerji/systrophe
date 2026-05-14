@@ -1,0 +1,6 @@
+numpy>=1.24
+scipy>=1.11
+# Optional, for real-event GWOSC fetching:
+#   gwpy>=3.0
+# Tests use only synthetic strain and don't need gwpy.
+# systrophe is imported from the parent repo's src/.
