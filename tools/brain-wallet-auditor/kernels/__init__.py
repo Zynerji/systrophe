@@ -17,9 +17,9 @@ hardware. The numbers feed Phase 3's secp256k1 budget.
 """
 
 from .triton_sha256 import sha256_batch
-from .triton_ripemd160 import ripemd160_batch
 
-__all__ = [
-    "sha256_batch",
-    "ripemd160_batch",
-]
+try:
+    from .triton_ripemd160 import ripemd160_batch
+    __all__ = ["sha256_batch", "ripemd160_batch"]
+except ImportError:
+    __all__ = ["sha256_batch"]
