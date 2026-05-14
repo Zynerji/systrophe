@@ -1,16 +1,15 @@
 """Triton SHA-256 kernel for batched short-message hashing.
 
 Scope: messages up to 55 bytes (single SHA-256 block after the 9-byte
-pad). This covers brain-wallet passphrases (typically 8-32 chars) and
-the intermediate SHA-256 of a compressed pubkey (33 bytes) in the
-hash160 step.
+pad). Covers brain-wallet passphrases and the intermediate SHA-256
+of a compressed pubkey (33 bytes).
 
-Layout: one Triton program per input. Each program loads up to 55
-bytes (16 u32 words after padding), runs 64 rounds of the SHA-256
-compression, writes 32 output bytes. Parallelism = batch size.
+Layout: one Triton program per input. A single @triton.jit helper
+(_rotr32) is used; everything else is inlined since Triton does NOT
+allow nested function definitions inside @triton.jit.
 
-Bit-exact correctness is verified by the companion test against
-`hashlib.sha256` on 10K random inputs of random lengths in [0, 55].
+Bit-exact correctness verified via `test_triton_correctness.py`
+against `hashlib.sha256` on random inputs.
 """
 
 from __future__ import annotations
@@ -41,83 +40,126 @@ SHA256_K = (
 
 
 @triton.jit
-def _sha256_short_kernel(
-    msg_ptr,                       # *u8  (N, MAX_BYTES)  raw input bytes (zero-padded)
-    len_ptr,                       # *i32 (N,)             actual length per row
-    out_ptr,                       # *u8  (N, 32)          output digest bytes
-    n_rows,                        # scalar
-    K_ptr,                         # *u32 (64,)           SHA-256 round constants
-    BLOCK_BYTES: tl.constexpr,     # padded msg block size; must be 64
-):
-    """Single SHA-256 block on a short message.
+def _rotr32(x, n: tl.constexpr):
+    return ((x >> n) | (x << (32 - n))) & 0xFFFFFFFF
 
-    Each Triton program processes one message. The message must
-    satisfy `length <= 55` (so the standard SHA-256 pad fits in one
-    64-byte block).
-    """
+
+@triton.jit
+def _sha256_short_kernel(
+    msg_ptr,                       # *u8  (N, 64)
+    len_ptr,                       # *i32 (N,)
+    out_ptr,                       # *u8  (N, 32)
+    n_rows,
+    K_ptr,                         # *u32 (64,)
+):
     pid = tl.program_id(axis=0)
     if pid >= n_rows:
         return
 
-    # Load length and clamp to 55 (the kernel only supports single-block messages)
-    L = tl.load(len_ptr + pid)
-    L = tl.minimum(L, 55)
+    L_raw = tl.load(len_ptr + pid)
+    L = tl.minimum(L_raw, 55).to(tl.uint32)
 
-    # Load 64 bytes from this row and apply standard SHA-256 padding:
-    #   byte[L] = 0x80
-    #   bytes[L+1 .. 55] = 0x00
-    #   bytes[56 .. 63] = big-endian (L * 8)
-    byte_idx = tl.arange(0, BLOCK_BYTES)
-    raw = tl.load(
-        msg_ptr + pid * BLOCK_BYTES + byte_idx,
-        mask=byte_idx < BLOCK_BYTES, other=0,
-    )
-    raw = raw.to(tl.uint32)
-    # Zero out anything past L (so a row longer than its declared L is ignored)
-    raw = tl.where(byte_idx < L, raw, 0)
+    # ---- Load the 64 input bytes for this row and apply SHA-256 padding ----
+    byte_idx = tl.arange(0, 64)
+    raw = tl.load(msg_ptr + pid * 64 + byte_idx).to(tl.uint32)
+
+    # Zero out anything past the declared length L
+    raw = tl.where(byte_idx < L.to(tl.int32), raw, 0)
     # Insert 0x80 at position L
-    raw = tl.where(byte_idx == L, 0x80, raw)
-    # Insert big-endian length-in-bits at bytes 56..63
-    bits = (L * 8).to(tl.uint32)
-    # Only bytes 60..63 carry non-zero length bits (since L <= 55, bits fits in u32)
-    # but we follow the standard layout exactly.
-    b_60 = (bits >> 24) & 0xFF
-    b_61 = (bits >> 16) & 0xFF
-    b_62 = (bits >>  8) & 0xFF
-    b_63 = (bits      ) & 0xFF
-    raw = tl.where(byte_idx == 60, b_60, raw)
-    raw = tl.where(byte_idx == 61, b_61, raw)
-    raw = tl.where(byte_idx == 62, b_62, raw)
-    raw = tl.where(byte_idx == 63, b_63, raw)
+    raw = tl.where(byte_idx == L.to(tl.int32), 0x80, raw)
+    # Insert big-endian (L * 8) in the last four bytes (positions 60..63)
+    bits = (L * 8)
+    raw = tl.where(byte_idx == 60, (bits >> 24) & 0xFF, raw)
+    raw = tl.where(byte_idx == 61, (bits >> 16) & 0xFF, raw)
+    raw = tl.where(byte_idx == 62, (bits >>  8) & 0xFF, raw)
+    raw = tl.where(byte_idx == 63, (bits      ) & 0xFF, raw)
 
-    # Pack into 16 big-endian u32 words: W[0..15]
-    # We compute each word from the byte vector. To keep things simple,
-    # build w0..w15 individually.
-    def word_at(offset):
-        b0 = tl.sum(tl.where(byte_idx == offset + 0, raw, 0))
-        b1 = tl.sum(tl.where(byte_idx == offset + 1, raw, 0))
-        b2 = tl.sum(tl.where(byte_idx == offset + 2, raw, 0))
-        b3 = tl.sum(tl.where(byte_idx == offset + 3, raw, 0))
-        return (b0 << 24) | (b1 << 16) | (b2 << 8) | b3
+    # ---- Pack 64 bytes into 16 big-endian u32 words ----
+    # Standard Triton idiom for extracting one scalar from a vector:
+    #   tl.sum(tl.where(byte_idx == k, raw, 0)).
+    b00 = tl.sum(tl.where(byte_idx ==  0, raw, 0))
+    b01 = tl.sum(tl.where(byte_idx ==  1, raw, 0))
+    b02 = tl.sum(tl.where(byte_idx ==  2, raw, 0))
+    b03 = tl.sum(tl.where(byte_idx ==  3, raw, 0))
+    b04 = tl.sum(tl.where(byte_idx ==  4, raw, 0))
+    b05 = tl.sum(tl.where(byte_idx ==  5, raw, 0))
+    b06 = tl.sum(tl.where(byte_idx ==  6, raw, 0))
+    b07 = tl.sum(tl.where(byte_idx ==  7, raw, 0))
+    b08 = tl.sum(tl.where(byte_idx ==  8, raw, 0))
+    b09 = tl.sum(tl.where(byte_idx ==  9, raw, 0))
+    b10 = tl.sum(tl.where(byte_idx == 10, raw, 0))
+    b11 = tl.sum(tl.where(byte_idx == 11, raw, 0))
+    b12 = tl.sum(tl.where(byte_idx == 12, raw, 0))
+    b13 = tl.sum(tl.where(byte_idx == 13, raw, 0))
+    b14 = tl.sum(tl.where(byte_idx == 14, raw, 0))
+    b15 = tl.sum(tl.where(byte_idx == 15, raw, 0))
+    b16 = tl.sum(tl.where(byte_idx == 16, raw, 0))
+    b17 = tl.sum(tl.where(byte_idx == 17, raw, 0))
+    b18 = tl.sum(tl.where(byte_idx == 18, raw, 0))
+    b19 = tl.sum(tl.where(byte_idx == 19, raw, 0))
+    b20 = tl.sum(tl.where(byte_idx == 20, raw, 0))
+    b21 = tl.sum(tl.where(byte_idx == 21, raw, 0))
+    b22 = tl.sum(tl.where(byte_idx == 22, raw, 0))
+    b23 = tl.sum(tl.where(byte_idx == 23, raw, 0))
+    b24 = tl.sum(tl.where(byte_idx == 24, raw, 0))
+    b25 = tl.sum(tl.where(byte_idx == 25, raw, 0))
+    b26 = tl.sum(tl.where(byte_idx == 26, raw, 0))
+    b27 = tl.sum(tl.where(byte_idx == 27, raw, 0))
+    b28 = tl.sum(tl.where(byte_idx == 28, raw, 0))
+    b29 = tl.sum(tl.where(byte_idx == 29, raw, 0))
+    b30 = tl.sum(tl.where(byte_idx == 30, raw, 0))
+    b31 = tl.sum(tl.where(byte_idx == 31, raw, 0))
+    b32 = tl.sum(tl.where(byte_idx == 32, raw, 0))
+    b33 = tl.sum(tl.where(byte_idx == 33, raw, 0))
+    b34 = tl.sum(tl.where(byte_idx == 34, raw, 0))
+    b35 = tl.sum(tl.where(byte_idx == 35, raw, 0))
+    b36 = tl.sum(tl.where(byte_idx == 36, raw, 0))
+    b37 = tl.sum(tl.where(byte_idx == 37, raw, 0))
+    b38 = tl.sum(tl.where(byte_idx == 38, raw, 0))
+    b39 = tl.sum(tl.where(byte_idx == 39, raw, 0))
+    b40 = tl.sum(tl.where(byte_idx == 40, raw, 0))
+    b41 = tl.sum(tl.where(byte_idx == 41, raw, 0))
+    b42 = tl.sum(tl.where(byte_idx == 42, raw, 0))
+    b43 = tl.sum(tl.where(byte_idx == 43, raw, 0))
+    b44 = tl.sum(tl.where(byte_idx == 44, raw, 0))
+    b45 = tl.sum(tl.where(byte_idx == 45, raw, 0))
+    b46 = tl.sum(tl.where(byte_idx == 46, raw, 0))
+    b47 = tl.sum(tl.where(byte_idx == 47, raw, 0))
+    b48 = tl.sum(tl.where(byte_idx == 48, raw, 0))
+    b49 = tl.sum(tl.where(byte_idx == 49, raw, 0))
+    b50 = tl.sum(tl.where(byte_idx == 50, raw, 0))
+    b51 = tl.sum(tl.where(byte_idx == 51, raw, 0))
+    b52 = tl.sum(tl.where(byte_idx == 52, raw, 0))
+    b53 = tl.sum(tl.where(byte_idx == 53, raw, 0))
+    b54 = tl.sum(tl.where(byte_idx == 54, raw, 0))
+    b55 = tl.sum(tl.where(byte_idx == 55, raw, 0))
+    b56 = tl.sum(tl.where(byte_idx == 56, raw, 0))
+    b57 = tl.sum(tl.where(byte_idx == 57, raw, 0))
+    b58 = tl.sum(tl.where(byte_idx == 58, raw, 0))
+    b59 = tl.sum(tl.where(byte_idx == 59, raw, 0))
+    b60 = tl.sum(tl.where(byte_idx == 60, raw, 0))
+    b61 = tl.sum(tl.where(byte_idx == 61, raw, 0))
+    b62 = tl.sum(tl.where(byte_idx == 62, raw, 0))
+    b63 = tl.sum(tl.where(byte_idx == 63, raw, 0))
 
-    w0  = word_at(0)
-    w1  = word_at(4)
-    w2  = word_at(8)
-    w3  = word_at(12)
-    w4  = word_at(16)
-    w5  = word_at(20)
-    w6  = word_at(24)
-    w7  = word_at(28)
-    w8  = word_at(32)
-    w9  = word_at(36)
-    w10 = word_at(40)
-    w11 = word_at(44)
-    w12 = word_at(48)
-    w13 = word_at(52)
-    w14 = word_at(56)
-    w15 = word_at(60)
+    w0  = ((b00 << 24) | (b01 << 16) | (b02 << 8) | b03) & 0xFFFFFFFF
+    w1  = ((b04 << 24) | (b05 << 16) | (b06 << 8) | b07) & 0xFFFFFFFF
+    w2  = ((b08 << 24) | (b09 << 16) | (b10 << 8) | b11) & 0xFFFFFFFF
+    w3  = ((b12 << 24) | (b13 << 16) | (b14 << 8) | b15) & 0xFFFFFFFF
+    w4  = ((b16 << 24) | (b17 << 16) | (b18 << 8) | b19) & 0xFFFFFFFF
+    w5  = ((b20 << 24) | (b21 << 16) | (b22 << 8) | b23) & 0xFFFFFFFF
+    w6  = ((b24 << 24) | (b25 << 16) | (b26 << 8) | b27) & 0xFFFFFFFF
+    w7  = ((b28 << 24) | (b29 << 16) | (b30 << 8) | b31) & 0xFFFFFFFF
+    w8  = ((b32 << 24) | (b33 << 16) | (b34 << 8) | b35) & 0xFFFFFFFF
+    w9  = ((b36 << 24) | (b37 << 16) | (b38 << 8) | b39) & 0xFFFFFFFF
+    w10 = ((b40 << 24) | (b41 << 16) | (b42 << 8) | b43) & 0xFFFFFFFF
+    w11 = ((b44 << 24) | (b45 << 16) | (b46 << 8) | b47) & 0xFFFFFFFF
+    w12 = ((b48 << 24) | (b49 << 16) | (b50 << 8) | b51) & 0xFFFFFFFF
+    w13 = ((b52 << 24) | (b53 << 16) | (b54 << 8) | b55) & 0xFFFFFFFF
+    w14 = ((b56 << 24) | (b57 << 16) | (b58 << 8) | b59) & 0xFFFFFFFF
+    w15 = ((b60 << 24) | (b61 << 16) | (b62 << 8) | b63) & 0xFFFFFFFF
 
-    # Initial hash values H0..H7 (constants from SHA-256 spec)
+    # Initial hash values H0..H7
     a = tl.cast(0x6A09E667, tl.uint32)
     b = tl.cast(0xBB67AE85, tl.uint32)
     c = tl.cast(0x3C6EF372, tl.uint32)
@@ -127,29 +169,9 @@ def _sha256_short_kernel(
     g = tl.cast(0x1F83D9AB, tl.uint32)
     h = tl.cast(0x5BE0CD19, tl.uint32)
 
-    # We maintain w[0..15] as a "rotating window" of the last 16
-    # message-schedule words via 16 local variables. After the first
-    # 16 rounds, each new W_t = sigma1(W_{t-2}) + W_{t-7} +
-    # sigma0(W_{t-15}) + W_{t-16}.
-    def rotr32(x, n):
-        return ((x >> n) | (x << (32 - n))) & 0xFFFFFFFF
-
-    def big_sigma0(x):
-        return rotr32(x, 2) ^ rotr32(x, 13) ^ rotr32(x, 22)
-
-    def big_sigma1(x):
-        return rotr32(x, 6) ^ rotr32(x, 11) ^ rotr32(x, 25)
-
-    def small_sigma0(x):
-        return rotr32(x, 7) ^ rotr32(x, 18) ^ (x >> 3)
-
-    def small_sigma1(x):
-        return rotr32(x, 17) ^ rotr32(x, 19) ^ (x >> 10)
-
-    # The 64 rounds, written out so Triton can fully unroll.
-    # We track the rotating window via 16 named locals.
+    # 64 rounds. The message schedule is a 16-word rolling window
+    # (w0..w15) updated each round once we pass the first 16.
     for t in tl.static_range(64):
-        # Compute W_t for t >= 16 and advance the window.
         if t == 0:
             Wt = w0
         elif t == 1:
@@ -183,33 +205,21 @@ def _sha256_short_kernel(
         elif t == 15:
             Wt = w15
         else:
-            # Extension step. New W = s1(W_{t-2}) + W_{t-7} + s0(W_{t-15}) + W_{t-16}.
-            # Use the rolling window via 16 named locals.
-            new = (small_sigma1(w14) + w9 + small_sigma0(w1) + w0) & 0xFFFFFFFF
-            # Roll the window: drop w0, shift all left, store new in w15.
-            w0  = w1
-            w1  = w2
-            w2  = w3
-            w3  = w4
-            w4  = w5
-            w5  = w6
-            w6  = w7
-            w7  = w8
-            w8  = w9
-            w9  = w10
-            w10 = w11
-            w11 = w12
-            w12 = w13
-            w13 = w14
-            w14 = w15
-            w15 = new
+            # W_t = s1(w14) + w9 + s0(w1) + w0
+            s0 = _rotr32(w1, 7) ^ _rotr32(w1, 18) ^ (w1 >> 3)
+            s1 = _rotr32(w14, 17) ^ _rotr32(w14, 19) ^ (w14 >> 10)
+            new = (s1 + w9 + s0 + w0) & 0xFFFFFFFF
+            w0, w1, w2, w3, w4, w5, w6, w7 = w1, w2, w3, w4, w5, w6, w7, w8
+            w8, w9, w10, w11, w12, w13, w14, w15 = w9, w10, w11, w12, w13, w14, w15, new
             Wt = new
 
         Kt = tl.load(K_ptr + t)
+        S1 = _rotr32(e, 6) ^ _rotr32(e, 11) ^ _rotr32(e, 25)
         ch = (e & f) ^ ((~e) & g)
-        T1 = (h + big_sigma1(e) + ch + Kt + Wt) & 0xFFFFFFFF
+        T1 = (h + S1 + ch + Kt + Wt) & 0xFFFFFFFF
+        S0 = _rotr32(a, 2) ^ _rotr32(a, 13) ^ _rotr32(a, 22)
         maj = (a & b) ^ (a & c) ^ (b & c)
-        T2 = (big_sigma0(a) + maj) & 0xFFFFFFFF
+        T2 = (S0 + maj) & 0xFFFFFFFF
         h = g
         g = f
         f = e
@@ -228,21 +238,39 @@ def _sha256_short_kernel(
     H6 = (0x1F83D9AB + g) & 0xFFFFFFFF
     H7 = (0x5BE0CD19 + h) & 0xFFFFFFFF
 
-    # Write 32 output bytes big-endian
-    def store_word(idx, w):
-        tl.store(out_ptr + pid * 32 + idx * 4 + 0, ((w >> 24) & 0xFF).to(tl.uint8))
-        tl.store(out_ptr + pid * 32 + idx * 4 + 1, ((w >> 16) & 0xFF).to(tl.uint8))
-        tl.store(out_ptr + pid * 32 + idx * 4 + 2, ((w >>  8) & 0xFF).to(tl.uint8))
-        tl.store(out_ptr + pid * 32 + idx * 4 + 3, ((w      ) & 0xFF).to(tl.uint8))
-
-    store_word(0, H0)
-    store_word(1, H1)
-    store_word(2, H2)
-    store_word(3, H3)
-    store_word(4, H4)
-    store_word(5, H5)
-    store_word(6, H6)
-    store_word(7, H7)
+    # Big-endian 32-byte output, byte-by-byte (no nested helper)
+    tl.store(out_ptr + pid * 32 +  0, ((H0 >> 24) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 +  1, ((H0 >> 16) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 +  2, ((H0 >>  8) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 +  3, ((H0      ) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 +  4, ((H1 >> 24) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 +  5, ((H1 >> 16) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 +  6, ((H1 >>  8) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 +  7, ((H1      ) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 +  8, ((H2 >> 24) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 +  9, ((H2 >> 16) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 10, ((H2 >>  8) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 11, ((H2      ) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 12, ((H3 >> 24) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 13, ((H3 >> 16) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 14, ((H3 >>  8) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 15, ((H3      ) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 16, ((H4 >> 24) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 17, ((H4 >> 16) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 18, ((H4 >>  8) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 19, ((H4      ) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 20, ((H5 >> 24) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 21, ((H5 >> 16) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 22, ((H5 >>  8) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 23, ((H5      ) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 24, ((H6 >> 24) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 25, ((H6 >> 16) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 26, ((H6 >>  8) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 27, ((H6      ) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 28, ((H7 >> 24) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 29, ((H7 >> 16) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 30, ((H7 >>  8) & 0xFF).to(tl.uint8))
+    tl.store(out_ptr + pid * 32 + 31, ((H7      ) & 0xFF).to(tl.uint8))
 
 
 def sha256_batch(
@@ -250,43 +278,28 @@ def sha256_batch(
     lengths: torch.Tensor,
     out: torch.Tensor | None = None,
 ) -> torch.Tensor:
-    """Batched SHA-256 for short messages.
+    """Batched SHA-256 for short messages (L <= 55 bytes).
 
     Parameters
     ----------
     messages
-        `(N, 64)` uint8 tensor of zero-padded raw bytes. The padding
-        bytes past `lengths[i]` are ignored (the kernel zero-fills
-        internally), so callers may pass any value there.
+        `(N, 64)` uint8 tensor of raw bytes. Bytes past `lengths[i]`
+        are ignored.
     lengths
-        `(N,)` int32 tensor of byte counts per message. Each value
-        must satisfy `0 <= lengths[i] <= 55`.
+        `(N,)` int32 tensor of byte counts (0 <= L <= 55).
     out
-        Optional pre-allocated `(N, 32)` uint8 output. If None, one
-        is allocated on the same device as `messages`.
-
-    Returns
-    -------
-    `(N, 32)` uint8 tensor of digests.
+        Optional pre-allocated `(N, 32)` uint8 output.
     """
     assert messages.is_cuda, "sha256_batch needs a CUDA tensor"
-    assert messages.dtype == torch.uint8, f"messages must be uint8, got {messages.dtype}"
-    assert messages.shape[1] == 64, f"messages must be (N, 64); got {tuple(messages.shape)}"
+    assert messages.dtype == torch.uint8
+    assert messages.shape[1] == 64
     n = messages.shape[0]
-    assert lengths.shape == (n,), f"lengths shape {lengths.shape} != ({n},)"
+    assert lengths.shape == (n,)
     if not lengths.is_cuda or lengths.dtype != torch.int32:
         lengths = lengths.to(device=messages.device, dtype=torch.int32)
-
     if out is None:
         out = torch.empty((n, 32), dtype=torch.uint8, device=messages.device)
-    else:
-        assert out.shape == (n, 32) and out.dtype == torch.uint8
-
-    K_dev = torch.tensor(SHA256_K, dtype=torch.int64, device=messages.device).to(torch.uint32)
-
-    grid = (n,)
-    _sha256_short_kernel[grid](
-        messages, lengths, out, n, K_dev,
-        BLOCK_BYTES=64,
-    )
+    K_dev = torch.tensor(SHA256_K, dtype=torch.int64,
+                          device=messages.device).to(torch.uint32)
+    _sha256_short_kernel[(n,)](messages, lengths, out, n, K_dev)
     return out
