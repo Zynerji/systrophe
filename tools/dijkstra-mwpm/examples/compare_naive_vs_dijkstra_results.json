@@ -1,0 +1,62 @@
+{
+  "args": {
+    "d": 5,
+    "n_shots": 200,
+    "p_grid": [
+      0.005,
+      0.01,
+      0.02,
+      0.04,
+      0.08,
+      0.15
+    ],
+    "n_rounds": 2,
+    "seed": 0,
+    "out": null
+  },
+  "rows": [
+    {
+      "p": 0.005,
+      "naive_logical_zero_rate": 0.965,
+      "dijkstra_logical_zero_rate": 0.995,
+      "delta_pp": 3.0000000000000027,
+      "elapsed_seconds": 0.7919967174530029
+    },
+    {
+      "p": 0.01,
+      "naive_logical_zero_rate": 0.915,
+      "dijkstra_logical_zero_rate": 0.975,
+      "delta_pp": 5.999999999999995,
+      "elapsed_seconds": 0.2539985179901123
+    },
+    {
+      "p": 0.02,
+      "naive_logical_zero_rate": 0.88,
+      "dijkstra_logical_zero_rate": 0.955,
+      "delta_pp": 7.499999999999996,
+      "elapsed_seconds": 0.2019968032836914
+    },
+    {
+      "p": 0.04,
+      "naive_logical_zero_rate": 0.805,
+      "dijkstra_logical_zero_rate": 0.95,
+      "delta_pp": 14.499999999999991,
+      "elapsed_seconds": 0.3599724769592285
+    },
+    {
+      "p": 0.08,
+      "naive_logical_zero_rate": 0.685,
+      "dijkstra_logical_zero_rate": 0.91,
+      "delta_pp": 22.499999999999996,
+      "elapsed_seconds": 0.5399982929229736
+    },
+    {
+      "p": 0.15,
+      "naive_logical_zero_rate": 0.595,
+      "dijkstra_logical_zero_rate": 0.78,
+      "delta_pp": 18.500000000000007,
+      "elapsed_seconds": 0.5426747798919678
+    }
+  ],
+  "total_elapsed_s": 2.6906375885009766
+}

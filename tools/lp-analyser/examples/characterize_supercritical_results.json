@@ -1,0 +1,151 @@
+{
+  "tool": "lp-analyser",
+  "spacetime": {
+    "omega": 2.0,
+    "R": 1.0,
+    "a": 2.0,
+    "alpha": 3.872983346207417
+  },
+  "summary": {
+    "regime": "supercritical",
+    "interior_regime": "supercritical",
+    "n_cauchy_horizons_in_10R": 3,
+    "first_horizon_r": 1.405419881607395,
+    "first_horizon_surface_gravity": 1.999999999686231,
+    "first_horizon_hawking_temperature": 0.3183098861338528,
+    "boulware_T_tt_simple_pole_power": -1.0094182934510807,
+    "chronology_protection_verdict": "chronology_protection_consistent",
+    "hadamard_V_1_at_midpoint": 0.12744546479587224,
+    "kretschmann_at_midpoint": 91.76073465302801
+  },
+  "phase_2a_horizons": [
+    {
+      "r_horizon": 1.405419881607395,
+      "power": -1.00744195547098,
+      "fit_residual_rms": 0.005354758448979103,
+      "diverges": true
+    },
+    {
+      "r_horizon": 3.1629079489612204,
+      "power": -0.9973462362405392,
+      "fit_residual_rms": 0.0016452425107349152,
+      "diverges": true
+    },
+    {
+      "r_horizon": 7.118147981626958,
+      "power": -1.0013049141575086,
+      "fit_residual_rms": 0.0008706307315747856,
+      "diverges": true
+    }
+  ],
+  "phase_2a_trace_anomaly_residual": 2.220446049250313e-16,
+  "phase_2b_horizons": [
+    {
+      "r_horizon": 1.405419881607395,
+      "power": 0.02159280481207287,
+      "fit_residual_rms": 0.01023676906585434
+    },
+    {
+      "r_horizon": 3.1629079489612204,
+      "power": -0.00947200323611821,
+      "fit_residual_rms": 0.004447187767072935
+    },
+    {
+      "r_horizon": 7.118147981626958,
+      "power": 0.004232815531493973,
+      "fit_residual_rms": 0.0019958663753650513
+    }
+  ],
+  "phase_2b_trace_anomaly_check": {
+    "trace_anomaly_via_V_1": 0.0032282313357414162,
+    "trace_anomaly_via_point_splitting": 0.0032282313357414162,
+    "relative_difference": 0.0
+  },
+  "phase_3a_extinction": [
+    {
+      "N": 2,
+      "max_array_factor": 1.2947314098277873e-15,
+      "is_extinguished": true,
+      "r_max": 20.0,
+      "atol": 1e-10
+    },
+    {
+      "N": 3,
+      "max_array_factor": 1.6300346472626374e-15,
+      "is_extinguished": true,
+      "r_max": 20.0,
+      "atol": 1e-10
+    },
+    {
+      "N": 4,
+      "max_array_factor": 1.943881310905518e-15,
+      "is_extinguished": true,
+      "r_max": 20.0,
+      "atol": 1e-10
+    },
+    {
+      "N": 5,
+      "max_array_factor": 2.3103911863283375e-15,
+      "is_extinguished": true,
+      "r_max": 20.0,
+      "atol": 1e-10
+    },
+    {
+      "N": 6,
+      "max_array_factor": 2.3714374201337737e-15,
+      "is_extinguished": true,
+      "r_max": 20.0,
+      "atol": 1e-10
+    },
+    {
+      "N": 7,
+      "max_array_factor": 3.364268880035439e-15,
+      "is_extinguished": true,
+      "r_max": 20.0,
+      "atol": 1e-10
+    },
+    {
+      "N": 8,
+      "max_array_factor": 2.437438961788735e-15,
+      "is_extinguished": true,
+      "r_max": 20.0,
+      "atol": 1e-10
+    }
+  ],
+  "phase_3a_beam_steer": [
+    {
+      "r_target": 2.0,
+      "L_at_target": 0.0
+    },
+    {
+      "r_target": 3.0,
+      "L_at_target": 0.0
+    },
+    {
+      "r_target": 5.0,
+      "L_at_target": -4.440892098500626e-16
+    },
+    {
+      "r_target": 7.0,
+      "L_at_target": -4.440892098500626e-15
+    }
+  ],
+  "phase_3b_topology": [
+    {
+      "nx": 41,
+      "ny": 21,
+      "n_components": 1,
+      "n_holes": 2,
+      "ctc_fraction": 0.9744483159117305,
+      "topology_summary": "with_holes"
+    },
+    {
+      "nx": 81,
+      "ny": 41,
+      "n_components": 1,
+      "n_holes": 2,
+      "ctc_fraction": 0.976513098464318,
+      "topology_summary": "with_holes"
+    }
+  ]
+}

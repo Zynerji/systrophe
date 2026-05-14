@@ -1,0 +1,4 @@
+numpy>=1.24
+scipy>=1.11
+# systrophe is imported from the parent repo's src/. For a standalone
+# install of just this tool, add: systrophe>=0.21
