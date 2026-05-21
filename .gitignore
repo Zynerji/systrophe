@@ -27,3 +27,6 @@ docs/_autosummary/
 # Private notes (not pushed)
 CONTACTS.md
 NOTES_PRIVATE.md
+
+# OEIS b-file cache (re-fetchable; not committed)
+examples/oeis_cache/

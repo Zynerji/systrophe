@@ -1,0 +1,1499 @@
+{
+  "n_candidates": 260,
+  "n_real_scanned": 77,
+  "n_skipped": 183,
+  "bonferroni_threshold": 0.0006493506493506494,
+  "skipped_reasons": {
+    "A160559": "too_short",
+    "A003003": "too_short",
+    "A003004": "too_short",
+    "A003005": "too_short",
+    "A002386": "too_short",
+    "A001223": "not_growthlike(r=0.09)",
+    "A335277": "too_short",
+    "A387053": "nonpositive",
+    "A001220": "too_short",
+    "A377587": "too_short",
+    "A002264": "nonpositive",
+    "A332077": "too_short",
+    "A391599": "too_short",
+    "A389646": "too_short",
+    "A227590": "too_short",
+    "A003022": "too_short",
+    "A389241": "too_short",
+    "A234813": "too_short",
+    "A390187": "too_short",
+    "A393584": "too_short",
+    "A365474": "too_short",
+    "A014197": "nonpositive",
+    "A006855": "too_short",
+    "A331373": "nonpositive",
+    "A262153": "too_short",
+    "A060407": "too_short",
+    "A059442": "too_short",
+    "A071799": "too_short",
+    "A387635": "too_short",
+    "A006672": "too_short",
+    "A245762": "too_short",
+    "A068063": "too_short",
+    "A005346": "too_short",
+    "A006560": "too_short",
+    "A076393": "too_short",
+    "A006585": "too_short",
+    "A137245": "too_short",
+    "A000791": "too_short",
+    "A057561": "too_short",
+    "A094708": "too_short",
+    "A386439": "too_short",
+    "A156989": "too_short",
+    "A003323": "too_short",
+    "A003142": "too_short",
+    "A389784": "too_short",
+    "A005115": "too_short",
+    "A076259": "not_growthlike(r=0.00)",
+    "A113827": "too_short",
+    "A123556": "too_short",
+    "A322144": "nonpositive",
+    "A256435": "not_growthlike(r=0.07)",
+    "A039669": "too_short",
+    "A109925": "nonpositive",
+    "A387704": "too_short",
+    "A073101": "nonpositive",
+    "A075246": "not_growthlike(r=0.96)",
+    "A075247": "not_growthlike(r=0.96)",
+    "A075248": "nonpositive",
+    "A287116": "too_short",
+    "A000058": "too_short",
+    "A256936": "too_short",
+    "A066766": "too_short",
+    "A098990": "too_short",
+    "A227988": "too_short",
+    "A227989": "too_short",
+    "A380791": "too_short",
+    "A030659": "too_short",
+    "A110566": "not_growthlike(r=0.17)",
+    "A192881": "too_short",
+    "A092670": "not_growthlike(r=0.86)",
+    "A390393": "too_short",
+    "A390394": "too_short",
+    "A097847": "too_short",
+    "A097849": "too_short",
+    "A217693": "too_short",
+    "A054377": "too_short",
+    "A072207": "too_short",
+    "A391592": "too_short",
+    "A025456": "nonpositive",
+    "A025418": "too_short",
+    "A062241": "too_short",
+    "A045535": "too_short",
+    "A080200": "too_short",
+    "A001661": "too_short",
+    "A364132": "too_short",
+    "A364153": "too_short",
+    "A060355": "too_short",
+    "A076445": "too_short",
+    "A060859": "too_short",
+    "A175155": "nonpositive",
+    "A057521": "not_growthlike(r=0.01)",
+    "A074399": "not_growthlike(r=0.46)",
+    "A003135": "too_short",
+    "A389117": "too_short",
+    "A030979": "nonpositive",
+    "A002182": "not_growthlike(r=0.88)",
+    "A388850": "too_short",
+    "A280992": "too_short",
+    "A375071": "too_short",
+    "A193429": "too_short",
+    "A034259": "too_short",
+    "A388302": "too_short",
+    "A344005": "not_growthlike(r=0.67)",
+    "A375077": "too_short",
+    "A146968": "too_short",
+    "A141399": "too_short",
+    "A387688": "nonpositive",
+    "A049108": "not_growthlike(r=0.87)",
+    "A039651": "nonpositive",
+    "A229487": "not_growthlike(r=0.86)",
+    "A007497": "not_growthlike(r=0.86)",
+    "A383044": "too_short",
+    "A051572": "not_growthlike(r=0.86)",
+    "A263958": "too_short",
+    "A389479": "too_short",
+    "A000445": "too_short",
+    "A363069": "too_short",
+    "A074738": "nonpositive",
+    "A386620": "too_short",
+    "A389676": "too_short",
+    "A389677": "too_short",
+    "A391668": "too_short",
+    "A056604": "not_growthlike(r=0.86)",
+    "A289280": "not_growthlike(r=0.36)",
+    "A032742": "not_growthlike(r=0.35)",
+    "A167485": "nonpositive",
+    "A387502": "nonpositive",
+    "A387503": "nonpositive",
+    "A036236": "nonpositive",
+    "A050259": "too_short",
+    "A006517": "too_short",
+    "A015940": "too_short",
+    "A004539": "nonpositive",
+    "A030126": "too_short",
+    "A000372": "too_short",
+    "A140462": "nonpositive",
+    "A387543": "not_growthlike(r=0.35)",
+    "A387698": "not_growthlike(r=0.48)",
+    "A034463": "too_short",
+    "A389335": "too_short",
+    "A006856": "too_short",
+    "A372040": "too_short",
+    "A087280": "too_short",
+    "A391750": "too_short",
+    "A389680": "too_short",
+    "A006530": "not_growthlike(r=0.28)",
+    "A121359": "not_growthlike(r=0.56)",
+    "A392019": "too_short",
+    "A048670": "too_short",
+    "A058989": "too_short",
+    "A391118": "too_short",
+    "A061092": "too_short",
+    "A091963": "not_growthlike(r=0.12)",
+    "A390645": "too_short",
+    "A171081": "too_short",
+    "A001438": "too_short",
+    "A001009": "too_short",
+    "A343507": "too_short",
+    "A006197": "not_growthlike(r=0.22)",
+    "A007865": "too_short",
+    "A014544": "too_short",
+    "A390813": "too_short",
+    "A005235": "not_growthlike(r=0.96)",
+    "A143301": "too_short",
+    "A066063": "too_short",
+    "A330244": "too_short",
+    "A259180": "too_short",
+    "A092487": "nonpositive",
+    "A003016": "not_growthlike(r=-0.12)",
+    "A003015": "too_short",
+    "A059233": "not_growthlike(r=-0.13)",
+    "A098565": "too_short",
+    "A090162": "too_short",
+    "A180058": "too_short",
+    "A343101": "too_short",
+    "A053597": "not_growthlike(r=0.13)",
+    "A078515": "too_short",
+    "A390769": "too_short",
+    "A389839": "too_short",
+    "A143823": "too_short",
+    "A382395": "too_short",
+    "A389182": "too_short",
+    "A339378": "too_short"
+  },
+  "results": [
+    {
+      "name": "__control_logperiodic",
+      "kind": "anchor",
+      "peak_omega": 7.97997997997998,
+      "geometric_ratio": 2.1976059321616352,
+      "peak_power": 0.9255056368437422,
+      "p_value": 0.006622516556291391,
+      "null_power_95": 0.17293758644129653,
+      "verdict": "DSI"
+    },
+    {
+      "name": "__anchor_psi_error",
+      "kind": "anchor",
+      "peak_omega": 14.134134134134134,
+      "geometric_ratio": 1.55977223957652,
+      "peak_power": 0.21002968105688904,
+      "p_value": 0.006622516556291391,
+      "null_power_95": 0.06367213064161015,
+      "verdict": "DSI"
+    },
+    {
+      "name": "A388851",
+      "kind": "oeis",
+      "problem": "374",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.47518977608434887,
+      "p_value": 0.013245033112582781,
+      "null_power_95": 0.36023347280102125,
+      "verdict": "null"
+    },
+    {
+      "name": "A005185",
+      "kind": "oeis",
+      "problem": "422",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.058058058058058,
+      "geometric_ratio": 21.1781069724847,
+      "peak_power": 0.08152583239143392,
+      "p_value": 0.019867549668874173,
+      "null_power_95": 0.06882597416112377,
+      "verdict": "null"
+    },
+    {
+      "name": "A002048",
+      "kind": "oeis",
+      "problem": "359",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.174174174174174,
+      "geometric_ratio": 17.991836081676528,
+      "peak_power": 0.3434380737488903,
+      "p_value": 0.06622516556291391,
+      "null_power_95": 0.35480498991179554,
+      "verdict": "null"
+    },
+    {
+      "name": "A263647",
+      "kind": "oeis",
+      "problem": "770",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.058058058058058,
+      "geometric_ratio": 21.1781069724847,
+      "peak_power": 0.31909386175623866,
+      "p_value": 0.07947019867549669,
+      "null_power_95": 0.35480498991179604,
+      "verdict": "null"
+    },
+    {
+      "name": "A003002",
+      "kind": "oeis",
+      "problem": "3",
+      "tags": [
+        "number theory",
+        "additive combinatorics",
+        "arithmetic progressions"
+      ],
+      "state": "open",
+      "n_terms": 211,
+      "peak_omega": 5.947947947947949,
+      "geometric_ratio": 2.8758890221468842,
+      "peak_power": 0.5334923282890065,
+      "p_value": 0.11920529801324503,
+      "null_power_95": 0.6266387519372257,
+      "verdict": "null"
+    },
+    {
+      "name": "A182237",
+      "kind": "oeis",
+      "problem": "849",
+      "tags": [
+        "number theory",
+        "binomial coefficients"
+      ],
+      "state": "open",
+      "n_terms": 1000,
+      "peak_omega": 2.870870870870871,
+      "geometric_ratio": 8.922704236770594,
+      "peak_power": 0.4164000357371484,
+      "p_value": 0.11920529801324503,
+      "null_power_95": 0.4839615199242626,
+      "verdict": "null"
+    },
+    {
+      "name": "A064113",
+      "kind": "oeis",
+      "problem": "218",
+      "tags": [
+        "number theory",
+        "primes"
+      ],
+      "state": "open",
+      "n_terms": 1000,
+      "peak_omega": 2.058058058058058,
+      "geometric_ratio": 21.1781069724847,
+      "peak_power": 0.38867144805782766,
+      "p_value": 0.15894039735099338,
+      "null_power_95": 0.4839615199242624,
+      "verdict": "null"
+    },
+    {
+      "name": "A005279",
+      "kind": "oeis",
+      "problem": "144",
+      "tags": [
+        "number theory",
+        "divisors"
+      ],
+      "state": "proved",
+      "n_terms": 1500,
+      "peak_omega": 2.3483483483483485,
+      "geometric_ratio": 14.520716472774478,
+      "peak_power": 0.27848301247617097,
+      "p_value": 0.16556291390728478,
+      "null_power_95": 0.3548049899117958,
+      "verdict": "null"
+    },
+    {
+      "name": "A002975",
+      "kind": "oeis",
+      "problem": "470",
+      "tags": [
+        "number theory",
+        "divisors"
+      ],
+      "state": "open",
+      "n_terms": 1161,
+      "peak_omega": 2.928928928928929,
+      "geometric_ratio": 8.543886826630658,
+      "peak_power": 0.3212321368530433,
+      "p_value": 0.19205298013245034,
+      "null_power_95": 0.4135411586864328,
+      "verdict": "null"
+    },
+    {
+      "name": "A389100",
+      "kind": "oeis",
+      "problem": "380",
+      "tags": [
+        "number theory"
+      ],
+      "state": "proved",
+      "n_terms": 1500,
+      "peak_omega": 2.058058058058058,
+      "geometric_ratio": 21.1781069724847,
+      "peak_power": 0.261887816188702,
+      "p_value": 0.1986754966887417,
+      "null_power_95": 0.3452164876273925,
+      "verdict": "null"
+    },
+    {
+      "name": "A155085",
+      "kind": "oeis",
+      "problem": "822",
+      "tags": [
+        "number theory"
+      ],
+      "state": "proved",
+      "n_terms": 1500,
+      "peak_omega": 8.966966966966968,
+      "geometric_ratio": 2.0151699189216252,
+      "peak_power": 0.027518472488562717,
+      "p_value": 0.1986754966887417,
+      "null_power_95": 0.03269201989932213,
+      "verdict": "null"
+    },
+    {
+      "name": "A002503",
+      "kind": "oeis",
+      "problem": "727",
+      "tags": [
+        "number theory",
+        "factorials"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.25010043769430335,
+      "p_value": 0.2582781456953642,
+      "null_power_95": 0.3548049899117959,
+      "verdict": "null"
+    },
+    {
+      "name": "__control_rednoise",
+      "kind": "anchor",
+      "peak_omega": 2.4644644644644647,
+      "geometric_ratio": 12.800874043441938,
+      "peak_power": 0.029906617507111388,
+      "p_value": 0.2781456953642384,
+      "null_power_95": 0.03786517114358462,
+      "verdict": "null"
+    },
+    {
+      "name": "A387054",
+      "kind": "oeis",
+      "problem": "380",
+      "tags": [
+        "number theory"
+      ],
+      "state": "proved",
+      "n_terms": 1500,
+      "peak_omega": 2.058058058058058,
+      "geometric_ratio": 21.1781069724847,
+      "peak_power": 0.24603363908532822,
+      "p_value": 0.2913907284768212,
+      "null_power_95": 0.3548049899117961,
+      "verdict": "null"
+    },
+    {
+      "name": "A389396",
+      "kind": "oeis",
+      "problem": "727",
+      "tags": [
+        "number theory",
+        "factorials"
+      ],
+      "state": "open",
+      "n_terms": 1468,
+      "peak_omega": 2.6386386386386387,
+      "geometric_ratio": 10.818118342099023,
+      "peak_power": 0.2732303992560812,
+      "p_value": 0.304635761589404,
+      "null_power_95": 0.36124993657166177,
+      "verdict": "null"
+    },
+    {
+      "name": "A390395",
+      "kind": "oeis",
+      "problem": "302",
+      "tags": [
+        "number theory",
+        "unit fractions"
+      ],
+      "state": "open",
+      "n_terms": 731,
+      "peak_omega": 2.116116116116116,
+      "geometric_ratio": 19.476455031219743,
+      "peak_power": 0.3218875674748927,
+      "p_value": 0.32450331125827814,
+      "null_power_95": 0.468566725233474,
+      "verdict": "null"
+    },
+    {
+      "name": "A004059",
+      "kind": "oeis",
+      "problem": "168",
+      "tags": [
+        "additive combinatorics"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 3.915915915915916,
+      "geometric_ratio": 4.975496090279224,
+      "peak_power": 0.24819428052342873,
+      "p_value": 0.33112582781456956,
+      "null_power_95": 0.3602078041725739,
+      "verdict": "null"
+    },
+    {
+      "name": "A384927",
+      "kind": "oeis",
+      "problem": "321",
+      "tags": [
+        "number theory",
+        "unit fractions"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.2322322322322323,
+      "geometric_ratio": 16.68907501688521,
+      "peak_power": 0.2200396265525933,
+      "p_value": 0.40397350993377484,
+      "null_power_95": 0.36047674708562355,
+      "verdict": "null"
+    },
+    {
+      "name": "A005153",
+      "kind": "oeis",
+      "problem": "18",
+      "tags": [
+        "number theory",
+        "divisors",
+        "factorials"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.2322322322322323,
+      "geometric_ratio": 16.68907501688521,
+      "peak_power": 0.21239568559861483,
+      "p_value": 0.41721854304635764,
+      "null_power_95": 0.3548049899117959,
+      "verdict": "null"
+    },
+    {
+      "name": "A015921",
+      "kind": "oeis",
+      "problem": "479",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1000,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.2808773295051621,
+      "p_value": 0.41721854304635764,
+      "null_power_95": 0.4839615199242623,
+      "verdict": "null"
+    },
+    {
+      "name": "A005282",
+      "kind": "oeis",
+      "problem": "340",
+      "tags": [
+        "number theory",
+        "additive combinatorics",
+        "sidon sets"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.2026018906826698,
+      "p_value": 0.47019867549668876,
+      "null_power_95": 0.35480498991179554,
+      "verdict": "null"
+    },
+    {
+      "name": "A002202",
+      "kind": "oeis",
+      "problem": "51",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.20034493020182467,
+      "p_value": 0.4768211920529801,
+      "null_power_95": 0.3548049899117956,
+      "verdict": "null"
+    },
+    {
+      "name": "A064491",
+      "kind": "oeis",
+      "problem": "414",
+      "tags": [
+        "number theory",
+        "iterated functions"
+      ],
+      "state": "open",
+      "n_terms": 1000,
+      "peak_omega": 2.986986986986987,
+      "geometric_ratio": 8.194961202040204,
+      "peak_power": 0.26096139657554845,
+      "p_value": 0.4768211920529801,
+      "null_power_95": 0.4839615199242624,
+      "verdict": "null"
+    },
+    {
+      "name": "A005278",
+      "kind": "oeis",
+      "problem": "418",
+      "tags": [
+        "number theory"
+      ],
+      "state": "proved (Lean)",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.20038062958897046,
+      "p_value": 0.4768211920529801,
+      "null_power_95": 0.35480498991179554,
+      "verdict": "null"
+    },
+    {
+      "name": "A263996",
+      "kind": "oeis",
+      "problem": "52",
+      "tags": [
+        "number theory",
+        "additive combinatorics"
+      ],
+      "state": "open",
+      "n_terms": 205,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.2790494428727883,
+      "p_value": 0.48344370860927155,
+      "null_power_95": 0.6487112431891611,
+      "verdict": "null"
+    },
+    {
+      "name": "A386978",
+      "kind": "oeis",
+      "problem": "682",
+      "tags": [
+        "number theory",
+        "primes"
+      ],
+      "state": "proved",
+      "n_terms": 1500,
+      "peak_omega": 4.206206206206206,
+      "geometric_ratio": 4.453940353291024,
+      "peak_power": 0.19214347707789567,
+      "p_value": 0.5364238410596026,
+      "null_power_95": 0.3548049899117959,
+      "verdict": "null"
+    },
+    {
+      "name": "A264810",
+      "kind": "oeis",
+      "problem": "416",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.1855431818195945,
+      "p_value": 0.5562913907284768,
+      "null_power_95": 0.3548049899117957,
+      "verdict": "null"
+    },
+    {
+      "name": "A006521",
+      "kind": "oeis",
+      "problem": "479",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1064,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.23473097689434827,
+      "p_value": 0.5629139072847682,
+      "null_power_95": 0.4252211749294678,
+      "verdict": "null"
+    },
+    {
+      "name": "A210184",
+      "kind": "oeis",
+      "problem": "478",
+      "tags": [
+        "number theory",
+        "factorials"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.1844444104584514,
+      "p_value": 0.5761589403973509,
+      "null_power_95": 0.35480498991179615,
+      "verdict": "null"
+    },
+    {
+      "name": "A129515",
+      "kind": "oeis",
+      "problem": "730",
+      "tags": [
+        "number theory",
+        "binomial coefficients",
+        "base representations"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.174174174174174,
+      "geometric_ratio": 17.991836081676528,
+      "peak_power": 0.18294412247688463,
+      "p_value": 0.5761589403973509,
+      "null_power_95": 0.35480498991179565,
+      "verdict": "null"
+    },
+    {
+      "name": "A034258",
+      "kind": "oeis",
+      "problem": "391",
+      "tags": [
+        "number theory",
+        "factorials"
+      ],
+      "state": "proved",
+      "n_terms": 1500,
+      "peak_omega": 2.058058058058058,
+      "geometric_ratio": 21.1781069724847,
+      "peak_power": 0.17860283568747523,
+      "p_value": 0.6026490066225165,
+      "null_power_95": 0.3548049899117953,
+      "verdict": "null"
+    },
+    {
+      "name": "A121048",
+      "kind": "oeis",
+      "problem": "822",
+      "tags": [
+        "number theory"
+      ],
+      "state": "proved",
+      "n_terms": 1000,
+      "peak_omega": 13.205205205205205,
+      "geometric_ratio": 1.6093192419325832,
+      "peak_power": 0.025490988395439507,
+      "p_value": 0.6026490066225165,
+      "null_power_95": 0.04016695291100677,
+      "verdict": "null"
+    },
+    {
+      "name": "A074741",
+      "kind": "oeis",
+      "problem": "233",
+      "tags": [
+        "number theory",
+        "primes"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.754754754754755,
+      "geometric_ratio": 9.785004509700608,
+      "peak_power": 0.17251467487459576,
+      "p_value": 0.6357615894039735,
+      "null_power_95": 0.3548049899117961,
+      "verdict": "null"
+    },
+    {
+      "name": "A005243",
+      "kind": "oeis",
+      "problem": "423",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1000,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.2158070603101992,
+      "p_value": 0.6357615894039735,
+      "null_power_95": 0.4839615199242622,
+      "verdict": "null"
+    },
+    {
+      "name": "A002858",
+      "kind": "oeis",
+      "problem": "342",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.174174174174174,
+      "geometric_ratio": 17.991836081676528,
+      "peak_power": 0.16642966346349522,
+      "p_value": 0.6622516556291391,
+      "null_power_95": 0.35480498991179604,
+      "verdict": "null"
+    },
+    {
+      "name": "A389313",
+      "kind": "oeis",
+      "problem": "555",
+      "tags": [
+        "graph theory",
+        "ramsey theory"
+      ],
+      "state": "open",
+      "n_terms": 998,
+      "peak_omega": 16.3983983983984,
+      "geometric_ratio": 1.4669104788926206,
+      "peak_power": 0.023072924613613276,
+      "p_value": 0.6688741721854304,
+      "null_power_95": 0.0410582702495982,
+      "verdict": "null"
+    },
+    {
+      "name": "A322292",
+      "kind": "oeis",
+      "problem": "385",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.696696696696697,
+      "geometric_ratio": 10.27749182331896,
+      "peak_power": 0.18575939702229682,
+      "p_value": 0.6821192052980133,
+      "null_power_95": 0.3601375459722855,
+      "verdict": "null"
+    },
+    {
+      "name": "A186736",
+      "kind": "oeis",
+      "problem": "879",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 4.38038038038038,
+      "geometric_ratio": 4.1970950189596845,
+      "peak_power": 0.1809470081672624,
+      "p_value": 0.7019867549668874,
+      "null_power_95": 0.360237040037846,
+      "verdict": "null"
+    },
+    {
+      "name": "A070089",
+      "kind": "oeis",
+      "problem": "371",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1000,
+      "peak_omega": 4.960960960960961,
+      "geometric_ratio": 3.54850309744458,
+      "peak_power": 0.19469428444361517,
+      "p_value": 0.7086092715231788,
+      "null_power_95": 0.48396151992426223,
+      "verdict": "null"
+    },
+    {
+      "name": "A071870",
+      "kind": "oeis",
+      "problem": "372",
+      "tags": [
+        "number theory"
+      ],
+      "state": "proved",
+      "n_terms": 1000,
+      "peak_omega": 5.7157157157157155,
+      "geometric_ratio": 3.002010806817811,
+      "peak_power": 0.19226647129603885,
+      "p_value": 0.7218543046357616,
+      "null_power_95": 0.4839615199242624,
+      "verdict": "null"
+    },
+    {
+      "name": "A006286",
+      "kind": "oeis",
+      "problem": "9",
+      "tags": [
+        "number theory",
+        "additive basis",
+        "primes"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.15587686964086683,
+      "p_value": 0.7284768211920529,
+      "null_power_95": 0.3548049899117956,
+      "verdict": "null"
+    },
+    {
+      "name": "A006285",
+      "kind": "oeis",
+      "problem": "16",
+      "tags": [
+        "number theory",
+        "additive basis",
+        "primes"
+      ],
+      "state": "disproved (Lean)",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.15623970979317323,
+      "p_value": 0.7284768211920529,
+      "null_power_95": 0.3548049899117957,
+      "verdict": "null"
+    },
+    {
+      "name": "A005244",
+      "kind": "oeis",
+      "problem": "424",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.15684595650984448,
+      "p_value": 0.7284768211920529,
+      "null_power_95": 0.3548049899117955,
+      "verdict": "null"
+    },
+    {
+      "name": "A027434",
+      "kind": "oeis",
+      "problem": "650",
+      "tags": [
+        "number theory"
+      ],
+      "state": "solved (Lean)",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.15316267757660743,
+      "p_value": 0.7350993377483444,
+      "null_power_95": 0.3548049899117957,
+      "verdict": "null"
+    },
+    {
+      "name": "A005487",
+      "kind": "oeis",
+      "problem": "271",
+      "tags": [
+        "additive combinatorics",
+        "arithmetic progressions"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.15236969148008045,
+      "p_value": 0.7483443708609272,
+      "null_power_95": 0.3548049899117956,
+      "verdict": "null"
+    },
+    {
+      "name": "A092671",
+      "kind": "oeis",
+      "problem": "292",
+      "tags": [
+        "number theory",
+        "unit fractions"
+      ],
+      "state": "proved",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.1505990131612818,
+      "p_value": 0.7682119205298014,
+      "null_power_95": 0.3548049899117957,
+      "verdict": "null"
+    },
+    {
+      "name": "A070003",
+      "kind": "oeis",
+      "problem": "380",
+      "tags": [
+        "number theory"
+      ],
+      "state": "proved",
+      "n_terms": 1500,
+      "peak_omega": 2.174174174174174,
+      "geometric_ratio": 17.991836081676528,
+      "peak_power": 0.14579945141663042,
+      "p_value": 0.8013245033112583,
+      "null_power_95": 0.3548049899117958,
+      "verdict": "null"
+    },
+    {
+      "name": "A388654",
+      "kind": "oeis",
+      "problem": "380",
+      "tags": [
+        "number theory"
+      ],
+      "state": "proved",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.14700456525048525,
+      "p_value": 0.8013245033112583,
+      "null_power_95": 0.35480498991179577,
+      "verdict": "null"
+    },
+    {
+      "name": "A023193",
+      "kind": "oeis",
+      "problem": "855",
+      "tags": [
+        "number theory",
+        "primes"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.5225225225225225,
+      "geometric_ratio": 12.071341537205608,
+      "peak_power": 0.15740688849794157,
+      "p_value": 0.8013245033112583,
+      "null_power_95": 0.360549938941341,
+      "verdict": "null"
+    },
+    {
+      "name": "A352287",
+      "kind": "oeis",
+      "problem": "768",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.14397508922926833,
+      "p_value": 0.8079470198675497,
+      "null_power_95": 0.3548049899117958,
+      "verdict": "null"
+    },
+    {
+      "name": "A006037",
+      "kind": "oeis",
+      "problem": "470",
+      "tags": [
+        "number theory",
+        "divisors"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.13946768916143856,
+      "p_value": 0.8410596026490066,
+      "null_power_95": 0.35480498991179577,
+      "verdict": "null"
+    },
+    {
+      "name": "A387584",
+      "kind": "oeis",
+      "problem": "888",
+      "tags": [
+        "number theory",
+        "squares"
+      ],
+      "state": "open",
+      "n_terms": 203,
+      "peak_omega": 6.354354354354355,
+      "geometric_ratio": 2.688006810125645,
+      "peak_power": 0.1648030537176862,
+      "p_value": 0.8410596026490066,
+      "null_power_95": 0.61253565792001,
+      "verdict": "null"
+    },
+    {
+      "name": "A389544",
+      "kind": "oeis",
+      "problem": "421",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.12393156447829215,
+      "p_value": 0.8543046357615894,
+      "null_power_95": 0.32615463748143364,
+      "verdict": "null"
+    },
+    {
+      "name": "A038133",
+      "kind": "oeis",
+      "problem": "17",
+      "tags": [
+        "number theory",
+        "primes"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.12943647394525454,
+      "p_value": 0.8741721854304636,
+      "null_power_95": 0.35480498991179577,
+      "verdict": "null"
+    },
+    {
+      "name": "A046693",
+      "kind": "oeis",
+      "problem": "170",
+      "tags": [
+        "additive combinatorics"
+      ],
+      "state": "open",
+      "n_terms": 213,
+      "peak_omega": 7.341341341341342,
+      "geometric_ratio": 2.353405416654002,
+      "peak_power": 0.15157023037053344,
+      "p_value": 0.8741721854304636,
+      "null_power_95": 0.3967630353800632,
+      "verdict": "null"
+    },
+    {
+      "name": "A375081",
+      "kind": "oeis",
+      "problem": "290",
+      "tags": [
+        "number theory",
+        "unit fractions"
+      ],
+      "state": "proved (Lean)",
+      "n_terms": 1500,
+      "peak_omega": 5.483483483483484,
+      "geometric_ratio": 3.145076720803815,
+      "peak_power": 0.12778386952099333,
+      "p_value": 0.8741721854304636,
+      "null_power_95": 0.35480498991179577,
+      "verdict": "null"
+    },
+    {
+      "name": "A068509",
+      "kind": "oeis",
+      "problem": "441",
+      "tags": [
+        "number theory"
+      ],
+      "state": "disproved",
+      "n_terms": 1000,
+      "peak_omega": 5.541541541541542,
+      "geometric_ratio": 3.107546399575635,
+      "peak_power": 0.15624822820208767,
+      "p_value": 0.9006622516556292,
+      "null_power_95": 0.4839615199242622,
+      "verdict": "null"
+    },
+    {
+      "name": "A390848",
+      "kind": "oeis",
+      "problem": "421",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.10822512003435887,
+      "p_value": 0.9205298013245033,
+      "null_power_95": 0.35480498991179543,
+      "verdict": "null"
+    },
+    {
+      "name": "A390246",
+      "kind": "oeis",
+      "problem": "710",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.10835905231530525,
+      "p_value": 0.9205298013245033,
+      "null_power_95": 0.35480498991179554,
+      "verdict": "null"
+    },
+    {
+      "name": "A143824",
+      "kind": "oeis",
+      "problem": "14",
+      "tags": [
+        "number theory",
+        "sidon sets",
+        "additive combinatorics"
+      ],
+      "state": "open",
+      "n_terms": 500,
+      "peak_omega": 7.747747747747748,
+      "geometric_ratio": 2.250087864610327,
+      "peak_power": 0.11917907336233748,
+      "p_value": 0.9470198675496688,
+      "null_power_95": 0.5497094134817467,
+      "verdict": "null"
+    },
+    {
+      "name": "A006036",
+      "kind": "oeis",
+      "problem": "469",
+      "tags": [
+        "number theory",
+        "divisors"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.09996267034184281,
+      "p_value": 0.9470198675496688,
+      "null_power_95": 0.3548049899117959,
+      "verdict": "null"
+    },
+    {
+      "name": "A333231",
+      "kind": "oeis",
+      "problem": "218",
+      "tags": [
+        "number theory",
+        "primes"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.09277663314650568,
+      "p_value": 0.9536423841059603,
+      "null_power_95": 0.3548049899117954,
+      "verdict": "null"
+    },
+    {
+      "name": "A389713",
+      "kind": "oeis",
+      "problem": "472",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.2322322322322323,
+      "geometric_ratio": 16.68907501688521,
+      "peak_power": 0.09540209932943565,
+      "p_value": 0.9536423841059603,
+      "null_power_95": 0.35480498991179577,
+      "verdict": "null"
+    },
+    {
+      "name": "A390181",
+      "kind": "oeis",
+      "problem": "676",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.08064799824611751,
+      "p_value": 0.9668874172185431,
+      "null_power_95": 0.3164487512517333,
+      "verdict": "null"
+    },
+    {
+      "name": "A061070",
+      "kind": "oeis",
+      "problem": "417",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.08161432814870645,
+      "p_value": 0.9735099337748344,
+      "null_power_95": 0.3548049899117956,
+      "verdict": "null"
+    },
+    {
+      "name": "A055265",
+      "kind": "oeis",
+      "problem": "473",
+      "tags": [
+        "number theory"
+      ],
+      "state": "proved",
+      "n_terms": 1500,
+      "peak_omega": 6.934934934934935,
+      "geometric_ratio": 2.474452994802056,
+      "peak_power": 0.0744121312697916,
+      "p_value": 0.9867549668874173,
+      "null_power_95": 0.35480498991179577,
+      "verdict": "null"
+    },
+    {
+      "name": "A365339",
+      "kind": "oeis",
+      "problem": "49",
+      "tags": [
+        "number theory",
+        "primes"
+      ],
+      "state": "proved",
+      "n_terms": 1500,
+      "peak_omega": 2.928928928928929,
+      "geometric_ratio": 8.543886826630658,
+      "peak_power": 0.0596390658234818,
+      "p_value": 0.9933774834437086,
+      "null_power_95": 0.35480498991179593,
+      "verdict": "null"
+    },
+    {
+      "name": "A367090",
+      "kind": "oeis",
+      "problem": "125",
+      "tags": [
+        "number theory",
+        "base representations"
+      ],
+      "state": "disproved (Lean)",
+      "n_terms": 1500,
+      "peak_omega": 3.915915915915916,
+      "geometric_ratio": 4.975496090279224,
+      "peak_power": 0.07231426858092985,
+      "p_value": 0.9933774834437086,
+      "null_power_95": 0.3261546374814339,
+      "verdict": "null"
+    },
+    {
+      "name": "A333230",
+      "kind": "oeis",
+      "problem": "218",
+      "tags": [
+        "number theory",
+        "primes"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.06979941178425404,
+      "p_value": 0.9933774834437086,
+      "null_power_95": 0.3548049899117956,
+      "verdict": "null"
+    },
+    {
+      "name": "A387184",
+      "kind": "oeis",
+      "problem": "374",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.928928928928929,
+      "geometric_ratio": 8.543886826630658,
+      "peak_power": 0.06880712159210804,
+      "p_value": 0.9933774834437086,
+      "null_power_95": 0.3548049899117955,
+      "verdict": "null"
+    },
+    {
+      "name": "A389148",
+      "kind": "oeis",
+      "problem": "374",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.07116754310454879,
+      "p_value": 0.9933774834437086,
+      "null_power_95": 0.3548049899117955,
+      "verdict": "null"
+    },
+    {
+      "name": "A005236",
+      "kind": "oeis",
+      "problem": "413",
+      "tags": [
+        "number theory",
+        "iterated functions"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.049795448364556,
+      "p_value": 0.9933774834437086,
+      "null_power_95": 0.35480498991179593,
+      "verdict": "null"
+    },
+    {
+      "name": "A015919",
+      "kind": "oeis",
+      "problem": "479",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.5225225225225225,
+      "geometric_ratio": 12.071341537205608,
+      "peak_power": 0.05500415548131571,
+      "p_value": 0.9933774834437086,
+      "null_power_95": 0.3261546374814335,
+      "verdict": "null"
+    },
+    {
+      "name": "A062249",
+      "kind": "oeis",
+      "problem": "647",
+      "tags": [
+        "number theory"
+      ],
+      "state": "verifiable",
+      "n_terms": 1000,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.07221090505796955,
+      "p_value": 0.9933774834437086,
+      "null_power_95": 0.23344595375559488,
+      "verdict": "null"
+    },
+    {
+      "name": "A005117",
+      "kind": "oeis",
+      "problem": "145",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.5225225225225225,
+      "geometric_ratio": 12.071341537205608,
+      "peak_power": 0.027196831132787987,
+      "p_value": 1.0,
+      "null_power_95": 0.3176505734713415,
+      "verdict": "null"
+    },
+    {
+      "name": "A075245",
+      "kind": "oeis",
+      "problem": "242",
+      "tags": [
+        "number theory",
+        "unit fractions"
+      ],
+      "state": "falsifiable",
+      "n_terms": 1500,
+      "peak_omega": 8.038038038038039,
+      "geometric_ratio": 2.185143408905087,
+      "peak_power": 0.08083489481658929,
+      "p_value": 1.0,
+      "null_power_95": 0.3706458297518357,
+      "verdict": "null"
+    },
+    {
+      "name": "A119425",
+      "kind": "oeis",
+      "problem": "469",
+      "tags": [
+        "number theory",
+        "divisors"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 2.3483483483483485,
+      "geometric_ratio": 14.520716472774478,
+      "peak_power": 0.040760476993045275,
+      "p_value": 1.0,
+      "null_power_95": 0.35480498991179593,
+      "verdict": "null"
+    },
+    {
+      "name": "A001034",
+      "kind": "oeis",
+      "problem": "768",
+      "tags": [
+        "number theory"
+      ],
+      "state": "open",
+      "n_terms": 1500,
+      "peak_omega": 3.5095095095095097,
+      "geometric_ratio": 5.991438098848784,
+      "peak_power": 0.027648588912536295,
+      "p_value": 1.0,
+      "null_power_95": 0.35480498991179565,
+      "verdict": "null"
+    }
+  ]
+}
