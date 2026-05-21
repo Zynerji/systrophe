@@ -1,0 +1,95 @@
+{
+  "n_noncontrol_tests": 6,
+  "bonferroni_threshold": 0.008333333333333333,
+  "n_points": 1500,
+  "results": [
+    {
+      "name": "control_logperiodic",
+      "kind": "control",
+      "note": "synthetic log-periodic omega=8.0",
+      "peak_omega": 7.998331943286072,
+      "geometric_ratio": 2.19363932898787,
+      "peak_power": 0.9285178815526728,
+      "p_value": 0.004975124378109453,
+      "null_power_95": 0.18034143940943942,
+      "verdict": "DSI"
+    },
+    {
+      "name": "psi_error",
+      "kind": "erdos-adjacent",
+      "note": "prime psi(x)-x (Chebyshev)",
+      "peak_omega": 14.141784820683904,
+      "geometric_ratio": 1.5593971665706101,
+      "peak_power": 0.21010508021241195,
+      "p_value": 0.004975124378109453,
+      "null_power_95": 0.06577818071316775,
+      "verdict": "DSI"
+    },
+    {
+      "name": "squarefree_error",
+      "kind": "erdos-adjacent",
+      "note": "squarefree count Q(x) - 6x/pi^2",
+      "peak_omega": 7.030859049207673,
+      "geometric_ratio": 2.4440543180166894,
+      "peak_power": 0.3200077142805473,
+      "p_value": 0.004975124378109453,
+      "null_power_95": 0.10032665863593766,
+      "verdict": "DSI"
+    },
+    {
+      "name": "divisor_error",
+      "kind": "erdos-adjacent",
+      "note": "Dirichlet divisor error Delta(x)",
+      "peak_omega": 15.786488740617182,
+      "geometric_ratio": 1.4888593827708472,
+      "peak_power": 0.01024248098100566,
+      "p_value": 0.0945273631840796,
+      "null_power_95": 0.010828871712075113,
+      "verdict": "null"
+    },
+    {
+      "name": "goldbach_count",
+      "kind": "erdos-adjacent",
+      "note": "Goldbach representation count g(2m)",
+      "peak_omega": 20.817347789824854,
+      "geometric_ratio": 1.3523238548007537,
+      "peak_power": 0.005257331872006826,
+      "p_value": 0.15920398009950248,
+      "null_power_95": 0.006522062214954789,
+      "verdict": "null"
+    },
+    {
+      "name": "control_rednoise",
+      "kind": "control",
+      "note": "AR(1) red noise",
+      "peak_omega": 2.4837364470391994,
+      "geometric_ratio": 12.55013081575283,
+      "peak_power": 0.02982443650448012,
+      "p_value": 0.2935323383084577,
+      "null_power_95": 0.037951329996416955,
+      "verdict": "null"
+    },
+    {
+      "name": "circle_error",
+      "kind": "erdos-adjacent",
+      "note": "Gauss circle error P(x)",
+      "peak_omega": 32.91075896580484,
+      "geometric_ratio": 1.2103575882998696,
+      "peak_power": 0.006086638780127032,
+      "p_value": 0.7562189054726368,
+      "null_power_95": 0.010828871712075158,
+      "verdict": "null"
+    },
+    {
+      "name": "mult_table_erdos",
+      "kind": "erdos",
+      "note": "distinct products in n x n table (Erdos)",
+      "peak_omega": 13.948290241868225,
+      "geometric_ratio": 1.5690381041866808,
+      "peak_power": 0.0904877271161001,
+      "p_value": 0.9402985074626866,
+      "null_power_95": 0.2364579136234181,
+      "verdict": "null"
+    }
+  ]
+}
