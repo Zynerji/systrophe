@@ -1,0 +1,87 @@
+{
+  "x_max": 10000000,
+  "x_min": 1000.0,
+  "u_span": 9.210340371976184,
+  "n_zeros": 20,
+  "window_width_u": 4.0,
+  "perturbed_zero": {
+    "k": 10,
+    "gamma": 49.7738324776723
+  },
+  "real_prime_false_alarm_check": [
+    {
+      "k": 1,
+      "gamma": 14.134725141734695,
+      "sigma_hat": -0.0014252604652650784,
+      "growth_z": -0.36,
+      "old_catcher": "smooth",
+      "growth_catcher": "stationary"
+    },
+    {
+      "k": 5,
+      "gamma": 32.93506158773919,
+      "sigma_hat": 0.017107448432353622,
+      "growth_z": 1.0,
+      "old_catcher": "smooth",
+      "growth_catcher": "stationary"
+    },
+    {
+      "k": 10,
+      "gamma": 49.7738324776723,
+      "sigma_hat": -0.004705166607081967,
+      "growth_z": -0.39,
+      "old_catcher": "smooth",
+      "growth_catcher": "stationary"
+    },
+    {
+      "k": 15,
+      "gamma": 65.1125440480816,
+      "sigma_hat": 0.017964891495582523,
+      "growth_z": 0.84,
+      "old_catcher": "smooth",
+      "growth_catcher": "stationary"
+    }
+  ],
+  "synthetic_offline_sweep": [
+    {
+      "beta": 0.5,
+      "sigma_true": 0.0,
+      "sigma_hat": -0.004693022645522719,
+      "growth_z": -0.39,
+      "old_catcher": "smooth",
+      "growth_catcher": "stationary"
+    },
+    {
+      "beta": 0.55,
+      "sigma_true": 0.050000000000000044,
+      "sigma_hat": 0.024179049721793796,
+      "growth_z": 3.97,
+      "old_catcher": "smooth",
+      "growth_catcher": "growing"
+    },
+    {
+      "beta": 0.6,
+      "sigma_true": 0.09999999999999998,
+      "sigma_hat": 0.08016847329930314,
+      "growth_z": 6.59,
+      "old_catcher": "smooth",
+      "growth_catcher": "growing"
+    },
+    {
+      "beta": 0.7,
+      "sigma_true": 0.19999999999999996,
+      "sigma_hat": 0.19497097866798974,
+      "growth_z": 6.8,
+      "old_catcher": "smooth",
+      "growth_catcher": "growing"
+    },
+    {
+      "beta": 0.8,
+      "sigma_true": 0.30000000000000004,
+      "sigma_hat": 0.29892281306151675,
+      "growth_z": 6.8,
+      "old_catcher": "novel_structure",
+      "growth_catcher": "growing"
+    }
+  ]
+}

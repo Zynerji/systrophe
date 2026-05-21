@@ -1,0 +1,69 @@
+{
+  "x_max": 100000000,
+  "x_min": 1000.0,
+  "u_span": 11.51292546497023,
+  "n_zeros": 20,
+  "window_width_u": 5.0,
+  "perturbed_zero": {
+    "k": 10,
+    "gamma": 49.7738324776723
+  },
+  "real_prime_false_alarm_check": [
+    {
+      "k": 1,
+      "gamma": 14.134725141734695,
+      "sigma_hat": 0.00020984070527910943,
+      "catcher_verdict": "smooth"
+    },
+    {
+      "k": 5,
+      "gamma": 32.93506158773919,
+      "sigma_hat": -0.0006374983081550071,
+      "catcher_verdict": "smooth"
+    },
+    {
+      "k": 10,
+      "gamma": 49.7738324776723,
+      "sigma_hat": 0.009840217268129012,
+      "catcher_verdict": "smooth"
+    },
+    {
+      "k": 15,
+      "gamma": 65.1125440480816,
+      "sigma_hat": 0.0026922122241977895,
+      "catcher_verdict": "smooth"
+    }
+  ],
+  "synthetic_offline_sweep": [
+    {
+      "beta": 0.5,
+      "sigma_true": 0.0,
+      "sigma_hat": 0.003953131298694771,
+      "catcher_verdict": "smooth"
+    },
+    {
+      "beta": 0.55,
+      "sigma_true": 0.050000000000000044,
+      "sigma_hat": 0.02949911210751187,
+      "catcher_verdict": "smooth"
+    },
+    {
+      "beta": 0.6,
+      "sigma_true": 0.09999999999999998,
+      "sigma_hat": 0.08561133853650182,
+      "catcher_verdict": "smooth"
+    },
+    {
+      "beta": 0.7,
+      "sigma_true": 0.19999999999999996,
+      "sigma_hat": 0.1972160052726812,
+      "catcher_verdict": "smooth"
+    },
+    {
+      "beta": 0.8,
+      "sigma_true": 0.30000000000000004,
+      "sigma_hat": 0.29960670572534315,
+      "catcher_verdict": "smooth"
+    }
+  ]
+}

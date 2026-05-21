@@ -1,0 +1,68 @@
+{
+  "real_primes": [
+    {
+      "x_max": 1000000,
+      "u_span": 6.907755278982137,
+      "sigma_env": -0.004331585453313565,
+      "growth_z": -2.2213899620507056,
+      "null_slope_std": 0.001949943741221737,
+      "floor_times_span": 0.01346973417214263,
+      "verdict": "stationary"
+    },
+    {
+      "x_max": 10000000,
+      "u_span": 9.210340371976184,
+      "sigma_env": 0.0009079117952277737,
+      "growth_z": 0.6340309405267582,
+      "null_slope_std": 0.001431967648887092,
+      "floor_times_span": 0.0131889094479086,
+      "verdict": "stationary"
+    },
+    {
+      "x_max": 100000000,
+      "u_span": 11.51292546497023,
+      "sigma_env": -0.0007989540249184864,
+      "growth_z": -0.6789077646880827,
+      "null_slope_std": 0.001176822635524809,
+      "floor_times_span": 0.013548671288286955,
+      "verdict": "stationary"
+    }
+  ],
+  "synthetic_calibration": [
+    {
+      "theta": 0.5,
+      "sigma_env_true": 0.0,
+      "sigma_env_hat": 8.508099098598777e-05,
+      "growth_z": 0.04348810111648884,
+      "verdict": "stationary"
+    },
+    {
+      "theta": 0.55,
+      "sigma_env_true": 0.050000000000000044,
+      "sigma_env_hat": 0.018571393938140175,
+      "growth_z": 7.24154231549741,
+      "verdict": "growing"
+    },
+    {
+      "theta": 0.6,
+      "sigma_env_true": 0.09999999999999998,
+      "sigma_env_hat": 0.06889305735767037,
+      "growth_z": 8.065760879792482,
+      "verdict": "growing"
+    },
+    {
+      "theta": 0.7,
+      "sigma_env_true": 0.19999999999999996,
+      "sigma_env_hat": 0.19063072520795282,
+      "growth_z": 8.083091356050252,
+      "verdict": "growing"
+    },
+    {
+      "theta": 0.8,
+      "sigma_env_true": 0.30000000000000004,
+      "sigma_env_hat": 0.2982552492714894,
+      "growth_z": 8.078402600411993,
+      "verdict": "growing"
+    }
+  ]
+}
