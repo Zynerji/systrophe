@@ -34,7 +34,9 @@ p=0.003; prime ψ ω=14.13 p=0.003).
 **The binding wall is data length.** The prize problems are dominated by
 sequences (Ramsey numbers, Golomb rulers, distinct-distance sets) with only
 a handful of known terms — far too few for any spectral test. Of the six
-testable, none shows significant log-periodicity.
+testable, none shows significant log-periodicity. The one signed prize
+sequence, A140462 (#500), was tested separately with the sign-aware variant
+(`erdos_signed_dsi.py`) and is also null (ω=2.0 floor, p=0.02).
 
 ## Depth — the structural map (where DSI *does* live)
 
@@ -46,6 +48,8 @@ analytic constants to <0.1%:
 |---|---|---|
 | prime ψ(x)−x | ln x | DSI at ω=γ₁=14.13 (zeta comb) — `FINDINGS_ERDOS_DSI_SWEEP.md` |
 | squarefree-count error | ln x | DSI at ω=γ₁/2 (zeros of ζ(2s)) |
+| Mertens M(x)=Σμ(n) | ln x | DSI at ω=14.122=γ₁ (p=0.003) — `erdos_signed_dsi.py` |
+| Liouville L(x)=Σλ(n) | ln x | DSI at ω=14.140=γ₁ (p=0.003) |
 | greedy 3-AP-free set (A005836, Cantor) | ln N | DSI at ω=2π/ln3=5.72, ratio=3 (the base) — `FINDINGS_ERDOS_AP_COMPLEX_DIMENSION.md` |
 | Dirichlet divisor error Δ(x) | √x | comb at 4π√n to ~0.01% (Voronoi) — `FINDINGS_…` |
 | Gauss circle error P(x) | √x | comb at 2π√n, sums-of-two-squares only (Hardy) |
