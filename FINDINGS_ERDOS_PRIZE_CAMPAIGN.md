@@ -61,6 +61,17 @@ structure (Euler-product errors in ln x; the Cantor construction; lattice
 errors in √x). It is correctly absent from extremal/combinatorial prize
 sequences, which is why the battery is a clean negative.
 
+## Growth-exponent mode (companion: `erdos_multiplication_table_growth.py`)
+
+The Erdős multiplication-table problem (distinct products in the n×n table,
+M(n) ~ n²/(ln n)^δ (ln ln n)^{3/2}, Ford's δ=0.0860713) exercises the
+`growth_catcher` rather than the DSI catcher. Computed exactly to n=8000
+(M=14,509,549): the catcher recovers the **leading exponent 1.95 ≈ 2**
+(z=88, R²=1.00) cleanly, but **Ford's δ is not recoverable** (2-param loglog
+fit gives δ=−0.03, wrong sign) — at n=8000 `ln ln n` spans only [1.67, 2.20],
+so the sub-leading loglog exponent is degenerate. Same loglog-asymptopia wall
+as r₃(n): the toolkit reads leading exponents, never the subleading one.
+
 ## Verdict
 
 - **No monetary prize is approachable by spectral methods.** The prizes
