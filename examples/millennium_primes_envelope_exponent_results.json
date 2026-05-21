@@ -26,6 +26,15 @@
       "null_slope_std": 0.001176822635524809,
       "floor_times_span": 0.013548671288286955,
       "verdict": "stationary"
+    },
+    {
+      "x_max": 1000000000,
+      "u_span": 13.815510557964274,
+      "sigma_env": -0.000766232210751655,
+      "growth_z": -0.7157455511654071,
+      "null_slope_std": 0.001070537161570957,
+      "floor_times_span": 0.014790017458376662,
+      "verdict": "stationary"
     }
   ],
   "synthetic_calibration": [

@@ -83,16 +83,26 @@ the search-band edge and aliases — push `--gamma-hi` to recover it.
   structured content of the prime spectrum, with no number-theoretic
   input.
 
-### Scaling X = 10^7 -> 10^8
+### Scaling X = 10^7 -> 10^9, and the diminishing-returns wall
 
 | X | u-span | Rayleigh dgamma | zeros recovered | mean |err| (first 6) | EF correlation |
 |---|--------|-----------------|-----------------|----------------------|----------------|
 | 10^7 | 9.21 | 0.682 | 14 (≤0.21%) | 0.10% | 0.80 |
 | 10^8 | 11.51 | 0.546 | 26 (≤0.10%) | 0.04% | 0.855 |
+| 10^9 | 13.82 | 0.455 | 27 (≤0.11%) | 0.03% | 0.890 |
 
 Wider `ln x` span sharpens the comb and lifts more high-`gamma` modes
-above the prime-power discreteness floor, exactly as the `~2/gamma`
-amplitude law predicts.
+above the prime-power discreteness floor, as the `~2/gamma` amplitude
+law predicts — but with **hard diminishing returns**. From `10^8` to
+`10^9` a 10x increase in primes (5.8M → 50.8M prime-power steps) added
+exactly **one** more clean zero (26 → 27); accuracy and EF correlation
+improved only modestly. Past `gamma ≈ 100` the modes alias and collapse,
+because `2/gamma ≈ 0.02` there has sunk to ~1.8% of the `gamma_1` peak
+power — below the detector's prominence floor. This is the **height
+wall**: the lens reads off only the low-height zeros (the first few tens),
+and X buys count only logarithmically. Reaching Odlyzko-scale heights
+(`gamma ~ 10^22`) is impossible — `2/gamma` is then ~`10^-22`, invisible
+at any feasible X.
 
 ## Interpretation — what is and is not claimed
 

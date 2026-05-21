@@ -35,15 +35,22 @@ leakage** — unlike the per-mode test — so the floor depends only on the
 | 10^6 | 6.908 | −0.0043 | −2.2 | 0.0019 | 0.0135 | stationary |
 | 10^7 | 9.210 | +0.0009 | +0.6 | 0.0014 | 0.0132 | stationary |
 | 10^8 | 11.513 | −0.0008 | −0.7 | 0.0012 | 0.0135 | stationary |
+| 10^9 | 13.816 | −0.0008 | −0.7 | 0.0011 | 0.0148 | stationary |
 
 - The primes are **`stationary` at every X** (`|z| <= 2.2`): no growing
   envelope ⇒ `theta = 1/2` to within the floor ⇒ RH-consistent.
-- **The `~1/ln X` scaling prediction holds to three significant
-  figures**: `floor × span` is constant at `0.0133 ± 0.0002`, so the
-  floor is `~ 0.0133 / ln(X/1000)`. The primes-only certified bound on
-  `|theta - 1/2|` is **±0.0012 at X = 10^8** — about 40x tighter than the
-  leakage-limited per-mode test (±0.05), exactly because the envelope is
-  a single global statistic.
+- **The `~1/ln X` scaling holds only approximately, and the bound shows
+  hard diminishing returns.** `floor × span` is roughly constant —
+  `0.0135, 0.0132, 0.0135` at `X = 10^6..10^8`, then up ~10% to `0.0148`
+  at `10^9` — so `floor ≈ (0.013–0.015) / ln(X/1000)`, i.e. the `1/ln X`
+  law to about 10%, not better. (An earlier version of this file claimed
+  "three significant figures" from the first three points; the `10^9`
+  point corrects that.) The primes-only certified bound on
+  `|theta - 1/2|` is **±0.0012 at 10^8 and only ±0.0011 at 10^9** — a 10x
+  increase in primes (and compute) tightened it ~8%. This is the
+  logarithmic wall: still ~40x tighter than the leakage-limited per-mode
+  test (±0.05) because the envelope is one global statistic, but
+  brute-forcing X buys almost nothing.
 
 **Part 2 — synthetic calibration (push the dominant zero to theta), X=10^7:**
 
