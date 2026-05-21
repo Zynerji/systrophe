@@ -1,0 +1,357 @@
+{
+  "n_unique": 28,
+  "n_tested": 6,
+  "n_untestable": 22,
+  "bonferroni": 0.008333333333333333,
+  "anchors": {
+    "control_logperiodic": {
+      "peak_omega": 7.97997997997998,
+      "geometric_ratio": 2.1976059321616352,
+      "peak_power": 0.9255056368437422,
+      "p_value": 0.0033222591362126247,
+      "null_power_95": 0.17566670136280044
+    },
+    "psi_error": {
+      "peak_omega": 14.134134134134134,
+      "geometric_ratio": 1.55977223957652,
+      "peak_power": 0.21002968105688904,
+      "p_value": 0.0033222591362126247,
+      "null_power_95": 0.06541296576973163
+    }
+  },
+  "tested": [
+    {
+      "aid": "A003002",
+      "problem": "142",
+      "prize": 10000,
+      "tags": [
+        "additive combinatorics",
+        "arithmetic progressions"
+      ],
+      "n_terms": 211,
+      "peak_omega": 5.947947947947949,
+      "geometric_ratio": 2.8758890221468842,
+      "peak_power": 0.5334923282890065,
+      "p_value": 0.09966777408637874,
+      "null_power_95": 0.6117039494785997,
+      "verdict": "null"
+    },
+    {
+      "aid": "A002975",
+      "problem": "470",
+      "prize": 10,
+      "tags": [
+        "number theory",
+        "divisors"
+      ],
+      "n_terms": 1161,
+      "peak_omega": 2.928928928928929,
+      "geometric_ratio": 8.543886826630658,
+      "peak_power": 0.3212321368530433,
+      "p_value": 0.1893687707641196,
+      "null_power_95": 0.42236213429484415,
+      "verdict": "null"
+    },
+    {
+      "aid": "A263996",
+      "problem": "52",
+      "prize": 250,
+      "tags": [
+        "number theory",
+        "additive combinatorics"
+      ],
+      "n_terms": 205,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.2790494428727883,
+      "p_value": 0.5083056478405316,
+      "null_power_95": 0.6462576759786256,
+      "verdict": "null"
+    },
+    {
+      "aid": "A387704",
+      "problem": "241",
+      "prize": 100,
+      "tags": [
+        "additive combinatorics",
+        "sidon sets"
+      ],
+      "n_terms": 150,
+      "peak_omega": 5.6576576576576585,
+      "geometric_ratio": 3.0360672438419143,
+      "peak_power": 0.23142421153810702,
+      "p_value": 0.7275747508305648,
+      "null_power_95": 0.5786436256961554,
+      "verdict": "null"
+    },
+    {
+      "aid": "A006037",
+      "problem": "470",
+      "prize": 10,
+      "tags": [
+        "number theory",
+        "divisors"
+      ],
+      "n_terms": 1500,
+      "peak_omega": 2.0,
+      "geometric_ratio": 23.140692632779267,
+      "peak_power": 0.13946768916143856,
+      "p_value": 0.7973421926910299,
+      "null_power_95": 0.3542805006540412,
+      "verdict": "null"
+    },
+    {
+      "aid": "A143824",
+      "problem": "30",
+      "prize": 1000,
+      "tags": [
+        "number theory",
+        "sidon sets",
+        "additive combinatorics"
+      ],
+      "n_terms": 500,
+      "peak_omega": 7.747747747747748,
+      "geometric_ratio": 2.250087864610327,
+      "peak_power": 0.11917907336233748,
+      "p_value": 0.9435215946843853,
+      "null_power_95": 0.486775985859636,
+      "verdict": "null"
+    }
+  ],
+  "untestable": [
+    {
+      "aid": "A003003",
+      "problem": "142",
+      "prize": 10000,
+      "tags": [
+        "additive combinatorics",
+        "arithmetic progressions"
+      ],
+      "reason": "too_short",
+      "n_terms": 142
+    },
+    {
+      "aid": "A003004",
+      "problem": "142",
+      "prize": 10000,
+      "tags": [
+        "additive combinatorics",
+        "arithmetic progressions"
+      ],
+      "reason": "too_short",
+      "n_terms": 115
+    },
+    {
+      "aid": "A003005",
+      "problem": "142",
+      "prize": 10000,
+      "tags": [
+        "additive combinatorics",
+        "arithmetic progressions"
+      ],
+      "reason": "too_short",
+      "n_terms": 147
+    },
+    {
+      "aid": "A332077",
+      "problem": "20",
+      "prize": 1000,
+      "tags": [
+        "combinatorics"
+      ],
+      "reason": "too_short",
+      "n_terms": 17
+    },
+    {
+      "aid": "A227590",
+      "problem": "30",
+      "prize": 1000,
+      "tags": [
+        "number theory",
+        "sidon sets",
+        "additive combinatorics"
+      ],
+      "reason": "too_short",
+      "n_terms": 28
+    },
+    {
+      "aid": "A003022",
+      "problem": "30",
+      "prize": 1000,
+      "tags": [
+        "number theory",
+        "sidon sets",
+        "additive combinatorics"
+      ],
+      "reason": "too_short",
+      "n_terms": 27
+    },
+    {
+      "aid": "A048670",
+      "problem": "687",
+      "prize": 1000,
+      "tags": [
+        "number theory"
+      ],
+      "reason": "too_short",
+      "n_terms": 64
+    },
+    {
+      "aid": "A058989",
+      "problem": "687",
+      "prize": 1000,
+      "tags": [
+        "number theory"
+      ],
+      "reason": "too_short",
+      "n_terms": 64
+    },
+    {
+      "aid": "A186704",
+      "problem": "89",
+      "prize": 500,
+      "tags": [
+        "geometry",
+        "distances"
+      ],
+      "reason": "too_short",
+      "n_terms": 13
+    },
+    {
+      "aid": "A131628",
+      "problem": "89",
+      "prize": 500,
+      "tags": [
+        "geometry",
+        "distances"
+      ],
+      "reason": "too_short",
+      "n_terms": 7
+    },
+    {
+      "aid": "A005346",
+      "problem": "138",
+      "prize": 500,
+      "tags": [
+        "additive combinatorics"
+      ],
+      "reason": "too_short",
+      "n_terms": 6
+    },
+    {
+      "aid": "A140462",
+      "problem": "500",
+      "prize": 500,
+      "tags": [
+        "graph theory",
+        "hypergraphs",
+        "turan number"
+      ],
+      "reason": "nonpositive",
+      "n_terms": 10001
+    },
+    {
+      "aid": "A006370",
+      "problem": "1135",
+      "prize": 500,
+      "tags": [
+        "number theory"
+      ],
+      "reason": "not_growthlike(r=0.74)",
+      "n_terms": 1001
+    },
+    {
+      "aid": "A008908",
+      "problem": "1135",
+      "prize": 500,
+      "tags": [
+        "number theory"
+      ],
+      "reason": "not_growthlike(r=0.31)",
+      "n_terms": 10000
+    },
+    {
+      "aid": "A059442",
+      "problem": "77",
+      "prize": 250,
+      "tags": [
+        "graph theory",
+        "ramsey theory"
+      ],
+      "reason": "too_short",
+      "n_terms": 23
+    },
+    {
+      "aid": "A000791",
+      "problem": "165",
+      "prize": 250,
+      "tags": [
+        "graph theory",
+        "ramsey theory"
+      ],
+      "reason": "too_short",
+      "n_terms": 9
+    },
+    {
+      "aid": "A003323",
+      "problem": "183",
+      "prize": 250,
+      "tags": [
+        "graph theory",
+        "ramsey theory"
+      ],
+      "reason": "too_short",
+      "n_terms": 4
+    },
+    {
+      "aid": "A245762",
+      "problem": "86",
+      "prize": 100,
+      "tags": [
+        "graph theory"
+      ],
+      "reason": "too_short",
+      "n_terms": 6
+    },
+    {
+      "aid": "A006065",
+      "problem": "101",
+      "prize": 100,
+      "tags": [
+        "geometry"
+      ],
+      "reason": "too_short",
+      "n_terms": 20
+    },
+    {
+      "aid": "A003829",
+      "problem": "104",
+      "prize": 100,
+      "tags": [
+        "geometry"
+      ],
+      "reason": "too_short",
+      "n_terms": 6
+    },
+    {
+      "aid": "A008997",
+      "problem": "588",
+      "prize": 100,
+      "tags": [
+        "geometry"
+      ],
+      "reason": "too_short",
+      "n_terms": 20
+    },
+    {
+      "aid": "A002827",
+      "problem": "1052",
+      "prize": 10,
+      "tags": [
+        "number theory"
+      ],
+      "reason": "too_short",
+      "n_terms": 5
+    }
+  ]
+}
