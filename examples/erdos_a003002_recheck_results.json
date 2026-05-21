@@ -1,0 +1,33 @@
+{
+  "n_terms": 211,
+  "ln_n_span": 5.351858133476067,
+  "cantor_omega": 5.7192017347602535,
+  "rows": [
+    {
+      "detrend_deg": 2,
+      "peak_omega": 5.949974987493746,
+      "geometric_ratio": 2.8748542284645073,
+      "peak_power": 0.5281245091037919,
+      "p_value": 0.08938212357528494,
+      "null_power_95": 0.5866087603476008
+    },
+    {
+      "detrend_deg": 3,
+      "peak_omega": 5.949974987493746,
+      "geometric_ratio": 2.8748542284645073,
+      "peak_power": 0.5335023419737152,
+      "p_value": 0.08218356328734253,
+      "null_power_95": 0.5725008658765387
+    },
+    {
+      "detrend_deg": 4,
+      "peak_omega": 5.907953976988495,
+      "geometric_ratio": 2.896528372004637,
+      "peak_power": 0.5167781402161935,
+      "p_value": 0.09958008398320337,
+      "null_power_95": 0.5808742784585973
+    }
+  ],
+  "best_p": 0.08218356328734253,
+  "verdict": "noise / not robust"
+}

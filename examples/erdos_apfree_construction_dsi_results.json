@@ -1,0 +1,15 @@
+{
+  "Nmax": 3486784401,
+  "n_points": 2500,
+  "ln_N_span": 15.065490994426842,
+  "empirical_exponent": 0.6299035554844647,
+  "exponent_theory": 0.6309297535714574,
+  "omega_theory": 5.7192017347602535,
+  "ratio_theory": 3.0,
+  "peak_omega": 5.715905301767256,
+  "geometric_ratio": 3.0019013519857536,
+  "peak_power": 0.9022899682812148,
+  "p_value": 0.001996007984031936,
+  "null_power_95": 0.2415776866346068,
+  "verdict": "DSI confirmed (complex dimension recovered)"
+}
