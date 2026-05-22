@@ -46,12 +46,36 @@ def test_channel_is_not_ftl():
 
 
 def test_gjw_haar_signature_is_honestly_absent():
-    """Documented negative result: a generic Haar scrambler does NOT reproduce
-    the GJW traversable signature (no size-winding)."""
+    """A generic Haar scrambler does NOT activate the GJW channel (no
+    size-winding) -- fidelity stays near the no-coupling baseline."""
     scan = gjw_coupling_scan(n=3)
     assert scan["gjw_signature_present"] is False
     assert scan["peak_fidelity"] < 0.55       # stays near baseline
-    assert "SYK" in scan["note"]
+
+
+def test_real_syk_scrambler_activates_the_channel():
+    """A real SYK scrambler ACTIVATES coupling-mediated transmission where Haar
+    does not: the size-winding lift is large and >> the Haar lift."""
+    from systrophe.erepr_channel import syk_vs_haar_activation
+    a = syk_vs_haar_activation(nq=3, seeds=(1, 2, 3))
+    assert a["syk_activates_channel"] is True
+    assert a["syk_lift"] > 0.05
+    assert a["syk_lift"] > 3 * abs(a["haar_lift"])
+
+
+def test_syk_falls_short_of_classical_bound_at_small_N():
+    """Honest: at classically-simulable N the SYK wormhole transmission does not
+    reach the 0.5 classical bound (needs larger N / engineered winding)."""
+    from systrophe.erepr_channel import syk_vs_haar_activation
+    a = syk_vs_haar_activation(nq=3, seeds=(1, 2, 3))
+    assert a["reaches_classical_bound"] is False
+    assert "SYK" in a["note"]
+
+
+def test_syk_transmission_runs():
+    from systrophe.erepr_channel import syk_wormhole_transmission
+    f = syk_wormhole_transmission(nq=3, t=0.5, g=4.0, seed=1)
+    assert 0.0 <= f <= 1.0
 
 
 def test_summary():

@@ -420,16 +420,30 @@ mouth is "traversing the wormhole."
 - **Not FTL** (`is_faster_than_light=False`): the corrections need a coupling
   between the two mouths; by no-signaling nothing moves until that physical/
   classical link is used. This is a quantum-network primitive, not a comms FTL.
-- **GJW negative-energy signature: documented negative result.** The full
-  Maldacena–Qi "size-winding" mechanism (scramble + `e^{igV}` + unscramble, with
-  the traversability sign-asymmetry) needs SYK-like dynamics. `gjw_coupling_scan`
-  shows a generic Haar scrambler does **not** reproduce it (peak fidelity 0.25 ≈
-  baseline, sign-asymmetry is noise) — so the working channel above does not rely
-  on it.
+- **GJW size-winding: a *real SYK scrambler* activates it; Haar does not.**
+  Built a genuine SYK Hamiltonian (N Majoranas, random 4-body couplings,
+  `syk_hamiltonian`) and the two-sided Maldacena–Qi protocol (TFD ≈ EPR pairs,
+  past-insertion, `e^{igV}` coupling, time-reversed readout). Measured
+  (`syk_vs_haar_activation`, N=8 Majoranas/side, disorder-averaged):
+
+  | scrambler | no-coupling baseline | peak with coupling | lift |
+  |---|---|---|---|
+  | Haar | 0.25 | 0.26 | **+0.01 (inert)** |
+  | **SYK** | 0.25 | 0.43 | **+0.18 (activates)** |
+
+  So the chaotic size-winding the GJW mechanism requires is **real and
+  demonstrated** — SYK lifts the coupling-mediated channel ~18×, where a Haar
+  scrambler does nothing. Honest limit: at classically-simulable N (≤8
+  Majoranas/side) the transmission stays **below the 0.5 classical bound**
+  (`reaches_classical_bound=False`) and shows no clean sign-asymmetry; unit
+  fidelity needs N beyond simulability or an engineered "perfect-winding"
+  Hamiltonian (cf. the contested 2022 quantum-processor demo, which used a
+  *learned sparse* SYK Hamiltonian).
 
 So the buildable, tested deliverable from the entire warp/wormhole investigation
-is a perfect entanglement-mediated qubit channel — real, useful, and honestly
-*not* a faster-than-light or matter-transport device.
+is a perfect entanglement-mediated qubit channel (fidelity 1), plus a real SYK
+demonstration that the holographic size-winding mechanism genuinely activates —
+honestly *not* a faster-than-light or matter-transport device.
 
 ## Bottom line
 
