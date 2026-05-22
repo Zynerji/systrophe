@@ -523,9 +523,33 @@ decay → reliable extrapolation; the runtime's built-in exponential extrapolato
 returned `nan`, so the zero-noise value is extrapolated directly from the saved
 per-factor data). ZNE job `d88cta1789is73920eig`.
 
+**Best backend + lowest-error qubits.** Ranking three Heron-r2 backends by
+calibration quality (`best_quality_quad`: lowest total CX + readout error over a
+connected good quad):
+
+| backend | best quad | total error | queue |
+|---|---|---|---|
+| **ibm_kingston** | [140,141,142,143] | **0.045** (CX ~0.001) | 0 |
+| ibm_marrakesh | [11,12,13,14] | 0.052 | 1 |
+| ibm_fez | [116,120,121,122] | 0.071 | 22 |
+
+Re-running the ZNE protocol on the Kingston low-error quad:
+
+| run | Bell fidelity |
+|---|---|
+| Marrakesh BFS quad, Sampler 4096 | 0.839 |
+| Marrakesh ZNE (32768) | 0.918 |
+| Kingston quality quad, factor 1 | 0.925 |
+| **Kingston quality quad + ZNE** | **0.958** (linear 0.954) |
+
+Per-noise-factor `{1: 0.925, 3: 0.853, 5: 0.796}`; ZNE job `d88d949789is73920rv0`.
+Picking the best backend and the calibration-lowest-error qubits added another
+~0.04 on top of ZNE.
+
 So the buildable capability is not just simulated — it **runs on a real quantum
-computer, pushed from 0.839 to 0.918 fidelity** with more shots + ZNE. Still
-entanglement-mediated teleportation: not FTL, not matter transport.
+computer at 0.958 fidelity** (from 0.839 → 0.918 via shots+ZNE → 0.958 via
+best-backend + lowest-error qubit selection). Still entanglement-mediated
+teleportation: not FTL, not matter transport.
 
 ## Bottom line
 

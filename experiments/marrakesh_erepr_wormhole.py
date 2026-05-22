@@ -132,7 +132,64 @@ def _syk_wormhole_depth(service, snap) -> dict:
                                                if inst.operation.num_qubits == 2))}
 
 
-def run_zne(shots: int = 32768, noise_factors=(1, 3, 5)) -> dict:
+def best_quality_quad(backend, snap) -> tuple[list[int], dict]:
+    """Pick the 4 connected qubits with the LOWEST total CX + readout error.
+
+    Greedy: start from the lowest-CX-error good edge, grow to 4 qubits each step
+    adding the neighbor minimizing (readout error + connecting CX error). Returns
+    (qubits ordered with the highest-internal-degree qubit first = the teleport
+    hub, error_summary).
+    """
+    from quantum_golden_pendulum.calibration import _get_two_qubit_error
+    target = backend.target
+    good = set(snap.good_qubits)
+    readout = {q: snap.qubit_info[q].readout_error for q in good}
+    edge_err: dict[frozenset, float] = {}
+    adj: dict[int, list[int]] = {q: [] for q in good}
+    for (i, j) in snap.good_edges:
+        e = _get_two_qubit_error(target, i, j)
+        if e is None:
+            e = _get_two_qubit_error(target, j, i)
+        if e is None:
+            continue
+        edge_err[frozenset((i, j))] = e
+        adj[i].append(j); adj[j].append(i)
+
+    start = min(edge_err, key=edge_err.get)
+    sel = set(start)
+    while len(sel) < 4:
+        cands = {}
+        for q in sel:
+            for nb in adj[q]:
+                if nb in sel:
+                    continue
+                ces = [edge_err[frozenset((nb, s))] for s in sel
+                       if frozenset((nb, s)) in edge_err]
+                if ces:
+                    cands[nb] = readout[nb] + min(ces)
+        if not cands:
+            break
+        sel.add(min(cands, key=cands.get))
+    quad = sorted(sel)
+    # order: hub (max internal degree) first -> logical M; transpile routes rest
+    deg = {q: sum(1 for r in quad if frozenset((q, r)) in edge_err) for q in quad}
+    ordered = sorted(quad, key=lambda q: -deg[q])
+    summary = {
+        "qubits": quad,
+        "readout_errors": {q: round(readout[q], 5) for q in quad},
+        "internal_cx_errors": {f"{i}-{j}": round(edge_err[frozenset((i, j))], 5)
+                               for i in quad for j in quad
+                               if i < j and frozenset((i, j)) in edge_err},
+        "total_error": round(sum(readout[q] for q in quad)
+                             + sum(edge_err[frozenset((i, j))] for i in quad
+                                   for j in quad if i < j
+                                   and frozenset((i, j)) in edge_err), 5),
+    }
+    return ordered, summary
+
+
+def run_zne(shots: int = 32768, noise_factors=(1, 3, 5),
+            qubits: list[int] | None = None, backend_name: str = BACKEND) -> dict:
     """Push the fidelity higher: EstimatorV2 + Zero-Noise Extrapolation.
 
     Measures the Bell-fidelity observable O_F = (I + X_PX_B - Y_PY_B + Z_PZ_B)/4
@@ -144,10 +201,15 @@ def run_zne(shots: int = 32768, noise_factors=(1, 3, 5)) -> dict:
     from qiskit_ibm_runtime import QiskitRuntimeService, EstimatorV2
 
     service = QiskitRuntimeService(instance=INSTANCE)
-    backend = service.backend(BACKEND)
+    backend = service.backend(backend_name)
+    print(f"    Backend: {backend_name}")
     snap = pull_calibration(backend)
-    phys, _ = select_qubit_subset(snap, 4)
-    print(f"    Selected good qubits: {phys}")
+    if qubits is not None:
+        phys = qubits
+        print(f"    Using quality-selected qubits: {phys}")
+    else:
+        phys, _ = select_qubit_subset(snap, 4)
+        print(f"    Selected good qubits (BFS): {phys}")
 
     qc = QuantumCircuit(4)
     _teleport_body(qc)                     # state-prep only; Estimator measures O
@@ -189,7 +251,8 @@ def run_zne(shots: int = 32768, noise_factors=(1, 3, 5)) -> dict:
     print(f"[ZNE] per-noise-factor F: {dict(zip(nf.tolist(), per_nf.round(4).tolist()))}")
     print(f"[ZNE] zero-noise F: exponential={F_exp:.4f} linear={F_lin:.4f}  "
           f"(job {job.job_id()})")
-    return {"zne_fidelity": F_exp, "zne_fidelity_linear": F_lin,
+    return {"backend": backend_name,
+            "zne_fidelity": F_exp, "zne_fidelity_linear": F_lin,
             "zne_factor1_fidelity": float(per_nf[0]),
             "zne_per_noise_factor": {str(k): float(v) for k, v in zip(nf, per_nf)},
             "zne_shots": shots, "zne_noise_factors": list(noise_factors),
@@ -266,7 +329,24 @@ def main(submit: bool = True) -> None:
 
 
 if __name__ == "__main__":
-    if "--zne" in sys.argv:
+    if "--best-quad" in sys.argv:
+        from qiskit_ibm_runtime import QiskitRuntimeService
+        svc = QiskitRuntimeService(instance=INSTANCE)
+        bk = svc.backend(BACKEND)
+        snap = pull_calibration(bk)
+        quad, summ = best_quality_quad(bk, snap)
+        bfs, _ = select_qubit_subset(snap, 4)
+        print("BFS quad:", bfs)
+        print("Quality quad (ordered, hub first):", quad)
+        print("Quality quad error profile:", json.dumps(summ, indent=2))
+        if "--dry-run" not in sys.argv:
+            out = run_zne(shots=32768, qubits=quad)
+            out["quality_quad_summary"] = summ
+            prev = json.loads(RESULTS.read_text()) if RESULTS.exists() else {}
+            prev.update({f"bestquad_{k}": v for k, v in out.items()})
+            RESULTS.write_text(json.dumps(prev, indent=2, default=str))
+            print("Results ->", RESULTS.name)
+    elif "--zne" in sys.argv:
         out = run_zne(shots=32768)
         prev = json.loads(RESULTS.read_text()) if RESULTS.exists() else {}
         prev.update(out)

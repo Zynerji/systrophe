@@ -39,5 +39,29 @@
   },
   "zne_factor1_fidelity": 0.8747467071935157,
   "zne_fidelity_linear": 0.9111285249915565,
-  "zne_extrapolator": "exponential (manual; runtime built-in returned nan)"
+  "zne_extrapolator": "exponential (manual; runtime built-in returned nan)",
+  "kingston_backend": "ibm_kingston",
+  "kingston_zne_fidelity": 0.9577121558342174,
+  "kingston_zne_fidelity_linear": 0.9540118110236216,
+  "kingston_zne_factor1_fidelity": 0.9244881889763779,
+  "kingston_zne_per_noise_factor": {
+    "1.0": 0.9244881889763779,
+    "3.0": 0.852488188976378,
+    "5.0": 0.7960314960629922
+  },
+  "kingston_zne_shots": 32768,
+  "kingston_zne_noise_factors": [
+    1,
+    3,
+    5
+  ],
+  "kingston_zne_extrapolator": "exponential (manual)",
+  "kingston_zne_job_id": "d88d949789is73920rv0",
+  "kingston_selected_qubits": [
+    141,
+    142,
+    140,
+    143
+  ],
+  "kingston_quality_quad_total_error": 0.04489
 }
