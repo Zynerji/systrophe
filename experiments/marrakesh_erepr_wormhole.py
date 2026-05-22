@@ -260,6 +260,62 @@ def run_zne(shots: int = 32768, noise_factors=(1, 3, 5),
             "selected_qubits": phys}
 
 
+def run_pec(shots: int = 32768, qubits: list[int] | None = None,
+            backend_name: str = "ibm_kingston", max_overhead: float = 100.0) -> dict:
+    """Push fidelity with Probabilistic Error Cancellation (unbiased).
+
+    EstimatorV2 with PEC: learns a sparse Pauli-Lindblad noise model per layer
+    and samples quasi-probability circuits to invert it -> unbiased expectation,
+    at a sampling-overhead cost (capped by max_overhead). T-REx + DD + twirling
+    on top. PEC and ZNE are mutually exclusive; this uses PEC only.
+    """
+    from qiskit.quantum_info import SparsePauliOp
+    from qiskit_ibm_runtime import QiskitRuntimeService, EstimatorV2
+
+    service = QiskitRuntimeService(instance=INSTANCE)
+    backend = service.backend(backend_name)
+    print(f"    Backend: {backend_name}")
+    snap = pull_calibration(backend)
+    phys = qubits if qubits is not None else select_qubit_subset(snap, 4)[0]
+    print(f"    Qubits: {phys}")
+
+    qc = QuantumCircuit(4)
+    _teleport_body(qc)
+    tqc = transpile(qc, backend=backend, optimization_level=2, initial_layout=phys)
+    F_op = SparsePauliOp.from_sparse_list(
+        [("", [], 0.25), ("XX", [0, 3], 0.25),
+         ("YY", [0, 3], -0.25), ("ZZ", [0, 3], 0.25)], num_qubits=4)
+    F_phys = F_op.apply_layout(tqc.layout)
+
+    est = EstimatorV2(mode=backend)
+    est.options.default_shots = shots
+    est.options.resilience_level = 1               # T-REx, no ZNE
+    est.options.resilience.measure_mitigation = True
+    est.options.resilience.pec_mitigation = True   # <-- PEC
+    est.options.resilience.pec.max_overhead = max_overhead
+    est.options.dynamical_decoupling.enable = True
+    est.options.dynamical_decoupling.sequence_type = "XpXm"
+    est.options.twirling.enable_gates = True
+
+    print(f"[PEC] Submitting EstimatorV2 ({shots} shots, PEC max_overhead "
+          f"{max_overhead}, DD + twirling)...")
+    job = est.run([(tqc, F_phys)])
+    res = job.result()[0]
+    F = float(np.asarray(res.data.evs).reshape(-1)[0])
+    std = float(np.asarray(res.data.stds).reshape(-1)[0]) if hasattr(res.data, "stds") else float("nan")
+    overhead = None
+    try:
+        overhead = res.metadata.get("resilience", {}).get("pec", {}).get("sampling_overhead")
+    except Exception:
+        pass
+    print(f"[PEC] PEC Bell fidelity = {F:.4f} +/- {std:.4f}  "
+          f"(overhead {overhead}; job {job.job_id()})")
+    return {"backend": backend_name, "pec_fidelity": F, "pec_std": std,
+            "pec_shots": shots, "pec_max_overhead": max_overhead,
+            "pec_sampling_overhead": overhead, "pec_job_id": job.job_id(),
+            "pec_qubits": phys}
+
+
 def main(submit: bool = True) -> None:
     print("=" * 70)
     print("ER=EPR channel on IBM Marrakesh  (instance:", INSTANCE, ")")
@@ -346,6 +402,14 @@ if __name__ == "__main__":
             prev.update({f"bestquad_{k}": v for k, v in out.items()})
             RESULTS.write_text(json.dumps(prev, indent=2, default=str))
             print("Results ->", RESULTS.name)
+    elif "--pec" in sys.argv:
+        out = run_pec(shots=32768, qubits=[141, 142, 140, 143],
+                      backend_name="ibm_kingston")
+        prev = json.loads(RESULTS.read_text()) if RESULTS.exists() else {}
+        prev.update({f"pec_{k}" if not k.startswith("pec") else k: v
+                     for k, v in out.items()})
+        RESULTS.write_text(json.dumps(prev, indent=2, default=str))
+        print("Results ->", RESULTS.name)
     elif "--zne" in sys.argv:
         out = run_zne(shots=32768)
         prev = json.loads(RESULTS.read_text()) if RESULTS.exists() else {}
