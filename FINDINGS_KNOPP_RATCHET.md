@@ -205,12 +205,48 @@ nested-cylinder/singularity infrastructure). It does **not** touch the
 Ford–Roman principal per metre of band traversed — that remains the same
 conservation-bounded wall. No optimizer beats a quantum inequality.
 
+### 8. Geometry — shrinking the principal itself (Van den Broeck scaling)
+
+Everything above *relocates* the principal; the one lever that shrinks it is
+geometry, because `E_principal ∝ R_shell²/σ`. Van den Broeck (1999) decouples
+the energy-driving shell radius from the passenger pocket via a topological
+neck, so the dragged wall can be microscopic while the crew volume stays
+macroscopic. `warp_geometry.optimize_geometry` minimizes the shell principal
+over QI-allowed `(R_shell, σ)`:
+
+| quantity | value |
+|---|---|
+| baseline principal (R=σ=1 m) | 1.01e43 J |
+| optimized (R_shell=σ=100·ℓ_Planck=1.6e-33 m) | **1.63e10 J (~16 GJ)** |
+| reduction | **−33 orders of magnitude** |
+| × band-coverage paid fraction (0.139) | 2.3e9 J (~2.3 GJ) paid |
+| residual gap to a lab squeezed-vacuum source (1e-15 J) | **still ~24 OOM** |
+
+Catcher: `smooth` (power-law, no emergent transition).
+
+**Two load-bearing caveats (why this is NOT feasibility):**
+- `wall_is_planck_scale = True`: the optimum sits at a ~Planck-scale wall where
+  the semiclassical / QFTCS treatment is no longer trustworthy.
+- `blowup_energy_modeled = False`: this is the Alcubierre *shell* energy only.
+  Van den Broeck's neck blow-up region carries additional negative energy that
+  Pfenning–Ford (1997) showed re-inflates the total in a model-dependent,
+  contested way. The 16 GJ is an **optimistic lower bound**, not a validated
+  total.
+
+So geometry closes ~33 of the ~60-order gap on paper — a real, scaling-grounded
+reduction — but lands at theory-breaking scales, omits the blow-up term, and
+still leaves ~24 orders of magnitude. The principal-per-metre remains
+conservation-bounded; geometry only tunes the `R_shell²/σ` prefactor within the
+QI-allowed region.
+
 ## Bottom line
 
 The reversible-ratcheting pendulum is a clean, stable, reversible *control*
 layer for steering a warp bubble, and the amplified-Casimir capacitor makes the
 *peak charge* and *pump power* arbitrarily small with Q. Band-coverage
-optimization cuts the paid out-of-band fraction by ~74%. But the Ford–Roman
+optimization cuts the paid out-of-band fraction by ~74%, and Van den Broeck
+geometry shrinks the principal itself by ~33 orders of magnitude (optimistically,
+at Planck-scale walls, blow-up term omitted) — yet ~24 orders still remain. But the Ford–Roman
 *principal* — the time-integrated negative energy that must flow and be repaid —
 is invariant under all of it, and lands at Jupiter-mass scale for a 1-metre
 bubble. Elegant control over an irreducible energy wall.
