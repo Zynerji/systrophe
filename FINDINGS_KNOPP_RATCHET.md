@@ -179,11 +179,38 @@ metric hits.
   emergent phase transition. Per the standing project rule, no result here is
   called "validated".
 
+### 7. Band-coverage optimization (relocating the paid fraction)
+
+The principal is paid only on the **out-of-band fraction** of a route — where
+the worldline lies outside the source's CTC bands. Nesting concentric
+supercritical cylinders tiles more of the route with bands, but the bands
+*interfere* (the uniform-phase comb extinguishes them entirely), so the phase
+offsets must be optimized. `band_coverage_optimizer.optimize_offsets` does this
+with an amplitude-modulation cull (method ported from the ResonantQ optimizer:
+reweight candidates by `exp(-α·E/E_max)`, `E` = out-of-band fraction; elite +
+shrinking perturbation per pass). Measured on route `r ∈ [1.05, 60]`:
+
+| configuration | out-of-band (paid) fraction |
+|---|---|
+| single cylinder | 0.534 |
+| naive aligned nesting (R = 1,3,9,27) | 0.329 |
+| **optimized phase offsets** | **0.139** |
+| uniform-phase comb (extinction control) | 0.858 |
+
+**74% reduction vs a single cylinder, 58% vs naive nesting** — the paid portion
+of the trip drops to ~1/7 of the route. Catcher: `novel_structure` on the
+descent curve. **Honest scope:** this shrinks the *out-of-band fraction* (an
+engineering-reducible term that relocates cost toward reusable
+nested-cylinder/singularity infrastructure). It does **not** touch the
+Ford–Roman principal per metre of band traversed — that remains the same
+conservation-bounded wall. No optimizer beats a quantum inequality.
+
 ## Bottom line
 
 The reversible-ratcheting pendulum is a clean, stable, reversible *control*
 layer for steering a warp bubble, and the amplified-Casimir capacitor makes the
-*peak charge* and *pump power* arbitrarily small with Q. But the Ford–Roman
+*peak charge* and *pump power* arbitrarily small with Q. Band-coverage
+optimization cuts the paid out-of-band fraction by ~74%. But the Ford–Roman
 *principal* — the time-integrated negative energy that must flow and be repaid —
 is invariant under all of it, and lands at Jupiter-mass scale for a 1-metre
 bubble. Elegant control over an irreducible energy wall.
