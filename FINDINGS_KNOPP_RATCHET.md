@@ -367,6 +367,37 @@ might be gatherable *ordinary* mass): it is QI-bounded *exotic* energy, ~Jupiter
 reinforcing the closure with a direct integral rather than the flawed singular
 optimum.
 
+### 12. Full wormhole map — the energy wall is dual to an entanglement wall
+
+The wormhole route (interior as a separate region, not a pocket) mapped across
+all three sub-routes (`wormhole_map.py`, using Systrophe's `er_epr_pair`,
+`exotic_matter_accounting`, `casimir_throat`, and the HHmL Ryu–Takayanagi
+machinery):
+
+| route | requirement for throat radius `r_t` | metre throat |
+|---|---|---|
+| classical Morris–Thorne | exotic energy `~(c⁴/G)·r_t` | 3.0e43 J (0.18 Jupiter) |
+| Casimir thin-shell | `d_req/r_t ≈ 0.9` (cavity doesn't fit) | infeasible |
+| quantum ER=EPR (Gao–Jafferis–Wall) | `~(r_t/ℓ_P)²` ebits (RT: `S=A/4G_N`) | **1.7e70 ebits** |
+| dual black hole | `Mc² = c⁴r_t/2G` | 6.1e43 J (0.35 Jupiter) |
+
+**The deep result:** classical exotic energy = **½ × the ER=EPR dual
+black-hole mass-energy** — duality ratio **0.50 at every scale**. The wormhole's
+*energy wall* and its *entanglement wall* are the **same Bekenstein-bounded
+wall**, both equal to assembling a black hole of radius `r_t`. The quantum
+ER=EPR route is genuinely different — the negative energy is sourced by
+**entanglement, not a slab of exotic matter** (removing the unobtainium problem,
+and demonstrated for *one qubit* on a quantum processor, 2022) — but a
+macroscopic throat needs a **black hole's worth of pre-shared entanglement**
+(~1e70 ebits for a metre). So:
+
+- **Information** (a few qubits): the quantum wormhole works in principle.
+- **Macroscopic matter / a ship**: every route hits the same `~(c⁴/G)·r_t`
+  ≈ Jupiter wall, ~58 OOM above a lab source. `beats_the_wall = False`.
+
+Catcher: `smooth`. (Casimir "fits" geometrically only for large throats where
+the energy is even larger — never a win.)
+
 ## Bottom line
 
 The reversible-ratcheting pendulum is a clean, stable, reversible *control*
@@ -374,10 +405,11 @@ layer for steering a warp bubble, and the amplified-Casimir capacitor makes the
 *peak charge* and *pump power* arbitrarily small with Q. Band-coverage
 optimization cuts the paid out-of-band fraction by ~74%. But every route to
 shrinking the *principal itself* fails under rigorous treatment: the Van den
-Broeck pocket blow-up is `~(c⁴/G)·R_pocket` (calibrated, §10), and calculus of
+Broeck pocket blow-up is `~(c⁴/G)·R_pocket` (calibrated, §10), calculus of
 variations proves the thick-wall variant cannot beat `~2(c⁴/G)·ρ_use` for **any**
-wall shape (§11) — the interior stays usable, but the energy floor is a
-positive-mass-bounded ~Jupiter-scale wall. The Ford–Roman
+wall shape (§11), and the full wormhole map shows the energy wall is *dual to a
+black-hole-entropy entanglement wall* (§12) — the quantum ER=EPR route moves
+information but not a ship. The Ford–Roman
 *principal* — the time-integrated negative energy that must flow and be repaid —
 is invariant under all of it, and lands at Jupiter-mass scale for a 1-metre
 bubble. Elegant control over an irreducible energy wall.
