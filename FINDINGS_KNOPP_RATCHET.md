@@ -315,16 +315,49 @@ the Einstein-tensor integral rather than by assertion. Catcher: `smooth`.
 usability and validity is the genuinely contested question — not a demonstrated
 reduction.
 
+### 11. The thick-wall escape — closed by calculus of variations
+
+§10 left one open escape: a thick/gradual blow-up wall. Settled by minimizing
+the exact pocket energy `E[B] = ½∫(B'²/B)r²dr` over **all** profiles. The
+Euler–Lagrange equation (with `B=u²`) collapses to `(r²u')'=0`, giving the
+**isotropic-Schwarzschild** optimum `B_opt(r) = (1+|c|/r)²`. For
+`B(R_shell)=B_max`, `B(R₂)=1`:
+
+```
+E = 2(√B_max−1)²·R_shell·R₂/(R₂−R_shell)   →   E_min = 2R_shell(√B_max−1)²  (R₂→∞)
+```
+
+So the **thick wall is genuinely optimal** (thinner costs more) — verified
+analytically and numerically. But with `B_max = ρ_use/R_shell` (large interior,
+small exterior), `E_min → 2·ρ_use` as `R_shell→0`. Measured:
+
+| ρ_use | E_min | E/ρ_use | shrinking shell helps? |
+|---|---|---|---|
+| 1 m | 2.4e44 J (1.4 Jupiter) | 2.00 | **No** |
+| 2 m | 4.8e44 J (2.8 Jupiter) | 2.00 | **No** |
+
+`E_min` is **independent of R_shell** (1e-15 m and 1e-30 m give identical
+energy). The floor is `~2(c⁴/G)·ρ_use` — a positive-mass-theorem-flavoured
+inevitability: holding open that much proper volume costs ~its proper size.
+
+**The dual honest result:** the interior genuinely **stays usable** — the
+flat-B core is flat space (rescaled), zero tidal field, fully habitable
+(`interior_is_flat_usable=True`). Van den Broeck's interior claim is *correct*.
+But the **thick-wall energy escape is CLOSED** (`escape_closed=True`): the floor
+is Jupiter-scale and irreducible across every wall shape, residual ~60 OOM above
+a lab source. Catcher: `smooth`.
+
 ## Bottom line
 
 The reversible-ratcheting pendulum is a clean, stable, reversible *control*
 layer for steering a warp bubble, and the amplified-Casimir capacitor makes the
 *peak charge* and *pump power* arbitrarily small with Q. Band-coverage
-optimization cuts the paid out-of-band fraction by ~74%. But the geometry route
-to shrinking the *principal itself* **collapses under calibration**: the exact
-Einstein-tensor integral of the Van den Broeck pocket gives a blow-up energy
-`~(c⁴/G)·R_pocket` ≈ Jupiter-scale for a metre pocket — no net reduction, ~29
-orders worse than the scaffold's optimistic guess. The Ford–Roman
+optimization cuts the paid out-of-band fraction by ~74%. But every route to
+shrinking the *principal itself* fails under rigorous treatment: the Van den
+Broeck pocket blow-up is `~(c⁴/G)·R_pocket` (calibrated, §10), and calculus of
+variations proves the thick-wall variant cannot beat `~2(c⁴/G)·ρ_use` for **any**
+wall shape (§11) — the interior stays usable, but the energy floor is a
+positive-mass-bounded ~Jupiter-scale wall. The Ford–Roman
 *principal* — the time-integrated negative energy that must flow and be repaid —
 is invariant under all of it, and lands at Jupiter-mass scale for a 1-metre
 bubble. Elegant control over an irreducible energy wall.
