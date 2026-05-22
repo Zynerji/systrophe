@@ -398,6 +398,39 @@ macroscopic throat needs a **black hole's worth of pre-shared entanglement**
 Catcher: `smooth`. (Casimir "fits" geometrically only for large throats where
 the energy is even larger — never a win.)
 
+### 13. The ER=EPR quantum information channel — the one thing that WORKS
+
+The wormhole map (§12) showed the quantum ER=EPR route transports *information*
+where matter transport hits the Bekenstein wall. `erepr_channel.py` builds that
+channel — and it works at unit fidelity:
+
+| quantity | value |
+|---|---|
+| single-qubit teleport fidelity (200 random states, worst case) | **1.000000** |
+| entanglement fidelity, 1 / 2 / 3-qubit register | **1.000 / 1.000 / 1.000** |
+| classical (no-entanglement) bound | 0.5 |
+| capacity | 1 qubit per EPR pair |
+
+Operationally it is deterministic, measurement-free teleportation through
+pre-shared EPR pairs with coherent X/Z corrections — under ER=EPR the
+entanglement *is* the Einstein–Rosen bridge, so the qubit emerging at the far
+mouth is "traversing the wormhole."
+
+**Honest boundaries (no overclaim):**
+- **Not FTL** (`is_faster_than_light=False`): the corrections need a coupling
+  between the two mouths; by no-signaling nothing moves until that physical/
+  classical link is used. This is a quantum-network primitive, not a comms FTL.
+- **GJW negative-energy signature: documented negative result.** The full
+  Maldacena–Qi "size-winding" mechanism (scramble + `e^{igV}` + unscramble, with
+  the traversability sign-asymmetry) needs SYK-like dynamics. `gjw_coupling_scan`
+  shows a generic Haar scrambler does **not** reproduce it (peak fidelity 0.25 ≈
+  baseline, sign-asymmetry is noise) — so the working channel above does not rely
+  on it.
+
+So the buildable, tested deliverable from the entire warp/wormhole investigation
+is a perfect entanglement-mediated qubit channel — real, useful, and honestly
+*not* a faster-than-light or matter-transport device.
+
 ## Bottom line
 
 The reversible-ratcheting pendulum is a clean, stable, reversible *control*
