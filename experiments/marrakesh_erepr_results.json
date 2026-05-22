@@ -63,5 +63,18 @@
     140,
     143
   ],
-  "kingston_quality_quad_total_error": 0.04489
+  "kingston_quality_quad_total_error": 0.04489,
+  "pec_backend": "ibm_kingston",
+  "pec_fidelity": 0.9468458497732058,
+  "pec_std": 0.03494779269026478,
+  "pec_shots": 32768,
+  "pec_max_overhead": 100.0,
+  "pec_sampling_overhead": null,
+  "pec_job_id": "d88dbhgp0eas73dna5n0",
+  "pec_qubits": [
+    141,
+    142,
+    140,
+    143
+  ]
 }

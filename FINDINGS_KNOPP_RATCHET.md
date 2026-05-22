@@ -546,10 +546,20 @@ Per-noise-factor `{1: 0.925, 3: 0.853, 5: 0.796}`; ZNE job `d88d949789is73920rv0
 Picking the best backend and the calibration-lowest-error qubits added another
 ~0.04 on top of ZNE.
 
+**PEC did NOT push it higher (honest negative).** Probabilistic Error
+Cancellation on the same Kingston quad (learns a Pauli-Lindblad noise model,
+inverts it for an unbiased estimate) gave **F = 0.947 ± 0.035** (job
+`d88dbhgp0eas73dna5n0`) — *below* the ZNE 0.958 in central value and statistically
+consistent with it (0.958 lies within the ±0.035 band). On this already-clean,
+low-error circuit there is little coherent noise left for PEC to invert beyond
+what T-REx + DD + twirling remove, so PEC only adds sampling variance. **ZNE on
+the best-backend quad (0.958) remains the best result.**
+
 So the buildable capability is not just simulated — it **runs on a real quantum
 computer at 0.958 fidelity** (from 0.839 → 0.918 via shots+ZNE → 0.958 via
-best-backend + lowest-error qubit selection). Still entanglement-mediated
-teleportation: not FTL, not matter transport.
+best-backend + lowest-error qubit selection; PEC consistent at 0.947 ± 0.035 but
+no improvement). Still entanglement-mediated teleportation: not FTL, not matter
+transport.
 
 ## Bottom line
 
