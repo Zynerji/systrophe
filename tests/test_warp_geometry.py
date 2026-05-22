@@ -54,3 +54,11 @@ def test_summary_and_catcher():
     s = summarise_geometry(r)
     assert "OOM" in s and "PLANCK-WALL" in s
     assert r.novelty_verdict in {"novel_structure", "smooth", "uniform"}
+
+
+def test_velocity_sweep_is_v_squared():
+    from systrophe.warp_geometry import velocity_sweep
+    sw = velocity_sweep((1.0, 0.1, 0.01))
+    # principal ~ v^2: 0.1c -> 2 OOM below luminal, 0.01c -> 4 OOM
+    assert sw[0.1]["oom_below_luminal"] == pytest.approx(2.0, abs=0.05)
+    assert sw[0.01]["oom_below_luminal"] == pytest.approx(4.0, abs=0.05)

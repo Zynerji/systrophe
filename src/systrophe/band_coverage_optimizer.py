@@ -194,6 +194,40 @@ def optimize_offsets(
     )
 
 
+def coverage_scaling(
+    max_cylinders: int = 8,
+    base_ratio: float = 3.0,
+    r_min: float = 1.05,
+    r_max: float = 60.0,
+    seed: int = 1,
+    n_pass: int = 6,
+) -> dict:
+    """Out-of-band fraction vs number of nested cylinders (optimized phases).
+
+    HONEST FINDING (measured): the coverage win SATURATES almost immediately
+    and is dominated by *single-cylinder phase tuning*, not by nesting -- a
+    single cylinder with an optimized phase already reaches the saturated
+    coverage (~86% here), and adding cylinders does not improve it. This
+    revises the earlier "nesting tiles the route" framing: the lever is the
+    phase, and extra cylinders are redundant for coverage (they remain useful
+    only for placing bands at specific radii a single cylinder cannot reach).
+    """
+    out = {}
+    for n in range(1, max_cylinders + 1):
+        radii = tuple(float(base_ratio ** i) for i in range(n))
+        res = optimize_offsets(radii=radii, r_min=r_min, r_max=r_max,
+                               seed=seed, n_pass=n_pass, population=40)
+        out[n] = float(res.best_out_of_band)
+    vals = list(out.values())
+    return {
+        "out_of_band_by_n": out,
+        "saturates": bool(max(vals) - min(vals) < 0.05),
+        "single_cylinder_optimized": out[1],
+        "interpretation": "coverage win is single-cylinder phase tuning; "
+                          "nesting saturates",
+    }
+
+
 def summarise_coverage(res: CoverageOptResult) -> str:
     """One-line summary of an optimization result."""
     return (

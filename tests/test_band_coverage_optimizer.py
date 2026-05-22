@@ -54,6 +54,16 @@ def test_history_is_monotone_non_increasing():
     assert all(b <= a + 1e-12 for a, b in zip(h, h[1:]))
 
 
+def test_coverage_saturates_and_is_phase_tuning():
+    """Honest finding: coverage saturates with N and is dominated by
+    single-cylinder phase tuning (a single optimized cylinder already reaches
+    the saturated coverage)."""
+    from systrophe.band_coverage_optimizer import coverage_scaling
+    sc = coverage_scaling(max_cylinders=4, n_pass=5)
+    assert sc["saturates"] is True
+    assert sc["single_cylinder_optimized"] < 0.25  # one cylinder already ~good
+
+
 def test_summary_and_novelty_present():
     res = optimize_offsets(radii=(1.0, 3.0, 9.0), seed=3, n_pass=4)
     s = summarise_coverage(res)

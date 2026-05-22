@@ -161,6 +161,31 @@ def optimize_geometry(
     )
 
 
+def velocity_sweep(
+    v_grid: tuple[float, ...] = (1.0, 0.5, 0.1, 0.01),
+    R_shell_m: float = 1.0,
+    sigma_m: float = 1.0,
+    kappa: float = 1.0 / 12.0,
+) -> dict:
+    """Subluminal lever: principal ~ (v_s/c)^2 (rigorous, exact in the model).
+
+    A trip at v = 0.1c costs 1/100 of the luminal principal (2 OOM); v = 0.01c
+    costs 1e-4 (4 OOM). HONEST CAVEAT: subluminal warp forfeits the FTL point
+    of the drive (a reaction-mass rocket reaches the same speed), so this lever
+    trades the headline capability for energy. It is included because it is an
+    exact, defensible term of the floor, not because it is strategically free.
+    """
+    base = principal_joules(R_shell_m, sigma_m, 1.0, kappa)
+    out = {}
+    for v in v_grid:
+        e = principal_joules(R_shell_m, sigma_m, float(v), kappa)
+        out[float(v)] = {
+            "principal_J": float(e),
+            "oom_below_luminal": float(math.log10(base / e)) if e > 0 else float("inf"),
+        }
+    return out
+
+
 def summarise_geometry(r: GeometryFloorReport) -> str:
     """One-line honest summary."""
     return (

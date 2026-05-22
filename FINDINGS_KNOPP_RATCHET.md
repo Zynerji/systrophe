@@ -199,7 +199,16 @@ shrinking perturbation per pass). Measured on route `r ∈ [1.05, 60]`:
 
 **74% reduction vs a single cylinder, 58% vs naive nesting** — the paid portion
 of the trip drops to ~1/7 of the route. Catcher: `novel_structure` on the
-descent curve. **Honest scope:** this shrinks the *out-of-band fraction* (an
+descent curve.
+
+**Correction (measured later, §9):** the win is *single-cylinder phase tuning*,
+not nesting. A single cylinder's phase alone moves out-of-band from 0.53 to
+~0.15, and adding cylinders **saturates** at ~86% coverage. The earlier
+"nesting tiles the route" reading is revised: the lever is the phase; extra
+cylinders are redundant for coverage (useful only to place bands at radii one
+cylinder cannot reach).
+
+**Honest scope:** this shrinks the *out-of-band fraction* (an
 engineering-reducible term that relocates cost toward reusable
 nested-cylinder/singularity infrastructure). It does **not** touch the
 Ford–Roman principal per metre of band traversed — that remains the same
@@ -238,6 +247,36 @@ reduction — but lands at theory-breaking scales, omits the blow-up term, and
 still leaves ~24 orders of magnitude. The principal-per-metre remains
 conservation-bounded; geometry only tunes the `R_shell²/σ` prefactor within the
 QI-allowed region.
+
+### 9. Minor rigorous levers + the honest blow-up correction
+
+**(a) Defensible minor levers.**
+- *Subluminal `v²`* (`warp_geometry.velocity_sweep`, exact): `v=0.1c` → −2 OOM,
+  `v=0.01c` → −4 OOM. Caveat: subluminal forfeits the FTL point — a rocket
+  reaches the same speed — so it trades the headline capability for energy.
+- *Multi-cylinder coverage scaling* (`band_coverage_optimizer.coverage_scaling`):
+  **saturates** at ~86% coverage for all N; the win is single-cylinder phase
+  tuning (the §7 correction). Nesting adds nothing for coverage.
+
+**(b) Van den Broeck neck blow-up — research scaffold (UNCALIBRATED).**
+`vdb_neck.vdb_total_floor` supplies the term §8 omitted, via the gradient-energy
+scaling `ρ ~ C·(c⁴/G)·(B'/B)²` → `E_blowup ~ C·(c⁴/G)·ln²(R_pocket/R_shell)·R_shell²/Δ`.
+The O(1) prefactor C is **uncalibrated** (not a full Einstein-tensor integral);
+the result is flagged `calibrated=False`. Measured (R_pocket=2 m, 100·ℓ_Planck wall):
+
+| term | value |
+|---|---|
+| shell principal (calibrated scaling) | 1.6e10 J (~16 GJ) |
+| neck blow-up (uncalibrated) | **1.1e15 J (~1 PJ)** |
+| total floor | ~1.1 PJ |
+| blow-up / shell | **~7×10⁴ (blow-up dominates)** |
+| reduction vs baseline | −28 OOM (vs −33 shell-only) |
+| blow-up re-inflates | ~5 OOM |
+| residual gap to lab | ~30 OOM |
+
+This confirms Pfenning–Ford **qualitatively**: the neck blow-up dominates and
+re-inflates the optimistic shell-only floor. The precise PJ value is not to be
+trusted (uncalibrated C, Planck-scale wall); only the direction and scale are.
 
 ## Bottom line
 
