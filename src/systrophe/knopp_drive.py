@@ -398,6 +398,113 @@ class KnoppDrive:
         vs = VanStockumInterior(omega=self._cfg.omega, R=self._cfg.R_cylinder)
         return tipler_tilt_at(vs, r) >= 1.0
 
+    def bias(
+        self,
+        heading: float = 0.0,
+        n_cycles: int = 64,
+        eps_high: float = 0.6,
+        floor_pct: float = 0.85,
+    ):
+        """Steer the bubble with a reversible-ratcheting pendulum.
+
+        Runs a bias controller (see `systrophe.knopp_ratchet`) that swings the
+        horn-twist pendulum on `heading`, locks in forward progress with a
+        rising-floor pawl, and rolls back any stroke that pushes past the horn
+        pinch. Returns a `RatchetTraversalReport` with the net directed
+        displacement, exotic/pump budget, and catcher verdict.
+
+        The bias direction is reversible: call again with `heading + pi` (or
+        the opposite displacement convention) to lock the opposite direction.
+        """
+        # Local import to avoid a circular dependency.
+        from .knopp_ratchet import WarpRatchetConfig, ratchet_traversal
+        cfg = WarpRatchetConfig(
+            drive=self._cfg, heading=float(heading), eps_high=float(eps_high),
+            floor_pct=float(floor_pct), n_cycles=int(n_cycles),
+        )
+        return ratchet_traversal(cfg)
+
+    def asymmetry(
+        self, heading: float = 0.0, floor_pct: float = 0.85,
+        eps_high: float = 0.6,
+    ) -> dict:
+        """Measured exotic-matter cost to advance vs retreat one ratchet step.
+
+        The bare drive is direction-blind (composite_E_neg is independent of
+        the twist axis); this returns the asymmetry the ratchet manufactures.
+        """
+        from .knopp_ratchet import WarpRatchetConfig, reverse_asymmetry
+        cfg = WarpRatchetConfig(
+            drive=self._cfg, heading=float(heading),
+            eps_high=float(eps_high), floor_pct=float(floor_pct),
+        )
+        return reverse_asymmetry(cfg)
+
+    def pump_accounting(
+        self, heading: float = 0.0, floor_pct: float = 0.85,
+    ) -> dict:
+        """Express the bias controller's cost as dynamical-Casimir pump power.
+
+        The negative energy is the parametrically squeezed Casimir vacuum of
+        the feedback shell, not a reservoir of exotic matter; the pump cost
+        falls as 1/Q^2 and Pfenning-Ford is saturated, not beaten.
+        """
+        from .knopp_ratchet import WarpRatchetConfig, casimir_pump_accounting
+        cfg = WarpRatchetConfig(
+            drive=self._cfg, heading=float(heading), floor_pct=float(floor_pct),
+        )
+        return casimir_pump_accounting(cfg)
+
+    def energy_ledger(
+        self, heading: float = 0.0, n_cycles: int = 64,
+        floor_pct: float = 0.85, interest_alpha: float = 1.0,
+    ):
+        """Total energy bottom-line for a biased journey, weighed against the
+        Ford-Roman quantum-interest payback.
+
+        Returns a `BiasEnergyLedger` (see `systrophe.knopp_ratchet`) with the
+        pump, borrow, and quantum-interest-repay accounts, the cost per unit
+        directed displacement, and the irreducible Q -> inf floor.
+        """
+        from .knopp_ratchet import WarpRatchetConfig, bias_energy_ledger
+        cfg = WarpRatchetConfig(
+            drive=self._cfg, heading=float(heading),
+            floor_pct=float(floor_pct), n_cycles=int(n_cycles),
+        )
+        return bias_energy_ledger(cfg, interest_alpha=float(interest_alpha))
+
+    def feasibility_report(
+        self, bubble_radius_m: float = 1.0,
+        wall_thickness_m: float | None = None,
+        v_s_over_c: float = 1.0, n_cycles: int = 64,
+        floor_pct: float = 0.85, lab_source_J: float = 1e-15,
+    ):
+        """SI-joule feasibility of a biased journey for a physical bubble.
+
+        Converts the ledger's irreducible Ford-Roman principal to joules for
+        the chosen radius/wall thickness and compares it to a lab squeezed-
+        vacuum source. Returns a `FeasibilityReport`.
+        """
+        from .knopp_ratchet import feasibility_report
+        return feasibility_report(
+            bubble_radius_m=float(bubble_radius_m),
+            wall_thickness_m=wall_thickness_m,
+            v_s_over_c=float(v_s_over_c), Q=float(self._cfg.Q),
+            n_cycles=int(n_cycles), floor_pct=float(floor_pct),
+            lab_source_J=float(lab_source_J),
+        )
+
+    def capacitor_accounting(self, floor_pct: float = 0.85):
+        """Surface-capacitor view: the peak negative-energy charge the shell
+        holds at once (|E_neg|/Q) vs the Q-independent total throughput.
+
+        Quantifies what the Q-cavity 'capacitor' buys (peak charge and pump
+        power fall with Q) and what it cannot (the Ford-Roman principal).
+        """
+        from .knopp_ratchet import WarpRatchetConfig, capacitor_accounting
+        cfg = WarpRatchetConfig(drive=self._cfg, floor_pct=float(floor_pct))
+        return capacitor_accounting(cfg)
+
     def summarise(self, r_orbit: float | None = None) -> str:
         """One-line summary of the budget at the given orbit."""
         return summarise_knopp_budget(self.budget(r_orbit))

@@ -5,6 +5,7 @@
 \usepackage{lmodern}
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{hyperref}
@@ -24,13 +25,13 @@
 A Four-Mechanism Composite Warp Engineering Bound \\
 \large{Tipler CTC-band gating, Krasnikov tube embedding, $Q$-cavity feedback, and horn-toroidal steering \\ \emph{with hardware confirmation on IBM Quantum \texttt{ibm\_marrakesh}}}}
 \author{Christian Knopp\\\texttt{cknopp@gmail.com}}
-\date{2026-05-11 \quad (v0.18.0, extended)}
+\date{2026-05-22 \quad (v0.19.0, extended --- reversible-ratcheting bias controller)}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-We present the \textbf{Knopp Drive}, a composite warp-drive engineering object that combines four independent shortcut mechanisms validated against the address-space novelty catcher of the Systroph\=e framework. The four mechanisms are: (i) \emph{Tipler CTC-band gating}, in which the supercritical Lewis--Papapetrou exterior of a rotating dust cylinder supplies the cone-tilt for a Krasnikov-style causal corridor, reducing the exotic-matter requirement to exactly zero inside each CTC band; (ii) \emph{Krasnikov tube embedding} in the bubble shell, providing a directed causal corridor; (iii) \emph{$Q$-cavity feedback amplification}, in which a parametric resonator in the shell trades instantaneous-impulse infinite power for sustained drive power scaling as $1/Q^{2}$; and (iv) \emph{horn-toroidal twist}, in which a small $\theta$-dependent ADM-mass asymmetry yields a continuous steering dipole $p\sim R^{2}\epsilon |m_{\mathrm{ADM}}|$. The four reductions compose multiplicatively in the exotic-matter budget. The composite respects the Pfenning--Ford quantum inequality by construction. We validate each mechanism with an independent novelty-catcher hit on a parameter sweep (a total of 20 catcher-confirmed emergents are reported), and demonstrate the composite in a Python implementation in the Systroph\=e framework. We further \textbf{confirm the Knopp Drive's headline shortcut on IBM Quantum's 156-qubit \texttt{ibm\_marrakesh} processor} (Heron-r2): a four-qubit encoding of the composite reproduces the predicted CTC-band gating at TV distance $\le 0.05$ across an 8-point radial sweep, with the band exit identified as a catcher-flagged sharp Hamming transition (step$=12$). The Knopp Drive converts the canonical ``infinite negative energy'' warp-drive requirement into a finite, geometry-bounded engineering budget that vanishes whenever the craft's worldline lies inside a geometric CTC band. At Earth--Mars distance ($L=0.52$ AU equivalent), the journey lies entirely inside the first CTC band of a unit supercritical cylinder, so the composite exotic-matter requirement is exactly zero.
+We present the \textbf{Knopp Drive}, a composite warp-drive engineering object that combines four independent shortcut mechanisms validated against the address-space novelty catcher of the Systroph\=e framework. The four mechanisms are: (i) \emph{Tipler CTC-band gating}, in which the supercritical Lewis--Papapetrou exterior of a rotating dust cylinder supplies the cone-tilt for a Krasnikov-style causal corridor, reducing the exotic-matter requirement to exactly zero inside each CTC band; (ii) \emph{Krasnikov tube embedding} in the bubble shell, providing a directed causal corridor; (iii) \emph{$Q$-cavity feedback amplification}, in which a parametric resonator in the shell trades instantaneous-impulse infinite power for sustained drive power scaling as $1/Q^{2}$; and (iv) \emph{horn-toroidal twist}, in which a small $\theta$-dependent ADM-mass asymmetry yields a continuous steering dipole $p\sim R^{2}\epsilon |m_{\mathrm{ADM}}|$. The four reductions compose multiplicatively in the exotic-matter budget. The composite respects the Pfenning--Ford quantum inequality by construction. We validate each mechanism with an independent novelty-catcher hit on a parameter sweep (a total of 20 catcher-confirmed emergents are reported), and demonstrate the composite in a Python implementation in the Systroph\=e framework. We further \textbf{confirm the Knopp Drive's headline shortcut on IBM Quantum's 156-qubit \texttt{ibm\_marrakesh} processor} (Heron-r2): a four-qubit encoding of the composite reproduces the predicted CTC-band gating at TV distance $\le 0.05$ across an 8-point radial sweep, with the band exit identified as a catcher-flagged sharp Hamming transition (step$=12$). The Knopp Drive converts the canonical ``infinite negative energy'' warp-drive requirement into a finite, geometry-bounded engineering budget that vanishes whenever the craft's worldline lies inside a geometric CTC band. At Earth--Mars distance ($L=0.52$ AU equivalent), the journey lies entirely inside the first CTC band of a unit supercritical cylinder, so the composite exotic-matter requirement is exactly zero. Finally we add a \emph{reversible-ratcheting pendulum} bias controller (Section~\ref{sec:bias}) that converts the drive's direction-blind steering dipole into stable directed transport: a rising-floor Pareto ratchet manufactures a tunable forward/reverse energy asymmetry ($1.7\times$ to $>\!100\times$), the negative energy is supplied as parametrically squeezed (dynamical-Casimir) vacuum charged onto the shell as a $Q$-cavity surface capacitor rather than an exotic-matter reservoir, and a Ford--Roman quantum-interest ledger shows that amplification removes the pump overhead but never the irreducible principal --- which an SI estimate places at $\sim\!3.8$ Jupiter mass-energies for a one-metre luminal bubble, $\sim\!60$ orders of magnitude beyond a laboratory squeezed-vacuum source.
 \end{abstract}
 
 \tableofcontents
@@ -44,7 +45,7 @@ Subsequent constructions have refined the exotic-matter budget. Krasnikov~\cite{
 
 Independently, Tipler~\cite{Tipler1974} showed that an infinite rotating dust cylinder of sufficient angular velocity admits closed timelike curves in its vacuum exterior. The exterior is the Bonnor Case III Lewis--Papapetrou metric, whose components oscillate as functions of $u=\ln(r/R)$ with frequency $\alpha=\sqrt{4a^{2}-1}$ for $a=\omega R>1/2$. The \emph{Systroph\=e} package~\cite{SystropheRepo} provides the exact analytic closed forms, the Lewis--Papapetrou integrator, and a Python interface that we exploit here as one of the four shortcut mechanisms.
 
-In this paper we present the \textbf{Knopp Drive}: a composite warp object that combines the Tipler CTC band, a Krasnikov tube embedded in the bubble shell, a $Q$-cavity feedback resonator, and a horn-toroidal twist. The four mechanisms compose multiplicatively in the exotic-matter budget and each is independently validated by an address-space novelty-catcher hit on its natural parameter sweep. Section~\ref{sec:catcher} introduces the catcher methodology. Section~\ref{sec:mechanisms} treats the four mechanisms in turn. Section~\ref{sec:composite} writes the composite. Section~\ref{sec:bounds} establishes the engineering bounds. Section~\ref{sec:emergents} reports the catcher-validated emergent inventory. Section~\ref{sec:steering} treats steerability. Section~\ref{sec:limits} lists falsifiers and limitations.
+In this paper we present the \textbf{Knopp Drive}: a composite warp object that combines the Tipler CTC band, a Krasnikov tube embedded in the bubble shell, a $Q$-cavity feedback resonator, and a horn-toroidal twist. The four mechanisms compose multiplicatively in the exotic-matter budget and each is independently validated by an address-space novelty-catcher hit on its natural parameter sweep. Section~\ref{sec:catcher} introduces the catcher methodology. Section~\ref{sec:mechanisms} treats the four mechanisms in turn. Section~\ref{sec:composite} writes the composite. Section~\ref{sec:bounds} establishes the engineering bounds. Section~\ref{sec:emergents} reports the catcher-validated emergent inventory. Section~\ref{sec:steering} treats steerability and Section~\ref{sec:bias} the reversible-ratcheting bias controller and its irreducible energy floor. Section~\ref{sec:limits} lists falsifiers and limitations.
 
 \section{The address-space novelty catcher}\label{sec:catcher}
 
@@ -301,6 +302,39 @@ Steerability is continuous up to the pinch threshold $\epsilon=1$ (the geometric
 
 The Knopp Drive composite is Pfenning--Ford-compatible by construction: the $Q$-cavity feedback trades amplitude for duration along the bound $|E_{\mathrm{shell}}|\tau\ge 3/(32\pi^{2}\sigma^{2})$, the Tipler gate reduces \emph{both} amplitude and integrated duration in the same way (so the product is preserved), and the horn-twist contributes only a $O(\epsilon)$ angular modulation. We verify compatibility on every reported configuration; the \texttt{knopp\_drive} module returns the explicit boolean \texttt{pfenning\_ford\_compatible} on every budget call.
 
+\section{Reversible-ratcheting directional bias}\label{sec:bias}
+
+\subsection{The reciprocity obstruction}
+The composite exotic-matter budget of Section~\ref{sec:composite} is \emph{independent} of the horn-twist axis $\theta_{0}$: only the steering vector $\bm{p}_{\mathrm{steer}}$ rotates with $\theta_{0}$, while $E_{\mathrm{neg}}^{\mathrm{comp}}$ does not. A pendulum that swings $\theta_{0}$ symmetrically therefore produces zero net impulse,
+\begin{equation}
+\bm{J}=\oint \bm{p}_{\mathrm{steer}}\,dt = R^{2}|m_{\mathrm{ADM}}|\,\epsilon\oint(\cos\theta_{0},\sin\theta_{0})\,d\theta_{0}=0,
+\end{equation}
+the warp-bubble analogue of Purcell's scallop theorem: a reciprocal deformation cycle yields no translation. Any directional bias must be \emph{manufactured} by breaking the reciprocity of the swing.
+
+\subsection{The rising-floor ratchet}
+We break reciprocity with a port of the Pareto ratchet proven in the TriCameral control stack. Each pendulum cycle is a \emph{power stroke} ($\epsilon=\epsilon_{\mathrm{hi}}$, worldline outside the band, exotic matter spent and steering thrust produced) followed by a \emph{recovery stroke} routed through the Tipler band, where the gate factor $\to0$ makes the return free. A two-metric ratchet on (displacement $d$, pinch-safety $s=1-\epsilon_{\mathrm{hi}}$) accepts a stroke only when the product $d\cdot\max(s,\delta)$ improves and, crucially, raises its acceptance floor monotonically,
+\begin{equation}
+\text{floor}\leftarrow\max\!\bigl(\text{floor},\ \text{best}\times f\bigr),\qquad f\in(0,1),
+\end{equation}
+so the configuration can never relax below $f$ of its best lean; a stroke regressing below the raised floor rolls back to the saved best state, giving closed-loop stability rather than open-loop runaway. The measured cost asymmetry between advancing and retreating one ratchet step, sourced entirely from \texttt{knopp\_budget}, rises with $f$ from $1.7\times$ (no pawl; the residual gate asymmetry alone) through $7.3\times$ ($f=0.85$) to $>\!100\times$ ($f=0.99$). The bias is reversible: re-anchoring with $\theta_{0}\!\to\!\theta_{0}+\pi$ locks the opposite direction.
+
+\subsection{The shell as a surface capacitor}
+The $Q$-cavity of Section~\ref{ssec:feedback} acts as an energy-accumulating surface capacitor. Under the parametric (dynamical-Casimir) pump it rings up as $E_{\mathrm{shell}}(t)=E_{\mathrm{shell}}(0)e^{gt}$ and at saturation holds only
+\begin{equation}
+E_{\mathrm{peak}}=|E_{\mathrm{neg}}^{\mathrm{bare}}|/Q
+\end{equation}
+sustained over the cavity lifetime $\tau=Q/f_{0}$. The instantaneous negative-energy charge present on the bubble is thus reduced by a factor $Q$ and the sustained pump power by $1/Q^{2}$: one never marshals the full requirement at once, but trickle-charges a small standing charge. The negative energy itself is the parametrically squeezed Casimir vacuum (the dynamical Casimir effect~\cite{Wilson2011}), \emph{not} a reservoir of exotic matter; static parallel-plate Casimir is quantitatively insufficient, and only the amplified route reaches the budget while respecting the quantum inequality.
+
+\subsection{Ford--Roman quantum-interest ledger}
+Negative energy borrowed for a hold time $\tau$ must be repaid by a larger positive pulse (the Ford--Roman quantum-interest conjecture~\cite{FordRoman1999}). Modelling the premium as $r=(\tau/\tau_{0})^{\alpha}-1=Q^{\alpha}-1$ with pulse width $\tau_{0}=1/f_{0}$, the per-stroke repayment at $\alpha=1$ is
+\begin{equation}
+E_{\mathrm{repay}}=\frac{|E_{\mathrm{neg}}^{\mathrm{bare}}|}{Q}\,(1+r)=|E_{\mathrm{neg}}^{\mathrm{bare}}|,
+\end{equation}
+\emph{independent of $Q$}: amplification removes the pump overhead $1/Q$ but never the quantum-interest \emph{principal}. The total per-stroke ledger $E=E_{\mathrm{pump}}+E_{\mathrm{repay}}=|E_{\mathrm{neg}}^{\mathrm{bare}}|(1+1/Q)$ therefore falls toward an irreducible floor as $Q\to\infty$ (within $+0.1\%$ at $Q=10^{3}$). For superlinear interest $\alpha>1$ the cost per unit displacement instead has an interior optimum at $Q^{*}=(\alpha-1)^{-1/\alpha}$.
+
+\subsection{SI feasibility floor}
+Converting the irreducible principal to SI via the textbook geometrised estimate $E_{\mathrm{geom}}\simeq\kappa(v_{s}/c)^{2}R^{2}/\sigma$ ($\kappa\approx1/12$) and $c^{4}/G=1.21\times10^{44}\,\mathrm{J/m}$, a one-metre luminal bubble ($\sigma=R$) carries a floor of $\approx6.5\times10^{44}\,\mathrm{J}\approx3.8$ Jupiter mass-energies, scaling as $R^{2}/\sigma$. This exceeds the negative-energy budget of a state-of-the-art squeezed-vacuum source by $\sim\!60$ orders of magnitude. The ratchet and capacitor make the \emph{peak charge} and \emph{pump power} arbitrarily small, but this \emph{total} is the same irreducible wall every warp metric encounters. The full controller is implemented in the \texttt{systrophe.knopp\_ratchet} module, with the address-space catcher returning \texttt{smooth} on the bias-energy curve (a continuously tunable control, not an emergent transition).
+
 \section{Monetisation pathway}
 
 The Knopp Drive composite provides four independently-quantified engineering bounds, each directly relevant to warp-drive physical realisation efforts:
@@ -323,13 +357,15 @@ These four bounds are jointly novel and are reduced to an executable Python modu
 
 \paragraph{Horn pinch.} The horn-twist parameter $\epsilon$ must satisfy $\epsilon<1$ to avoid horn-torus self-intersection. The linear $\bm{p}\sim\epsilon$ scaling is reliable on $[0,0.9]$.
 
+\paragraph{Irreducible energy floor.} The reversible-ratcheting bias controller (Section~\ref{sec:bias}) lowers the \emph{peak} negative-energy charge and the pump power without bound as $Q\to\infty$, but the Ford--Roman quantum-interest principal is invariant and sits at Jupiter-mass scale ($\sim10^{44}$--$10^{45}$ J for a metre-scale bubble), $\sim60$ orders of magnitude beyond laboratory squeezed-vacuum sources. The controller is an engineering convenience over an irreducible energy wall, not a route around it.
+
 \paragraph{Chronology protection.} The Knopp Drive is pre-quantum: the chronology-protection conjecture~\cite{Hawking1992} is not engaged. The Deutsch-CTC analysis~\cite{Deutsch1991} in the Systroph\=e DCTC trilogy provides one route to a quantum-consistent CTC theory.
 
 \paragraph{Numerical validation only.} All four mechanisms are validated by Python simulation and the address-space novelty catcher; the composite has not been demonstrated on quantum hardware. Marrakesh batch 5 verified the bubble-extinction property at the wall level on IBM \texttt{ibm\_marrakesh} (5/5 circuits, TV $<$ 0.05); the Knopp composite has not yet been mapped to a hardware experiment.
 
 \section{Conclusion}
 
-The Knopp Drive composes four independently-validated warp-engineering shortcut mechanisms into a single tractable object. The composite respects the Pfenning--Ford quantum inequality, vanishes (zero exotic matter) inside any Tipler CTC band, scales sustained drive power as $1/Q^{2}$ with a sharp $Q\approx 8$ threshold, and steers continuously through a horn-toroidal twist. The full implementation lives in the \texttt{systrophe.knopp\_drive} module of the open-source \emph{Systroph\=e} package~\cite{SystropheRepo}.
+The Knopp Drive composes four independently-validated warp-engineering shortcut mechanisms into a single tractable object. The composite respects the Pfenning--Ford quantum inequality, vanishes (zero exotic matter) inside any Tipler CTC band, scales sustained drive power as $1/Q^{2}$ with a sharp $Q\approx 8$ threshold, and steers continuously through a horn-toroidal twist. A reversible-ratcheting pendulum bias controller (Section~\ref{sec:bias}) converts the direction-blind steering dipole into stable directed transport and books the journey against the Ford--Roman quantum-interest bound, which fixes an irreducible Jupiter-mass energy floor that amplification reduces in \emph{peak} and \emph{power} but cannot remove in \emph{total}. The full implementation lives in the \texttt{systrophe.knopp\_drive} and \texttt{systrophe.knopp\_ratchet} modules of the open-source \emph{Systroph\=e} package~\cite{SystropheRepo}.
 
 \section*{Acknowledgements}
 
@@ -358,6 +394,10 @@ S.~W.~Hawking, \emph{The chronology protection conjecture}, Phys. Rev. D \textbf
 D.~Deutsch, \emph{Quantum mechanics near closed timelike lines}, Phys. Rev. D \textbf{44} (1991) 3197.
 \bibitem{SystropheRepo}
 C.~Knopp, \emph{Systroph\=e: a co-rotating Tipler-cylinder pair as a tunable time-travel harness}, \url{https://github.com/Zynerji/systrophe} (2026).
+\bibitem{FordRoman1999}
+L.~H.~Ford, T.~A.~Roman, \emph{The quantum interest conjecture}, Phys. Rev. D \textbf{60} (1999) 104018.
+\bibitem{Wilson2011}
+C.~M.~Wilson, G.~Johansson, A.~Pourkabirian, M.~Simoen, J.~R.~Johansson, T.~Duty, F.~Nori, P.~Delsing, \emph{Observation of the dynamical Casimir effect in a superconducting circuit}, Nature \textbf{479} (2011) 376.
 \end{thebibliography}
 
 \end{document}

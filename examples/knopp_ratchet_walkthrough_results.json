@@ -1,0 +1,34 @@
+{
+  "direction_blind_e_advance_fwd": 0.0050783551996357494,
+  "direction_blind_e_advance_bwd": 0.0050783551996357494,
+  "asymmetry_at_floor_0.85": 7.322916666666666,
+  "net_displacement_64cyc": 14.358711048745679,
+  "total_exotic_cost": 0.3250147327766879,
+  "pump_accounting_Q10": {
+    "power_stroke_pump_power": 6.774173047609902e-05,
+    "recovery_pump_power": 0.0,
+    "shell_natural_frequency_f0": 0.039788735772973836,
+    "Q": 10.0,
+    "pfenning_ford_compatible": true,
+    "pf_product": 4.278938119963622,
+    "pf_bound": 0.0005936788104043229,
+    "pump_asymmetry_ratio": 7.322916666666666,
+    "negative_energy_source": "parametrically squeezed Casimir vacuum (DCE)",
+    "needs_exotic_matter_reservoir": false
+  },
+  "ledger_Q10": {
+    "e_ledger_total": 11.985849092387316,
+    "e_pump_total": 1.089622644762483,
+    "e_repay_total": 10.896226447624832,
+    "irreducible_floor": 10.89622644762483,
+    "energy_per_unit_displacement": 0.8347440833440515,
+    "reverse_undo_energy": 87.77137408279461
+  },
+  "feasibility_1m_bubble": {
+    "irreducible_floor_J": 6.4546963431371e+44,
+    "floor_jupiter_masses": 3.7838873804007274,
+    "shortfall_orders_of_magnitude": 59.80987581599021,
+    "verdict": "INFEASIBLE with current sources: irreducible principal exceeds a lab squeezed-vacuum budget by ~60 orders of magnitude (3.8 Jupiter mass-energies)."
+  },
+  "novelty_verdict": "smooth"
+}
