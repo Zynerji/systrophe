@@ -5,6 +5,7 @@
 \usepackage{lmodern}
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{hyperref}
@@ -28,7 +29,7 @@ A Four-Mechanism Composite Warp Engineering Bound \\
 with Hardware Confirmation on IBM Quantum \texttt{ibm\_marrakesh}}
 \author{Christian Knopp}
 \affil{Independent researcher\\\texttt{cknopp@gmail.com}}
-\date{2026-05-11 (v1, arXiv preprint)}
+\date{2026-05-22 (v2, arXiv preprint --- bias controller, energy-floor closure, ER=EPR channel)}
 
 % Graphics path for figures
 \graphicspath{{../paper/}}
@@ -37,7 +38,7 @@ with Hardware Confirmation on IBM Quantum \texttt{ibm\_marrakesh}}
 \maketitle
 
 \begin{abstract}
-We introduce the \textbf{Knopp Drive}, a composite warp-drive engineering object that combines four independent shortcut mechanisms each validated against an address-space novelty catcher. The mechanisms are: (i) Tipler CTC-band gating, in which the supercritical Lewis--Papapetrou exterior of a rotating dust cylinder supplies the cone-tilt for a Krasnikov-style causal corridor, reducing the exotic-matter requirement to exactly zero inside each CTC band; (ii) Krasnikov tube embedding in the bubble shell, providing a directed causal corridor; (iii) $Q$-cavity feedback amplification, in which a parametric resonator in the shell trades instantaneous-impulse infinite power for sustained drive power scaling as $1/Q^{2}$; and (iv) horn-toroidal twist, in which a small $\theta$-dependent ADM-mass asymmetry yields a continuous steering dipole $p\sim R^{2}\epsilon |m_{\mathrm{ADM}}|$. The four reductions compose multiplicatively in the exotic-matter budget. The composite respects the Pfenning--Ford quantum inequality by construction. We confirm the Knopp Drive's headline shortcut on the IBM Quantum 156-qubit Heron-r2 processor \texttt{ibm\_marrakesh}: a four-qubit encoding of the composite reproduces the predicted CTC-band gating at total-variation distance $\le 0.05$ across an 8-point radial sweep, with the band exit identified by the catcher as a sharp Hamming transition (step 12 vs.\ median 0). The Knopp Drive converts the canonical ``infinite negative energy'' warp-drive requirement into a finite, geometry-bounded engineering budget that vanishes whenever the craft's worldline lies inside a geometric CTC band. At Earth--Mars distance ($L=0.52\,\mathrm{AU}$ equivalent in geometric units), the journey lies entirely inside the first CTC band of a unit supercritical cylinder, so the composite exotic-matter requirement is exactly zero.
+We introduce the \textbf{Knopp Drive}, a composite warp-drive engineering object that combines four independent shortcut mechanisms each validated against an address-space novelty catcher. The mechanisms are: (i) Tipler CTC-band gating, in which the supercritical Lewis--Papapetrou exterior of a rotating dust cylinder supplies the cone-tilt for a Krasnikov-style causal corridor, reducing the exotic-matter requirement to exactly zero inside each CTC band; (ii) Krasnikov tube embedding in the bubble shell, providing a directed causal corridor; (iii) $Q$-cavity feedback amplification, in which a parametric resonator in the shell trades instantaneous-impulse infinite power for sustained drive power scaling as $1/Q^{2}$; and (iv) horn-toroidal twist, in which a small $\theta$-dependent ADM-mass asymmetry yields a continuous steering dipole $p\sim R^{2}\epsilon |m_{\mathrm{ADM}}|$. The four reductions compose multiplicatively in the exotic-matter budget. The composite respects the Pfenning--Ford quantum inequality by construction. We confirm the Knopp Drive's headline shortcut on the IBM Quantum 156-qubit Heron-r2 processor \texttt{ibm\_marrakesh}: a four-qubit encoding of the composite reproduces the predicted CTC-band gating at total-variation distance $\le 0.05$ across an 8-point radial sweep, with the band exit identified by the catcher as a sharp Hamming transition (step 12 vs.\ median 0). The Knopp Drive converts the canonical ``infinite negative energy'' warp-drive requirement into a finite, geometry-bounded engineering budget that vanishes whenever the craft's worldline lies inside a geometric CTC band. At Earth--Mars distance ($L=0.52\,\mathrm{AU}$ equivalent in geometric units), the journey lies entirely inside the first CTC band of a unit supercritical cylinder, so the composite exotic-matter requirement is exactly zero. We add a reversible-ratcheting pendulum bias controller that converts the direction-blind steering dipole into stable directed transport, and we establish from first principles that the Ford--Roman quantum-interest \emph{principal} is irreducible: Van den Broeck geometry re-inflates under exact Einstein-tensor calibration, the thick-wall variational optimum still costs $\sim(c^{4}/G)\rho_{\mathrm{use}}\sim$ Jupiter mass-energy, and the wormhole energy wall is dual to a Bekenstein entanglement wall. The honest residue is not matter transport but an \emph{information} channel: the ER$=$EPR teleportation primitive, which we hardware-validate on IBM Heron-r2 at $0.958$ Bell fidelity. The Knopp Drive is thus a rigorous, hardware-grounded \emph{negative} result for matter transport, paired with a working quantum-network capability---not a propulsion device, and not faster-than-light.
 \end{abstract}
 
 \noindent\textbf{Keywords:} warp drive; Alcubierre metric; Krasnikov tube; Tipler cylinder; closed timelike curves; Lewis--Papapetrou; Pfenning--Ford; quantum hardware; IBM Quantum; ibm\_marrakesh.
@@ -255,6 +256,31 @@ Steerability is continuous up to the pinch threshold $\epsilon=1$ (the geometric
 
 The Knopp Drive composite is Pfenning--Ford-compatible by construction: the $Q$-cavity feedback trades amplitude for duration along the bound $|E_{\mathrm{shell}}|\tau\ge 3/(32\pi^{2}\sigma^{2})$, the Tipler gate reduces both amplitude and integrated duration in the same way (so the product is preserved), and the horn-twist contributes only a $O(\epsilon)$ angular modulation. We verify compatibility on every reported configuration; the \texttt{knopp\_drive} module returns the explicit boolean \texttt{pfenning\_ford\_compatible} on every budget call.
 
+\section{Reversible-ratcheting directional bias}\label{sec:bias}
+
+\subsection{The reciprocity obstruction}
+The composite exotic-matter budget of Section~\ref{sec:composite} is \emph{independent} of the horn-twist axis $\theta_{0}$: only the steering vector $\bm{p}_{\mathrm{steer}}$ rotates with $\theta_{0}$, while $E_{\mathrm{neg}}^{\mathrm{comp}}$ does not. A pendulum that swings $\theta_{0}$ symmetrically therefore produces zero net impulse, $\bm{J}=\oint \bm{p}_{\mathrm{steer}}\,dt=0$---the warp-bubble analogue of Purcell's scallop theorem. Any directional bias must be \emph{manufactured} by breaking the reciprocity of the swing.
+
+\subsection{The rising-floor ratchet}
+We break reciprocity with a port of the Pareto ratchet from the TriCameral control stack. Each cycle is a \emph{power stroke} ($\epsilon=\epsilon_{\mathrm{hi}}$, worldline outside the band, exotic matter spent, thrust produced) then a \emph{recovery stroke} routed through the Tipler band where the gate factor $\to0$ (free return). A two-metric ratchet on (displacement, pinch-safety) raises its acceptance floor monotonically, $\text{floor}\leftarrow\max(\text{floor},\text{best}\times f)$, $f\in(0,1)$, rolling back any regressing stroke (closed-loop stability). The measured advance/retreat cost asymmetry rises with $f$ from $1.7\times$ (no pawl) through $7.3\times$ ($f=0.85$) to $>\!100\times$ ($f=0.99$); the bias reverses under $\theta_{0}\to\theta_{0}+\pi$.
+
+\subsection{Surface capacitor and Ford--Roman ledger}
+The $Q$-cavity acts as an energy-accumulating surface capacitor: it rings up as $E_{\mathrm{shell}}(t)=E_{\mathrm{shell}}(0)e^{gt}$ and holds only $E_{\mathrm{peak}}=|E_{\mathrm{neg}}^{\mathrm{bare}}|/Q$, so the instantaneous charge and pump power fall as $1/Q$ and $1/Q^{2}$. The negative energy is parametrically squeezed (dynamical-)Casimir vacuum~\cite{Wilson2011}, not a reservoir of exotic matter. But the Ford--Roman quantum-interest principal~\cite{FordRoman1999} is invariant: with premium $r=Q^{\alpha}-1$, the per-stroke repayment at $\alpha=1$ is $E_{\mathrm{repay}}=|E_{\mathrm{neg}}^{\mathrm{bare}}|$, independent of $Q$. Amplification removes the pump overhead, never the principal.
+
+\subsection{SI feasibility floor}
+In SI, $E_{\mathrm{geom}}\simeq\kappa(v_{s}/c)^{2}R^{2}/\sigma$ ($\kappa\approx1/12$), $c^{4}/G=1.21\times10^{44}\,\mathrm{J/m}$: a one-metre luminal bubble carries a floor $\approx6.5\times10^{44}\,\mathrm{J}\approx3.8$ Jupiter mass-energies, $\sim\!60$ orders of magnitude beyond a state-of-the-art squeezed-vacuum source. The ratchet and capacitor make peak charge and pump power arbitrarily small; the \emph{total} is the irreducible wall.
+
+\section{The irreducible energy floor, the wormhole map, and the buildable residue}\label{sec:floor}
+
+\subsection{Geometry does not lower the principal}
+The principal scales as $E\sim(c^{4}/G)(v_{s}/c)^{2}R^{2}/\sigma$, so Van den Broeck~\cite{VanDenBroeck1999} decoupling of shell from pocket appears to help. Calibrating the neck blow-up against the exact Einstein-tensor integral of the conformally-flat static pocket, $E_{\mathrm{pocket}}=\tfrac12\!\int(B'^{2}/B)r^{2}dr$, the energy scales as $B_{\max}$ (not $\ln^{2}B_{\max}$): the blow-up dominates and re-inflates the floor to $\sim(c^{4}/G)R_{\mathrm{pocket}}$. The Euler--Lagrange minimiser $B=(1+c/r)^{2}$ (isotropic Schwarzschild) shows the thickest wall is optimal yet still gives $E_{\min}\approx2(c^{4}/G)\rho_{\mathrm{use}}$; the direct Einstein-tensor integral of a regular pocket gives an exotic (NEC-violating) energy $\approx5(c^{4}/G)\rho_{\mathrm{use}}$. The interior stays flat and habitable; the floor is Jupiter-scale and irreducible across all wall shapes.
+
+\subsection{The wormhole map: energy wall $=$ entanglement wall}
+The classical Morris--Thorne exotic energy and the quantum ER$=$EPR~\cite{MaldacenaSusskind2013} requirement are dual: a throat of radius $r_{t}$ needs either $\sim(c^{4}/G)r_{t}$ of exotic energy or $\sim(r_{t}/\ell_{P})^{2}$ ebits of pre-shared entanglement (Ryu--Takayanagi $S=A/4G_{N}$). The classical exotic energy equals exactly half the ER$=$EPR dual black-hole mass-energy at every scale---both equal assembling a black hole of radius $r_{t}$. For matter transport the wall is the same Bekenstein bound; only \emph{information} traverses cheaply.
+
+\subsection{Hardware-validated ER$=$EPR channel}
+Under ER$=$EPR the shared entanglement is the bridge; sending a qubit through it (Gao--Jafferis--Wall~\cite{GaoJafferisWall2017}) is the operational traversal. We verify from first principles that the Maldacena--Qi coupling $V=\tfrac1n\sum_jZ_j^LZ_j^R$ is the operator-size operator on the EPR state, $V P_L|\mathrm{EPR}\rangle=(1-2\,\mathrm{size}(P)/n)P_L|\mathrm{EPR}\rangle$ (residual $10^{-17}$); a real SYK scrambler activates the size-winding channel where a Haar scrambler is inert, but the faithful dense-SYK wormhole transpiles to depth $11570$ ($3816$ two-qubit gates) and cannot run clean on current hardware. The deterministic coherent channel does: executed on IBM Heron-r2 with a live-calibration best-qubit pipeline plus error mitigation, the entanglement-teleportation Bell fidelity reaches $0.958$ (\texttt{ibm\_kingston}, zero-noise extrapolated; $0.918$ on \texttt{ibm\_marrakesh}), well above the $0.5$ classical bound. This is a quantum-network primitive---not faster-than-light, not matter transport.
+
 \section{Limitations and falsifiers}\label{sec:limits}
 
 \paragraph{Linearised composition.} The four mechanisms are composed in the linearised regime. Cross-products of perturbations are formally $O(G^{2})$ and not modelled.
@@ -271,7 +297,7 @@ The Knopp Drive composite is Pfenning--Ford-compatible by construction: the $Q$-
 
 \section{Conclusion}
 
-The Knopp Drive composes four independently-validated warp-engineering shortcut mechanisms into a single tractable object. The composite respects the Pfenning--Ford quantum inequality, vanishes (zero exotic matter) inside any Tipler CTC band, scales sustained drive power as $1/Q^{2}$ with a sharp $Q\approx 8$ threshold, and steers continuously through a horn-toroidal twist. The composite's headline shortcut has been hardware-confirmed on IBM Quantum's 156-qubit \texttt{ibm\_marrakesh} processor. The full implementation is open-source in the \texttt{systrophe.knopp\_drive} module of the Systroph\=e package \cite{SystropheRepo}. Extension to multi-drive fleet operations, generalisation to other background spacetimes (Kerr, BTZ, de Sitter), and integration with quantum-inequality-respecting exotic-matter sourcing (Casimir cavities, squeezed vacuum) are immediate next steps.
+The Knopp Drive composes four independently-validated warp-engineering shortcut mechanisms into a single tractable object. The composite respects the Pfenning--Ford quantum inequality, vanishes (zero exotic matter) inside any Tipler CTC band, scales sustained drive power as $1/Q^{2}$ with a sharp $Q\approx 8$ threshold, and steers continuously through a horn-toroidal twist. The composite's headline shortcut has been hardware-confirmed on IBM Quantum's 156-qubit \texttt{ibm\_marrakesh} processor. A reversible-ratcheting pendulum bias controller (Section~\ref{sec:bias}) converts the direction-blind steering dipole into stable directed transport. We then establish, from first principles (Section~\ref{sec:floor}), that \emph{no} route lowers the Ford--Roman quantum-interest principal: Van den Broeck geometry re-inflates under exact Einstein-tensor calibration, the thick-wall variational optimum still costs $\sim(c^{4}/G)\rho_{\mathrm{use}}$, and the wormhole energy wall is dual to a Bekenstein entanglement wall. The honest residue is an \emph{information} channel---the ER$=$EPR teleportation primitive, hardware-validated on IBM Heron-r2 at $0.958$ Bell fidelity. The Knopp Drive is therefore a rigorous negative result for matter transport paired with a working quantum-network capability, \emph{not} a propulsion device. The full implementation is open-source across the \texttt{knopp\_drive}, \texttt{knopp\_ratchet}, \texttt{wormhole\_map}, \texttt{size\_winding}, and \texttt{erepr\_channel} modules of the Systroph\=e package \cite{SystropheRepo}.
 
 \section*{Acknowledgements}
 
@@ -292,6 +318,14 @@ S.~V.~Krasnikov, \emph{Hyperfast travel in general relativity}, Phys. Rev. D \te
 A.~E.~Everett, T.~A.~Roman, \emph{A superluminal subway: the Krasnikov tube}, Phys. Rev. D \textbf{56} (1997) 2100.
 \bibitem{VanDenBroeck1999}
 C.~Van Den Broeck, \emph{A `warp drive' with more reasonable total energy requirements}, Class. Quantum Grav. \textbf{16} (1999) 3973.
+\bibitem{FordRoman1999}
+L.~H.~Ford, T.~A.~Roman, \emph{The quantum interest conjecture}, Phys. Rev. D \textbf{60} (1999) 104018.
+\bibitem{Wilson2011}
+C.~M.~Wilson et al., \emph{Observation of the dynamical Casimir effect in a superconducting circuit}, Nature \textbf{479} (2011) 376.
+\bibitem{MaldacenaSusskind2013}
+J.~Maldacena, L.~Susskind, \emph{Cool horizons for entangled black holes (ER=EPR)}, Fortsch. Phys. \textbf{61} (2013) 781.
+\bibitem{GaoJafferisWall2017}
+P.~Gao, D.~L.~Jafferis, A.~C.~Wall, \emph{Traversable wormholes via a double trace deformation}, JHEP \textbf{12} (2017) 151.
 \bibitem{Lentz2021}
 E.~W.~Lentz, \emph{Breaking the warp barrier: hyper-fast solitons in Einstein--Maxwell-plasma theory}, Class. Quantum Grav. \textbf{38} (2021) 075015.
 \bibitem{BobrickMartire2021}
