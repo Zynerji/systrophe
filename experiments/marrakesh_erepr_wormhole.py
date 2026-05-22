@@ -132,6 +132,71 @@ def _syk_wormhole_depth(service, snap) -> dict:
                                                if inst.operation.num_qubits == 2))}
 
 
+def run_zne(shots: int = 32768, noise_factors=(1, 3, 5)) -> dict:
+    """Push the fidelity higher: EstimatorV2 + Zero-Noise Extrapolation.
+
+    Measures the Bell-fidelity observable O_F = (I + X_PX_B - Y_PY_B + Z_PZ_B)/4
+    directly (no final measurement on the circuit), with ZNE (gate-folding at
+    noise factors, extrapolated to zero noise) on top of DD + gate twirling, at
+    higher shot count for a tight extrapolation.
+    """
+    from qiskit.quantum_info import SparsePauliOp
+    from qiskit_ibm_runtime import QiskitRuntimeService, EstimatorV2
+
+    service = QiskitRuntimeService(instance=INSTANCE)
+    backend = service.backend(BACKEND)
+    snap = pull_calibration(backend)
+    phys, _ = select_qubit_subset(snap, 4)
+    print(f"    Selected good qubits: {phys}")
+
+    qc = QuantumCircuit(4)
+    _teleport_body(qc)                     # state-prep only; Estimator measures O
+    tqc = transpile(qc, backend=backend, optimization_level=2,
+                    initial_layout=phys)
+    # Bell-fidelity operator on logical (P=0, B=3), then map to physical layout
+    F_op = SparsePauliOp.from_sparse_list(
+        [("", [], 0.25), ("XX", [0, 3], 0.25),
+         ("YY", [0, 3], -0.25), ("ZZ", [0, 3], 0.25)],
+        num_qubits=4,
+    )
+    F_phys = F_op.apply_layout(tqc.layout)
+
+    est = EstimatorV2(mode=backend)
+    est.options.default_shots = shots
+    est.options.resilience_level = 2       # ZNE + twirling + readout (T-REx)
+    est.options.dynamical_decoupling.enable = True
+    est.options.dynamical_decoupling.sequence_type = "XpXm"
+    try:
+        est.options.resilience.zne_mitigation = True
+        est.options.resilience.zne.noise_factors = list(noise_factors)
+        est.options.resilience.zne.extrapolator = "exponential"
+    except Exception as e:
+        print("    (using resilience_level=2 default ZNE config:", repr(e)[:80], ")")
+
+    print(f"[ZNE] Submitting EstimatorV2 ({shots} shots, ZNE factors "
+          f"{noise_factors}, DD + twirling)...")
+    job = est.run([(tqc, F_phys)])
+    res = job.result()[0]
+    F = float(np.asarray(res.data.evs).reshape(-1)[0])
+    # The runtime's built-in extrapolator sometimes returns nan; if so,
+    # extrapolate to zero noise from the per-noise-factor fidelities directly.
+    per_nf = np.asarray(res.data.evs_noise_factors).ravel()[:len(noise_factors)]
+    nf = np.array(noise_factors, dtype=float)
+    F_lin = float(np.polyval(np.polyfit(nf, per_nf, 1), 0.0))
+    F_exp = float(np.exp(np.polyval(np.polyfit(nf, np.log(per_nf), 1), 0.0)))
+    if not np.isfinite(F):
+        F = F_exp
+    print(f"[ZNE] per-noise-factor F: {dict(zip(nf.tolist(), per_nf.round(4).tolist()))}")
+    print(f"[ZNE] zero-noise F: exponential={F_exp:.4f} linear={F_lin:.4f}  "
+          f"(job {job.job_id()})")
+    return {"zne_fidelity": F_exp, "zne_fidelity_linear": F_lin,
+            "zne_factor1_fidelity": float(per_nf[0]),
+            "zne_per_noise_factor": {str(k): float(v) for k, v in zip(nf, per_nf)},
+            "zne_shots": shots, "zne_noise_factors": list(noise_factors),
+            "zne_extrapolator": "exponential (manual)", "zne_job_id": job.job_id(),
+            "selected_qubits": phys}
+
+
 def main(submit: bool = True) -> None:
     print("=" * 70)
     print("ER=EPR channel on IBM Marrakesh  (instance:", INSTANCE, ")")
@@ -201,4 +266,11 @@ def main(submit: bool = True) -> None:
 
 
 if __name__ == "__main__":
-    main(submit="--dry-run" not in sys.argv)
+    if "--zne" in sys.argv:
+        out = run_zne(shots=32768)
+        prev = json.loads(RESULTS.read_text()) if RESULTS.exists() else {}
+        prev.update(out)
+        RESULTS.write_text(json.dumps(prev, indent=2, default=str))
+        print("Results ->", RESULTS.name)
+    else:
+        main(submit="--dry-run" not in sys.argv)

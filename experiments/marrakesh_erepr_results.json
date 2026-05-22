@@ -22,5 +22,22 @@
     "ZZ": 0.7783203125
   },
   "hardware_fidelity": 0.8392333984375,
-  "classical_bound": 0.5
+  "classical_bound": 0.5,
+  "zne_fidelity": 0.917978988084502,
+  "zne_std": NaN,
+  "zne_shots": 32768,
+  "zne_noise_factors": [
+    1,
+    3,
+    5
+  ],
+  "zne_job_id": "d88cta1789is73920eig",
+  "zne_per_noise_factor": {
+    "1.0": 0.8747467071935157,
+    "3.0": 0.768632852077001,
+    "5.0": 0.702539260385005
+  },
+  "zne_factor1_fidelity": 0.8747467071935157,
+  "zne_fidelity_linear": 0.9111285249915565,
+  "zne_extrapolator": "exponential (manual; runtime built-in returned nan)"
 }

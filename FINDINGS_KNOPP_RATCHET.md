@@ -508,9 +508,24 @@ wormhole cannot run clean on current hardware (and why the 2022 demo used a
 *learned sparse* Hamiltonian). The deterministic ER=EPR channel is the runnable,
 honest hardware demonstration.
 
+**Pushing it higher — more shots + ZNE.** Re-run with EstimatorV2 measuring the
+fidelity observable directly, 32768 shots, T-REx readout mitigation, and
+Zero-Noise Extrapolation (gate-folding at noise factors 1/3/5):
+
+| configuration | Bell fidelity |
+|---|---|
+| Sampler, 4096 shots, DD + twirling | 0.839 |
+| Estimator, 32768 shots, T-REx (noise factor 1) | 0.875 |
+| **+ ZNE → zero noise (exponential)** | **0.918** (linear: 0.911) |
+
+Per-noise-factor fidelities `{1: 0.875, 3: 0.769, 5: 0.703}` (clean monotonic
+decay → reliable extrapolation; the runtime's built-in exponential extrapolator
+returned `nan`, so the zero-noise value is extrapolated directly from the saved
+per-factor data). ZNE job `d88cta1789is73920eig`.
+
 So the buildable capability is not just simulated — it **runs on a real quantum
-computer at 0.839 fidelity**. Still entanglement-mediated teleportation: not FTL,
-not matter transport.
+computer, pushed from 0.839 to 0.918 fidelity** with more shots + ZNE. Still
+entanglement-mediated teleportation: not FTL, not matter transport.
 
 ## Bottom line
 
