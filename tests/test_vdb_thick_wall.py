@@ -59,3 +59,39 @@ def test_interior_usable_but_escape_closed():
 def test_summary():
     s = summarise_thick_wall(thick_wall_floor())
     assert "ESCAPE_CLOSED=True" in s and "interior_usable=True" in s
+
+
+# --- CORRECTED: direct Einstein-tensor exotic energy ------------------------
+
+from systrophe.vdb_thick_wall import (
+    regular_pocket_einstein,
+    exotic_energy_ratio,
+)
+
+
+def test_regular_pocket_energy_is_negative_and_exotic():
+    """The regular pocket's total static energy is NEGATIVE and the
+    NEC-violating (exotic) part is the dominant piece -- not gatherable
+    ordinary mass."""
+    d = regular_pocket_einstein(1e4)
+    assert d["E_total"] < 0
+    assert d["E_negative"] < 0
+    assert abs(d["E_nec_violating"]) > 0.5 * abs(d["E_total"])
+
+
+def test_exotic_ratio_converges_near_five():
+    """|E_exotic| / rho_use converges to ~5 across B_max (robust, scale-free)."""
+    r1 = exotic_energy_ratio(1e3)
+    r2 = exotic_energy_ratio(1e4)
+    assert 4.0 < r1 < 6.0
+    assert r2 == pytest.approx(r1, rel=0.1)
+
+
+def test_exotic_floor_is_jupiter_scale_and_dominates():
+    """The corrected headline: the EXOTIC (QI-bounded) requirement is itself
+    ~Jupiter-scale -- the closure is reinforced, not opened."""
+    r = thick_wall_floor(rho_use_m=2.0)
+    assert r.exotic_dominated is True
+    assert r.exotic_to_rho_ratio == pytest.approx(5.0, abs=1.0)
+    assert 0.1 < r.exotic_jupiter_masses < 100.0
+    assert r.residual_oom > 30.0

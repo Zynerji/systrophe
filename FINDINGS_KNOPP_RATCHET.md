@@ -347,6 +347,26 @@ But the **thick-wall energy escape is CLOSED** (`escape_closed=True`): the floor
 is Jupiter-scale and irreducible across every wall shape, residual ~60 OOM above
 a lab source. Catcher: `smooth`.
 
+**Correction + reinforcement (direct Einstein-tensor integral).** On review the
+variational argument above had a flaw: the EL optimum `B=(1+|c|/r)²` is the
+*singular* isotropic-Schwarzschild profile (a central mass, not a regular
+pocket), for which the boundary term `[B'r²]` does not vanish; and `½∫(B'²/B)r²dr`
+is the *total* energy, not the *exotic* (QI-bounded) part. The corrected
+**direct Einstein-tensor computation of a regular pocket**
+(`vdb_thick_wall.regular_pocket_einstein`; isotropic-static `ρ`, `ρ+p_r`)
+gives, robustly across `B_max`:
+
+```
+E_total ≈ −4 (c⁴/G)·ρ_use      |E_exotic (NEC-violating)| ≈ 5 (c⁴/G)·ρ_use
+```
+
+So the pocket energy is **negative and exotic-dominated** — for ρ_use=2 m the
+exotic requirement is **~1.2×10⁴⁵ J ≈ 7 Jupiter masses** (`exotic_dominated=True`,
+ratio 5.1× ρ_use). This kills the one remaining hope (that most of the ~Jupiter
+might be gatherable *ordinary* mass): it is QI-bounded *exotic* energy, ~Jupiter,
+reinforcing the closure with a direct integral rather than the flawed singular
+optimum.
+
 ## Bottom line
 
 The reversible-ratcheting pendulum is a clean, stable, reversible *control*
