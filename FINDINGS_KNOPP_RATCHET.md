@@ -278,14 +278,53 @@ This confirms Pfenning–Ford **qualitatively**: the neck blow-up dominates and
 re-inflates the optimistic shell-only floor. The precise PJ value is not to be
 trusted (uncalibrated C, Planck-scale wall); only the direction and scale are.
 
+### 10. Calibrating the blow-up with the exact Einstein-tensor integral — the geometry route collapses
+
+The §8/§9 "−33 OOM via geometry" was optimistic. Calibrating it properly
+**overturns it.** For the VdB pocket the spatial slice is conformally flat,
+`γ_ij = B(r)²δ_ij`; the static Hamiltonian constraint `ρ = R⁽³⁾/16π` gives the
+**exact** pocket energy (curvature total-derivatives cancel):
+
+```
+E_pocket = ½ ∫₀^∞ (B'²/B) r² dr        (geometrized; × c⁴/G for joules)
+```
+
+Numerically (`vdb_neck.pocket_energy_geometrized`, `calibrate_K`):
+- `E ∝ B_max¹` (measured exponent 1.05) — **not `ln²(B_max)`** as the scaffold guessed.
+- `E ∝ R_w²/w`, prefactor **K = 0.554** (converged, tanh wall).
+
+Since `B_max = R_pocket/R_shell`, this collapses to `E ≈ K·(c⁴/G)·R_pocket·(R_shell/w)`.
+For a localized thin wall (`w ≈ R_shell`) the **shell radius cancels**:
+
+| quantity | scaffold (§9, wrong) | **calibrated (exact integral)** |
+|---|---|---|
+| blow-up (R_pocket=2 m) | 1.1e15 J | **1.34e44 J = 0.79 Jupiter** |
+| net reduction vs baseline | −28 OOM | **−1.1 OOM (i.e. ~13× WORSE)** |
+| `geometry_reduces_floor` | (implied yes) | **False** |
+
+**The scaffold over-claimed the reduction by ~29 orders of magnitude.** The
+exact integral shows the pocket-expansion energy is `~(c⁴/G)·R_pocket` — set by
+the *proper interior radius you want*, independent of how small the coordinate
+shell is made. Van den Broeck geometry therefore does **not** reduce the
+principal for a habitable (metre-scale) pocket; it is marginally *worse* than
+plain Alcubierre. This vindicates Pfenning–Ford (1997) quantitatively, now from
+the Einstein-tensor integral rather than by assertion. Catcher: `smooth`.
+
+*Open caveat (honest):* a very thick/gradual wall (`w ≫ R_shell`) lowers
+`E ~ R_pocket·R_shell/w`, but that is a different geometry whose interior
+usability and validity is the genuinely contested question — not a demonstrated
+reduction.
+
 ## Bottom line
 
 The reversible-ratcheting pendulum is a clean, stable, reversible *control*
 layer for steering a warp bubble, and the amplified-Casimir capacitor makes the
 *peak charge* and *pump power* arbitrarily small with Q. Band-coverage
-optimization cuts the paid out-of-band fraction by ~74%, and Van den Broeck
-geometry shrinks the principal itself by ~33 orders of magnitude (optimistically,
-at Planck-scale walls, blow-up term omitted) — yet ~24 orders still remain. But the Ford–Roman
+optimization cuts the paid out-of-band fraction by ~74%. But the geometry route
+to shrinking the *principal itself* **collapses under calibration**: the exact
+Einstein-tensor integral of the Van den Broeck pocket gives a blow-up energy
+`~(c⁴/G)·R_pocket` ≈ Jupiter-scale for a metre pocket — no net reduction, ~29
+orders worse than the scaffold's optimistic guess. The Ford–Roman
 *principal* — the time-integrated negative energy that must flow and be repaid —
 is invariant under all of it, and lands at Jupiter-mass scale for a 1-metre
 bubble. Elegant control over an irreducible energy wall.

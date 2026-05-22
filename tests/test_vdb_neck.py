@@ -47,3 +47,51 @@ def test_no_feasibility_claim():
     lab source. The wall is not broken."""
     r = vdb_total_floor()
     assert r.residual_oom > 20.0
+
+
+# --- CALIBRATED via the exact Einstein-tensor integral ----------------------
+
+from systrophe.vdb_neck import (
+    calibrate_K,
+    pocket_energy_geometrized,
+    vdb_calibrated_floor,
+    summarise_vdb_calibrated,
+)
+
+
+def test_calibrate_K_converges_near_half():
+    K = calibrate_K(1e5)
+    assert 0.5 < K < 0.6  # tanh-wall constant, deep-pocket limit
+
+
+def test_pocket_energy_scales_linearly_in_Bmax():
+    """The exact integral scales as B_max^1, NOT ln^2(B_max) (the scaffold's
+    error). Check the exponent over two decades."""
+    e1 = pocket_energy_geometrized(1e3)
+    e2 = pocket_energy_geometrized(1e5)
+    exponent = math.log(e2 / e1) / math.log(1e5 / 1e3)
+    assert exponent == pytest.approx(1.0, abs=0.05)
+
+
+def test_calibrated_blowup_far_exceeds_scaffold():
+    """Calibration corrects the scaffold UPWARD by many orders: the real
+    blow-up is enormously larger than the ln^2 estimate."""
+    r = vdb_calibrated_floor(R_pocket_m=2.0)
+    assert r.blowup_calibrated_J > 1e10 * r.blowup_scaffold_J
+    assert r.scaffold_overestimated_reduction_by_oom > 20.0
+
+
+def test_geometry_does_not_reduce_floor():
+    """The headline calibrated result: for a thin localized wall, VdB geometry
+    does NOT reduce the floor (it is ~Jupiter-scale, set by R_pocket)."""
+    r = vdb_calibrated_floor(R_pocket_m=2.0)
+    assert r.calibrated is True
+    assert r.geometry_reduces_floor is False
+    assert r.net_reduction_oom <= 1.0          # no meaningful reduction
+    assert 0.1 < r.total_floor_jupiter_masses < 100.0  # back at Jupiter scale
+
+
+def test_calibrated_summary():
+    r = vdb_calibrated_floor()
+    s = summarise_vdb_calibrated(r)
+    assert "CALIBRATED" in s and "geometry_reduces_floor=False" in s
