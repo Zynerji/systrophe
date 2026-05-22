@@ -445,6 +445,44 @@ is a perfect entanglement-mediated qubit channel (fidelity 1), plus a real SYK
 demonstration that the holographic size-winding mechanism genuinely activates —
 honestly *not* a faster-than-light or matter-transport device.
 
+### 14. First-principles derivation — the coupling *is* the operator-size operator
+
+Why does SYK activate the channel and cap below unit fidelity? Derived from
+first principles and verified to machine precision (`size_winding.py`):
+
+**Theorem (★).** For `n` EPR pairs and the GJW coupling `V = (1/n)Σ_j Z_jᴸZ_jᴿ`,
+every Pauli string `P` on L is an eigenvector of `V` on the EPR state:
+
+```
+V · P_L|EPR⟩ = (1 − 2·size(P)/n) · P_L|EPR⟩          size(P) = #{X,Y factors}
+```
+
+*Proof:* `Z_jᴸZ_jᴿ|EPR⟩=|EPR⟩` (ricochet `Zᵀ=Z`); `Z_jᴸP=(−1)^{a_j}PZ_jᴸ` with
+`a_j=1` iff `P` has X/Y at `j`; sum → `(1/n)Σ(−1)^{a_j}=1−2·size/n`. ∎
+Verified: max residual **7.9×10⁻¹⁷** (n=3), **0.0** (n=4) over all Paulis.
+
+So **the coupling is literally the operator-size operator**, and
+`e^{igV}` phases each component by `e^{−2ig·size/n}` — the "size winding"
+mechanism, *derived* rather than assumed. Consequences, all measured:
+
+- Chaotic scrambling grows operator size (SYK: `⟨size⟩` of `X₀` runs 1.0 → 2.1),
+  which is the precondition for winding — **mechanism active** (SYK teleports
+  0.43, Haar 0.25).
+- Single-shot teleportation of an *unknown qubit* is nonetheless partial at
+  simulable N (winding only approximately linear). **Honest correction:** a
+  tempting "fidelity = |characteristic function of the size distribution|"
+  identity is *false* — that quantity is 1 at g=0, where the EPR ricochet
+  trivially mirrors the whole operator algebra to R without localizing the
+  message on R₀. Teleporting a state is a stronger, localizing requirement.
+
+**The solution (verified):** unit fidelity comes from the **deterministic
+coherent-correction channel** (F = 1.000, §13) — the same EPR bridge with
+feed-forward readout instead of a single size-limited coupling — or from the
+unsimulable large-N perfect-winding limit. It is *not* obtained by enlarging the
+single-shot SYK protocol. This is the rigorous resolution of the "gap to unit
+fidelity": the mechanism is the size operator (exact), and the buildable
+unit-fidelity device is the deterministic channel.
+
 ## Bottom line
 
 The reversible-ratcheting pendulum is a clean, stable, reversible *control*
