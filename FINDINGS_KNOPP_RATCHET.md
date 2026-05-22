@@ -483,6 +483,35 @@ single-shot SYK protocol. This is the rigorous resolution of the "gap to unit
 fidelity": the mechanism is the size operator (exact), and the buildable
 unit-fidelity device is the deterministic channel.
 
+### 15. ER=EPR channel run on real quantum hardware (IBM Marrakesh)
+
+The deterministic ER=EPR channel (§13) executed on `ibm_marrakesh` (156-qubit
+Heron r2) via the Zynerji instance, with the full live-calibration pipeline
+(`quantum_golden_pendulum.calibration`) + error mitigation
+(`experiments/marrakesh_erepr_wormhole.py`):
+
+- **Calibration (live):** 142 good / 14 bad / 0 dead qubits, 288 good edges;
+  BFS-selected connected good subset `[2, 3, 4, 16]`.
+- **Circuit:** deterministic EPR teleportation, transpiled depth ~31
+  (opt_level=2), DD (XpXm) + gate/measure twirling, 4096 shots/basis.
+- **Measured correlators:** `⟨XX⟩ = +0.824`, `⟨YY⟩ = −0.755`, `⟨ZZ⟩ = +0.778`.
+- **Hardware Bell fidelity** `F = (1 + ⟨XX⟩ − ⟨YY⟩ + ⟨ZZ⟩)/4 = `**`0.839`** —
+  noise-degraded from the noiseless 1.000, but **clearly above the 0.5 classical
+  bound.** The ER=EPR channel works on real hardware.
+- **Verifiable job IDs:** XX `d88cqh1789is73920b40`, YY `d88cqh9789is73920b50`,
+  ZZ `d88cqhh789is73920b60`.
+
+**Why not the SYK wormhole on hardware:** the faithful dense-SYK wormhole
+transpiles to **depth 11570 / 3816 two-qubit gates** on Marrakesh — far beyond
+the ~150 usable-depth budget. That is the quantitative reason the size-winding
+wormhole cannot run clean on current hardware (and why the 2022 demo used a
+*learned sparse* Hamiltonian). The deterministic ER=EPR channel is the runnable,
+honest hardware demonstration.
+
+So the buildable capability is not just simulated — it **runs on a real quantum
+computer at 0.839 fidelity**. Still entanglement-mediated teleportation: not FTL,
+not matter transport.
+
 ## Bottom line
 
 The reversible-ratcheting pendulum is a clean, stable, reversible *control*

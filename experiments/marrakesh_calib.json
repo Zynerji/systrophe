@@ -1,0 +1,1105 @@
+{
+  "backend": "ibm_marrakesh",
+  "timestamp": "2026-05-22T17:40:16.504807",
+  "n_qubits": 156,
+  "good_qubits": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    49,
+    50,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    80,
+    81,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    97,
+    98,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    114,
+    115,
+    116,
+    117,
+    118,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    146,
+    148,
+    149,
+    150,
+    151,
+    152,
+    153,
+    154,
+    155
+  ],
+  "bad_qubits": [
+    26,
+    48,
+    51,
+    66,
+    67,
+    79,
+    82,
+    83,
+    96,
+    99,
+    113,
+    119,
+    130,
+    147
+  ],
+  "dead_qubits": [],
+  "n_good_edges": 288,
+  "qubit_stats": {
+    "0": {
+      "t1_us": 251.82,
+      "t2_us": 51.29,
+      "readout_error": 0.01038,
+      "class": "good"
+    },
+    "1": {
+      "t1_us": 201.97,
+      "t2_us": 148.22,
+      "readout_error": 0.01245,
+      "class": "good"
+    },
+    "2": {
+      "t1_us": 239.44,
+      "t2_us": 414.88,
+      "readout_error": 0.00623,
+      "class": "good"
+    },
+    "3": {
+      "t1_us": 315.76,
+      "t2_us": 232.68,
+      "readout_error": 0.00989,
+      "class": "good"
+    },
+    "4": {
+      "t1_us": 161.53,
+      "t2_us": 204.13,
+      "readout_error": 0.00586,
+      "class": "good"
+    },
+    "5": {
+      "t1_us": 283.37,
+      "t2_us": 181.66,
+      "readout_error": 0.00513,
+      "class": "good"
+    },
+    "6": {
+      "t1_us": 288.58,
+      "t2_us": 181.31,
+      "readout_error": 0.00415,
+      "class": "good"
+    },
+    "7": {
+      "t1_us": 247.47,
+      "t2_us": 96.82,
+      "readout_error": 0.00903,
+      "class": "good"
+    },
+    "8": {
+      "t1_us": 188.99,
+      "t2_us": 69.01,
+      "readout_error": 0.01086,
+      "class": "good"
+    },
+    "9": {
+      "t1_us": 157.4,
+      "t2_us": 147.97,
+      "readout_error": 0.00769,
+      "class": "good"
+    },
+    "10": {
+      "t1_us": 181.21,
+      "t2_us": 120.29,
+      "readout_error": 0.02283,
+      "class": "good"
+    },
+    "11": {
+      "t1_us": 26.2,
+      "t2_us": 22.17,
+      "readout_error": 0.02429,
+      "class": "good"
+    },
+    "12": {
+      "t1_us": 305.85,
+      "t2_us": 134.7,
+      "readout_error": 0.00818,
+      "class": "good"
+    },
+    "13": {
+      "t1_us": 209.2,
+      "t2_us": 246.67,
+      "readout_error": 0.00964,
+      "class": "good"
+    },
+    "14": {
+      "t1_us": 232.73,
+      "t2_us": 121.48,
+      "readout_error": 0.00586,
+      "class": "good"
+    },
+    "15": {
+      "t1_us": 289.17,
+      "t2_us": 31.62,
+      "readout_error": 0.00513,
+      "class": "good"
+    },
+    "16": {
+      "t1_us": 139.67,
+      "t2_us": 77.91,
+      "readout_error": 0.01404,
+      "class": "good"
+    },
+    "17": {
+      "t1_us": 274.98,
+      "t2_us": 10.1,
+      "readout_error": 0.00818,
+      "class": "good"
+    },
+    "18": {
+      "t1_us": 77.58,
+      "t2_us": 82.4,
+      "readout_error": 0.01514,
+      "class": "good"
+    },
+    "19": {
+      "t1_us": 149.64,
+      "t2_us": 62.54,
+      "readout_error": 0.00452,
+      "class": "good"
+    },
+    "20": {
+      "t1_us": 102.02,
+      "t2_us": 113.29,
+      "readout_error": 0.00732,
+      "class": "good"
+    },
+    "21": {
+      "t1_us": 243.28,
+      "t2_us": 153.03,
+      "readout_error": 0.01758,
+      "class": "good"
+    },
+    "22": {
+      "t1_us": 169.42,
+      "t2_us": 31.43,
+      "readout_error": 0.00684,
+      "class": "good"
+    },
+    "23": {
+      "t1_us": 241.53,
+      "t2_us": 195.86,
+      "readout_error": 0.03125,
+      "class": "good"
+    },
+    "24": {
+      "t1_us": 110.55,
+      "t2_us": 88.11,
+      "readout_error": 0.02661,
+      "class": "good"
+    },
+    "25": {
+      "t1_us": 165.36,
+      "t2_us": 63.58,
+      "readout_error": 0.03467,
+      "class": "good"
+    },
+    "26": {
+      "t1_us": 6.85,
+      "t2_us": 7.45,
+      "readout_error": 0.09277,
+      "class": "bad"
+    },
+    "27": {
+      "t1_us": 117.67,
+      "t2_us": 117.34,
+      "readout_error": 0.00659,
+      "class": "good"
+    },
+    "28": {
+      "t1_us": 84.5,
+      "t2_us": 86.7,
+      "readout_error": 0.0127,
+      "class": "good"
+    },
+    "29": {
+      "t1_us": 94.95,
+      "t2_us": 92.42,
+      "readout_error": 0.02673,
+      "class": "good"
+    },
+    "30": {
+      "t1_us": 167.75,
+      "t2_us": 82.54,
+      "readout_error": 0.01978,
+      "class": "good"
+    },
+    "31": {
+      "t1_us": 164.52,
+      "t2_us": 41.84,
+      "readout_error": 0.04163,
+      "class": "good"
+    },
+    "32": {
+      "t1_us": 181.69,
+      "t2_us": 39.14,
+      "readout_error": 0.00916,
+      "class": "good"
+    },
+    "33": {
+      "t1_us": 120.62,
+      "t2_us": 99.15,
+      "readout_error": 0.00549,
+      "class": "good"
+    },
+    "34": {
+      "t1_us": 159.94,
+      "t2_us": 156.53,
+      "readout_error": 0.00366,
+      "class": "good"
+    },
+    "35": {
+      "t1_us": 152.39,
+      "t2_us": 141.72,
+      "readout_error": 0.01001,
+      "class": "good"
+    },
+    "36": {
+      "t1_us": 146.6,
+      "t2_us": 78.86,
+      "readout_error": 0.00891,
+      "class": "good"
+    },
+    "37": {
+      "t1_us": 156.22,
+      "t2_us": 15.05,
+      "readout_error": 0.01611,
+      "class": "good"
+    },
+    "38": {
+      "t1_us": 92.39,
+      "t2_us": 44.64,
+      "readout_error": 0.02356,
+      "class": "good"
+    },
+    "39": {
+      "t1_us": 88.49,
+      "t2_us": 90.85,
+      "readout_error": 0.02869,
+      "class": "good"
+    },
+    "40": {
+      "t1_us": 154.39,
+      "t2_us": 26.08,
+      "readout_error": 0.01733,
+      "class": "good"
+    },
+    "41": {
+      "t1_us": 188.7,
+      "t2_us": 39.9,
+      "readout_error": 0.01196,
+      "class": "good"
+    },
+    "42": {
+      "t1_us": 299.92,
+      "t2_us": 130.63,
+      "readout_error": 0.00891,
+      "class": "good"
+    },
+    "43": {
+      "t1_us": 234.09,
+      "t2_us": 60.94,
+      "readout_error": 0.00488,
+      "class": "good"
+    },
+    "44": {
+      "t1_us": 260.24,
+      "t2_us": 79.89,
+      "readout_error": 0.01233,
+      "class": "good"
+    },
+    "45": {
+      "t1_us": 80.03,
+      "t2_us": 92.71,
+      "readout_error": 0.01733,
+      "class": "good"
+    },
+    "46": {
+      "t1_us": 143.74,
+      "t2_us": 68.26,
+      "readout_error": 0.00745,
+      "class": "good"
+    },
+    "47": {
+      "t1_us": 234.6,
+      "t2_us": 180.78,
+      "readout_error": 0.02075,
+      "class": "good"
+    },
+    "48": {
+      "t1_us": 253.06,
+      "t2_us": 188.83,
+      "readout_error": 0.05298,
+      "class": "bad"
+    },
+    "49": {
+      "t1_us": 200.43,
+      "t2_us": 155.45,
+      "readout_error": 0.00928,
+      "class": "good"
+    },
+    "50": {
+      "t1_us": 178.5,
+      "t2_us": 162.79,
+      "readout_error": 0.01746,
+      "class": "good"
+    },
+    "51": {
+      "t1_us": 217.6,
+      "t2_us": 276.24,
+      "readout_error": 0.06506,
+      "class": "bad"
+    },
+    "52": {
+      "t1_us": 161.92,
+      "t2_us": 166.78,
+      "readout_error": 0.01782,
+      "class": "good"
+    },
+    "53": {
+      "t1_us": 376.93,
+      "t2_us": 71.17,
+      "readout_error": 0.00525,
+      "class": "good"
+    },
+    "54": {
+      "t1_us": 147.76,
+      "t2_us": 233.24,
+      "readout_error": 0.00537,
+      "class": "good"
+    },
+    "55": {
+      "t1_us": 255.09,
+      "t2_us": 78.84,
+      "readout_error": 0.02087,
+      "class": "good"
+    },
+    "56": {
+      "t1_us": 274.29,
+      "t2_us": 143.12,
+      "readout_error": 0.00757,
+      "class": "good"
+    },
+    "57": {
+      "t1_us": 241.92,
+      "t2_us": 163.92,
+      "readout_error": 0.0249,
+      "class": "good"
+    },
+    "58": {
+      "t1_us": 230.54,
+      "t2_us": 160.56,
+      "readout_error": 0.02844,
+      "class": "good"
+    },
+    "59": {
+      "t1_us": 104.48,
+      "t2_us": 107.08,
+      "readout_error": 0.01074,
+      "class": "good"
+    },
+    "60": {
+      "t1_us": 162.97,
+      "t2_us": 146.9,
+      "readout_error": 0.00745,
+      "class": "good"
+    },
+    "61": {
+      "t1_us": 255.21,
+      "t2_us": 71.0,
+      "readout_error": 0.01038,
+      "class": "good"
+    },
+    "62": {
+      "t1_us": 121.0,
+      "t2_us": 39.9,
+      "readout_error": 0.00781,
+      "class": "good"
+    },
+    "63": {
+      "t1_us": 196.07,
+      "t2_us": 147.33,
+      "readout_error": 0.02307,
+      "class": "good"
+    },
+    "64": {
+      "t1_us": 153.62,
+      "t2_us": 97.68,
+      "readout_error": 0.01074,
+      "class": "good"
+    },
+    "65": {
+      "t1_us": 294.2,
+      "t2_us": 61.78,
+      "readout_error": 0.04578,
+      "class": "good"
+    },
+    "66": {
+      "t1_us": 124.09,
+      "t2_us": 93.52,
+      "readout_error": 0.05981,
+      "class": "bad"
+    },
+    "67": {
+      "t1_us": 289.78,
+      "t2_us": 97.15,
+      "readout_error": 0.05688,
+      "class": "bad"
+    },
+    "68": {
+      "t1_us": 121.12,
+      "t2_us": 19.31,
+      "readout_error": 0.03491,
+      "class": "good"
+    },
+    "69": {
+      "t1_us": 146.01,
+      "t2_us": 23.98,
+      "readout_error": 0.03979,
+      "class": "good"
+    },
+    "70": {
+      "t1_us": 143.84,
+      "t2_us": 21.33,
+      "readout_error": 0.00891,
+      "class": "good"
+    },
+    "71": {
+      "t1_us": 135.87,
+      "t2_us": 139.19,
+      "readout_error": 0.0105,
+      "class": "good"
+    },
+    "72": {
+      "t1_us": 114.02,
+      "t2_us": 27.01,
+      "readout_error": 0.02881,
+      "class": "good"
+    },
+    "73": {
+      "t1_us": 264.15,
+      "t2_us": 155.99,
+      "readout_error": 0.01855,
+      "class": "good"
+    },
+    "74": {
+      "t1_us": 106.97,
+      "t2_us": 12.37,
+      "readout_error": 0.02283,
+      "class": "good"
+    },
+    "75": {
+      "t1_us": 262.72,
+      "t2_us": 143.76,
+      "readout_error": 0.00623,
+      "class": "good"
+    },
+    "76": {
+      "t1_us": 43.11,
+      "t2_us": 20.55,
+      "readout_error": 0.01697,
+      "class": "good"
+    },
+    "77": {
+      "t1_us": 179.76,
+      "t2_us": 43.71,
+      "readout_error": 0.01038,
+      "class": "good"
+    },
+    "78": {
+      "t1_us": 94.64,
+      "t2_us": 112.91,
+      "readout_error": 0.00549,
+      "class": "good"
+    },
+    "79": {
+      "t1_us": 39.8,
+      "t2_us": 29.36,
+      "readout_error": 0.07593,
+      "class": "bad"
+    },
+    "80": {
+      "t1_us": 137.56,
+      "t2_us": 36.23,
+      "readout_error": 0.00989,
+      "class": "good"
+    },
+    "81": {
+      "t1_us": 210.69,
+      "t2_us": 56.74,
+      "readout_error": 0.04663,
+      "class": "good"
+    },
+    "82": {
+      "t1_us": 6.28,
+      "t2_us": 6.44,
+      "readout_error": 0.42163,
+      "class": "bad"
+    },
+    "83": {
+      "t1_us": 194.9,
+      "t2_us": 237.25,
+      "readout_error": 0.17664,
+      "class": "bad"
+    },
+    "84": {
+      "t1_us": 148.13,
+      "t2_us": 134.67,
+      "readout_error": 0.01465,
+      "class": "good"
+    },
+    "85": {
+      "t1_us": 166.26,
+      "t2_us": 108.68,
+      "readout_error": 0.00537,
+      "class": "good"
+    },
+    "86": {
+      "t1_us": 177.49,
+      "t2_us": 54.27,
+      "readout_error": 0.00623,
+      "class": "good"
+    },
+    "87": {
+      "t1_us": 179.52,
+      "t2_us": 150.29,
+      "readout_error": 0.00647,
+      "class": "good"
+    },
+    "88": {
+      "t1_us": 258.94,
+      "t2_us": 183.69,
+      "readout_error": 0.0188,
+      "class": "good"
+    },
+    "89": {
+      "t1_us": 407.01,
+      "t2_us": 378.28,
+      "readout_error": 0.02881,
+      "class": "good"
+    },
+    "90": {
+      "t1_us": 64.71,
+      "t2_us": 82.84,
+      "readout_error": 0.026,
+      "class": "good"
+    },
+    "91": {
+      "t1_us": 137.14,
+      "t2_us": 127.21,
+      "readout_error": 0.01086,
+      "class": "good"
+    },
+    "92": {
+      "t1_us": 155.64,
+      "t2_us": 116.11,
+      "readout_error": 0.0094,
+      "class": "good"
+    },
+    "93": {
+      "t1_us": 280.76,
+      "t2_us": 233.91,
+      "readout_error": 0.01953,
+      "class": "good"
+    },
+    "94": {
+      "t1_us": 226.55,
+      "t2_us": 205.51,
+      "readout_error": 0.00879,
+      "class": "good"
+    },
+    "95": {
+      "t1_us": 317.94,
+      "t2_us": 479.59,
+      "readout_error": 0.01001,
+      "class": "good"
+    },
+    "96": {
+      "t1_us": 142.89,
+      "t2_us": 39.36,
+      "readout_error": 0.0625,
+      "class": "bad"
+    },
+    "97": {
+      "t1_us": 239.02,
+      "t2_us": 59.06,
+      "readout_error": 0.01245,
+      "class": "good"
+    },
+    "98": {
+      "t1_us": 216.08,
+      "t2_us": 69.19,
+      "readout_error": 0.00452,
+      "class": "good"
+    },
+    "99": {
+      "t1_us": 165.81,
+      "t2_us": 32.78,
+      "readout_error": 0.1272,
+      "class": "bad"
+    },
+    "100": {
+      "t1_us": 94.51,
+      "t2_us": 113.54,
+      "readout_error": 0.01355,
+      "class": "good"
+    },
+    "101": {
+      "t1_us": 152.88,
+      "t2_us": 76.45,
+      "readout_error": 0.0144,
+      "class": "good"
+    },
+    "102": {
+      "t1_us": 100.66,
+      "t2_us": 8.97,
+      "readout_error": 0.01965,
+      "class": "good"
+    },
+    "103": {
+      "t1_us": 107.19,
+      "t2_us": 37.37,
+      "readout_error": 0.01562,
+      "class": "good"
+    },
+    "104": {
+      "t1_us": 257.18,
+      "t2_us": 160.69,
+      "readout_error": 0.01465,
+      "class": "good"
+    },
+    "105": {
+      "t1_us": 143.91,
+      "t2_us": 102.7,
+      "readout_error": 0.00732,
+      "class": "good"
+    },
+    "106": {
+      "t1_us": 220.44,
+      "t2_us": 31.57,
+      "readout_error": 0.01392,
+      "class": "good"
+    },
+    "107": {
+      "t1_us": 300.38,
+      "t2_us": 266.84,
+      "readout_error": 0.01172,
+      "class": "good"
+    },
+    "108": {
+      "t1_us": 59.99,
+      "t2_us": 79.54,
+      "readout_error": 0.02002,
+      "class": "good"
+    },
+    "109": {
+      "t1_us": 152.64,
+      "t2_us": 54.1,
+      "readout_error": 0.00977,
+      "class": "good"
+    },
+    "110": {
+      "t1_us": 352.65,
+      "t2_us": 238.22,
+      "readout_error": 0.01196,
+      "class": "good"
+    },
+    "111": {
+      "t1_us": 85.55,
+      "t2_us": 57.56,
+      "readout_error": 0.04358,
+      "class": "good"
+    },
+    "112": {
+      "t1_us": 243.24,
+      "t2_us": 156.02,
+      "readout_error": 0.005,
+      "class": "good"
+    },
+    "113": {
+      "t1_us": 120.07,
+      "t2_us": 89.49,
+      "readout_error": 0.29883,
+      "class": "bad"
+    },
+    "114": {
+      "t1_us": 187.59,
+      "t2_us": 122.63,
+      "readout_error": 0.00696,
+      "class": "good"
+    },
+    "115": {
+      "t1_us": 178.76,
+      "t2_us": 75.22,
+      "readout_error": 0.01489,
+      "class": "good"
+    },
+    "116": {
+      "t1_us": 76.17,
+      "t2_us": 89.44,
+      "readout_error": 0.02429,
+      "class": "good"
+    },
+    "117": {
+      "t1_us": 147.23,
+      "t2_us": 9.46,
+      "readout_error": 0.00964,
+      "class": "good"
+    },
+    "118": {
+      "t1_us": 137.94,
+      "t2_us": 70.99,
+      "readout_error": 0.00854,
+      "class": "good"
+    },
+    "119": {
+      "t1_us": 140.38,
+      "t2_us": 75.63,
+      "readout_error": 0.18262,
+      "class": "bad"
+    },
+    "120": {
+      "t1_us": 128.05,
+      "t2_us": 60.89,
+      "readout_error": 0.01184,
+      "class": "good"
+    },
+    "121": {
+      "t1_us": 184.94,
+      "t2_us": 93.78,
+      "readout_error": 0.03271,
+      "class": "good"
+    },
+    "122": {
+      "t1_us": 87.79,
+      "t2_us": 18.74,
+      "readout_error": 0.01172,
+      "class": "good"
+    },
+    "123": {
+      "t1_us": 214.57,
+      "t2_us": 90.88,
+      "readout_error": 0.01733,
+      "class": "good"
+    },
+    "124": {
+      "t1_us": 160.92,
+      "t2_us": 96.38,
+      "readout_error": 0.00549,
+      "class": "good"
+    },
+    "125": {
+      "t1_us": 179.65,
+      "t2_us": 56.13,
+      "readout_error": 0.00708,
+      "class": "good"
+    },
+    "126": {
+      "t1_us": 84.87,
+      "t2_us": 23.93,
+      "readout_error": 0.00964,
+      "class": "good"
+    },
+    "127": {
+      "t1_us": 82.48,
+      "t2_us": 19.81,
+      "readout_error": 0.02686,
+      "class": "good"
+    },
+    "128": {
+      "t1_us": 208.24,
+      "t2_us": 238.4,
+      "readout_error": 0.00916,
+      "class": "good"
+    },
+    "129": {
+      "t1_us": 275.7,
+      "t2_us": 258.25,
+      "readout_error": 0.00513,
+      "class": "good"
+    },
+    "130": {
+      "t1_us": 322.97,
+      "t2_us": 16.29,
+      "readout_error": 0.49756,
+      "class": "bad"
+    },
+    "131": {
+      "t1_us": 275.66,
+      "t2_us": 209.34,
+      "readout_error": 0.00928,
+      "class": "good"
+    },
+    "132": {
+      "t1_us": 151.41,
+      "t2_us": 73.43,
+      "readout_error": 0.00684,
+      "class": "good"
+    },
+    "133": {
+      "t1_us": 315.16,
+      "t2_us": 269.37,
+      "readout_error": 0.00598,
+      "class": "good"
+    },
+    "134": {
+      "t1_us": 169.51,
+      "t2_us": 97.43,
+      "readout_error": 0.00769,
+      "class": "good"
+    },
+    "135": {
+      "t1_us": 175.36,
+      "t2_us": 66.5,
+      "readout_error": 0.02527,
+      "class": "good"
+    },
+    "136": {
+      "t1_us": 184.25,
+      "t2_us": 76.54,
+      "readout_error": 0.01343,
+      "class": "good"
+    },
+    "137": {
+      "t1_us": 211.72,
+      "t2_us": 8.26,
+      "readout_error": 0.00757,
+      "class": "good"
+    },
+    "138": {
+      "t1_us": 303.06,
+      "t2_us": 120.91,
+      "readout_error": 0.01086,
+      "class": "good"
+    },
+    "139": {
+      "t1_us": 168.11,
+      "t2_us": 142.65,
+      "readout_error": 0.005,
+      "class": "good"
+    },
+    "140": {
+      "t1_us": 279.96,
+      "t2_us": 62.6,
+      "readout_error": 0.01013,
+      "class": "good"
+    },
+    "141": {
+      "t1_us": 332.56,
+      "t2_us": 267.5,
+      "readout_error": 0.00989,
+      "class": "good"
+    },
+    "142": {
+      "t1_us": 74.62,
+      "t2_us": 73.42,
+      "readout_error": 0.01208,
+      "class": "good"
+    },
+    "143": {
+      "t1_us": 155.0,
+      "t2_us": 56.06,
+      "readout_error": 0.01184,
+      "class": "good"
+    },
+    "144": {
+      "t1_us": 65.74,
+      "t2_us": 68.33,
+      "readout_error": 0.01624,
+      "class": "good"
+    },
+    "145": {
+      "t1_us": 186.1,
+      "t2_us": 67.23,
+      "readout_error": 0.04138,
+      "class": "good"
+    },
+    "146": {
+      "t1_us": 151.86,
+      "t2_us": 61.5,
+      "readout_error": 0.00708,
+      "class": "good"
+    },
+    "147": {
+      "t1_us": 226.25,
+      "t2_us": 91.43,
+      "readout_error": 0.08069,
+      "class": "bad"
+    },
+    "148": {
+      "t1_us": 319.92,
+      "t2_us": 47.05,
+      "readout_error": 0.00647,
+      "class": "good"
+    },
+    "149": {
+      "t1_us": 162.45,
+      "t2_us": 110.44,
+      "readout_error": 0.01514,
+      "class": "good"
+    },
+    "150": {
+      "t1_us": 153.22,
+      "t2_us": 102.56,
+      "readout_error": 0.01221,
+      "class": "good"
+    },
+    "151": {
+      "t1_us": 162.62,
+      "t2_us": 61.47,
+      "readout_error": 0.00464,
+      "class": "good"
+    },
+    "152": {
+      "t1_us": 294.07,
+      "t2_us": 220.18,
+      "readout_error": 0.01428,
+      "class": "good"
+    },
+    "153": {
+      "t1_us": 42.59,
+      "t2_us": 65.81,
+      "readout_error": 0.00403,
+      "class": "good"
+    },
+    "154": {
+      "t1_us": 57.75,
+      "t2_us": 15.97,
+      "readout_error": 0.01025,
+      "class": "good"
+    },
+    "155": {
+      "t1_us": 323.18,
+      "t2_us": 150.07,
+      "readout_error": 0.00732,
+      "class": "good"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "noiseless_fidelity": 0.9999999999999993,
+  "selected_qubits": [
+    2,
+    3,
+    4,
+    16
+  ],
+  "teleport_depths": {
+    "XX": 31,
+    "YY": 32,
+    "ZZ": 30
+  },
+  "syk_depth": {
+    "syk_logical_qubits": 8,
+    "syk_transpiled_depth": 11570,
+    "syk_transpiled_2q_gates": 3816
+  },
+  "correlators": {
+    "XX": 0.82373046875,
+    "YY": -0.7548828125,
+    "ZZ": 0.7783203125
+  },
+  "hardware_fidelity": 0.8392333984375,
+  "classical_bound": 0.5
+}
