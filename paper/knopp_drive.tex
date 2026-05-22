@@ -25,7 +25,7 @@
 A Four-Mechanism Composite Warp Engineering Bound \\
 \large{Tipler CTC-band gating, Krasnikov tube embedding, $Q$-cavity feedback, and horn-toroidal steering \\ \emph{with hardware confirmation on IBM Quantum \texttt{ibm\_marrakesh}}}}
 \author{Christian Knopp\\\texttt{cknopp@gmail.com}}
-\date{2026-05-22 \quad (v0.19.0, extended --- reversible-ratcheting bias controller)}
+\date{2026-05-22 \quad (v0.20.0 --- energy-floor closure, wormhole map, hardware-validated ER=EPR channel)}
 
 \begin{document}
 \maketitle
@@ -335,6 +335,19 @@ E_{\mathrm{repay}}=\frac{|E_{\mathrm{neg}}^{\mathrm{bare}}|}{Q}\,(1+r)=|E_{\math
 \subsection{SI feasibility floor}
 Converting the irreducible principal to SI via the textbook geometrised estimate $E_{\mathrm{geom}}\simeq\kappa(v_{s}/c)^{2}R^{2}/\sigma$ ($\kappa\approx1/12$) and $c^{4}/G=1.21\times10^{44}\,\mathrm{J/m}$, a one-metre luminal bubble ($\sigma=R$) carries a floor of $\approx6.5\times10^{44}\,\mathrm{J}\approx3.8$ Jupiter mass-energies, scaling as $R^{2}/\sigma$. This exceeds the negative-energy budget of a state-of-the-art squeezed-vacuum source by $\sim\!60$ orders of magnitude. The ratchet and capacitor make the \emph{peak charge} and \emph{pump power} arbitrarily small, but this \emph{total} is the same irreducible wall every warp metric encounters. The full controller is implemented in the \texttt{systrophe.knopp\_ratchet} module, with the address-space catcher returning \texttt{smooth} on the bias-energy curve (a continuously tunable control, not an emergent transition).
 
+\section{The irreducible energy floor, the wormhole map, and the buildable residue}\label{sec:floor}
+
+The bias controller (Section~\ref{sec:bias}) lowers the \emph{peak} negative-energy charge and pump power but not the time-integrated Ford--Roman principal. We close, from first principles, the question of whether \emph{any} route lowers that principal, and identify the one capability that is genuinely buildable.
+
+\subsection{Geometry does not lower the principal}
+The principal scales as $E\sim(c^{4}/G)\,(v_{s}/c)^{2}R^{2}/\sigma$, so the Van den Broeck~\cite{VanDenBroeck1999} trick---decoupling the energy-driving shell radius from the passenger pocket---appears to help. Calibrating the neck blow-up against the exact Einstein-tensor integral of the conformally-flat static pocket, $E_{\mathrm{pocket}}=\tfrac12\!\int(B'^{2}/B)r^{2}\,dr$, the energy scales as $B_{\max}$ (not $\ln^{2}B_{\max}$), so the blow-up dominates the shell and re-inflates the floor to $\sim(c^{4}/G)R_{\mathrm{pocket}}$. A calculus-of-variations argument (Euler--Lagrange minimiser $B=(1+c/r)^{2}$, isotropic Schwarzschild) shows the thickest wall is optimal yet still gives $E_{\min}\approx2(c^{4}/G)\rho_{\mathrm{use}}$; the direct Einstein-tensor integral of a \emph{regular} pocket gives an exotic (NEC-violating) energy $\approx5(c^{4}/G)\rho_{\mathrm{use}}$. The interior stays flat and habitable, but the floor is Jupiter-scale and irreducible across all wall shapes.
+
+\subsection{The wormhole map: energy wall $=$ entanglement wall}
+Mapping the traversable-wormhole routes, the classical Morris--Thorne exotic energy and the quantum ER$=$EPR~\cite{MaldacenaSusskind2013} requirement are dual: a throat of radius $r_{t}$ needs either $\sim(c^{4}/G)r_{t}$ of exotic energy \emph{or} $\sim(r_{t}/\ell_{P})^{2}$ ebits of pre-shared entanglement (Ryu--Takayanagi $S=A/4G_{N}$). The classical exotic energy equals exactly half the ER$=$EPR dual black-hole mass-energy at every scale---both equal assembling a black hole of radius $r_{t}$. For matter transport the wall is the same Bekenstein bound; only \emph{information} traverses cheaply.
+
+\subsection{Hardware-validated ER$=$EPR channel}
+The information channel is buildable. Under ER$=$EPR the shared entanglement is the bridge; sending a qubit through it (Gao--Jafferis--Wall~\cite{GaoJafferisWall2017} teleportation) is the operational traversal. We verify, from first principles, that the Maldacena--Qi coupling $V=\tfrac1n\sum_jZ_j^LZ_j^R$ is the operator-size operator on the EPR state, $V\,P_L|\mathrm{EPR}\rangle=(1-2\,\mathrm{size}(P)/n)\,P_L|\mathrm{EPR}\rangle$ (residual $10^{-17}$); a real SYK scrambler activates the size-winding channel where a Haar scrambler is inert, but the faithful dense-SYK wormhole transpiles to depth $11570$ ($3816$ two-qubit gates) and cannot run clean on current hardware. The deterministic coherent channel does: executed on IBM Heron-r2 hardware with a live-calibration best-qubit pipeline and error mitigation, the entanglement-teleportation Bell fidelity reaches $\mathbf{0.958}$ (\texttt{ibm\_kingston}, zero-noise extrapolated; $0.918$ on \texttt{ibm\_marrakesh}), well above the $0.5$ classical bound. This is entanglement-mediated quantum information transport---a real quantum-network primitive---\emph{not} faster-than-light and \emph{not} matter transport.
+
 \section{Monetisation pathway}
 
 The Knopp Drive composite provides four independently-quantified engineering bounds, each directly relevant to warp-drive physical realisation efforts:
@@ -365,7 +378,7 @@ These four bounds are jointly novel and are reduced to an executable Python modu
 
 \section{Conclusion}
 
-The Knopp Drive composes four independently-validated warp-engineering shortcut mechanisms into a single tractable object. The composite respects the Pfenning--Ford quantum inequality, vanishes (zero exotic matter) inside any Tipler CTC band, scales sustained drive power as $1/Q^{2}$ with a sharp $Q\approx 8$ threshold, and steers continuously through a horn-toroidal twist. A reversible-ratcheting pendulum bias controller (Section~\ref{sec:bias}) converts the direction-blind steering dipole into stable directed transport and books the journey against the Ford--Roman quantum-interest bound, which fixes an irreducible Jupiter-mass energy floor that amplification reduces in \emph{peak} and \emph{power} but cannot remove in \emph{total}. The full implementation lives in the \texttt{systrophe.knopp\_drive} and \texttt{systrophe.knopp\_ratchet} modules of the open-source \emph{Systroph\=e} package~\cite{SystropheRepo}.
+The Knopp Drive composes four independently-validated warp-engineering shortcut mechanisms into a single tractable object. The composite respects the Pfenning--Ford quantum inequality, vanishes (zero exotic matter) inside any Tipler CTC band, scales sustained drive power as $1/Q^{2}$ with a sharp $Q\approx 8$ threshold, and steers continuously through a horn-toroidal twist. A reversible-ratcheting pendulum bias controller (Section~\ref{sec:bias}) converts the direction-blind steering dipole into stable directed transport and books the journey against the Ford--Roman quantum-interest bound, which fixes an irreducible Jupiter-mass energy floor that amplification reduces in \emph{peak} and \emph{power} but cannot remove in \emph{total}. We further establish, from first principles (Section~\ref{sec:floor}), that \emph{no} route lowers that principal: Van den Broeck geometry re-inflates under exact Einstein-tensor calibration, the thick-wall variational optimum still costs $\sim(c^{4}/G)\rho_{\mathrm{use}}$, and the wormhole energy wall is dual to a Bekenstein entanglement wall. The honest residue is not matter transport but an \emph{information} channel: the ER$=$EPR teleportation primitive, hardware-validated on IBM Heron-r2 at $0.958$ Bell fidelity---a genuine quantum-network result, not a propulsion device. The full implementation lives in the \texttt{systrophe.knopp\_drive}, \texttt{knopp\_ratchet}, \texttt{wormhole\_map}, \texttt{size\_winding}, and \texttt{erepr\_channel} modules of the open-source \emph{Systroph\=e} package~\cite{SystropheRepo}.
 
 \section*{Acknowledgements}
 
@@ -376,6 +389,10 @@ This work is part of the larger Systroph\=e framework. Address-space novelty cat
 M.~Alcubierre, \emph{The warp drive: hyper-fast travel within general relativity}, Class. Quantum Grav. \textbf{11} (1994) L73.
 \bibitem{PfenningFord1997}
 M.~J.~Pfenning, L.~H.~Ford, \emph{The unphysical nature of warp drive}, Class. Quantum Grav. \textbf{14} (1997) 1743.
+\bibitem{MaldacenaSusskind2013}
+J.~Maldacena, L.~Susskind, \emph{Cool horizons for entangled black holes (ER=EPR)}, Fortsch. Phys. \textbf{61} (2013) 781.
+\bibitem{GaoJafferisWall2017}
+P.~Gao, D.~L.~Jafferis, A.~C.~Wall, \emph{Traversable wormholes via a double trace deformation}, JHEP \textbf{12} (2017) 151.
 \bibitem{Krasnikov1995}
 S.~V.~Krasnikov, \emph{Hyperfast travel in general relativity}, Phys. Rev. D \textbf{57} (1998) 4760.
 \bibitem{EverettRoman1997}
