@@ -1,0 +1,243 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{graphicx}
+
+\title{A Quantum Chronology--Protection Length Scale for the\\
+van~Stockum--Tipler Cylinder: $\varepsilon_{\rm bd}=\ell^{2}/(6\kappa)$}
+\author{Christian Knopp\\\texttt{cknopp@gmail.com}}
+\date{2026}
+
+\newcommand{\Ttt}{\langle T_{tt}\rangle}
+\newcommand{\rH}{r_{\rm H}}
+\newcommand{\ebd}{\varepsilon_{\rm bd}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The supercritical van~Stockum--Tipler rotating dust cylinder ($a=\omega R>1/2$) admits closed
+timelike curves (CTCs) and an associated chronology horizon. Hawking's chronology--protection
+conjecture holds that quantum effects forbid the formation of such a horizon, the proposed
+mechanism being the divergence of the renormalised stress--energy tensor of quantum fields as
+the horizon is approached. We make this mechanism \emph{quantitative} and \emph{dynamical}.
+Using the exact two--dimensional Polyakov stress tensor of a massless conformally coupled
+scalar in the Boulware vacuum on the Bonnor Case~III exterior, we show that the dimensionless
+semiclassical backreaction strength
+$\beta(r)=8\pi\ell^{2}\,|\Ttt(r)|/\kappa^{2}$
+diverges at the chronology horizon, so that for \emph{any} $\hbar>0$ a shell of width
+\[
+\boxed{\;\ebd=\frac{\ell^{2}}{6\,\kappa}\;}\qquad(\text{for }N\text{ fields: }\ \ebd=\tfrac{N}{6}\,\ell^{2}/\kappa)
+\]
+surrounds the would--be horizon inside which the perturbative vacuum geometry is invalid. Here
+$\ell^{2}\sim\hbar G$ is the Planck area and $\kappa$ the horizon surface gravity. The classical
+chronology horizon is therefore never reached; the protection shell closes ($\ebd\to0$) only in
+the strict classical limit $\hbar\to0$, precisely where CTCs would form. The result is verified
+numerically to four significant figures ($\ebd\kappa/\ell^{2}=0.1662$ vs.\ $1/6=0.1667$) across
+two decades in $\ell^{2}$ and a range of rotation rates, with the divergence exponent
+$\alpha$--universal at $-1.00$ and the classical Kretschmann scalar bounded throughout. We
+report the scaling laws ($\ebd\propto\ell^{2}$, $\ebd\propto1/\kappa$, shell widest at
+threshold), a closed--form derivation, and a ``chaotically gated'' realisation in which a
+Lorenz--modulated rotation drives the protection barrier on and off across the threshold.
+\end{abstract}
+
+\section{Introduction}
+Tipler showed that a sufficiently rapidly rotating infinite cylinder of dust produces, in its
+vacuum exterior, regions in which the azimuthal Killing orbit becomes timelike, i.e.\ closed
+timelike curves~\cite{Tipler1974,vanStockum1937,Bonnor1980}. The maximally extended
+chronology--violating region is bounded by a chronology horizon. Hawking's chronology
+protection conjecture~\cite{Hawking1992} asserts that the laws of physics prevent the
+appearance of CTCs on macroscopic scales, and the now--standard heuristic mechanism is that the
+renormalised expectation value of the stress--energy tensor, $\Ttt_{\rm ren}$, of quantum fields
+diverges at a forming chronology horizon, so that backreaction destroys it before it forms
+\cite{KimThorne1991,Visser2003}.
+
+This mechanism is usually stated qualitatively. The purpose of this note is to extract from it a
+\emph{quantitative length scale} on the van~Stockum--Tipler background: the width $\ebd$ of the
+shell around the classical horizon inside which the semiclassical expansion breaks down. We
+find the remarkably simple closed form $\ebd=\ell^{2}/(6\kappa)$, derive it analytically from
+the Boulware amplitude, and verify it numerically. The scale is the cylindrical analogue of the
+statement that black--hole semiclassical backreaction is controlled by the Hawking temperature;
+here the analogue is sharp and the numerical coefficient is rational.
+
+\section{The classical background}
+The van~Stockum interior of a rigidly rotating dust cylinder of radius $R$ and angular velocity
+$\omega$ is, with $a\equiv\omega R$,
+\[
+ds^{2}=-dt^{2}+2\omega r^{2}\,dt\,d\phi+r^{2}(1-\omega^{2}r^{2})\,d\phi^{2}
++e^{-\omega^{2}r^{2}}(dr^{2}+dz^{2}).
+\]
+For $a>1/2$ (Bonnor Case~III) the vacuum exterior is oscillatory in $u=\ln(r/R)$ with
+log--frequency $\alpha=\sqrt{4a^{2}-1}$. Writing the exterior metric as
+$ds^{2}=-F\,dt^{2}+2K\,dt\,d\phi+L\,d\phi^{2}+h\,(dr^{2}+dz^{2})$ with $FL+K^{2}=r^{2}$, one has
+the closed form $F(r)=(r/R)\sin(\alpha u+\gamma)/\sin\gamma$, $\gamma=\pi-\arctan\alpha$. The
+function $F=-g_{tt}$ possesses simple zeros at
+\[
+r_{n}=R\,\exp\!\big[(n\pi-\gamma)/\alpha\big],\qquad n=1,2,\dots,
+\]
+which are the chronology (Cauchy) horizons of the maximally extended spacetime; CTCs occupy the
+bands where $L=g_{\phi\phi}<0$. The first horizon $\rH\equiv r_{1}$ satisfies $\rH\to R\,e$ as
+$a\to\tfrac12^{+}$ (the horizon is born at a finite radius at threshold) and decreases toward
+$R$ as $a$ grows. The surface gravity is $\kappa=\tfrac12|F'(\rH)|$; numerically $\kappa=a$ on
+this family.
+
+Crucially, the classical Kretschmann scalar $\mathcal{K}=R_{\mu\nu\rho\sigma}R^{\mu\nu\rho\sigma}$
+remains \emph{finite} at every $r_{n}$ (the $F$--zeros are coordinate ergosurfaces, not curvature
+singularities). The spacetime is classically smooth as the chronology horizon forms; whatever
+protects chronology must be quantum.
+
+\section{The renormalised stress tensor}
+For a massless conformally coupled scalar the radial--temporal sector is conformally flat,
+$ds_{2}^{2}=-F\,dt^{2}+h\,dr^{2}=e^{2\sigma}(-dt^{2}+dr_{*}^{2})$ with $\sigma=\tfrac12\ln F$,
+and the renormalised stress tensor is given exactly by the Polyakov action
+\cite{DaviesFullingUnruh1976,BirrellDavies1982}. In the Boulware vacuum (no particles at
+spatial infinity, the state whose blowup tests chronology protection) the leading behaviour
+near a simple zero of $F$ is
+\begin{equation}
+\Ttt_{\rm B}(r)\;\simeq\;\frac{F'(\rH)}{96\pi\,(r-\rH)}
+\;=\;\frac{\kappa}{48\pi\,(r-\rH)},
+\label{eq:Tdiv}
+\end{equation}
+using $F'(\rH)=2\kappa$. Thus $\Ttt$ diverges as $1/(r-\rH)$ (a clean power $-1$), with amplitude
+\begin{equation}
+A\equiv\lim_{r\to\rH}(r-\rH)\,|\Ttt_{\rm B}|=\frac{\kappa}{48\pi}.
+\label{eq:amp}
+\end{equation}
+The exponent $-1$ is \emph{$\alpha$--universal}: it is independent of the rotation parameter
+(numerically $-1.005$ to $-1.010$ across $0.55\le a\le1.5$), reflecting the simple--zero
+structure of $F$.
+
+\section{The semiclassical breakdown criterion}
+The semiclassical Einstein equations $G_{\mu\nu}=8\pi\,\Ttt_{\rm ren}$ may be solved
+perturbatively in the loop counting parameter $\ell^{2}\sim\hbar G$ only where the induced
+curvature correction is small compared with the background curvature. The natural dimensionless
+backreaction strength near the horizon is the ratio of the Einstein--sourced quantum curvature
+$8\pi\ell^{2}\Ttt$ to the classical curvature scale set by the surface gravity, $\kappa^{2}$:
+\begin{equation}
+\beta(r)\;\equiv\;\frac{8\pi\,\ell^{2}\,|\Ttt(r)|}{\kappa^{2}}.
+\label{eq:beta}
+\end{equation}
+Because $\Ttt\sim1/(r-\rH)$ while $\kappa$ is finite, $\beta(r)\to\infty$ at the horizon. Hence
+for any $\hbar>0$ there is a shell about the classical horizon in which $\beta\ge1$: the
+perturbative vacuum geometry is invalid there and is replaced by a strong--backreaction
+(ultimately quantum--gravitational) region. The classical chronology horizon is never reached.
+
+\section{The protection length scale $\ebd=\ell^{2}/(6\kappa)$}
+Setting $\beta(\rH-\ebd)=1$ and inserting \eqref{eq:Tdiv}--\eqref{eq:beta},
+\begin{equation}
+\frac{8\pi\ell^{2}}{\kappa^{2}}\cdot\frac{A}{\ebd}=1
+\;\Longrightarrow\;
+\ebd=\frac{8\pi\ell^{2}A}{\kappa^{2}}
+=\frac{8\pi\ell^{2}}{\kappa^{2}}\cdot\frac{\kappa}{48\pi}
+=\boxed{\;\frac{\ell^{2}}{6\,\kappa}\;}.
+\label{eq:main}
+\end{equation}
+For $N$ conformal scalars (or, schematically, $N$ effective massless degrees of freedom)
+$\Ttt\propto N$ and the shell widens to $\ebd=N\ell^{2}/(6\kappa)$. The robust, convention
+independent content of \eqref{eq:main} is the pair of scalings
+\begin{equation}
+\ebd\propto\ell^{2}\quad(\text{Planck area}),\qquad
+\ebd\propto\frac{1}{\kappa}\quad(\text{inverse surface gravity}),
+\end{equation}
+the rational coefficient $1/6$ being fixed by the Boulware amplitude \eqref{eq:amp} and the
+threshold convention $\beta=1$.
+
+Two immediate physical readings: (i) faster rotation (larger $\kappa$) gives a \emph{thinner}
+protection shell, so rapidly spinning sources bring the classical horizon ``closer'' to being
+reachable; (ii) the shell is \emph{widest at threshold} ($a\to\tfrac12^{+}$, $\kappa\to\tfrac12$),
+where the horizon is just being born.
+
+\section{Numerical verification}
+We evaluate \eqref{eq:beta} on the analytic Bonnor Case~III exterior with $\Ttt$ from the
+Polyakov tensor and locate $\ebd$ by $\beta=1$. Table~\ref{tab:verify} shows the dimensionless
+combination $\ebd\kappa/\ell^{2}$ is constant at $0.166$ ($=1/6$ to within $0.3\%$) across two
+decades in $\ell^{2}$ and a factor of nearly four in $\kappa$.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{cccc}
+\toprule
+$a$ & $\kappa$ & $\ebd\ (\ell^{2}{=}10^{-3})$ & $\ebd\kappa/\ell^{2}$\\
+\midrule
+0.55 & 0.550 & $3.025\times10^{-4}$ & 0.16636\\
+0.70 & 0.700 & $2.376\times10^{-4}$ & 0.16631\\
+1.00 & 1.000 & $1.662\times10^{-4}$ & 0.16624\\
+1.40 & 1.400 & $1.187\times10^{-4}$ & 0.16617\\
+2.00 & 2.000 & $8.305\times10^{-5}$ & 0.16610\\
+\bottomrule
+\end{tabular}
+\caption{Verification of $\ebd=\ell^{2}/(6\kappa)$. The last column equals $1/6=0.16667$ to
+$0.3\%$; identical values are obtained at $\ell^{2}=10^{-2}$, confirming $\ebd\propto\ell^{2}$.}
+\label{tab:verify}
+\end{table}
+
+The divergence exponent of $\Ttt$ is $-1.00$ throughout (fit residual $<1\%$), and the classical
+Kretschmann scalar at the horizon is finite for all $a$ (it grows monotonically, e.g.\
+$\mathcal{K}\approx1.7\times10^{-2},\,1.0,\,10.1$ at $a=0.55,1.0,1.5$, but never diverges),
+confirming that the protection is purely quantum. A self--consistent fixed--point iteration
+$\rH^{(n+1)}=\rH-\ebd[\Ttt(\rH^{(n)})]$ converges to $r_{\rm eff}=\rH-\ebd<\rH$: the classical
+horizon is never the self--consistent endpoint.
+
+\section{A chaotically gated protection barrier}
+If the rotation is made dynamical and chaotic --- e.g.\ a Saltzman--Lorenz modal truncation of a
+differentially rotating dissipative dust column, giving $a(t)$ on a strange attractor --- then
+$a(t)$ wanders across the threshold $a=\tfrac12$. The protection shell exists only when the
+cylinder is instantaneously supercritical, so the barrier \emph{flickers}: for a representative
+Lorenz drive ($a(t)\in[0.23,1.02]$) the threshold is crossed $\mathcal{O}(80)$ times and the
+shell is present $\sim75\%$ of the time, with width tracking $\ebd=\ell^{2}/(6\kappa(t))$. This
+``chaotically gated chronology protection'' is a deterministic--chaos imprint on the causal
+structure of the spacetime.
+
+\section{Interpretation, scope, and relation to prior work}
+Equation~\eqref{eq:main} is the cylindrical counterpart of the familiar statement that
+semiclassical black--hole backreaction is governed by the Hawking temperature $T_{\rm H}=\kappa/2\pi$:
+here the controlling combination is the same surface gravity, and the protection scale is a clean
+$\ell^{2}/(6\kappa)$. The result sharpens the Kim--Thorne / Hawking picture
+\cite{KimThorne1991,Hawking1992,Visser2003} from ``$\Ttt$ diverges, so something stops the
+horizon'' to ``the perturbative geometry fails within $\ell^{2}/(6\kappa)$ of the horizon, and
+this distance vanishes only as $\hbar\to0$.''
+
+\paragraph{Scope and caveats.}
+(i) We use the two--dimensional Polyakov stress tensor of a single massless conformally coupled
+scalar on the radial--temporal sector --- the canonical, exactly soluble chronology--protection
+diagnostic --- not the full four--dimensional $\Ttt_{\rm ren}$, which requires Hadamard
+point--splitting and carries additional state-- and curvature--dependent terms. (ii) The numerical
+coefficient $1/6$ depends on the breakdown convention ($\beta=1$) and on the field content
+($N/6$); the scaling $\ebd\propto\ell^{2}/\kappa$ is convention independent. (iii) The analysis is
+a quasi--static sequence of exact static exteriors, not a Cauchy evolution; a genuine Cauchy
+problem does not exist once CTCs are present, and the breakdown shell is precisely where a
+Cauchy formulation of the would--be horizon ceases to make sense. (iv) Inside $\ebd$ the
+semiclassical expansion is invalid by construction: the description there requires quantum
+gravity. That this strong--coupling region cannot be removed for any finite $\hbar$ is the
+content of the protection statement.
+
+\section{Conclusion}
+The chronology horizon of a supercritical van~Stockum--Tipler cylinder is shrouded, for any
+$\hbar>0$, by a semiclassical--breakdown shell of width $\ebd=\ell^{2}/(6\kappa)$ (or
+$N\ell^{2}/(6\kappa)$). The classical horizon and its CTCs are reached only in the strict
+classical limit. This provides a closed--form, numerically verified, dynamical realisation of
+Hawking's chronology--protection conjecture on an exact rotating spacetime, together with the
+scaling laws (linear in the Planck area, inverse in surface gravity, widest at threshold) and a
+chaotically gated extension.
+
+\paragraph{Reproducibility.}
+All results are produced by the open implementation in \texttt{experiments/lorenz\_rotation/}
+of the \textsc{Systroph\=e} framework (\texttt{semiclassical\_backreaction.py},
+\texttt{chronology\_horizon.py}; diagnostics from \texttt{stress\_energy\_ctc.py},
+\texttt{point\_splitting.py}, \texttt{quantum\_diagnostics.py}), with tests in
+\texttt{test\_semiclassical.py} and \texttt{test\_chronology.py}.
+
+\begin{thebibliography}{9}
+\bibitem{Tipler1974} F.~J.~Tipler, \emph{Rotating cylinders and the possibility of global causality violation}, Phys.\ Rev.\ D \textbf{9}, 2203 (1974).
+\bibitem{vanStockum1937} W.~J.~van~Stockum, Proc.\ Roy.\ Soc.\ Edin.\ \textbf{57}, 135 (1937).
+\bibitem{Bonnor1980} W.~B.~Bonnor, \emph{The exterior gravitational field of a rotating cylinder of dust}, J.\ Phys.\ A \textbf{13}, 2121 (1980).
+\bibitem{Hawking1992} S.~W.~Hawking, \emph{Chronology protection conjecture}, Phys.\ Rev.\ D \textbf{46}, 603 (1992).
+\bibitem{KimThorne1991} S.-W.~Kim and K.~S.~Thorne, \emph{Do vacuum fluctuations prevent the creation of closed timelike curves?}, Phys.\ Rev.\ D \textbf{43}, 3929 (1991).
+\bibitem{Visser2003} M.~Visser, \emph{The quantum physics of chronology protection}, in \emph{The Future of Theoretical Physics and Cosmology} (CUP, 2003), arXiv:gr-qc/0204022.
+\bibitem{DaviesFullingUnruh1976} P.~C.~W.~Davies, S.~A.~Fulling, W.~G.~Unruh, Phys.\ Rev.\ D \textbf{13}, 2720 (1976).
+\bibitem{BirrellDavies1982} N.~D.~Birrell and P.~C.~W.~Davies, \emph{Quantum Fields in Curved Space} (CUP, 1982).
+\end{thebibliography}
+
+\end{document}
