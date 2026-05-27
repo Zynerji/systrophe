@@ -37,20 +37,25 @@ def main() -> None:
     print(f"  Helstrom bound P_succ = {P_hel:.6f}")
     print()
 
-    print("Sweep parametric Brun-Wilde-like unitary family + fixed candidates:")
-    w = born_rule_witness(psi_0=psi_0, psi_1=psi_1)
+    print("Sweep parametric + cyclic-power + Haar D-CTC unitary families:")
+    w = born_rule_witness(
+        psi_0=psi_0, psi_1=psi_1,
+        cyclic_ctc_qubits=(2, 3),
+        haar_ctc_dim=4, haar_samples=80,
+    )
     print(f"  max P_dctc(input -> CR output) = {w.P_dctc_max:.6f}")
-    print(f"  achieved by                    {w.best_unitary}")
+    print(f"  family that won                = {w.family}")
+    print(f"  ctc_dim of winning U           = {w.ctc_dim}")
+    print(f"  best unitary label             = {w.best_unitary}")
     print(f"  margin (P_dctc - P_helstrom)   = {w.margin:+.6f}")
     print(f"  Born violated?                 {w.born_violated}")
     print()
-    print("Interpretation: Brun-Wilde proves SOME D-CTC unitary "
-          "(typically higher CTC dim,")
-    print("cyclic-power construction) violates Born. The simple 2-dim "
-          "family swept here does NOT.")
-    print("The witness machinery is correct; user can plug their own "
-          "joint unitary U into")
-    print("`dctc_output_state(U, sigma, dim_cr=2)` to test it.")
+    print("Empirical finding (2026-05-27): neither the parametric, cyclic-power,")
+    print("nor Haar-random families found a Born-violator. Typical D-CTC")
+    print("output Helstrom <= input Helstrom (the partial trace decoheres).")
+    print("Brun-Wilde Theorem 1 still guarantees a violator exists; finding it")
+    print("requires the specific Section 5 cyclic-counter U, not a generic")
+    print("single-shot 2N-dim unitary. Open follow-up.")
     print()
 
     # Mobius classical smoke test

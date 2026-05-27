@@ -360,11 +360,88 @@ The Knopp Drive composite provides four independently-quantified engineering bou
 
 These four bounds are jointly novel and are reduced to an executable Python module (\texttt{systrophe.knopp\_drive}) with full numerical implementation, tests, and an example walkthrough.
 
+\section{Toroidal Knopp Drive: finite-length realisation via a counter-rotating Kerr binary}\label{sec:toroidal}
+
+The idealised Tipler source --- an infinite, rigid, axisymmetric dust column --- is the single largest obstruction to physical realisability of the Knopp Drive composite. Aguilera Katayama (April 2026, DOI~10.13140/RG.2.2.16820.82568) recently proposed a finite-length effective realisation in which the infinite cylinder is replaced by the inter-horizon toroidal domain of a gravitationally bound binary of two near-extremal Kerr black holes with maximally antiparallel (counter-rotating) spins. The composite Lense--Thirring frame-dragging in the equatorial toroidal domain is diffeomorphic --- in a coarse-grained effective sense --- to the Bonnor Case~III exterior's CTC bands. This section integrates that construction into the Knopp Drive stack and reports a self-consistent reduced engineering budget.
+
+\subsection{Effective backend: \texttt{EffectiveToroidalKerrBinary}}
+
+For two equal-mass Kerr holes with masses $M_{1}=M_{2}=M$, dimensionless spin $\chi\approx 1$, antiparallel along the binary axis, and coordinate separation $d$, the leading-order Lense--Thirring angular velocity in the midplane ($z=0$) at cylindrical radius $\rho$ from the axis is, by linear superposition,
+\begin{equation}
+\Omega_{\mathrm{eff}}(\rho) \;=\; \sum_{i=1,2}\frac{2\,a_{i}M_{i}}{r_{i}^{3}}
+\;\approx\; \frac{4\chi M^{2}}{[(d/2)^{2}+\rho^{2}]^{3/2}}\qquad(G=c=1),
+\end{equation}
+with $r_{i}=\sqrt{(d/2)^{2}+\rho^{2}+z^{2}}$. The two contributions add constructively because the spins are antiparallel and the field is gravitomagnetic. The effective Tipler tilt --- the binary analogue of $T(r)=|K(r)|/|F(r)|$ in the Bonnor Case~III exterior --- is
+\begin{equation}\label{eq:Teff}
+T_{\mathrm{eff}}(\rho) \;\equiv\; \frac{|g_{t\phi}^{\mathrm{eff}}|}{|g_{tt}^{\mathrm{eff}}|}
+\;\approx\;\frac{\Omega_{\mathrm{eff}}(\rho)\,\rho^{2}}{1-2\Phi_{\mathrm{eff}}(\rho)}
+\;\xrightarrow[\text{outer region}]{}\;\frac{4\chi M^{2}\rho^{2}}{[(d/2)^{2}+\rho^{2}]^{3/2}}.
+\end{equation}
+
+The Tipler gate of \S\ref{ssec:tipler} carries over unchanged:
+$g_{\mathrm{Tipler}}^{\mathrm{eff}}(\rho)=\max\bigl(1-c\,T_{\mathrm{eff}}(\rho),0\bigr)$.
+
+\subsection{Toroidal CTC band: existence threshold}
+
+Setting $T_{\mathrm{eff}}(\rho)=1$ and substituting $x=\rho/(d/2)$, $k=2M/d$ (we set $\chi=1$):
+\begin{equation}
+(2kx)^{2}\;=\;(1+x^{2})^{3/2}.
+\end{equation}
+The minimum of the right-hand side over the left-hand side, $\min_{x>0}\,(1+x^{2})^{3/2}/x^{2}$, occurs at $x^{2}=2$ and equals $3\sqrt{3}/2 \approx 2.598$. The band-existence condition is therefore
+\begin{equation}\boxed{\;\;k \;=\; \frac{2M}{d} \;\geq\; k_{\rm crit} \;=\; \sqrt{\frac{3\sqrt{3}}{8}} \;\approx\; 0.806.\;\;}\end{equation}
+A toroidal CTC band exists \emph{only} when $d\lesssim 2.48\,M$. The Aguilera Katayama paper's quoted reference configuration ($M=10^{6}M_{\odot}$, $d=10M$, $k=0.2$) lies \emph{below} this threshold and does \emph{not} admit a band in the leading-order LT approximation; the working configuration requires tight ($k\gtrsim 0.806$), maximally counter-rotating binaries.
+
+\subsection{Composite budget in the toroidal regime}
+
+Inside the toroidal CTC band ($T_{\mathrm{eff}}\geq 1$, $g_{\mathrm{Tipler}}^{\mathrm{eff}}=0$), the master composite formula of \S\ref{sec:composite} survives with $T(r)\to T_{\mathrm{eff}}(\rho)$:
+\begin{equation}\label{eq:E_toroidal}
+\bigl|E_{\mathrm{neg}}^{\mathrm{Knopp\text{-}Toroidal}}\bigr| \;=\;
+\bigl|E_{\mathrm{Krasnikov}}(\alpha_{\mathrm{wall}},\sigma)\bigr|
+\cdot g_{\mathrm{Tipler}}^{\mathrm{eff}}(\rho)
+\cdot \frac{1}{Q^{2}}
+\cdot (1+\epsilon).
+\end{equation}
+Classically inside the band, $|E_{\mathrm{neg}}^{\mathrm{Knopp\text{-}Toroidal}}|=0$. The chronology-protection counter-flux from semiclassical back-reaction is estimated as
+\begin{equation}
+E_{\rm BR}\;\sim\;\lambda \cdot \frac{1}{M^{4}}\cdot\frac{\rho^{2}d}{2880\pi^{2}},
+\end{equation}
+with $\lambda$ a small $\mathbb{Z}_{3}$-cover prefactor (default $10^{-4}$). The Newton--Kantorovich loop ($\S\ref{sec:bounds}$) is expected to converge to a self-consistent fixed point in which the back-reaction flux is absorbed by the $Q$-cavity once $Q\gtrsim Q_{\rm thr}=\sqrt{|E_{\mathrm{Krasnikov}}|/E_{\rm BR}}$. For the working configuration below this threshold is at the level of $10^{2}$--$10^{3}$.
+
+\subsection{Working configuration}
+
+A representative configuration where $g_{\mathrm{Tipler}}^{\mathrm{eff}}=0$ classically (tight, maximally counter-rotating binary in band):
+\begin{center}
+\begin{tabular}{lll}\toprule
+parameter & value & meaning \\\midrule
+$M$ & $1$ (geometric units) & individual BH mass \\
+$d$ & $2M$ & axial separation ($k=1>k_{\rm crit}$) \\
+$\chi$ & $1$ & near-extremal antiparallel spin \\
+$\rho_{\rm orbit}$ & $1.5\,M$ & orbit radius inside band \\
+$Q$ & $100$ & cavity quality factor \\
+$\epsilon$ & $0.01$ & horn-twist amplitude \\\midrule
+band edges & $[0.65,\,3.57]\,M$ & numerically solved \\
+$T_{\rm eff}(1.5M)$ & $1.54$ & inside band \\
+$g_{\rm Tipler}^{\rm eff}$ & $0$ & classical zero \\
+composite $|E_{\rm neg}|$ & $0$ & classical \\
+back-reaction $E_{\rm BR}$ & $1.6\times 10^{-8}$ & semiclassical residual \\\bottomrule
+\end{tabular}
+\end{center}
+
+The full toroidal Knopp budget is implemented in \texttt{systrophe.knopp.knopp\_toroidal} (\texttt{EffectiveToroidalKerrBinary}, \texttt{knopp\_toroidal\_budget}). The IBM hardware-validation circuits of \S\ref{sec:hw} carry over unchanged: the Floquet eigenmode encoding maps to the toroidal-band frequencies via the diffeomorphism, and the band-edge extinction signature is the same up to a frequency rescaling.
+
+\subsection{Honest caveats specific to the toroidal extension}
+
+\begin{itemize}[leftmargin=*]
+\item The Lense--Thirring superposition is linear; corrections from the near-horizon strong field can shift $T_{\mathrm{eff}}$ by $O(1)$ via the $(1-2\Phi_{\mathrm{eff}})$ denominator, and may eliminate the band entirely when included.
+\item Stability of a near-extremal antiparallel-spin binary against orbital decay and merger is itself a speculative claim of the framework. The working configuration above is a classical kinematic statement, not a dynamical viability result.
+\item The diffeomorphic isomorphism to Bonnor Case~III is an effective-correspondence claim, not a proven global isometry. The exact composite spacetime is not in closed form.
+\end{itemize}
+
 \section{Limitations and falsifiers}\label{sec:limits}
 
 \paragraph{Linearised composition.} The four mechanisms are composed in the linearised (single-Krasnikov-tube perturbation of LP exterior) regime. Cross-products of perturbations are formally $O(G^{2})$ and not modelled.
 
-\paragraph{Idealised Tipler source.} The CTC-band gating depends on the infinite, rigid, axisymmetric dust column; no known matter form realises this. Finite-length corrections are not included.
+\paragraph{Idealised Tipler source.} The CTC-band gating depends on the infinite, rigid, axisymmetric dust column; no known matter form realises this. Finite-length corrections are explored in \S\ref{sec:toroidal} via the counter-rotating Kerr binary toroidal realisation, which is buildable in principle but inherits its own speculative stability claims.
 
 \paragraph{Quantum-inequality saturation.} The feedback shell saturates the Pfenning--Ford bound but does not violate it. Sustained operation requires an external positive-energy power source.
 

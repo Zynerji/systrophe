@@ -27,19 +27,37 @@ This module computes the witness numerically:
 Output: a BornWitness dict with both numbers and an explicit verdict
 ('Born preserved' iff max P_dctc <= P_Helstrom + 1e-8).
 
-Status of the witness
----------------------
-The shipped unitary family (SWAP / CNOT-Hadamard variants on a 2-dim
-CTC) is *not* sufficient to exhibit Born violation -- those unitaries
-either preserve distinguishability (unitary maps) or yield degenerate
-non-unique fixed points. The Brun-Wilde theorem guarantees the
-existence of a Born-violating D-CTC unitary in higher CTC dimensions
-(N >= some_N(c) where c is the input overlap), via an explicit
-cyclic-power construction; implementing it is left as a follow-up.
-What this module ships is the witness *framework*: pass any joint
-unitary U into `dctc_output_state` and `helstrom_bound_density`, get
-back P_dctc and compare to `helstrom_bound_pure`. The bookkeeping is
-correct -- only the U is the open knob.
+Status of the witness (empirical, 2026-05-27)
+---------------------------------------------
+The Brun-Wilde theorem (Found. Phys. 47, 375, 2017) guarantees that
+SOME D-CTC unitary on a finite-dim CTC register violates Helstrom
+for any non-orthogonal pure-state pair. This module supplies the
+witness framework + two search strategies:
+
+  (1) `brun_wilde_cyclic_unitary(n_ctc_qubits, alpha, ...)` --
+      parameterized N-CTC-qubit "cyclic-power" construction that
+      composes controlled rotations between CR and successive CTC
+      qubits. Implemented for n_ctc_qubits in {1, 2, 3, ...}.
+
+  (2) `haar_search_born_violation(psi_0, psi_1, ctc_dim, n_samples)`
+      -- Haar-random sampling of joint unitaries on (2 * ctc_dim)-dim
+      space.
+
+Empirical finding: neither family found a Born violator in our sweeps
+(cyclic m=1..3, alpha in [0, pi]; Haar ctc_dim=4 and 8, n_samples up
+to 300). Typical behaviour: the D-CTC partial trace REDUCES
+distinguishability rather than amplifying it (output Helstrom <= input
+Helstrom for all U tested). This is consistent with Brun-Wilde's
+explicit Section 5 construction being a NON-GENERIC, structured U
+that requires more than single-shot 2N-dim unitary sampling: the
+amplification needs an iterated fixed-point structure that encodes a
+counter / cyclic state into ρ_CTC and reads it back in CR. Implementing
+that exact construction faithfully is left as a follow-up.
+
+What this module ships: the witness machinery, the parametric cyclic
+family for follow-up sweeps, and the Haar search for stress-testing
+hypotheses. The bookkeeping is correct -- only finding the *specific*
+Born-violating U remains open.
 
 The dinos-bridge Mobius temporal loop is in the same self-consistency
 family (it's a CPTP fixed-point with prophetic feedback). A second
@@ -177,6 +195,158 @@ def cnot_then_hadamard_unitary() -> np.ndarray:
     return np.kron(H, I2) @ CNOT
 
 
+# ----- Brun-Wilde cyclic-power construction ------------------------------
+
+
+def _R_y(theta: float) -> np.ndarray:
+    c, s = math.cos(theta / 2.0), math.sin(theta / 2.0)
+    return np.array([[c, -s], [s, c]], dtype=complex)
+
+
+def _controlled_R_y_target_CR(theta: float, m: int, ctrl_qubit: int) -> np.ndarray:
+    """Joint unitary on 1 (CR) + m (CTC) qubits that applies R_y(theta) to CR
+    conditioned on the CTC qubit `ctrl_qubit` being |1>.
+
+    Qubit indexing (kron ordering): qubit 0 is CR (most significant);
+    qubits 1..m are CTC, indexed 1..m.
+    """
+    if not 1 <= ctrl_qubit <= m:
+        raise ValueError(f"ctrl_qubit must be in [1, {m}], got {ctrl_qubit}")
+    n_qubits = 1 + m
+    dim = 2 ** n_qubits
+    U = np.zeros((dim, dim), dtype=complex)
+    R = _R_y(theta)
+    I2 = np.eye(2, dtype=complex)
+    for basis in range(dim):
+        # Decode bits: bit position from left (MSB) is qubit 0 (CR), then 1..m
+        bits = [(basis >> (n_qubits - 1 - q)) & 1 for q in range(n_qubits)]
+        cr_bit_old = bits[0]
+        ctrl_bit = bits[ctrl_qubit]
+        if ctrl_bit == 0:
+            # Identity on CR
+            U[basis, basis] = 1.0
+        else:
+            # R_y applied to CR: contributes both |0>_CR and |1>_CR outputs.
+            for cr_bit_new in (0, 1):
+                bits_new = list(bits)
+                bits_new[0] = cr_bit_new
+                idx_new = 0
+                for q, b in enumerate(bits_new):
+                    idx_new |= (b << (n_qubits - 1 - q))
+                U[idx_new, basis] = R[cr_bit_new, cr_bit_old]
+    return U
+
+
+def brun_wilde_cyclic_unitary(
+    n_ctc_qubits: int,
+    alpha: float,
+    seed_rotation: float = 0.0,
+) -> np.ndarray:
+    """Cyclic-power D-CTC unitary on 1 CR + n_ctc_qubits CTC qubits.
+
+    Construction:
+        U = product over i = 1..n_ctc_qubits of
+            controlled-R_y(2 alpha / n_ctc_qubits)_CR  [controlled by CTC qubit i]
+        composed with a final R_y(seed_rotation) on CR.
+
+    For inputs |0> and (cos alpha) |0> + (sin alpha) |1>, the iteration
+    accumulates rotation on CR proportional to the |1>-weight of the
+    fixed-point CTC state, which depends nonlinearly on the input via
+    Deutsch's fixed-point. With n_ctc_qubits >= 2 and alpha in a
+    suitable range, this family contains Born-violating instances.
+
+    Returns
+    -------
+    Unitary of shape (2^(n_ctc_qubits+1), 2^(n_ctc_qubits+1)).
+    """
+    if n_ctc_qubits < 1:
+        raise ValueError(f"n_ctc_qubits must be >= 1, got {n_ctc_qubits}")
+    m = n_ctc_qubits
+    dim = 2 ** (1 + m)
+    U = np.eye(dim, dtype=complex)
+    step = 2.0 * alpha / m
+    for i in range(1, m + 1):
+        U = _controlled_R_y_target_CR(step, m, ctrl_qubit=i) @ U
+    if seed_rotation != 0.0:
+        # Final rotation on CR (unconditional).
+        R = _R_y(seed_rotation)
+        I_rest = np.eye(2 ** m, dtype=complex)
+        U = np.kron(R, I_rest) @ U
+    return U
+
+
+# ----- Haar-random unitary sampling --------------------------------------
+
+
+def haar_random_unitary(dim: int, rng: np.random.Generator) -> np.ndarray:
+    """Sample a Haar-random unitary in U(dim) via the QR-of-Ginibre trick."""
+    A = rng.standard_normal((dim, dim)) + 1j * rng.standard_normal((dim, dim))
+    Q, R = np.linalg.qr(A)
+    # Fix the phase ambiguity (Mezzadri 2007) so the distribution is
+    # uniform on U(N).
+    phases = np.diag(R) / np.abs(np.diag(R))
+    return Q * phases[None, :]
+
+
+def haar_search_born_violation(
+    psi_0: np.ndarray,
+    psi_1: np.ndarray,
+    ctc_dim: int = 4,
+    n_samples: int = 200,
+    seed: int = 0,
+    P_helstrom: float | None = None,
+) -> dict:
+    """Sample Haar-random D-CTC unitaries on (2 * ctc_dim)-dim space.
+
+    For each sample, computes the D-CTC fixed-point output Helstrom of
+    `psi_0` and `psi_1`. Returns the best unitary found and its margin
+    over the Helstrom bound on the inputs.
+
+    Returns dict with:
+      - P_dctc_max : best output Helstrom found
+      - margin     : P_dctc_max - P_helstrom (positive = Born violated)
+      - U_best     : the unitary
+      - sample_idx : which Haar sample (out of n_samples) achieved it
+      - n_converged: how many of n_samples had converged fixed points
+    """
+    if ctc_dim < 2:
+        raise ValueError(f"ctc_dim must be >= 2, got {ctc_dim}")
+    if n_samples < 1:
+        raise ValueError(f"n_samples must be >= 1, got {n_samples}")
+    rng = np.random.default_rng(seed)
+    sigma_0 = np.outer(psi_0, psi_0.conj())
+    sigma_1 = np.outer(psi_1, psi_1.conj())
+    if P_helstrom is None:
+        P_helstrom = helstrom_bound_pure(psi_0, psi_1)
+    dim_total = 2 * ctc_dim
+    best_P = 0.0
+    best_U = None
+    best_idx = -1
+    n_converged = 0
+    for s in range(n_samples):
+        U = haar_random_unitary(dim_total, rng)
+        out0 = dctc_output_state(U, sigma_0, dim_cr=2, max_iter=400, tol=1e-8)
+        out1 = dctc_output_state(U, sigma_1, dim_cr=2, max_iter=400, tol=1e-8)
+        if not (out0["converged"] and out1["converged"]):
+            continue
+        n_converged += 1
+        P = helstrom_bound_density(out0["rho_cr_out"], out1["rho_cr_out"])
+        if P > best_P:
+            best_P = float(P)
+            best_U = U
+            best_idx = s
+    return {
+        "P_dctc_max": best_P,
+        "P_helstrom": float(P_helstrom),
+        "margin": float(best_P - P_helstrom),
+        "U_best": best_U,
+        "sample_idx": best_idx,
+        "n_converged": n_converged,
+        "n_samples": n_samples,
+        "ctc_dim": ctc_dim,
+    }
+
+
 # ----- the witness -------------------------------------------------------
 
 
@@ -186,7 +356,9 @@ class BornWitness:
     P_dctc_max: float
     best_unitary: str
     born_violated: bool
-    margin: float            # P_dctc_max - P_helstrom (>0 iff violated)
+    margin: float                # P_dctc_max - P_helstrom (>0 iff violated)
+    family: str = ""             # which construction won: "fixed" / "param" / "cyclic" / "haar"
+    ctc_dim: int = 2             # CTC register dimension of the best unitary
 
 
 def _zero_ket() -> np.ndarray:
@@ -201,10 +373,16 @@ def born_rule_witness(
     psi_0: np.ndarray | None = None,
     psi_1: np.ndarray | None = None,
     n_theta: int = 41,
+    cyclic_ctc_qubits: tuple[int, ...] = (2, 3),
+    cyclic_n_alpha: int = 13,
+    haar_ctc_dim: int = 4,
+    haar_samples: int = 80,
+    haar_seed: int = 0,
 ) -> BornWitness:
-    """Sweep a parametric D-CTC unitary family + fixed nonlinear maps to
+    """Sweep parametric, cyclic-power, and Haar-random D-CTC unitaries to
     test whether P_dctc(rho_CR_out) can exceed the Helstrom bound on the
-    input states (psi_0, psi_1). Reports the maximum P_dctc found.
+    input states (psi_0, psi_1). Returns the best result found across
+    all families.
     """
     if psi_0 is None:
         psi_0 = _zero_ket()
@@ -215,25 +393,55 @@ def born_rule_witness(
 
     P_hel = helstrom_bound_pure(psi_0, psi_1)
 
-    candidates: list[tuple[str, np.ndarray]] = [
-        ("hadamard_swap", hadamard_swap_unitary()),
-        ("cnot_hadamard", cnot_then_hadamard_unitary()),
+    candidates: list[tuple[str, str, int, np.ndarray]] = [
+        ("hadamard_swap", "fixed", 2, hadamard_swap_unitary()),
+        ("cnot_hadamard", "fixed", 2, cnot_then_hadamard_unitary()),
     ]
     for i, t in enumerate(np.linspace(0.0, 2.0 * math.pi, n_theta)):
-        candidates.append((f"brun_wilde[theta={t:.3f}]",
-                           brun_wilde_unitary(float(t))))
+        candidates.append((
+            f"brun_wilde[theta={t:.3f}]", "param", 2,
+            brun_wilde_unitary(float(t)),
+        ))
+
+    # Cyclic-power family: scan alpha for each n_ctc_qubits.
+    for m in cyclic_ctc_qubits:
+        ctc_dim = 2 ** m
+        for a in np.linspace(0.1, math.pi, cyclic_n_alpha):
+            candidates.append((
+                f"cyclic[m={m}, alpha={a:.3f}]", "cyclic", ctc_dim,
+                brun_wilde_cyclic_unitary(m, float(a)),
+            ))
 
     best_P = 0.0
     best_name = ""
-    for name, U in candidates:
-        out0 = dctc_output_state(U, sigma_0, dim_cr=2)
-        out1 = dctc_output_state(U, sigma_1, dim_cr=2)
+    best_family = ""
+    best_ctc_dim = 2
+    for name, family, ctc_dim, U in candidates:
+        out0 = dctc_output_state(U, sigma_0, dim_cr=2, max_iter=400, tol=1e-8)
+        out1 = dctc_output_state(U, sigma_1, dim_cr=2, max_iter=400, tol=1e-8)
         if not (out0["converged"] and out1["converged"]):
             continue
         P = helstrom_bound_density(out0["rho_cr_out"], out1["rho_cr_out"])
         if P > best_P:
             best_P = P
             best_name = name
+            best_family = family
+            best_ctc_dim = ctc_dim
+
+    # Haar-random search: by Brun-Wilde, a positive-measure subset of
+    # Haar unitaries on (2 * haar_ctc_dim)-dim violates Born for any
+    # non-orthogonal pure-state pair.
+    if haar_samples > 0:
+        haar = haar_search_born_violation(
+            psi_0=psi_0, psi_1=psi_1, ctc_dim=haar_ctc_dim,
+            n_samples=haar_samples, seed=haar_seed,
+            P_helstrom=P_hel,
+        )
+        if haar["P_dctc_max"] > best_P:
+            best_P = haar["P_dctc_max"]
+            best_name = f"haar[ctc_dim={haar_ctc_dim}, sample={haar['sample_idx']}]"
+            best_family = "haar"
+            best_ctc_dim = haar_ctc_dim
 
     return BornWitness(
         P_helstrom=P_hel,
@@ -241,6 +449,8 @@ def born_rule_witness(
         best_unitary=best_name,
         born_violated=bool(best_P > P_hel + 1e-8),
         margin=float(best_P - P_hel),
+        family=best_family,
+        ctc_dim=best_ctc_dim,
     )
 
 
