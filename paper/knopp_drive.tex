@@ -437,6 +437,36 @@ The full toroidal Knopp budget is implemented in \texttt{systrophe.knopp.knopp\_
 \item The diffeomorphic isomorphism to Bonnor Case~III is an effective-correspondence claim, not a proven global isometry. The exact composite spacetime is not in closed form.
 \end{itemize}
 
+\subsection{Self-consistent semiclassical back-reaction via Newton--Kantorovich}\label{ssec:toroidal_nk}
+
+The Aguilera Katayama framework leaves the back-reaction term as a dimensional ansatz
+$E_{\rm BR}\!\sim\!\lambda\, M^{-4}\,\rho^{2}d/(2880\pi^{2})$ with a free prefactor $\lambda$.
+We replace it here by a Newton--Kantorovich iteration of the band-edge equation under an actual Polyakov--Boulware vacuum source.
+
+On the 2D radial slice $ds^{2}_{2\rm D}=-F(\rho)\,dt^{2}+d\rho^{2}$ with $F(\rho)=1-2\Phi_{\rm eff}(\rho)=1+4M/\sqrt{(d/2)^{2}+\rho^{2}}$, the Boulware vacuum stress
+\begin{equation}
+\langle T_{tt}\rangle_{B}(\rho)\;=\;-\frac{1}{24\pi}\!\left[F''(\rho)-\frac{F'(\rho)^{2}}{2F(\rho)}\right]
+\end{equation}
+is the exact Davies--Fulling--Unruh result in the conformally-flat 2D sector. We define the back-reacted Tipler tilt
+\begin{equation}
+T_{\rm eff}^{\rm BR}(\rho;\lambda)\;=\;T_{\rm eff}^{\rm classical}(\rho)\;-\;\lambda\,\langle T_{tt}\rangle_{B}(\rho)
+\end{equation}
+and solve the band-edge condition $T_{\rm eff}^{\rm BR}(\rho;\lambda)=1$ via \texttt{newton\_kantorovich\_1d} for each edge. Bisection over $\lambda$ identifies $\lambda_{\rm crit}$ -- the back-reaction strength above which the band collapses.
+
+For the working configuration ($M\!=\!1$, $d\!=\!2M$, $k\!=\!1$):
+\begin{itemize}[leftmargin=*]
+\item Classical band: $\rho\in[0.6523,\,3.5719]\,M$.
+\item $\langle T_{tt}\rangle_{B}$ is sign-changing: $+6.8\!\times\!10^{-3}$ at the inner edge, $-1.6\!\times\!10^{-3}$ at the outer.
+\item Newton--Kantorovich on each edge converges in $\lesssim\!20$ iterations.
+\item $\lambda_{\rm crit}\!\approx\!21.58$ -- the band closes for $\lambda\!\geq\!\lambda_{\rm crit}$.
+\end{itemize}
+
+The Q-cavity threshold follows from energy balance between the chronology-protection power flux and the cavity absorption rate:
+\begin{equation}
+\boxed{\;\;Q_{\rm thr}\;=\;\sqrt{\frac{|E_{\rm Krasnikov}|\,\omega_{0}\,A_{\rm band}}{|\langle T_{tt}\rangle_{B}|_{\rm inner}}}\;\;}
+\end{equation}
+For the working configuration with $|E_{\rm Krasnikov}|=\omega_{0}=1$, this evaluates to $Q_{\rm thr}\!\approx\!75.3$ -- within $13\%$ of the dimensional estimate ``$Q\!\gtrsim\!86$'' in the Aguilera Katayama framework, and now anchored in an explicit Polyakov vacuum stress rather than a free constant. The full implementation is \texttt{systrophe.knopp.knopp\_toroidal\_backreaction} (\texttt{backreaction\_diagnostic}, \texttt{critical\_lambda}, \texttt{q\_threshold\_from\_balance}).
+
 \subsection{Quantum-gravity probes of the toroidal band}\label{ssec:toroidal_quantum}
 
 Two probes from the broader Systrophe stack become well-defined when the CTC band is the \emph{finite} toroidal region rather than the infinite Tipler cylinder (where both diverge):
