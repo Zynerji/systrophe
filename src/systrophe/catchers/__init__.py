@@ -1,0 +1,1 @@
+"""systrophe.catchers -- topical subpackage."""

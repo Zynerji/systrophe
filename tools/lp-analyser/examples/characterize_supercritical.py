@@ -20,7 +20,7 @@ import numpy as np
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 from lp_analyser import LPAnalyser, PairAnalyser
-from systrophe.vanstockum import VanStockumInterior
+from systrophe.geometry.vanstockum import VanStockumInterior
 
 
 def main():
@@ -87,14 +87,14 @@ def main():
     print("PairAnalyser Phase 3a: N-fold extinction sweep (omega=1, R=1)")
     print("=" * 72)
     c = VanStockumInterior(omega=1.0, R=1.0)
-    from systrophe.array import SystropheArray
+    from systrophe.geometry.array import SystropheArray
     print(f"{'N':>4s}  {'max|A_factor|':>15s}  extinguished?")
     ext_rows = []
     for N in (2, 3, 4, 5, 6, 7, 8):
         # uniform_phase_comb method on the SystropheArray class
         comb = SystropheArray.uniform_phase_comb(c, N=N)
         # Wrap via PairAnalyser for API consistency
-        from systrophe.sinusoid import TiplerSinusoid
+        from systrophe.geometry.sinusoid import TiplerSinusoid
         ext = comb.extinction_check(r_max=20.0)
         print(f"  {N}    {ext['max_array_factor']:.3e}    {ext['is_extinguished']}")
         ext_rows.append({"N": N, **ext})

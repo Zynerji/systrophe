@@ -1,0 +1,1 @@
+"""systrophe.qftcs -- topical subpackage."""

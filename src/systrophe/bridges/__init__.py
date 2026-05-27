@@ -1,0 +1,1 @@
+"""systrophe.bridges -- topical subpackage."""

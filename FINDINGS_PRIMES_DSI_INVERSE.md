@@ -1,8 +1,8 @@
 # Recovering the Riemann zeta zeros from the PRIMES via DSI spectroscopy
 
-`examples/millennium_primes_dsi_inverse.py`
+`examples/millennium/millennium_primes_dsi_inverse.py`
 
-This is the **inverse** of `examples/millennium_riemann_catcher.py`.
+This is the **inverse** of `examples/millennium/millennium_riemann_catcher.py`.
 That experiment feeds the zeta zeros into the catcher and asks whether
 their spacings are GUE-consistent. This one never touches the zeta
 function: it computes the prime-counting fluctuation directly from a
@@ -28,8 +28,8 @@ f(u) := (psi(e^u) - e^u + log(2 pi) + (1/2) log(1 - e^{-2u})) / e^{u/2}
 
 Every term is a log-periodic cosine `cos(gamma * ln x)` — the exact
 functional form of Systrophe's Tipler sinusoid
-`F(r) = A cos(alpha ln(r/R))` (`systrophe.tipler_fractal`,
-`systrophe.dsi_observables`) under `alpha <-> gamma`. **The prime
+`F(r) = A cos(alpha ln(r/R))` (`systrophe.geometry.tipler_fractal`,
+`systrophe.catchers.dsi_observables`) under `alpha <-> gamma`. **The prime
 fluctuation is a Systrophe cascade-DSI signal whose log-periodic
 frequencies are the zeta zeros.** A Lomb–Scargle periodogram in the
 `u = ln x` variable should therefore show a comb of peaks at the
@@ -45,7 +45,7 @@ frequencies are the zeta zeros.** A Lomb–Scargle periodogram in the
 5. Forward check: correlate `f(u)` against the truncated explicit-
    formula cascade built from the true zeros.
 6. Pass the prime spectrum through the **mandated address-space
-   novelty catcher** (`systrophe.novelty_catcher.scan_novelty`).
+   novelty catcher** (`systrophe.catchers.novelty_catcher.scan_novelty`).
 
 ## Result (X = 10^8, x-window [1000, 10^8], u-span 11.51)
 
@@ -126,7 +126,7 @@ at any feasible X.
 ## Reproduce
 
 ```
-python examples/millennium_primes_dsi_inverse.py \
+python examples/millennium/millennium_primes_dsi_inverse.py \
     --x-max 1e8 --gamma-lo 5 --gamma-hi 95 --n-zeros 27 \
     --n-samples 40000 --n-freq 12000
 ```

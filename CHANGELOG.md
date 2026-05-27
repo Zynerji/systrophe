@@ -5,6 +5,50 @@ All notable changes to the Systrophe project will be recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Quantum foundations sandbox + heavy topical reorganization
+
+#### New modules
+- `src/systrophe/foundations/which_way_ancilla.py`: path-qubit / ancilla
+  entanglement model. V = cos(theta/2), D = sin(theta/2), Englert
+  V^2 + D^2 = 1 saturated for pure ancilla states.
+- `src/systrophe/foundations/unruh_modulated_ab.py`: combines
+  aharonov_bohm_ctc + which_way_ancilla + unruh_effect into a single
+  observer-dependent visibility V_total = cos(pi*kappa/2) *
+  exp(-gamma_tau * 2 nbar(omega, T_U)) on the LP exterior.
+- `examples/foundations/double_slit_ab_demo.py`: 4-panel AB double-slit
+  demo with ancilla-driven visibility + Englert curve.
+- `examples/foundations/unruh_ab_fringes.py`: 4-panel observer-dependent
+  fringes demo. Headline: r_obs = 1.80 on omega = R = 1 gives 52%
+  fringe contrast loss vs an inertial twin.
+- `paper/chronology_protection_shell.{tex,pdf}`: quantitative semiclassical
+  chronology protection on the supercritical van Stockum-Tipler exterior.
+  Boulware Polyakov <T_tt> drives a backreaction strength beta(r) that
+  diverges at the chronology horizon, so for any hbar > 0 a shell of width
+  eps_bd ~ ell^2 / (6 kappa) shrouds it.
+- `experiments/marrakesh/marrakesh_pec_depth.py`: depth-L Loschmidt-echo
+  benchmark on Kingston, comparing baseline vs ZNE vs PEC for the regime
+  where PEC is expected to win.
+
+#### Heavy topical reorganization
+`src/systrophe/` 100+ flat modules split into 10 topical subpackages
+(`geometry/`, `lp/`, `ctc/`, `qftcs/`, `foundations/`, `quantum_info/`,
+`knopp/`, `catchers/`, `analogs/`, `bridges/`); `spacetimes/` moved
+under `geometry/`. `tests/` mirror the same layout. `examples/` grouped
+into themes (`dctc/`, `millennium/`, `erdos/`, `phase_modules/`,
+`knopp/`, `qec/`, `stress_tests/`, `retrofit/`, `foundations/`,
+`lp_walks/`, `investigations/`, `audits/`). `experiments/` grouped
+similarly (`marrakesh/`, `kingston/`, `qec/`, `knopp/`, `plots/`).
+
+The top-level public API at `systrophe.<symbol>` is unchanged
+(`from systrophe import VanStockumInterior` etc. still work via
+re-exports). Direct module imports must use the new topical path
+(`from systrophe.geometry.vanstockum import VanStockumInterior` rather
+than `from systrophe.vanstockum import ...`).
+
+Test suite: 1488 tests pass (1466 prior + 22 new Unruh ancilla).
+
 ## [0.21.0] - 2026-05-13
 
 ### Phases 2b + 3a + 3b — Hadamard, beamforming, off-axis topology
@@ -12,7 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Closes three more roadmap items in a single release.
 
 #### Phase 2b — 4D Hadamard biparametrix + WKB mode-sum
-New module `src/systrophe/hadamard_modesum.py`:
+New module `src/systrophe/qftcs/hadamard_modesum.py`:
 - `hadamard_V_0(vs, r, mass, xi)`: V_0 = (m^2 + (xi - 1/6) R)/2 (= 0 in
   vacuum + massless + conformal).
 - `hadamard_V_1(vs, r)`: V_1 = K_Kretsch(r) / 720 (vacuum-conformal form).
@@ -31,11 +75,11 @@ New module `src/systrophe/hadamard_modesum.py`:
   biparametrix.
 - `hadamard_modesum_novelty_scan`: always-on catcher.
 
-Tests: 14 in `tests/test_hadamard_modesum.py`, all pass.
-Example: `examples/phase_2b_hadamard_modesum.py` (0.8 s).
+Tests: 14 in `tests/qftcs/test_hadamard_modesum.py`, all pass.
+Example: `examples/phase_modules/phase_2b_hadamard_modesum.py` (0.8 s).
 
 #### Phase 3a — SystropheArray beamforming + extinction
-Extended `src/systrophe/array.py`:
+Extended `src/systrophe/geometry/array.py`:
 - `phasor_field(r)`: complex phasor sum + magnitude + phase.
 - `array_factor(r)`: antenna-array-analog magnitude.
 - `extinction_check`: verifies N-fold topological extinction
@@ -50,10 +94,10 @@ Extended `src/systrophe/array.py`:
 - `array_factor_sidelobe_level`: SLL diagnostic.
 
 Tests: 9 in `tests/test_array_phase_3a.py`, all pass.
-Example: `examples/phase_3a_beam_steering.py` (0.02 s).
+Example: `examples/phase_modules/phase_3a_beam_steering.py` (0.02 s).
 
 #### Phase 3b — OffAxisPair topology + quantitative orbits
-Extended `src/systrophe/off_axis.py`:
+Extended `src/systrophe/geometry/off_axis.py`:
 - `ergosurface_2d(x_min, x_max, ...)`: locate g_tt = 0 surface in 2D.
 - `ctc_region_topology(...)`: classify connected components + holes
   via scipy.ndimage.label. **New finding**: for an omega=1, R=1 pair
@@ -69,7 +113,7 @@ Extended `src/systrophe/off_axis.py`:
   amplification through the CTC band).
 
 Tests: 6 in `tests/test_off_axis_phase_3b.py`, all pass.
-Example: `examples/phase_3b_off_axis_topology.py` (54 s).
+Example: `examples/phase_modules/phase_3b_off_axis_topology.py` (54 s).
 
 ### Suite total
 1350 passed, 2 skipped (was 1321).
@@ -110,7 +154,7 @@ Hawking's chronology-protection conjecture *quantitatively* — three
 independent Cauchy horizons, three matched -1 power laws, single
 mechanism (Polyakov divergence of the natural vacuum).
 
-**New module** `src/systrophe/stress_energy_ctc.py` (~430 lines):
+**New module** `src/systrophe/ctc/stress_energy_ctc.py` (~430 lines):
 - `StressEnergyState` enum: BOULWARE | HARTLE_HAWKING | UNRUH.
 - `polyakov_sigma`, `polyakov_sigma_derivatives`, `tortoise_coordinate`:
   geometric building blocks (`sigma = (1/2) ln F`, partial_{r*}^k sigma).
@@ -130,14 +174,14 @@ mechanism (Polyakov divergence of the natural vacuum).
   on the `(log|T_tt|, log|T_rr|, log|F|)` sweep, per the always-on rule
   (`feedback_systrophe_novelty_catcher_always_on`).
 
-**Tests** (`tests/test_stress_energy_ctc.py`): 18 new tests covering
+**Tests** (`tests/ctc/test_stress_energy_ctc.py`): 18 new tests covering
 sigma definition, tortoise monotonicity, 2D Ricci agreement with the
 prior `qftcs_backreaction` module, Polyakov trace identity, Boulware
 monotonicity, HH/Boulware offset, Unruh radial flux, divergence power
 fit at horizons 1 and 2, end-to-end report verdict, subcritical refusal,
 and catcher integration. All 18 pass; total suite 1321 passed, 2 skipped.
 
-**End-to-end example**: `examples/phase_2a_chronology_protection.py`
+**End-to-end example**: `examples/phase_modules/phase_2a_chronology_protection.py`
 runs in ~0.1 s; writes a fully-quantified JSON to
 `phase_2a_chronology_protection_results.json`.
 
@@ -214,9 +258,9 @@ This is **emergent #25**, the strongest possible hardware validation: two indepe
 - `band_width = 2.815 ± 0.010`
 - Contrast 0.594 ± 0.003 (SNR = 184σ)
 
-A single-step envelope fit gives χ²/dof = 16.2; adding two Lorentzian internal resonances drops the fit to χ²/dof = 1.09 (perfect to shot-noise budget). The Knopp Drive active CTC band hosts at least 2 internal resonances. See `experiments/knopp_band_edge_fit.py`, `experiments/knopp_substructure_fit.py`, `paper/figures/knopp_band_edge_kingston.pdf`.
+A single-step envelope fit gives χ²/dof = 16.2; adding two Lorentzian internal resonances drops the fit to χ²/dof = 1.09 (perfect to shot-noise budget). The Knopp Drive active CTC band hosts at least 2 internal resonances. See `experiments/knopp/knopp_band_edge_fit.py`, `experiments/knopp/knopp_substructure_fit.py`, `paper/figures/knopp_band_edge_kingston.pdf`.
 
-**Framework upgrade**: `src/systrophe/derivative_catcher.py` — address-space novelty on numerical derivatives of scalar outputs. Resolves the gradient-transition blind spot: catches sigmoid centres that the value-level catcher misses. 8/8 new tests passing (`tests/test_derivative_catcher.py`).
+**Framework upgrade**: `src/systrophe/catchers/derivative_catcher.py` — address-space novelty on numerical derivatives of scalar outputs. Resolves the gradient-transition blind spot: catches sigmoid centres that the value-level catcher misses. 8/8 new tests passing (`tests/catchers/test_derivative_catcher.py`).
 
 **Millennium-problem catcher explorations** (5 new emergents):
 - Emergent #21 (HW): Kingston batch 7 band-edge quantification at SNR 184σ.
@@ -229,12 +273,12 @@ A single-step envelope fit gives χ²/dof = 16.2; adding two Lorentzian internal
 
 **Reliability**:
 - `qec_decoders.py`: `minimum_weight_proxy_decoder` switched to sparse Arnoldi (`scipy.sparse.linalg.eigs`) at n ≥ 5 qubits, fixing OOM at n=7 (16384-dim superoperator).
-- `tests/test_qec_bridge.py::TestCatcherSweep`: stale-key bug fixed (uses `aggregate_verdict` since the per-quantity wrapper rename).
+- `tests/quantum_info/test_qec_bridge.py::TestCatcherSweep`: stale-key bug fixed (uses `aggregate_verdict` since the per-quantity wrapper rename).
 
 **Infrastructure**:
-- `examples/run_all_millennium.py`: unified runner for all Millennium-problem catcher explorations.
-- `examples/millennium_riemann_null_gue.py`: 30-seed GUE null reference distribution for the Riemann claim.
-- `experiments/plot_millennium_summary.py`: 4-panel summary figure embedded in the paper.
+- `examples/millennium/run_all_millennium.py`: unified runner for all Millennium-problem catcher explorations.
+- `examples/millennium/millennium_riemann_null_gue.py`: 30-seed GUE null reference distribution for the Riemann claim.
+- `experiments/plots/plot_millennium_summary.py`: 4-panel summary figure embedded in the paper.
 
 **Cross-chip note**: Marrakesh batch 7 job `d81bq77tjchs73bmm8sg` submitted but queued (IBM Quantum allocation exhausted). Recover when plan refreshes.
 
@@ -312,7 +356,7 @@ New public API in `d_ctc.py`:
    matrix (added v0.14)
 
 New demo:
-- `examples/dctc_aw_amplification_demo.py` - 20-second reproduction of
+- `examples/dctc/dctc_aw_amplification_demo.py` - 20-second reproduction of
   the headline AW speedup finding.
 
 Sixteen exploration scripts in `examples/dctc_deep_phase_*.py`:
@@ -334,11 +378,11 @@ exotic matter because no Morris-Thorne wormhole is being constructed.
 
 Updates:
 
-- `src/systrophe/wormhole_throat.py`: docstring rewrite separating
+- `src/systrophe/geometry/wormhole_throat.py`: docstring rewrite separating
   the *kinematic shape-function mapping* (mathematically valid) from
   the *Morris-Thorne wormhole interpretation* (which does not apply
   to the LP exterior).
-- `src/systrophe/exotic_matter_accounting.py`: docstring rewrite
+- `src/systrophe/qftcs/exotic_matter_accounting.py`: docstring rewrite
   making the comparison explicitly *conditional* ("IF one tried to
   interpret L=0 as an MT junction, THEN ...").
 - `docs/INTERPRETATIONS.md`: I.1 and I.2 verdicts rewritten with
@@ -557,8 +601,8 @@ Total: 109 new tests across 8 new modules; full suite remains green.
 
 ### Casimir / Z_3-cover mode sums (integrates verified updates.txt math)
 
-New module `systrophe.casimir` integrates the four mathematically-verified
-claims from `examples/external_claim_verification_extended.py`:
+New module `systrophe.qftcs.casimir` integrates the four mathematically-verified
+claims from `examples/audits/external_claim_verification_extended.py`:
 
 - `hurwitz_zeta_neg3(a)`: exact closed form
   `zeta_H(-3, a) = -a^4/4 + a^3/2 - a^2/4 + 1/120`
@@ -582,11 +626,11 @@ The module's docstring explicitly separates the verified mathematics
 from the speculative throat-Casimir interpretation; only the
 mathematics is implemented.
 
-Tests: 15 new in `tests/test_casimir.py`; all pass.
+Tests: 15 new in `tests/qftcs/test_casimir.py`; all pass.
 
 ## [0.11.0] - 2026-05-10
 
-### Verified / falsified external-chat math assertions (examples/external_claim_verification.py)
+### Verified / falsified external-chat math assertions (examples/audits/external_claim_verification.py)
 Systematic verification battery covering 19 mathematical claims from the
 external conversation on the Systrophe repo:
 
@@ -902,7 +946,7 @@ honestly than the previous 1/F^2 indicator alone.
 ## [0.3.2] - 2026-05-09
 
 ### Added
-- `systrophe.spacetimes.gott` — Gott pair (Gott 1991, PRL 66, 1126):
+- `systrophe.geometry.spacetimes.gott` — Gott pair (Gott 1991, PRL 66, 1126):
   symmetric pair of moving cosmic strings producing CTCs encircling
   both. Implements the standard threshold `gamma * v > tan(4 pi mu)`,
   exposes critical velocity `v_crit = sin(4 pi mu)` and critical mass
@@ -913,9 +957,9 @@ honestly than the previous 1/F^2 indicator alone.
 ## [0.3.1] - 2026-05-09
 
 ### Added
-- `systrophe.spacetimes.godel` — Goedel rotating-dust universe (Goedel
+- `systrophe.geometry.spacetimes.godel` — Goedel rotating-dust universe (Goedel
   1949). First additional CTC spacetime in the new
-  `systrophe.spacetimes` subpackage. Provides metric components,
+  `systrophe.geometry.spacetimes` subpackage. Provides metric components,
   exact CTC threshold radius `r_CTC = arcsinh(1) = ln(1 + sqrt(2))`,
   and dust/Lambda diagnostics. Establishes the architectural
   pattern for multi-spacetime CTC analysis (Phase 1b of the roadmap).

@@ -1,0 +1,1 @@
+"""systrophe.knopp -- topical subpackage."""

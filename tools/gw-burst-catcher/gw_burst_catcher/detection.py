@@ -9,7 +9,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from systrophe.novelty_catcher import scan_novelty
+from systrophe.catchers.novelty_catcher import scan_novelty
 
 from .preprocess import q_transform, whiten_strain
 from .events import KNOWN_EVENTS

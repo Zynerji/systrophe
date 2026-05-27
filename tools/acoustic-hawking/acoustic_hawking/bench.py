@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from systrophe.acoustic_hawking_spectrum import (
+from systrophe.analogs.acoustic_hawking_spectrum import (
     bec_experimental_predictions,
     compare_to_steinhauer_2019,
 )

@@ -17,7 +17,7 @@ dataclass.
 ## Provenance
 
 * Algorithm: the same address-space λ₂ catcher from
-  `systrophe.novelty_catcher.scan_novelty` (the framework's
+  `systrophe.catchers.novelty_catcher.scan_novelty` (the framework's
   load-bearing detection primitive; track record 26+ emergents).
 * Use case: applying the catcher to the *time-frequency representation*
   of a whitened strain segment, then sliding a window across it.

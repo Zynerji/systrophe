@@ -1,6 +1,6 @@
 # Off-line-zero detection test — would the DSI lens see an RH violation?
 
-`examples/millennium_primes_offline_zero_test.py`
+`examples/millennium/millennium_primes_offline_zero_test.py`
 
 Companion to `FINDINGS_PRIMES_DSI_INVERSE.md`. That experiment recovered
 the first ~26 zeta zeros from the primes as a log-periodic cascade — a
@@ -92,8 +92,8 @@ zero, it **measures how far off the line it sits**.
 
 ## The growth catcher closes the gap
 
-`src/systrophe/growth_catcher.py` (8/8 tests in
-`tests/test_growth_catcher.py`) is the trend-regime analog of
+`src/systrophe/catchers/growth_catcher.py` (8/8 tests in
+`tests/catchers/test_growth_catcher.py`) is the trend-regime analog of
 `derivative_catcher.py`. It uses a **global** rank-thermometer address
 encoding (shared scale across all points — fixing the per-segment
 self-normalisation blind spot) plus a permutation-null significance on
@@ -119,8 +119,8 @@ among the first ~20, and the real primes show no such signal.
 ## Reproduce
 
 ```
-python examples/millennium_primes_offline_zero_test.py --x-max 1e8 --window 5
-python examples/millennium_primes_offline_zero_test.py --x-max 1e7   # window 4 default
+python examples/millennium/millennium_primes_offline_zero_test.py --x-max 1e8 --window 5
+python examples/millennium/millennium_primes_offline_zero_test.py --x-max 1e7   # window 4 default
 ```
 
 Writes `examples/millennium_primes_offline_zero_test_x{X}_results.json`.

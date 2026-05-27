@@ -7,8 +7,8 @@ import math
 import numpy as np
 import pytest
 
-from systrophe.off_axis import OffAxisPair
-from systrophe.vanstockum import VanStockumInterior
+from systrophe.geometry.off_axis import OffAxisPair
+from systrophe.geometry.vanstockum import VanStockumInterior
 
 
 @pytest.fixture(scope="module")

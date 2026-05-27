@@ -153,7 +153,7 @@ def fig_time_travel_balance():
 
 def fig_off_axis_ctc_map():
     """2D CTC map for an off-axis Systrophe pair."""
-    from systrophe.off_axis import OffAxisPair
+    from systrophe.geometry.off_axis import OffAxisPair
 
     cyl = VanStockumInterior(omega=1.0, R=1.0)
     pair = OffAxisPair(cyl1=cyl, cyl2=cyl, separation=4.0)
@@ -237,7 +237,7 @@ def fig_spacetime_worldline():
 
 def fig_lp_robust_demo():
     """Demonstrate machine-precision agreement of the robust solver across regimes."""
-    from systrophe.lp_robust import integrate_lp_robust
+    from systrophe.lp.lp_robust import integrate_lp_robust
 
     fig, ax = plt.subplots(figsize=(6.5, 3.8))
     cases = [

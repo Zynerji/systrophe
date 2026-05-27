@@ -1,6 +1,6 @@
 """cascade-dsi-explorer: scan + diagnose multi-scale Tipler cascade-DSI fractals.
 
-Wraps the existing `systrophe.tipler_fractal` machinery in an
+Wraps the existing `systrophe.geometry.tipler_fractal` machinery in an
 LPAnalyser-style one-object-per-cascade explorer with:
 
   - zero-set extraction

@@ -123,7 +123,7 @@ catcher's notion of "address" co-adapts with the rest of the model.
 
 Design from `Cyliformer.txt` (user's May-2026 design notes). The
 implementation reuses Systrophe primitives where principled:
-`systrophe.novelty_catcher` is the conceptual ancestor of
+`systrophe.catchers.novelty_catcher` is the conceptual ancestor of
 `LearnedAddressCatcher`, and the cylinder-phasor / beam-sum / soft-
 prune structure mirrors the N-cylinder array work in
 `src/systrophe/array.py` (Phase 3a).

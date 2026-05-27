@@ -20,7 +20,7 @@ from implosion_carving import (
     compute_z3_signature,
 )
 from implosion_carving.monodromy import closure_on_cover_residual
-from systrophe.vanstockum import VanStockumInterior
+from systrophe.geometry.vanstockum import VanStockumInterior
 
 
 # ---------------------------------------------------------------------------

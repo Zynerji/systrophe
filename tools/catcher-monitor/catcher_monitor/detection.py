@@ -1,4 +1,4 @@
-"""Phase-transition, anomaly, and emergent detection on top of systrophe.novelty_catcher."""
+"""Phase-transition, anomaly, and emergent detection on top of systrophe.catchers.novelty_catcher."""
 
 from __future__ import annotations
 
@@ -7,12 +7,12 @@ from typing import Callable, Sequence
 
 import numpy as np
 
-from systrophe.novelty_catcher import (
+from systrophe.catchers.novelty_catcher import (
     hamming_distance,
     real_array_to_address,
     scan_novelty,
 )
-from systrophe.derivative_catcher import catch_smooth_transition
+from systrophe.catchers.derivative_catcher import catch_smooth_transition
 
 
 # ---------------------------------------------------------------------------
@@ -49,7 +49,7 @@ def find_phase_transition(
 ) -> PhaseTransitionResult:
     """Detect a phase transition in `measurement_fn` over `parameter_values`.
 
-    Two-pass detection on top of `systrophe.derivative_catcher.catch_smooth_transition`:
+    Two-pass detection on top of `systrophe.catchers.derivative_catcher.catch_smooth_transition`:
       * **Value-level scan** -- catches discontinuous jumps in the
         measurement output (the classical Hamming-step outlier).
       * **Derivative-level scan** -- catches smooth-sigmoid centres
@@ -148,7 +148,7 @@ def find_anomalies(
     """Flag samples that are isolated in address-space.
 
     Each sample is hashed to an `n_bits` bit address via
-    `systrophe.novelty_catcher.real_array_to_address`. A Hamming graph
+    `systrophe.catchers.novelty_catcher.real_array_to_address`. A Hamming graph
     is built over the addresses with edge threshold `radius`. The
     anomaly score for sample i is
         score_i = mean Hamming distance from i to every other sample.
@@ -265,7 +265,7 @@ def scan_emergents(
     radii: tuple[int, ...] = (4, 8, 12, 16),
     parameter_label: str = "parameter",
 ) -> EmergentScanResult:
-    """Wrap `systrophe.novelty_catcher.scan_novelty` and return a flat dataclass.
+    """Wrap `systrophe.catchers.novelty_catcher.scan_novelty` and return a flat dataclass.
 
     This is the direct interface for users who want the full sharp-feature
     list rather than the single transition centre from

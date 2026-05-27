@@ -3,8 +3,8 @@
 import numpy as np
 import pytest
 
-from systrophe.spacetimes import GodelUniverse  # to ensure spacetimes package
-from systrophe.spacetimes.kerr import KerrSpacetime
+from systrophe.geometry.spacetimes import GodelUniverse  # to ensure spacetimes package
+from systrophe.geometry.spacetimes.kerr import KerrSpacetime
 
 
 def test_construction_validates_M_positive():

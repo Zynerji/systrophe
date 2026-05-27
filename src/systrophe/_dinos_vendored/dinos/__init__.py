@@ -1,7 +1,7 @@
 """Vendored subset of the Dinos (Δῖνος) Dirac-Kerr-Newman framework.
 
 Provenance: copied verbatim from `C:/Users/cknop/.local/bin/Dinos/src/dinos/`
-on 2026-05-13. Only the modules required by `systrophe.dinos_bridge`
+on 2026-05-13. Only the modules required by `systrophe.bridges.dinos_bridge`
 are vendored here:
 
   * `kerr_corrections`  -- functions used by `kerr_correction_at_tipler_threshold`
@@ -28,7 +28,7 @@ holdouts). The math vendored here -- the Möbius Z_3 cover eigenvalue
 closed forms and the Kerr correction kinematics -- is *separate* from
 that predictivity claim and is used by the bridge as a mathematical
 correspondence with the cylindrical Tipler exterior, not as a
-physical-prediction tool. See `systrophe.dinos_bridge` docstring for
+physical-prediction tool. See `systrophe.bridges.dinos_bridge` docstring for
 the integration's scope.
 """
 

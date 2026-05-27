@@ -19,22 +19,22 @@ Every method maps directly to a Systrophe module:
 
 | LPAnalyser method                  | Backed by                                       |
 |------------------------------------|-------------------------------------------------|
-| `.F`, `.K`, `.L`                   | `systrophe.vanstockum.VanStockumInterior`       |
-| `.cauchy_horizons`                 | `systrophe.quantum_diagnostics`                 |
+| `.F`, `.K`, `.L`                   | `systrophe.geometry.vanstockum.VanStockumInterior`       |
+| `.cauchy_horizons`                 | `systrophe.qftcs.quantum_diagnostics`                 |
 | `.ctc_bands`                       | `systrophe.ctc.find_ctc_intervals`              |
-| `.energy_conditions`               | `systrophe.energy_conditions` (Phase 1a)        |
-| `.surface_gravity`, `.hawking_T`   | `systrophe.quantum_diagnostics`                 |
-| `.stress_tensor` (3 states)        | `systrophe.stress_energy_ctc` (**Phase 2a**)    |
-| `.chronology_protection_scan`      | `systrophe.stress_energy_ctc` (**Phase 2a**)    |
-| `.hadamard_V_0`, `.hadamard_V_1`   | `systrophe.hadamard_modesum` (**Phase 2b**)     |
-| `.hadamard_chronology_scan`        | `systrophe.hadamard_modesum` (**Phase 2b**)     |
+| `.energy_conditions`               | `systrophe.qftcs.energy_conditions` (Phase 1a)        |
+| `.surface_gravity`, `.hawking_T`   | `systrophe.qftcs.quantum_diagnostics`                 |
+| `.stress_tensor` (3 states)        | `systrophe.ctc.stress_energy_ctc` (**Phase 2a**)    |
+| `.chronology_protection_scan`      | `systrophe.ctc.stress_energy_ctc` (**Phase 2a**)    |
+| `.hadamard_V_0`, `.hadamard_V_1`   | `systrophe.qftcs.hadamard_modesum` (**Phase 2b**)     |
+| `.hadamard_chronology_scan`        | `systrophe.qftcs.hadamard_modesum` (**Phase 2b**)     |
 | `.trace_anomaly_check`             | cross-check Phase 2b ↔ 4D point-splitting       |
-| `.kretschmann`                     | `systrophe.point_splitting`                     |
-| `PairAnalyser.L`, `.array_factor`  | `systrophe.array.SystropheArray` (**Phase 3a**) |
-| `PairAnalyser.beam_steer`          | `systrophe.array.SystropheArray.beam_steer`     |
-| `PairAnalyser.extinction_check`    | `systrophe.array.SystropheArray.extinction_check`|
-| `PairAnalyser.ctc_region_topology` | `systrophe.off_axis.OffAxisPair` (**Phase 3b**) |
-| `PairAnalyser.ergosurface_2d`      | `systrophe.off_axis.OffAxisPair`                |
+| `.kretschmann`                     | `systrophe.qftcs.point_splitting`                     |
+| `PairAnalyser.L`, `.array_factor`  | `systrophe.geometry.array.SystropheArray` (**Phase 3a**) |
+| `PairAnalyser.beam_steer`          | `systrophe.geometry.array.SystropheArray.beam_steer`     |
+| `PairAnalyser.extinction_check`    | `systrophe.geometry.array.SystropheArray.extinction_check`|
+| `PairAnalyser.ctc_region_topology` | `systrophe.geometry.off_axis.OffAxisPair` (**Phase 3b**) |
+| `PairAnalyser.ergosurface_2d`      | `systrophe.geometry.off_axis.OffAxisPair`                |
 
 The reference numbers reproduced by `examples/characterize_supercritical.py`
 match `Systrophe/CHANGELOG.md` v0.20.0 + v0.21.0 line for line.
@@ -84,7 +84,7 @@ rep_2b = a.hadamard_chronology_scan(n_horizons=3)
 ```python
 # Phase 3a beam-steering
 from lp_analyser import PairAnalyser
-from systrophe.vanstockum import VanStockumInterior
+from systrophe.geometry.vanstockum import VanStockumInterior
 
 c = VanStockumInterior(omega=1.0, R=1.0)
 p = PairAnalyser.beam_steer(r_target=3.0, cylinder=c, N=2)

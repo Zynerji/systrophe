@@ -5,7 +5,7 @@ connectivity (λ₂) of the Hamming graph of its own address-hashed
 attention activations.
 
 Built on the Systrophe core framework
-(`systrophe.novelty_catcher`). The Systrophe catcher detects
+(`systrophe.catchers.novelty_catcher`). The Systrophe catcher detects
 information-topological structure in any array of measurements;
 applying it to transformer attention activations gives the model an
 explicit global structural-novelty signal it can learn to amplify or
@@ -16,7 +16,7 @@ dampen.
 ```
 systroformer/
 ├── systroformer/
-│   ├── catcher.py     # power-iter λ₂ + thin wrapper over systrophe.novelty_catcher
+│   ├── catcher.py     # power-iter λ₂ + thin wrapper over systrophe.catchers.novelty_catcher
 │   ├── block.py       # SystroformerBlock = attention + FFN + λ₂ modulation
 │   ├── model.py       # MiniSystroformer (stacked blocks)
 │   └── utils.py       # LSH subsample + LearnedAddressNet (straight-through)
@@ -62,7 +62,7 @@ Systrophe address-space catcher to LLM-architecture research. The
 design follows the prototype described in `SystropheLLMhelper.txt`
 (user's notes, May 2026). The framework primitives —
 `real_array_to_address`, `lambda_2_of_hamming_graph`,
-`hamming_distance` — are re-exported from `systrophe.novelty_catcher`
+`hamming_distance` — are re-exported from `systrophe.catchers.novelty_catcher`
 to avoid duplication.
 
 ## Status

@@ -2,8 +2,8 @@
 
 Closing out the A003002 thread from the Erdős×OEIS sweep (Erdős problems 3
 and 142 — largest 3-term-AP-free subset of [1,n]). Two parts:
-`examples/erdos_a003002_recheck.py` (b) and
-`examples/erdos_apfree_construction_dsi.py` (a).
+`examples/erdos/erdos_a003002_recheck.py` (b) and
+`examples/erdos/erdos_apfree_construction_dsi.py` (a).
 
 ## (b) The exact extremal sequence is data-length-walled
 
@@ -76,8 +76,8 @@ significant.
 ## Reproduce
 
 ```
-python examples/erdos_a003002_recheck.py
-python examples/erdos_apfree_construction_dsi.py
+python examples/erdos/erdos_a003002_recheck.py
+python examples/erdos/erdos_apfree_construction_dsi.py
 ```
 
 Writes the two `*_results.json`. Requires `numpy`, `scipy`; reuses

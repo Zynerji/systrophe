@@ -19,7 +19,7 @@ catcher measures whether the beam is constructive (high lambda_2) or
 incoherent (low lambda_2). Soft pruning via back-reaction makes the
 architecture sparse on the fly.
 
-This tool depends on the Systrophe core (`systrophe.novelty_catcher`)
+This tool depends on the Systrophe core (`systrophe.catchers.novelty_catcher`)
 for the address-space lambda_2 primitives. Built on top of the v0.21.0
 release; see ../systroformer/ for a simpler precursor.
 """

@@ -14,7 +14,7 @@
 [![Knopp Drive: live](https://img.shields.io/badge/Knopp%20Drive-live-red.svg)](#the-knopp-drive-headline-composite-warp-engineering-bound)
 [![Millennium: 4/7 + Goldbach](https://img.shields.io/badge/Millennium-4%2F7%20%2B%20Goldbach-orange.svg)](FINDINGS_MILLENNIUM_PROGRESS.md)
 [![Emergents: 28](https://img.shields.io/badge/catcher%20emergents-28-yellow.svg)](paper/knopp_drive.pdf)
-[![Cross-chip: 1.94σ](https://img.shields.io/badge/cross--chip-1.94%CF%83%20RMS-purple.svg)](experiments/knopp_cross_chip_comparison.py)
+[![Cross-chip: 1.94σ](https://img.shields.io/badge/cross--chip-1.94%CF%83%20RMS-purple.svg)](experiments/knopp/knopp_cross_chip_comparison.py)
 [![Version 0.21.0](https://img.shields.io/badge/version-0.21.0-blue.svg)](pyproject.toml)
 [![Phases 2a, 2b, 3a, 3b: shipped](https://img.shields.io/badge/Phases%202a%E2%80%933b-shipped-success.svg)](ROADMAP.md)
 [![Derived tools: 2](https://img.shields.io/badge/derived%20tools-Systroformer%20%2B%20Cyliformer-blueviolet.svg)](tools/)
@@ -90,7 +90,7 @@ pytest                         # 1118 tests, 1 skipped (z3-solver)
 
 Optional extras:
 - `.[symbolic]` — SymPy for the one-shot derivation script (`tools/derive_lewis_papapetrou.py`).
-- `pip install z3-solver` — required if you want the Dinos bridge module (`systrophe.dinos_bridge`); the test suite skips silently otherwise.
+- `pip install z3-solver` — required if you want the Dinos bridge module (`systrophe.bridges.dinos_bridge`); the test suite skips silently otherwise.
 - `pip install qiskit qiskit-ibm-runtime` — required only to re-run the Marrakesh hardware batches under `experiments/`.
 
 ---
@@ -157,10 +157,10 @@ python examples/quantum_z3_verification.py         # Z₃ Möbius bridge
 python examples/ctc_zoo.py                         # band catalogue
 python examples/offset_tipler_demo.py              # phase-offset sweep
 python examples/off_axis_simulation.py             # parallel-axis pair
-python examples/dctc_aw_amplification_demo.py      # Clifford-D-CTC amplification
-python examples/stress_cascade_novelty.py          # novelty catcher reference run
-python examples/retrofit_novelty_scan.py           # 9-feature first-CH cluster
-python examples/investigate_first_ch_cluster.py    # cluster resolution
+python examples/dctc/dctc_aw_amplification_demo.py      # Clifford-D-CTC amplification
+python examples/stress_tests/stress_cascade_novelty.py          # novelty catcher reference run
+python examples/retrofit/retrofit_novelty_scan.py           # 9-feature first-CH cluster
+python examples/investigations/investigate_first_ch_cluster.py    # cluster resolution
 jupyter notebook examples/tutorial.ipynb           # guided tutorial
 ```
 
@@ -312,7 +312,7 @@ A parallel line of empirical investigation lives in `examples/dctc_deep_phase_*.
 
 The unified treatment is in [`paper/dctc_treatise.pdf`](paper/dctc_treatise.pdf); per-phase findings in [`docs/DCTC_FINDINGS.md`](docs/DCTC_FINDINGS.md) and [`docs/DCTC_DEEP.md`](docs/DCTC_DEEP.md); the chronology-protection budget in [`docs/DCTC_CHRONOLOGY_PROTECTION.md`](docs/DCTC_CHRONOLOGY_PROTECTION.md); the phase plan in [`docs/DCTC_PHASE_PLAN.md`](docs/DCTC_PHASE_PLAN.md).
 
-**Novelty-catcher coverage (2026-05-11):** the DCTC trilogy was authored before the always-on rule landed. A retrofit pass (`examples/retrofit_dctc_novelty_scan.py`) scans every `dctc_*_results.json` whose shape carries extractable distributions and writes verdicts to `examples/retrofit_dctc_novelty_results.json`. Current status: **8 scanned, 1 novel-structure (`dctc_deep_E4_trichotomy`, confirming the trichotomy basin boundaries the paper already claims), 7 smooth/uniform, 14 scalar-summary-only result files awaiting in-place patches to emit native catcher verdicts on re-run.** `dctc_deep_E4_trichotomy.py` is patched (catcher block landed); the remaining 14 scripts are queued for native instrumentation.
+**Novelty-catcher coverage (2026-05-11):** the DCTC trilogy was authored before the always-on rule landed. A retrofit pass (`examples/retrofit/retrofit_dctc_novelty_scan.py`) scans every `dctc_*_results.json` whose shape carries extractable distributions and writes verdicts to `examples/retrofit_dctc_novelty_results.json`. Current status: **8 scanned, 1 novel-structure (`dctc_deep_E4_trichotomy`, confirming the trichotomy basin boundaries the paper already claims), 7 smooth/uniform, 14 scalar-summary-only result files awaiting in-place patches to emit native catcher verdicts on re-run.** `dctc_deep_E4_trichotomy.py` is patched (catcher block landed); the remaining 14 scripts are queued for native instrumentation.
 
 ---
 
@@ -331,20 +331,20 @@ Six batches submitted to IBM Quantum `ibm_marrakesh` (156-qubit Heron-r2), each 
 
 Each batch attaches the mandatory novelty catcher to the observed bitstring distributions before issuing a verdict. The Page-curve and KK-escape results are written up in [`paper/systrophe_extensions_5.pdf`](paper/systrophe_extensions_5.pdf) (Marrakesh hardware validation) and [`paper/systrophe_extensions_6.pdf`](paper/systrophe_extensions_6.pdf) (Page-curve + novelty-catcher integration). **The Knopp Drive batch 6 result hardware-validates the headline IP** — see [`paper/knopp_drive.pdf`](paper/knopp_drive.pdf).
 
-Recovery harnesses for crashed-mid-job recoveries: `experiments/recover_batch4_hw.py`, `experiments/recover_batch5_hw.py`, `experiments/recover_batch6_hw.py`.
+Recovery harnesses for crashed-mid-job recoveries: `experiments/marrakesh/recover_batch4_hw.py`, `experiments/marrakesh/recover_batch5_hw.py`, `experiments/marrakesh/recover_batch6_hw.py`.
 
 ---
 
 ## Novelty catcher
 
-A project-wide rule: every phase module, every example, every paper, every hardware run runs through `systrophe.novelty_catcher` before any "validated" or "null" verdict is issued. The catcher
+A project-wide rule: every phase module, every example, every paper, every hardware run runs through `systrophe.catchers.novelty_catcher` before any "validated" or "null" verdict is issued. The catcher
 
 1. hashes the observed distribution / bit-pattern to an integer address space (32 bits by default),
 2. constructs the Hamming-distance graph on the populated addresses,
 3. computes the algebraic connectivity λ₂ of that graph,
 4. flags features whose λ₂ exceeds an MAD-thresholded outlier band against a rank-thermometer baseline.
 
-This caught the **9-feature first-CH cluster** in `examples/retrofit_novelty_scan.py` and its resolution into two distinct physical drivers in `examples/investigate_first_ch_cluster.py` — the last two commits before v0.17.0. The reference cascade is in `examples/stress_cascade_novelty.py`.
+This caught the **9-feature first-CH cluster** in `examples/retrofit/retrofit_novelty_scan.py` and its resolution into two distinct physical drivers in `examples/investigations/investigate_first_ch_cluster.py` — the last two commits before v0.17.0. The reference cascade is in `examples/stress_tests/stress_cascade_novelty.py`.
 
 ---
 
@@ -382,16 +382,16 @@ The four reductions compose multiplicatively in the exotic-matter budget:
 ```
 
 ```python
-from systrophe.knopp_drive import knopp_budget, summarise_knopp_budget
+from systrophe.knopp.knopp_drive import knopp_budget, summarise_knopp_budget
 b = knopp_budget(r_orbit=1.5, Q=100.0, epsilon_horn=0.2)
 print(summarise_knopp_budget(b))
 # Knopp Drive @ r=1.50: E_neg=-0.0000e+00, P_drive=+6.7742e-07,
 # tipler_gate=0.000, Q=100 -> 1/Q^2=0.0001, |steering|=1.000e-01, P-F_ok=True
 ```
 
-The full derivation, six representative engineering configurations, the complete catcher-validated emergent inventory (**24 entries at v0.19.0+**), and the Pfenning–Ford compatibility analysis are in [`paper/knopp_drive.pdf`](paper/knopp_drive.pdf). The end-to-end walkthrough is `examples/knopp_drive_walkthrough.py`.
+The full derivation, six representative engineering configurations, the complete catcher-validated emergent inventory (**24 entries at v0.19.0+**), and the Pfenning–Ford compatibility analysis are in [`paper/knopp_drive.pdf`](paper/knopp_drive.pdf). The end-to-end walkthrough is `examples/knopp/knopp_drive_walkthrough.py`.
 
-Implementation: `src/systrophe/knopp_drive.py`. Supporting modules: `alcubierre.py`, `lentz_soliton.py`, `bobrick_martire.py`, `krasnikov_tube.py`, `tipler_krasnikov_hybrid.py`, `feedback_amplified_shell.py`, `horn_toroidal_warp.py`.
+Implementation: `src/systrophe/knopp/knopp_drive.py`. Supporting modules: `alcubierre.py`, `lentz_soliton.py`, `bobrick_martire.py`, `krasnikov_tube.py`, `tipler_krasnikov_hybrid.py`, `feedback_amplified_shell.py`, `horn_toroidal_warp.py`.
 
 ### Quantitative band-edge fit (`ibm_kingston` + `ibm_marrakesh` batch 7)
 
@@ -404,9 +404,9 @@ A 16-point r-sweep on `ibm_kingston` (job `d81b6rvoha1c73bk5ee0`) and the IDENTI
 | band_width  | 2.815 ± 0.010 | 2.815 ± 0.007 |
 | contrast    | 0.594 ± 0.003 | 0.588 ± 0.002 (SNR 256σ) |
 
-**Cross-chip RMS difference = 1.94σ of pooled shot noise** — Kingston and Marrakesh produce statistically equivalent band-gating curves. The Knopp Drive signature is reproduced across two independent Heron-r2 chips. Plot at `paper/figures/knopp_cross_chip.pdf`. Source: `experiments/knopp_cross_chip_comparison.py`.
+**Cross-chip RMS difference = 1.94σ of pooled shot noise** — Kingston and Marrakesh produce statistically equivalent band-gating curves. The Knopp Drive signature is reproduced across two independent Heron-r2 chips. Plot at `paper/figures/knopp_cross_chip.pdf`. Source: `experiments/knopp/knopp_cross_chip_comparison.py`.
 
-The single-step envelope fit gives χ²/dof = 16.2 on Kingston; a two-Lorentzian-internal-resonance fit drops this to **χ²/dof = 1.09** (perfect to shot-noise), revealing two internal modes inside the CTC band (r₁ ≈ 3.01 sharp, r₂ ≈ 4.47 broad). Plots in `paper/figures/`. Source: `experiments/knopp_band_edge_fit.py` + `experiments/knopp_substructure_fit.py`.
+The single-step envelope fit gives χ²/dof = 16.2 on Kingston; a two-Lorentzian-internal-resonance fit drops this to **χ²/dof = 1.09** (perfect to shot-noise), revealing two internal modes inside the CTC band (r₁ ≈ 3.01 sharp, r₂ ≈ 4.47 broad). Plots in `paper/figures/`. Source: `experiments/knopp/knopp_band_edge_fit.py` + `experiments/knopp/knopp_substructure_fit.py`.
 
 ---
 
@@ -419,12 +419,12 @@ Four Millennium Prize problems plus one adjacent (Goldbach / Hilbert's 8th) now 
 | # | Problem | Result |
 |---|---|---|
 | 1 | **Riemann hypothesis** | Third-split catcher returns `smooth` at N=50–500 zeta zeros → consistent with Montgomery-Odlyzko GUE conjecture. Single sharp feature at γ_33 ↔ γ_34 is a Lehmer-pair-like local cluster, **independently rediscovered** by the catcher without number-theoretic input. 30-seed GUE null reference (`millennium_riemann_null_gue.py`) shows the Riemann observation has p-value ≈ 0.10 — within the GUE fluctuation distribution. |
-| 2 | **P vs NP (3-SAT phase transition)** | Initial value-level catcher returns `smooth` (sigmoid transition too gradual). New **derivative catcher** (`src/systrophe/derivative_catcher.py`) recovers the transition centre at **α = 4.270 — within 0.001 of conjectured α_c ≈ 4.267**. Pure address-space novelty on a numerical derivative. |
+| 2 | **P vs NP (3-SAT phase transition)** | Initial value-level catcher returns `smooth` (sigmoid transition too gradual). New **derivative catcher** (`src/systrophe/catchers/derivative_catcher.py`) recovers the transition centre at **α = 4.270 — within 0.001 of conjectured α_c ≈ 4.267**. Pure address-space novelty on a numerical derivative. |
 | 3 | **Navier–Stokes existence & smoothness (Burgers' analog)** | 1D viscous Burgers' simulation with IC u(x,0) = −sin(x) at 5 viscosities. Analytic peak finder on d log\|u_x\|/dt recovers the inviscid shock time **t_shock = 0.996 at ν = 0.005** — matching the analytical inviscid result t_shock = 1.000 to 0.4%. Catcher itself returns null on smooth analytic peaks (third documented domain boundary). |
 | 4 | **Birch–Swinnerton-Dyer (local L-data)** | a_p sequences for primes p ≤ 500 on 17 elliptic curves of known rank (8 rank-0, 6 rank-1, 3 rank-2); partial Euler product approximation of log L(E, 1). Mean by rank: 0 → −1.39, 1 → −0.87, 2 → −2.22 — **non-monotone at this P_MAX**, per-curve variance dominates inter-rank mean separation. Honest null: partial-Euler convergence too slow to expose the BSD rank signal at P=500. Infrastructure in place for future high-P runs. |
 | 5 | **Goldbach (Hilbert 8 adjacent)** | g(n) computed for all even n ∈ [4, 1000]; Goldbach conjecture **verified throughout the range**. Per-quantity catcher (3 bands by n mod 6) independently flags the comet's 3-band structure (`millennium_goldbach_catcher.py`). |
 
-Standalone whitepaper: [`paper/millennium_catcher.pdf`](paper/millennium_catcher.pdf) (7 pages, arXiv-ready). See [`FINDINGS_MILLENNIUM_PROGRESS.md`](FINDINGS_MILLENNIUM_PROGRESS.md) for the markdown progress log. Run with `python examples/run_all_millennium.py`.
+Standalone whitepaper: [`paper/millennium_catcher.pdf`](paper/millennium_catcher.pdf) (7 pages, arXiv-ready). See [`FINDINGS_MILLENNIUM_PROGRESS.md`](FINDINGS_MILLENNIUM_PROGRESS.md) for the markdown progress log. Run with `python examples/millennium/run_all_millennium.py`.
 
 ---
 
@@ -469,7 +469,7 @@ The package optionally interoperates with [Dinos-DKN](https://github.com/Zynerji
 
 ```python
 from systrophe import VanStockumInterior
-from systrophe.dinos_bridge import z3_branch_match_to_tipler_alpha
+from systrophe.bridges.dinos_bridge import z3_branch_match_to_tipler_alpha
 
 vs = VanStockumInterior(omega=1.0, R=1.0)
 out = z3_branch_match_to_tipler_alpha(vs, N=24)
@@ -481,7 +481,7 @@ Requires `pip install z3-solver` and Dinos-DKN on `PYTHONPATH`. The test suite s
 
 ---
 
-## QEC bridge (`systrophe.qec_bridge` + co-modules)
+## QEC bridge (`systrophe.quantum_info.qec_bridge` + co-modules)
 
 Five concrete mappings between Systrophē mechanisms and quantum-error-correction concepts, with hardware demonstrations on IBM Quantum's three Heron-r2 chips (Marrakesh, Kingston; Fez deprecated due to persistent job errors):
 
@@ -501,7 +501,7 @@ On `ibm_kingston` (the cleanest of the three Heron-r2 chips at T1 = 280 μs):
 - **Distance-156 repetition-code logical decoder via majority vote: 99.1% success rate**
 - The physical 156-qubit GHZ is destroyed by decoherence, but the QEC-style majority vote on the same measurement recovers the logical bit at 99% success.
 
-Source: `experiments/kingston_156q_ghz_qec.py`. Raw counts and analysis JSON in `experiments/results/`.
+Source: `experiments/kingston/kingston_156q_ghz_qec.py`. Raw counts and analysis JSON in `experiments/results/`.
 
 ### Calibration-aware TFIM dynamics on 134 qubits (Marrakesh)
 
@@ -513,7 +513,7 @@ Calibration-aware qubit selection drops the bottom 10% of qubits by composite qu
 - Magnetisation: mean +0.006, std 0.043 (near-zero, symmetric)
 - Hamming-weight peak at 66 ≈ N/2
 
-This is a 134-qubit, depth-231 quantum simulation on Heron-r2 with calibration-aware qubit selection. Source: `experiments/kingston_156q_tfim_dynamics.py`.
+This is a 134-qubit, depth-231 quantum simulation on Heron-r2 with calibration-aware qubit selection. Source: `experiments/kingston/kingston_156q_tfim_dynamics.py`.
 
 ### Triple-chip QEC supremacy test
 
@@ -530,11 +530,11 @@ This is a 134-qubit, depth-231 quantum simulation on Heron-r2 with calibration-a
 | 2.693 | 0.950 | 0.930 | 0.933 | 0.003 |
 | 3.142 | 1.000 | 0.978 | 0.980 | 0.002 |
 
-Mean absolute difference: **0.004**. Both chips track the theoretical $\sin^2(\theta/2)$ error-injection curve. Cross-chip catcher verdict: **smooth** — platform-independent. Source: `experiments/qec_supremacy_3chip.py`.
+Mean absolute difference: **0.004**. Both chips track the theoretical $\sin^2(\theta/2)$ error-injection curve. Cross-chip catcher verdict: **smooth** — platform-independent. Source: `experiments/qec/qec_supremacy_3chip.py`.
 
 ### Spectral oracle decoder benchmark
 
-`examples/qec_decoder_oracle_validation.py` validates the spectral-oracle iteration-count formula against a real iterative decoder on the 3-qubit bit-flip repetition code:
+`examples/qec/qec_decoder_oracle_validation.py` validates the spectral-oracle iteration-count formula against a real iterative decoder on the 3-qubit bit-flip repetition code:
 
 - Pearson r (log-log) = **0.9992** between predicted and measured iterations across 5 decades of physical error rate (p ∈ {0.001, …, 0.2})
 - log-log slope: 0.90 (theoretical 1.0)

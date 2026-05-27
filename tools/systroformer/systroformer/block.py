@@ -78,7 +78,7 @@ class SystroformerBlock(nn.Module):
                 addresses, radius=self.radius, max_nodes=self.max_nodes,
             )
         # Fall back to the (slower) exact eigvalsh from the framework
-        from systrophe.novelty_catcher import lambda_2_of_hamming_graph
+        from systrophe.catchers.novelty_catcher import lambda_2_of_hamming_graph
         addrs = addresses[: self.max_nodes]
         return float(lambda_2_of_hamming_graph(addrs, radius=self.radius))
 

@@ -1,6 +1,6 @@
 # The error-exponent test — reading theta = sup Re(rho) off the primes
 
-`examples/millennium_primes_envelope_exponent.py`
+`examples/millennium/millennium_primes_envelope_exponent.py`
 
 Third in the series (`FINDINGS_PRIMES_DSI_INVERSE.md` recovered the
 zeros; `FINDINGS_PRIMES_OFFLINE_ZERO.md` built the per-mode off-line
@@ -88,9 +88,9 @@ verdict still fires).
 ## Reproduce
 
 ```
-python examples/millennium_primes_envelope_exponent.py --x-list 1e6,1e7,1e8
+python examples/millennium/millennium_primes_envelope_exponent.py --x-list 1e6,1e7,1e8
 ```
 
 Writes `examples/millennium_primes_envelope_exponent_results.json`.
 Requires `numpy`, `scipy`, `mpmath`; reuses helpers from the two
-companion experiments and `systrophe.growth_catcher`.
+companion experiments and `systrophe.catchers.growth_catcher`.

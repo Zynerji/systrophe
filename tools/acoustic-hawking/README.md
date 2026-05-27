@@ -3,7 +3,7 @@
 **Unruh acoustic analog of the Lewis-Papapetrou exterior + Steinhauer
 2019 BEC benchmark.**
 
-Wraps `systrophe.acoustic_metric` and `systrophe.acoustic_hawking_spectrum`
+Wraps `systrophe.analogs.acoustic_metric` and `systrophe.analogs.acoustic_hawking_spectrum`
 in an LPAnalyser-style API:
 
 * Locate the acoustic horizon (F = 0) of a van Stockum exterior.

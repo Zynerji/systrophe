@@ -2,7 +2,7 @@
 
 ## Setup
 
-`examples/millennium_riemann_catcher.py` computes the imaginary parts
+`examples/millennium/millennium_riemann_catcher.py` computes the imaginary parts
 of the first N non-trivial Riemann zeta zeros via `mpmath.zetazero`,
 normalises their spacings to mean = 1 using the Riemann–von Mangoldt
 local density `2π / log(t/(2π))`, and asks the Systrophē
@@ -77,7 +77,7 @@ Lehmer-pair structure that GUE predicts at finite rate.
 ## Reproducibility
 
 ```
-python examples/millennium_riemann_catcher.py
+python examples/millennium/millennium_riemann_catcher.py
 ```
 
 Requires `mpmath`. Writes per-N results JSON to

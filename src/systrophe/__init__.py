@@ -6,40 +6,40 @@ cylinders sharing an axis, whose joint exterior contains a log-periodic
 "Tipler sinusoid" structure with a relative phase offset.
 """
 
-from .vanstockum import VanStockumInterior, vanstockum_interior_metric
-from .sinusoid import TiplerSinusoid, fit_log_periodic
-from .pair import SystrophePair
-from .array import SystropheArray
-from .ctc import find_ctc_intervals, has_ctc
-from .lewis_papapetrou import LPSolution, integrate_lp_exterior
-from .geodesic import (
+from .geometry.vanstockum import VanStockumInterior, vanstockum_interior_metric
+from .geometry.sinusoid import TiplerSinusoid, fit_log_periodic
+from .geometry.pair import SystrophePair
+from .geometry.array import SystropheArray
+from .ctc.ctc import find_ctc_intervals, has_ctc
+from .geometry.lewis_papapetrou import LPSolution, integrate_lp_exterior
+from .geometry.geodesic import (
     CircularOrbit,
     integrate_geodesic,
     is_omega_timelike,
     omega_for_target_coord_time,
     timelike_omega_bounds,
 )
-from .time_machine import (
+from .ctc.time_machine import (
     TimeMachineWindow,
     find_single_cylinder_windows,
     find_time_machine_windows,
     harness_time_loop,
 )
-from .lp_robust import LPRobustSolution, integrate_lp_robust
-from .off_axis import OffAxisPair
-from .energy_conditions import (
+from .lp.lp_robust import LPRobustSolution, integrate_lp_robust
+from .geometry.off_axis import OffAxisPair
+from .qftcs.energy_conditions import (
     EnergyConditionReport,
     energy_condition_report,
     proper_energy_density,
     total_energy_per_unit_length,
 )
-from .photon_orbits import (
+from .geometry.photon_orbits import (
     integrate_null_geodesic,
     null_circular_omega,
     null_impact_parameters,
     vanstockum_photon_omega,
 )
-from .quantum_diagnostics import (
+from .qftcs.quantum_diagnostics import (
     cauchy_horizon_estimate,
     chronology_protection_indicator,
     conformal_anomaly_2d_proxy,
@@ -48,42 +48,42 @@ from .quantum_diagnostics import (
     surface_gravity_at_horizon,
     tolman_blueshift_factor,
 )
-from .photon_raytrace import (
+from .geometry.photon_raytrace import (
     lensing_pattern,
     photon_deflection_angle,
     photon_perihelion,
 )
-from .dirac import (
+from .qftcs.dirac import (
     LewisPapapetrouTetrad,
     gamma_matrix,
     radial_dirac_system,
     solve_radial_dirac,
     vanstockum_dirac_system,
 )
-from .dirac_spectrum import (
+from .qftcs.dirac_spectrum import (
     boundary_functional,
     find_bound_states,
     vanstockum_bound_states,
 )
-from .dirac_sea import (
+from .qftcs.dirac_sea import (
     chronology_horizon_pressure_divergence_rate,
     density_of_states_radial,
     dirac_sea_pressure_proxy,
     local_energy,
 )
-from .particle_creation import (
+from .qftcs.particle_creation import (
     bose_einstein,
     fermi_dirac,
     particle_creation_spectrum_at_horizon,
     total_emission_power_proxy,
 )
-from .qftcs_backreaction import (
+from .qftcs.qftcs_backreaction import (
     conformal_anomaly_trace,
     radial_temporal_ricci_scalar,
     stress_energy_at_horizon,
     vacuum_energy_density_proxy,
 )
-from .point_splitting import (
+from .qftcs.point_splitting import (
     dewitt_a2_coefficient,
     effective_action_volume_density,
     kretschmann_scalar,
@@ -93,14 +93,14 @@ from .point_splitting import (
     trace_anomaly_4d_exact,
     vacuum_residual,
 )
-from .floquet import (
+from .lp.floquet import (
     AdiabaticFloquetSpectrum,
     adiabatic_floquet_spectrum,
     adiabatic_floquet_validity,
     nonadiabatic_floquet_correction,
     static_pair_bound_states,
 )
-from .casimir import (
+from .qftcs.casimir import (
     hurwitz_zeta_neg3,
     standard_casimir_energy_density,
     standard_casimir_force,
@@ -110,7 +110,7 @@ from .casimir import (
     z3_cover_mode_density,
     z3_cover_regularised_zeta_sum,
 )
-from .tipler_fractal import (
+from .geometry.tipler_fractal import (
     CascadeDSI,
     base_tipler_sinusoid_is_dsi,
     box_count_log_dimension,
@@ -121,7 +121,7 @@ from .tipler_fractal import (
     verify_geometric_progression,
     zero_geometric_ratio,
 )
-from .anomaly_inflow import (
+from .qftcs.anomaly_inflow import (
     AXIAL_ANOMALY_COEFFICIENT,
     axial_anomaly_density,
     callan_harvey_bulk_inflow,
@@ -134,14 +134,14 @@ from .anomaly_inflow import (
     z3_branch_twists,
     z3_total_eta,
 )
-from .horned_torus import (
+from .geometry.horned_torus import (
     HornedTorus,
     compare_horn_modes,
     horn_circumference_at_z,
     inverted_horn_profile,
     regular_horn_profile,
 )
-from .hadamard_offtrace import (
+from .qftcs.hadamard_offtrace import (
     energy_density_in_static_frame,
     hadamard_offtrace_T,
     hadamard_T_diagonal_components,
@@ -150,14 +150,14 @@ from .hadamard_offtrace import (
     riemann_squared_tensor,
     trace_decomposition,
 )
-from .newton_kantorovich import (
+from .lp.newton_kantorovich import (
     NKResult,
     is_convergence_rate_quadratic,
     newton_kantorovich_1d,
     newton_kantorovich_nd,
     picard_iteration_1d,
 )
-from .floquet_mobius import (
+from .lp.floquet_mobius import (
     FloquetMobiusResult,
     analyze_floquet_mobius,
     brillouin_zone_wrap,
@@ -169,7 +169,7 @@ from .floquet_mobius import (
     z3_hopping_matrix,
     z3_symmetry_check,
 )
-from .acoustic_metric import (
+from .analogs.acoustic_metric import (
     acoustic_hawking_temperature,
     acoustic_horizon_radius,
     acoustic_line_element_at_radius,
@@ -178,7 +178,7 @@ from .acoustic_metric import (
     compare_acoustic_vs_gravitational_T_H,
     ctc_region_is_supersonic,
 )
-from .casimir_throat import (
+from .qftcs.casimir_throat import (
     brown_maclay_T_minkowski,
     brown_maclay_at_lp_point,
     brown_maclay_energy_density,
@@ -188,7 +188,7 @@ from .casimir_throat import (
     topological_throat_coefficient,
     transverse_pressure,
 )
-from .back_reaction import (
+from .qftcs.back_reaction import (
     BackReactionLandscape,
     back_reaction_landscape,
     chronology_favoring_deltas,
@@ -197,14 +197,14 @@ from .back_reaction import (
     pair_back_reaction_residual,
     pair_back_reaction_residual_at_r,
 )
-from .floquet_engineering import (
+from .lp.floquet_engineering import (
     StabilityMapResult,
     ctc_stability_gap,
     floquet_engineering_map,
     identify_floquet_resonances,
     stabilisation_efficacy,
 )
-from .dsi_observables import (
+from .catchers.dsi_observables import (
     LogPeriodicFit,
     box_count_dimension_1d,
     discrete_scale_invariance_test,
@@ -212,14 +212,14 @@ from .dsi_observables import (
     log_periodic_model,
     lomb_scargle_log_periodicity,
 )
-from .adm_export import (
+from .lp.adm_export import (
     ADMSlice,
     adm_decompose_lp,
     adm_summary,
     export_to_einsteintoolkit_ascii,
     hamiltonian_constraint_residual,
 )
-from .d_ctc import (
+from .ctc.d_ctc import (
     apply_channel,
     channel_superoperator,
     clifford_like_unitary,
@@ -230,7 +230,7 @@ from .d_ctc import (
     verify_fixed_point,
     z3_ctc_unitary,
 )
-from .wormhole_throat import (
+from .geometry.wormhole_throat import (
     WormholeThroatReport,
     build_wormhole_report,
     effective_redshift_function,
@@ -239,7 +239,7 @@ from .wormhole_throat import (
     flaring_out_check,
     z3_cover_throat_interpretation,
 )
-from .exotic_matter_accounting import (
+from .qftcs.exotic_matter_accounting import (
     ExoticMatterReport,
     casimir_cavity_energy,
     exotic_vs_casimir_comparison,
@@ -248,13 +248,13 @@ from .exotic_matter_accounting import (
     morris_thorne_exotic_density,
     required_plate_separation,
 )
-from .chronology_protection import (
+from .ctc.chronology_protection import (
     ChronologyProtectionStudy,
     chronology_protection_study,
     chronology_protection_verdict,
     matched_pair_default_study,
 )
-from .wilson_loop import (
+from .quantum_info.wilson_loop import (
     field_strength_is_zero,
     flat_u1_connection,
     gauge_field_strength_4d,
@@ -264,7 +264,7 @@ from .wilson_loop import (
     wilson_loop_sum_over_branches,
     z3_branch_holonomy,
 )
-from .dynamical_casimir import (
+from .qftcs.dynamical_casimir import (
     DCEFluxResult,
     cavity_mode_frequency,
     dce_flux_estimate,
@@ -274,7 +274,7 @@ from .dynamical_casimir import (
     on_resonance_photon_number,
     resonance_frequency_for_mode,
 )
-from .vacuum_states import (
+from .qftcs.vacuum_states import (
     VacuumStateReport,
     adiabatic_well_defined,
     boulware_energy_density_proxy,
@@ -284,7 +284,7 @@ from .vacuum_states import (
     natural_vacuum_verdict,
     vacuum_selection_summary,
 )
-from .stress_energy_ctc import (
+from .ctc.stress_energy_ctc import (
     ChronologyProtectionReport,
     DivergenceFit,
     StressEnergyState,
@@ -301,7 +301,7 @@ from .stress_energy_ctc import (
     trace_anomaly_2d,
     unruh_stress_tensor,
 )
-from .hadamard_modesum import (
+from .qftcs.hadamard_modesum import (
     HadamardChronologyFit,
     HadamardChronologyReport,
     fit_4d_quantity_at_horizon,

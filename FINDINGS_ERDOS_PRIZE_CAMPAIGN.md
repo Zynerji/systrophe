@@ -19,7 +19,7 @@ Open prize problems: **22 with an OEIS link, 31 without.** Prize histogram
 already proved 2014 — Maynard / Ford–Green–Konyagin–Tao)** and **#142 (the
 Erdős AP / divergence conjecture, open)**.
 
-## Breadth — prize battery (`examples/erdos_prize_battery.py`)
+## Breadth — prize battery (`examples/erdos/erdos_prize_battery.py`)
 
 Pointed the DSI ln-n detector at all 28 OEIS sequences attached to open
 prize problems. Anchors validated the run (synthetic log-periodic ω=7.98
@@ -85,6 +85,6 @@ as r₃(n): the toolkit reads leading exponents, never the subleading one.
 
 ## Files
 
-`examples/erdos_prize_battery.py` (+ results), `erdos_sqrtn_lattice_dsi.py`,
+`examples/erdos/erdos_prize_battery.py` (+ results), `erdos_sqrtn_lattice_dsi.py`,
 `erdos_apfree_construction_dsi.py`, `erdos_a003002_recheck.py`,
 `erdos_collatz_dsi.py`, and the companion FINDINGS_ERDOS_*.md.

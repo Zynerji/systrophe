@@ -9,7 +9,7 @@ depend on r alone. Computes the Ricci tensor in vacuum and extracts the
 independent ODEs.
 
 Run once and verify; the resulting ODE system is then encoded in
-`systrophe.lewis_papapetrou` for runtime use without a SymPy dependency.
+`systrophe.geometry.lewis_papapetrou` for runtime use without a SymPy dependency.
 
 Usage
 -----

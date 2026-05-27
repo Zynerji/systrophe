@@ -1,6 +1,6 @@
 # Erdős × OEIS DSI sweep — a validated negative
 
-`examples/erdos_oeis_dsi_sweep.py`
+`examples/erdos/erdos_oeis_dsi_sweep.py`
 
 The `erdos_dsi_sweep.py` net, validated on a hand-built battery, turned
 loose on the **real** Erdős↔OEIS linkage (the `data/problems.yaml`
@@ -86,8 +86,8 @@ exists) is the natural follow-up before reading anything into it.
 ## Reproduce
 
 ```
-python examples/erdos_oeis_dsi_sweep.py --max-fetch 260
-python examples/erdos_oeis_dsi_sweep.py --quick           # small smoke run
+python examples/erdos/erdos_oeis_dsi_sweep.py --max-fetch 260
+python examples/erdos/erdos_oeis_dsi_sweep.py --quick           # small smoke run
 ```
 
 Writes `examples/erdos_oeis_dsi_sweep_results.json`. b-files cache under

@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from systrophe.casimir_throat import (
+from systrophe.qftcs.casimir_throat import (
     brown_maclay_at_lp_point,
     brown_maclay_energy_density,
     compare_throat_to_brown_maclay,
 )
-from systrophe.vanstockum import VanStockumInterior
+from systrophe.geometry.vanstockum import VanStockumInterior
 
 
 @dataclass(frozen=True)

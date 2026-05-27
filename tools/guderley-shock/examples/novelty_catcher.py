@@ -19,7 +19,7 @@ import numpy as np
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
-from systrophe.vanstockum import VanStockumInterior
+from systrophe.geometry.vanstockum import VanStockumInterior
 
 from guderley_shock import compare_to_cauchy_horizon
 

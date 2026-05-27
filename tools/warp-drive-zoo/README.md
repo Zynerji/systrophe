@@ -2,8 +2,8 @@
 
 **Unified head-to-head comparator for canonical warp metrics.**
 
-Wraps `systrophe.alcubierre`, `systrophe.bobrick_martire`, and
-`systrophe.lentz_soliton` behind a common `WarpDrive` protocol so the
+Wraps `systrophe.geometry.alcubierre`, `systrophe.geometry.bobrick_martire`, and
+`systrophe.geometry.lentz_soliton` behind a common `WarpDrive` protocol so the
 three can be compared side-by-side on the same axes:
 
 * `nec_radial(x, rho)` — T_{kk} along outward radial null geodesic

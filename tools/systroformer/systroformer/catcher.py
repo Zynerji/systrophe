@@ -1,9 +1,9 @@
-"""Catcher primitives reused from systrophe.novelty_catcher.
+"""Catcher primitives reused from systrophe.catchers.novelty_catcher.
 
 This module provides thin torch-aware wrappers and one new utility
 (power-iteration λ₂) tuned for inline neural-net use. The framework's
 core address-space hashing and Hamming-graph definitions are imported
-directly from `systrophe.novelty_catcher` to avoid duplication.
+directly from `systrophe.catchers.novelty_catcher` to avoid duplication.
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ import numpy as np
 
 # Re-export the framework primitives so callers can stay inside one
 # module if they prefer.
-from systrophe.novelty_catcher import (
+from systrophe.catchers.novelty_catcher import (
     hamming_distance,
     lambda_2_of_hamming_graph as hamming_graph_lambda2,
     real_array_to_address,

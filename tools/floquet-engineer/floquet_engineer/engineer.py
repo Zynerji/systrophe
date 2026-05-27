@@ -6,14 +6,14 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from systrophe.floquet_engineering import (
+from systrophe.lp.floquet_engineering import (
     StabilityMapResult,
     ctc_stability_gap,
     floquet_engineering_map,
     identify_floquet_resonances,
     stabilisation_efficacy,
 )
-from systrophe.floquet_mobius import (
+from systrophe.lp.floquet_mobius import (
     FloquetMobiusResult,
     analyze_floquet_mobius,
     static_limit_check,

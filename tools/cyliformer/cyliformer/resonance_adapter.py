@@ -16,7 +16,7 @@ Lineage:
     competitive with a vanilla LoRA at 7B scale.
 
   * **What survives**: the Systrophe **address-space λ₂ catcher**
-    (`systrophe.novelty_catcher.lambda_2_of_hamming_graph` -- the
+    (`systrophe.catchers.novelty_catcher.lambda_2_of_hamming_graph` -- the
     only unfalsified Systrophe-derived LLM primitive). It enters
     here as a per-block gating signal for a SMALL near-identity-init
     adapter -- *not* as a routing signal for parallel cylinder

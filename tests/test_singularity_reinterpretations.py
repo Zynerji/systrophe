@@ -9,10 +9,10 @@ import numpy as np
 import pytest
 
 from systrophe import VanStockumInterior
-from systrophe.spacetimes import GottPair
-from systrophe.spacetimes.line_singularity import LineSingularity
-from systrophe.spacetimes.cosmic_string import CosmicString
-from systrophe.spacetimes.kerr import KerrSpacetime
+from systrophe.geometry.spacetimes import GottPair
+from systrophe.geometry.spacetimes.line_singularity import LineSingularity
+from systrophe.geometry.spacetimes.cosmic_string import CosmicString
+from systrophe.geometry.spacetimes.kerr import KerrSpacetime
 
 
 # ----------------------------------------------------------------------

@@ -15,7 +15,7 @@ CTCs come purely from idealised geometry (infinite, rigid, perfectly
 axisymmetric), not from exotic matter.
 
 ### 1b. Other analytically-tractable CTC spacetimes
-Each becomes a `systrophe.spacetimes.<name>` module sharing the existing
+Each becomes a `systrophe.geometry.spacetimes.<name>` module sharing the existing
 `CircularOrbit`, `find_ctc_intervals`, and time-machine harness.
 
 - **Gödel universe (1949)**: rotating dust universe, every point
@@ -44,8 +44,8 @@ independent Cauchy horizons (powers -1.007, -0.997, -1.001); Boulware
 `<T_{rr}>` fits the inverse square (power -1.998). Polyakov trace
 identity holds at machine precision. Verdict:
 `chronology_protection_consistent`. See `stress_energy_ctc.py`,
-`tests/test_stress_energy_ctc.py`, and
-`examples/phase_2a_chronology_protection.py`.
+`tests/ctc/test_stress_energy_ctc.py`, and
+`examples/phase_modules/phase_2a_chronology_protection.py`.
 
 ### 2b. Hadamard / point-splitting for cylindrical Tipler — **SHIPPED in v0.21.0 (2026-05-13)**
 4D Hadamard biparametrix module `hadamard_modesum.py`: V_0(x) = 0
@@ -54,7 +54,7 @@ identity holds at machine precision. Verdict:
 radial mode-sum + Hadamard UV subtraction. 4D chronology-protection
 scan: V_1 BOUNDED at every Cauchy horizon (powers ~ 0), confirming
 v0.10.0 -- the divergence is state-dependent (Phase 2a), not local.
-14 tests, example in `examples/phase_2b_hadamard_modesum.py`.
+14 tests, example in `examples/phase_modules/phase_2b_hadamard_modesum.py`.
 
 ## Phase 3 — From "pair" to "array"
 
@@ -64,7 +64,7 @@ diagnostics: `phasor_field`, `array_factor`, `extinction_check`
 (N=2..8 uniform-phase comb verified to machine precision),
 `dirichlet_pattern`, `beam_steer` (analytic placement of L-node at
 chosen r_target to machine zero), `beam_pattern`, side-lobe-level
-diagnostic. 9 new tests, example in `examples/phase_3a_beam_steering.py`.
+diagnostic. 9 new tests, example in `examples/phase_modules/phase_3a_beam_steering.py`.
 
 ### 3b. Off-axis pair quantitative orbits — **SHIPPED in v0.21.0 (2026-05-13)**
 `OffAxisPair` (v0.2.0) extended with topology + quantitative
@@ -72,7 +72,7 @@ diagnostics: `ergosurface_2d`, `ctc_region_topology` (NEW FINDING:
 canonical separation-3 pair has CTC = 1 component + 2 holes,
 resolution-stable), `trace_anomaly_2d_sector`,
 `geodesic_completeness_test`. 6 new tests, example in
-`examples/phase_3b_off_axis_topology.py`.
+`examples/phase_modules/phase_3b_off_axis_topology.py`.
 
 ## Phase 4 — From "implementation" to "observation"
 

@@ -20,8 +20,8 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from systrophe.array import SystropheArray
-from systrophe.sinusoid import TiplerSinusoid
+from systrophe.geometry.array import SystropheArray
+from systrophe.geometry.sinusoid import TiplerSinusoid
 
 
 @dataclass(frozen=True)

@@ -15,13 +15,13 @@ import math
 
 import numpy as np
 
-from systrophe.knopp_drive import (
+from systrophe.knopp.knopp_drive import (
     KnoppDrive,
     KnoppDriveConfig,
     knopp_budget,
     summarise_knopp_budget,
 )
-from systrophe.knopp_traversal import (
+from systrophe.knopp.knopp_traversal import (
     knopp_traversal,
     knopp_traversal_Q_sweep,
 )
@@ -157,8 +157,8 @@ class TestHardwareReproducibility:
         # We replicate the analytic formula here without invoking
         # the experiment harness; the bias is sin^2(phi/2) where phi
         # is the residual horn phase (Krasnikov-suppressed)
-        from systrophe.tipler_krasnikov_hybrid import tipler_tilt_at
-        from systrophe.vanstockum import VanStockumInterior
+        from systrophe.geometry.tipler_krasnikov_hybrid import tipler_tilt_at
+        from systrophe.geometry.vanstockum import VanStockumInterior
         vs = VanStockumInterior(omega=1.0, R=1.0)
         for r in (1.05, 1.55, 2.05):
             tilt = tipler_tilt_at(vs, r)
@@ -168,8 +168,8 @@ class TestHardwareReproducibility:
 
     def test_outside_band_at_r_3_plus(self):
         """At r >= 2.55 the gate factor becomes positive."""
-        from systrophe.tipler_krasnikov_hybrid import tipler_tilt_at
-        from systrophe.vanstockum import VanStockumInterior
+        from systrophe.geometry.tipler_krasnikov_hybrid import tipler_tilt_at
+        from systrophe.geometry.vanstockum import VanStockumInterior
         vs = VanStockumInterior(omega=1.0, R=1.0)
         for r in (2.55, 3.05, 3.55, 4.05, 4.55):
             tilt = tipler_tilt_at(vs, r)

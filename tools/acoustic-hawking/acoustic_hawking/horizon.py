@@ -1,6 +1,6 @@
 """Analog acoustic-horizon analyser on a van Stockum exterior.
 
-Wraps systrophe.acoustic_metric for ergonomic access:
+Wraps systrophe.analogs.acoustic_metric for ergonomic access:
 
   - find the acoustic horizon (locus c² = v² ⇔ F = 0)
   - compute its surface gravity, acoustic Hawking T
@@ -15,7 +15,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from systrophe.acoustic_metric import (
+from systrophe.analogs.acoustic_metric import (
     acoustic_horizon_radius,
     acoustic_hawking_temperature,
     acoustic_line_element_at_radius,
@@ -23,7 +23,7 @@ from systrophe.acoustic_metric import (
     compare_acoustic_vs_gravitational_T_H,
     ctc_region_is_supersonic,
 )
-from systrophe.vanstockum import VanStockumInterior
+from systrophe.geometry.vanstockum import VanStockumInterior
 
 
 @dataclass(frozen=True)

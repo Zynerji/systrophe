@@ -11,7 +11,7 @@ import pytest
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 from floquet_engineer import FloquetEngineer, FloquetSweepReport
-from systrophe.floquet_mobius import FloquetMobiusResult
+from systrophe.lp.floquet_mobius import FloquetMobiusResult
 
 
 # ---------------------------------------------------------------------------

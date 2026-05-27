@@ -6,12 +6,12 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from systrophe.acoustic_hawking_spectrum import (
+from systrophe.analogs.acoustic_hawking_spectrum import (
     PhononSpectrum,
     phonon_spectral_density,
     total_emission_power,
 )
-from systrophe.vanstockum import VanStockumInterior
+from systrophe.geometry.vanstockum import VanStockumInterior
 
 
 @dataclass(frozen=True)

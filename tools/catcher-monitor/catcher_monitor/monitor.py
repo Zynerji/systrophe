@@ -19,7 +19,7 @@ from typing import Any
 
 import numpy as np
 
-from systrophe.novelty_catcher import scan_novelty
+from systrophe.catchers.novelty_catcher import scan_novelty
 
 
 @dataclass

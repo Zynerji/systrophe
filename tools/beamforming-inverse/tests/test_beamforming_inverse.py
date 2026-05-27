@@ -18,9 +18,9 @@ from beamforming_inverse import (
     solve_beamforming_inverse,
     synthesised_array,
 )
-from systrophe.array import SystropheArray
-from systrophe.sinusoid import TiplerSinusoid
-from systrophe.vanstockum import VanStockumInterior
+from systrophe.geometry.array import SystropheArray
+from systrophe.geometry.sinusoid import TiplerSinusoid
+from systrophe.geometry.vanstockum import VanStockumInterior
 
 
 # ---------------------------------------------------------------------------

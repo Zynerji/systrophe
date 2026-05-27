@@ -2,8 +2,8 @@
 
 **The Systrophe address-space λ₂ catcher, exposed as a detector.**
 
-This tool packages `systrophe.novelty_catcher` and
-`systrophe.derivative_catcher` (the Hamming-graph algebraic-connectivity
+This tool packages `systrophe.catchers.novelty_catcher` and
+`systrophe.catchers.derivative_catcher` (the Hamming-graph algebraic-connectivity
 diagnostic that has caught 26+ emergents in the Systrophe project's
 physics modules and IBM Quantum runs) behind a small, well-typed
 public API focused on three concrete use cases:
@@ -20,9 +20,9 @@ public API focused on three concrete use cases:
 
 ## Provenance
 
-* Built on `systrophe.novelty_catcher.scan_novelty` (address-space
+* Built on `systrophe.catchers.novelty_catcher.scan_novelty` (address-space
   λ₂ on a Hamming graph of bit-hashed values) and
-  `systrophe.derivative_catcher.catch_smooth_transition` (two-pass
+  `systrophe.catchers.derivative_catcher.catch_smooth_transition` (two-pass
   scan adding a derivative-level pass for smooth sigmoids).
 * These primitives have a *demonstrated* detection track record on
   the Systrophe project: 26+ emergents flagged in physics phase

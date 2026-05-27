@@ -7,14 +7,14 @@ from typing import Any
 
 import numpy as np
 
-from systrophe.vanstockum import VanStockumInterior
-from systrophe.quantum_diagnostics import (
+from systrophe.geometry.vanstockum import VanStockumInterior
+from systrophe.qftcs.quantum_diagnostics import (
     cauchy_horizon_estimate,
     hawking_temperature_at_horizon,
     surface_gravity_at_horizon,
 )
-from systrophe.energy_conditions import energy_condition_report
-from systrophe.stress_energy_ctc import (
+from systrophe.qftcs.energy_conditions import energy_condition_report
+from systrophe.ctc.stress_energy_ctc import (
     boulware_stress_tensor,
     chronology_protection_report,
     divergence_rate_at_horizon,
@@ -22,13 +22,13 @@ from systrophe.stress_energy_ctc import (
     unruh_stress_tensor,
     StressEnergyState,
 )
-from systrophe.hadamard_modesum import (
+from systrophe.qftcs.hadamard_modesum import (
     hadamard_chronology_report,
     hadamard_V_0,
     hadamard_V_1,
     trace_anomaly_via_V_1,
 )
-from systrophe.point_splitting import (
+from systrophe.qftcs.point_splitting import (
     kretschmann_scalar,
     trace_anomaly_4d_exact,
 )
@@ -68,7 +68,7 @@ class LPSummary:
 class LPAnalyser:
     """Drive the analytic-CTC stack for a single rigidly-rotating dust cylinder.
 
-    Wraps :class:`systrophe.vanstockum.VanStockumInterior` and exposes
+    Wraps :class:`systrophe.geometry.vanstockum.VanStockumInterior` and exposes
     the Phase 1a/2a/2b APIs as methods on a single object.
 
     Parameters
@@ -132,7 +132,7 @@ class LPAnalyser:
     def ctc_bands(self, r_min: float = None, r_max: float = None,
                      n_grid: int = 2001) -> list[tuple[float, float]]:
         """Intervals in [r_min, r_max] where L(r) < 0 (CTC bands)."""
-        from systrophe.ctc import find_ctc_intervals
+        from systrophe.ctc.ctc import find_ctc_intervals
         r_min = r_min if r_min is not None else 1.05 * self.R
         r_max = r_max if r_max is not None else 10.0 * self.R
         return find_ctc_intervals(self.L, r_min=r_min, r_max=r_max, n_grid=n_grid)
@@ -187,7 +187,7 @@ class LPAnalyser:
                                      eps_max: float = 3e-2) -> Any:
         """Phase 2a: fit the Boulware <T_{tt}> simple-pole divergence at
         the first `n_horizons` Cauchy horizons. Returns a
-        :class:`systrophe.stress_energy_ctc.ChronologyProtectionReport`.
+        :class:`systrophe.ctc.stress_energy_ctc.ChronologyProtectionReport`.
 
         On the canonical omega=2, R=1 exterior the powers come out
         ~ -1.00 at every horizon scanned -- the headline Phase 2a

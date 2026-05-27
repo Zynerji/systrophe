@@ -6,7 +6,7 @@ signal participates in autograd. Power-iteration lambda_2 + straight-
 through binarisation; runs on the same device as the input.
 
 Provenance: this reuses the *concept* of the Systrophe address-space
-lambda_2 (`systrophe.novelty_catcher.lambda_2_of_hamming_graph`) but
+lambda_2 (`systrophe.catchers.novelty_catcher.lambda_2_of_hamming_graph`) but
 re-implements it in torch for inline use during forward / backward.
 """
 

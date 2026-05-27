@@ -2,7 +2,7 @@
 
 **Time-periodic Z₃ Floquet quasi-energies + CTC stability gap.**
 
-Wraps `systrophe.floquet_mobius` and `systrophe.floquet_engineering`
+Wraps `systrophe.lp.floquet_mobius` and `systrophe.lp.floquet_engineering`
 in a single FloquetEngineer object.
 
 Use case: drive the three Z₃ branches of a Möbius-Z₃ cover with a

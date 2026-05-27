@@ -1,6 +1,6 @@
 """wormhole-throat: scan + diagnose van Stockum CTC-band-boundary throats.
 
-Wraps `systrophe.wormhole_throat` and `systrophe.casimir_throat` in
+Wraps `systrophe.geometry.wormhole_throat` and `systrophe.qftcs.casimir_throat` in
 an LPAnalyser-style explorer:
 
   - find candidate wormhole throats (loci of L=0)

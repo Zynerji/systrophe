@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from systrophe.tipler_fractal import (
+from systrophe.geometry.tipler_fractal import (
     CascadeDSI,
     cascade_box_dimension,
     verify_geometric_progression,

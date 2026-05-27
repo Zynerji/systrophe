@@ -2,7 +2,7 @@
 
 **Traversable-wormhole-throat scanner on the van Stockum exterior + Brown-Maclay Casimir energy density at each throat.**
 
-Wraps `systrophe.wormhole_throat` and `systrophe.casimir_throat` in
+Wraps `systrophe.geometry.wormhole_throat` and `systrophe.qftcs.casimir_throat` in
 an LPAnalyser-style explorer.
 
 ## What a throat is here

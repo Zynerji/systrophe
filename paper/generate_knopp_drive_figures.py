@@ -24,8 +24,8 @@ def fig_tipler_gate_factor() -> None:
     Shows the gate factor's zeros (inside CTC bands) and nonzero
     plateaus (between bands).
     """
-    from systrophe.tipler_krasnikov_hybrid import tipler_tilt_at
-    from systrophe.vanstockum import VanStockumInterior
+    from systrophe.geometry.tipler_krasnikov_hybrid import tipler_tilt_at
+    from systrophe.geometry.vanstockum import VanStockumInterior
 
     vs = VanStockumInterior(omega=1.0, R=1.0)
     rs = np.linspace(1.05, 12.0, 400)
@@ -57,7 +57,7 @@ def fig_knopp_drive_E_neg_vs_r() -> None:
     Confirms the headline shortcut: zero exotic matter inside each
     Tipler CTC band.
     """
-    from systrophe.knopp_drive import KnoppDriveConfig, knopp_budget
+    from systrophe.knopp.knopp_drive import KnoppDriveConfig, knopp_budget
 
     rs = np.linspace(1.05, 12.0, 200)
     fig, ax = plt.subplots(figsize=(7.5, 3.6))
@@ -162,7 +162,7 @@ def fig_renormalized_T_tt() -> None:
     """Figure 5: renormalised <T_{tt}>_ren on the Tipler exterior,
     showing finite-bounded behaviour everywhere + chronology-horizon
     catcher transition."""
-    from systrophe.knopp_drive_quantum_validation import (
+    from systrophe.knopp.knopp_drive_quantum_validation import (
         validate_knopp_drive_quantum,
     )
 

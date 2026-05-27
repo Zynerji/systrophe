@@ -46,7 +46,7 @@ from guderley_shock import (
     compute_guderley_exponent, density_power_at_focus,
     compare_to_cauchy_horizon,
 )
-from systrophe.vanstockum import VanStockumInterior
+from systrophe.geometry.vanstockum import VanStockumInterior
 
 e = compute_guderley_exponent(gamma=5/3, n=3)
 print(e.beta)                            # 0.688376

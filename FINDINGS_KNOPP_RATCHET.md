@@ -16,10 +16,10 @@ code, not asserted.
 
 | Artifact | What |
 |---|---|
-| `src/systrophe/knopp_ratchet.py` | `WarpParetoRatchet`, `ratchet_traversal`, `reverse_asymmetry`, `casimir_pump_accounting`, `capacitor_accounting`, `bias_energy_ledger`, `ledger_Q_sweep`, `feasibility_report`, `novelty_scan` |
-| `src/systrophe/knopp_drive.py` | `KnoppDrive.bias / asymmetry / pump_accounting / capacitor_accounting / energy_ledger / feasibility_report` |
-| `tests/test_knopp_ratchet.py` | 26 tests, all passing |
-| `examples/knopp_ratchet_walkthrough.py` | end-to-end walkthrough + JSON results |
+| `src/systrophe/knopp/knopp_ratchet.py` | `WarpParetoRatchet`, `ratchet_traversal`, `reverse_asymmetry`, `casimir_pump_accounting`, `capacitor_accounting`, `bias_energy_ledger`, `ledger_Q_sweep`, `feasibility_report`, `novelty_scan` |
+| `src/systrophe/knopp/knopp_drive.py` | `KnoppDrive.bias / asymmetry / pump_accounting / capacitor_accounting / energy_ledger / feasibility_report` |
+| `tests/knopp/test_knopp_ratchet.py` | 26 tests, all passing |
+| `examples/knopp/knopp_ratchet_walkthrough.py` | end-to-end walkthrough + JSON results |
 
 ## The chain of results
 
@@ -488,7 +488,7 @@ unit-fidelity device is the deterministic channel.
 The deterministic ER=EPR channel (§13) executed on `ibm_marrakesh` (156-qubit
 Heron r2) via the Zynerji instance, with the full live-calibration pipeline
 (`quantum_golden_pendulum.calibration`) + error mitigation
-(`experiments/marrakesh_erepr_wormhole.py`):
+(`experiments/marrakesh/marrakesh_erepr_wormhole.py`):
 
 - **Calibration (live):** 142 good / 14 bad / 0 dead qubits, 288 good edges;
   BFS-selected connected good subset `[2, 3, 4, 16]`.

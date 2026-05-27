@@ -5,7 +5,7 @@ fixed cylinder parameters (R_i, a_i, p_i), prescribe a target complex
 phasor profile at M sample radii and solve for the N complex
 amplitudes c_i = A_i exp(i δ_i) that best synthesise it.
 
-Forward model (from systrophe.array.SystropheArray.phasor_field):
+Forward model (from systrophe.geometry.array.SystropheArray.phasor_field):
 
     z(r) = sum_i  c_i * exp(i α_i ln(r / R_i))
 

@@ -1,7 +1,7 @@
 """acoustic-hawking: analog gravity tool for the Lewis-Papapetrou exterior.
 
-Wraps `systrophe.acoustic_metric` (Unruh's acoustic-LP identification)
-and `systrophe.acoustic_hawking_spectrum` (phonon spectral density,
+Wraps `systrophe.analogs.acoustic_metric` (Unruh's acoustic-LP identification)
+and `systrophe.analogs.acoustic_hawking_spectrum` (phonon spectral density,
 Steinhauer 2019 benchmark) in a single LPAnalyser-style object.
 
 Headline use: predict the acoustic Hawking temperature of a rotating

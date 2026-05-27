@@ -104,11 +104,11 @@ stress-energy diverges at any developing Cauchy horizon.
 
 ## Files
 
-- `src/systrophe/stress_energy_ctc.py` (430 lines)
-- `tests/test_stress_energy_ctc.py` (18 tests, all pass)
-- `examples/phase_2a_chronology_protection.py` (end-to-end report)
-- `examples/phase_2a_alpha_sweep.py` (alpha universality)
-- `examples/phase_2a_4d_cross_check.py` (2D vs 4D)
+- `src/systrophe/ctc/stress_energy_ctc.py` (430 lines)
+- `tests/ctc/test_stress_energy_ctc.py` (18 tests, all pass)
+- `examples/phase_modules/phase_2a_chronology_protection.py` (end-to-end report)
+- `examples/phase_modules/phase_2a_alpha_sweep.py` (alpha universality)
+- `examples/phase_modules/phase_2a_4d_cross_check.py` (2D vs 4D)
 - `examples/phase_2a_chronology_protection_results.json`
 - `examples/phase_2a_alpha_sweep_results.json`
 - `examples/phase_2a_4d_cross_check_results.json`

@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from systrophe.spacetimes import GodelUniverse, godel_ctc_radius
+from systrophe.geometry.spacetimes import GodelUniverse, godel_ctc_radius
 
 
 def test_ctc_radius_is_arcsinh_1():

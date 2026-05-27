@@ -9,22 +9,22 @@ problems and related deep-mathematical questions.
 
 | # | Problem | Catcher artifact | Verdict | Notes |
 |---|---------|------------------|---------|-------|
-| 1 | Riemann hypothesis | `examples/millennium_riemann_catcher.py` | **smooth (RH-consistent)** + 1 Lehmer-pair-like sharp local feature | Catcher third-split returns `smooth` at N=50, 100, 200 — consistent with GUE / Montgomery / RH. The single sharp feature at γ_33↔γ_34 is the catcher independently rediscovering a Lehmer-pair-like local cluster. |
-| 2 | P vs NP (via 3-SAT phase transition) | `examples/millennium_sat_phase_transition.py` + `src/systrophe/derivative_catcher.py` | **catches transition at α=4.270 (true α_c≈4.267)** | At n=20 variables, P(SAT) drops smoothly from 1.0 (α=2) to 0.033 (α=6). The **value-level catcher returns smooth** (sigmoid is too gradual for Hamming-step detection). The **derivative catcher** — `catch_smooth_transition`, address-space novelty applied to the first numerical derivative of the SAT fraction — returns `novel_structure` with three sharp features clustered around α∈{4.00, 4.20, 4.27} and identifies α=4.270 as the transition centre. **Pure catcher recovery of the SAT phase transition centre to 0.001 precision**, no number-theoretic input. Initial null result motivated the derivative-catcher upgrade. |
-| Hilbert 8 (Goldbach) | Goldbach's conjecture | `examples/millennium_goldbach_catcher.py` | **conjecture verified up to N=1000**, comet band structure caught | Computes g(n) = number of Goldbach representations for n in [4, 1000]. **All g(n) ≥ 1 → conjecture verified up to N=1000**. scan_novelty flags 4–11 sharp Hamming features per range (individual comet outliers); per-quantity catcher (3 bands by n mod 6) returns `novel_structure` at N=200 — independently identifies the well-known 3-band structure of the Goldbach comet. Derivative catcher returns `discontinuous` centred at n=332. |
-| 3 | Navier–Stokes existence & smoothness (Burgers' analog) | `examples/millennium_burgers_shock_catcher.py` | **inviscid t_shock recovered at 0.4% via analytic peak finder; catcher itself returns null** | Solves 1D viscous Burgers' on [0, 2π] with IC u(x,0) = −sin(x), tracks |u_x|_max(t) at 5 viscosities ν ∈ [0.005, 0.1]. The analytic shock-formation time (t of max d log|u_x|/dt) recovers **t = 0.996 at ν = 0.005** — matching the inviscid Burgers' t_shock = 1.000 within 0.4%. The catcher (value + derivative) returns null on the smooth analytic peak — a third boundary on catcher domain: analytic smooth peaks have no Hamming-step outliers under rank-thermometer encoding. |
-| 4 | Birch–Swinnerton-Dyer (local L-data approach) | `examples/millennium_bsd_catcher.py` | **honest null at P_MAX=500, 17 curves — rank signal swamped by partial-Euler variance** | Computes a_p = p + 1 − #E(F_p) for primes p ≤ 500 on 17 short-Weierstrass elliptic curves with known rank (8 rank-0, 6 rank-1, 3 rank-2), estimates partial Euler product log L(E, 1). Mean by rank: 0 → −1.39, 1 → −0.87, 2 → −2.22. **Not monotone**: variance within each rank ([−3.06, −0.13] for rank 0, [−2.17, +0.27] for rank 1) dwarfs the inter-rank mean separation. Partial-Euler convergence at P_MAX = 500 is too slow to show the BSD rank signature cleanly. Honest negative result; infrastructure is in place for future runs at much higher P_MAX or with full L-function computation (requires sage/pari, not available here). |
+| 1 | Riemann hypothesis | `examples/millennium/millennium_riemann_catcher.py` | **smooth (RH-consistent)** + 1 Lehmer-pair-like sharp local feature | Catcher third-split returns `smooth` at N=50, 100, 200 — consistent with GUE / Montgomery / RH. The single sharp feature at γ_33↔γ_34 is the catcher independently rediscovering a Lehmer-pair-like local cluster. |
+| 2 | P vs NP (via 3-SAT phase transition) | `examples/millennium/millennium_sat_phase_transition.py` + `src/systrophe/catchers/derivative_catcher.py` | **catches transition at α=4.270 (true α_c≈4.267)** | At n=20 variables, P(SAT) drops smoothly from 1.0 (α=2) to 0.033 (α=6). The **value-level catcher returns smooth** (sigmoid is too gradual for Hamming-step detection). The **derivative catcher** — `catch_smooth_transition`, address-space novelty applied to the first numerical derivative of the SAT fraction — returns `novel_structure` with three sharp features clustered around α∈{4.00, 4.20, 4.27} and identifies α=4.270 as the transition centre. **Pure catcher recovery of the SAT phase transition centre to 0.001 precision**, no number-theoretic input. Initial null result motivated the derivative-catcher upgrade. |
+| Hilbert 8 (Goldbach) | Goldbach's conjecture | `examples/millennium/millennium_goldbach_catcher.py` | **conjecture verified up to N=1000**, comet band structure caught | Computes g(n) = number of Goldbach representations for n in [4, 1000]. **All g(n) ≥ 1 → conjecture verified up to N=1000**. scan_novelty flags 4–11 sharp Hamming features per range (individual comet outliers); per-quantity catcher (3 bands by n mod 6) returns `novel_structure` at N=200 — independently identifies the well-known 3-band structure of the Goldbach comet. Derivative catcher returns `discontinuous` centred at n=332. |
+| 3 | Navier–Stokes existence & smoothness (Burgers' analog) | `examples/millennium/millennium_burgers_shock_catcher.py` | **inviscid t_shock recovered at 0.4% via analytic peak finder; catcher itself returns null** | Solves 1D viscous Burgers' on [0, 2π] with IC u(x,0) = −sin(x), tracks |u_x|_max(t) at 5 viscosities ν ∈ [0.005, 0.1]. The analytic shock-formation time (t of max d log|u_x|/dt) recovers **t = 0.996 at ν = 0.005** — matching the inviscid Burgers' t_shock = 1.000 within 0.4%. The catcher (value + derivative) returns null on the smooth analytic peak — a third boundary on catcher domain: analytic smooth peaks have no Hamming-step outliers under rank-thermometer encoding. |
+| 4 | Birch–Swinnerton-Dyer (local L-data approach) | `examples/millennium/millennium_bsd_catcher.py` | **honest null at P_MAX=500, 17 curves — rank signal swamped by partial-Euler variance** | Computes a_p = p + 1 − #E(F_p) for primes p ≤ 500 on 17 short-Weierstrass elliptic curves with known rank (8 rank-0, 6 rank-1, 3 rank-2), estimates partial Euler product log L(E, 1). Mean by rank: 0 → −1.39, 1 → −0.87, 2 → −2.22. **Not monotone**: variance within each rank ([−3.06, −0.13] for rank 0, [−2.17, +0.27] for rank 1) dwarfs the inter-rank mean separation. Partial-Euler convergence at P_MAX = 500 is too slow to show the BSD rank signature cleanly. Honest negative result; infrastructure is in place for future runs at much higher P_MAX or with full L-function computation (requires sage/pari, not available here). |
 
 ## Framework upgrade triggered by SAT null result
 
 The initial SAT run returned `smooth` because the sigmoid transition has no Hamming-step outliers under the standard catcher's median + 3*MAD discriminator. This null is informative: it identifies an entire class of physical/numerical transitions (continuous-order-parameter, second-order, sigmoid) that the value-level catcher cannot see.
 
-The fix lives in `src/systrophe/derivative_catcher.py`. It adds:
+The fix lives in `src/systrophe/catchers/derivative_catcher.py`. It adds:
 
 * `scan_novelty_derivative(p, fn, derivative_order=1 or 2)` — runs `scan_novelty` on the k-th central-difference derivative of a scalar output.
 * `catch_smooth_transition(p, fn)` — two-pass catcher returning `kind` in `{discontinuous, smooth_sigmoid, none}` with an estimated transition centre.
 
-Tests in `tests/test_derivative_catcher.py` (8/8 passing) cover:
+Tests in `tests/catchers/test_derivative_catcher.py` (8/8 passing) cover:
 * Pure-linear no-op (returns `none`)
 * Quantised step (returns `discontinuous`)
 * SAT-style monotone-with-tail-plateaus (returns `smooth_sigmoid` at correct centre)
@@ -53,7 +53,7 @@ It is NOT the right tool for:
 * Continuous order-parameter transitions where the order parameter
   smoothly interpolates between two phases (Ising near T_c, 3-SAT
   phase transition, second-order continuous transitions) — these
-  need the **derivative catcher** (`src/systrophe/derivative_catcher.py`).
+  need the **derivative catcher** (`src/systrophe/catchers/derivative_catcher.py`).
 * Smooth analytic peaks with no quantisation or noise (e.g. the
   Burgers' |u_x|_max(t) viscous-growth profile). The derivative
   array of an analytic peak is itself analytic-smooth, and rank-
@@ -87,8 +87,8 @@ It is NOT the right tool for:
 
 ## File index
 
-* `examples/millennium_riemann_catcher.py` + `FINDINGS_MILLENNIUM_RIEMANN.md`
-* `examples/millennium_sat_phase_transition.py` + this file
+* `examples/millennium/millennium_riemann_catcher.py` + `FINDINGS_MILLENNIUM_RIEMANN.md`
+* `examples/millennium/millennium_sat_phase_transition.py` + this file
 
 ## Bottom line
 

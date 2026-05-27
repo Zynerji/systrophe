@@ -1,7 +1,7 @@
 """catcher-monitor: the Systrophe address-space lambda_2 catcher exposed as a detector.
 
-Provenance: this tool packages `systrophe.novelty_catcher` and
-`systrophe.derivative_catcher` (the Hamming-graph algebraic-connectivity
+Provenance: this tool packages `systrophe.catchers.novelty_catcher` and
+`systrophe.catchers.derivative_catcher` (the Hamming-graph algebraic-connectivity
 diagnostic that has caught 26+ emergents in the Systrophe project's
 physics modules and IBM Quantum runs) behind a small, well-typed
 public API aimed at three concrete use cases:

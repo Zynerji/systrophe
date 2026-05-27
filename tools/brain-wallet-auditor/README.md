@@ -59,7 +59,7 @@ brain-wallet-auditor/
 │   ├── __init__.py
 │   ├── derivation.py   brainwallet_sha256 / warpwallet / bip39 derivation
 │   ├── snapshot.py     FundedAddressSet + minimal pure-Python Bloom filter
-│   ├── catcher.py      diagnose_candidate_pool via systrophe.novelty_catcher
+│   ├── catcher.py      diagnose_candidate_pool via systrophe.catchers.novelty_catcher
 │   └── audit.py        audit_passphrases() main entry point
 ├── examples/
 │   └── audit_personal_phrases.py

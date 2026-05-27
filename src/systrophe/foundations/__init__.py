@@ -1,0 +1,1 @@
+"""systrophe.foundations -- topical subpackage."""

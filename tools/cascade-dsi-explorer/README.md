@@ -1,13 +1,13 @@
 # cascade-dsi-explorer
 
 **Multi-scale Tipler cascade-DSI fractal explorer.** Wraps
-`systrophe.tipler_fractal.CascadeDSI` in an LPAnalyser-style
+`systrophe.geometry.tipler_fractal.CascadeDSI` in an LPAnalyser-style
 one-object-per-cascade API. Adds the address-space novelty catcher
 as a built-in 2D phase-boundary scanner.
 
 ## Why this exists
 
-`systrophe.tipler_fractal` ships the cascade-DSI primitive (multi-
+`systrophe.geometry.tipler_fractal` ships the cascade-DSI primitive (multi-
 scale sum of log-periodic cosines) and its diagnostics, but each
 diagnostic is its own function. This tool collects them under one
 object and reports a flat `CascadeSummary` dataclass — matching the

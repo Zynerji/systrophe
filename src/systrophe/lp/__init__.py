@@ -1,0 +1,1 @@
+"""systrophe.lp -- topical subpackage."""

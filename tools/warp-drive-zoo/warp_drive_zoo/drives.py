@@ -19,16 +19,16 @@ from typing import Protocol
 
 import numpy as np
 
-from systrophe.alcubierre import (
+from systrophe.geometry.alcubierre import (
     alcubierre_energy_density,
     alcubierre_NEC_radial,
     alcubierre_total_negative_energy,
 )
-from systrophe.bobrick_martire import (
+from systrophe.geometry.bobrick_martire import (
     bm_energy_density,
     bm_NEC_radial,
 )
-from systrophe.lentz_soliton import (
+from systrophe.geometry.lentz_soliton import (
     lentz_energy_density,
     lentz_NEC_radial,
 )

@@ -26,7 +26,7 @@ What it does NOT do:
     raw-PRNG wallets). The keyspace is too large.
 
 Provenance: the address-space catcher diagnostic uses
-`systrophe.novelty_catcher.scan_novelty`. The cryptographic pipeline
+`systrophe.catchers.novelty_catcher.scan_novelty`. The cryptographic pipeline
 (SHA256 -> secp256k1 -> hash160 -> base58check) is straightforward
 Bitcoin reference math, implemented on top of `coincurve` and
 `base58`. The Vasek et al. (2016) "Bitcoin Brain Drain" paper is the

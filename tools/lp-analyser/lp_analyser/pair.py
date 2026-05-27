@@ -6,11 +6,11 @@ from typing import Any
 
 import numpy as np
 
-from systrophe.array import SystropheArray
-from systrophe.off_axis import OffAxisPair
-from systrophe.pair import SystrophePair
-from systrophe.sinusoid import TiplerSinusoid
-from systrophe.vanstockum import VanStockumInterior
+from systrophe.geometry.array import SystropheArray
+from systrophe.geometry.off_axis import OffAxisPair
+from systrophe.geometry.pair import SystrophePair
+from systrophe.geometry.sinusoid import TiplerSinusoid
+from systrophe.geometry.vanstockum import VanStockumInterior
 
 
 class PairAnalyser:

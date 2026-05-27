@@ -18,9 +18,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from systrophe.stress_energy_ctc import divergence_rate_at_horizon
-from systrophe.vanstockum import VanStockumInterior
-from systrophe.quantum_diagnostics import cauchy_horizon_estimate
+from systrophe.ctc.stress_energy_ctc import divergence_rate_at_horizon
+from systrophe.geometry.vanstockum import VanStockumInterior
+from systrophe.qftcs.quantum_diagnostics import cauchy_horizon_estimate
 
 from .shock import compute_guderley_exponent, density_power_at_focus
 

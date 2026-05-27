@@ -19,7 +19,7 @@ from guderley_shock import (
     density_power_at_focus,
     integrate_post_shock_profile,
 )
-from systrophe.vanstockum import VanStockumInterior
+from systrophe.geometry.vanstockum import VanStockumInterior
 
 
 # ---------------------------------------------------------------------------

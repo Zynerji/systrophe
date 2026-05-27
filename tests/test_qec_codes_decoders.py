@@ -1,10 +1,10 @@
-"""Tests for systrophe.qec_codes and systrophe.qec_decoders."""
+"""Tests for systrophe.quantum_info.qec_codes and systrophe.quantum_info.qec_decoders."""
 
 import math
 
 import numpy as np
 
-from systrophe.qec_codes import (
+from systrophe.quantum_info.qec_codes import (
     CODE_THRESHOLDS,
     bacon_shor_descriptor,
     channel_lambda_2,
@@ -19,7 +19,7 @@ from systrophe.qec_codes import (
     steane_code_descriptor,
     surface_code_descriptor,
 )
-from systrophe.qec_decoders import (
+from systrophe.quantum_info.qec_decoders import (
     DecoderResult,
     belief_propagation_decoder,
     benchmark_decoders_vs_oracle,

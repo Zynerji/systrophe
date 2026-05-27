@@ -4,7 +4,7 @@ from math import asin, cos, pi, sin, sqrt, tan
 
 import pytest
 
-from systrophe.spacetimes import GottPair, gott_critical_mu, gott_critical_velocity
+from systrophe.geometry.spacetimes import GottPair, gott_critical_mu, gott_critical_velocity
 
 
 def test_construction_validates_mu():

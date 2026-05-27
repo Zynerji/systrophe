@@ -1,12 +1,12 @@
 # Erdős DSI discovery sweep — log-periodicity is an Euler-product signature
 
-`examples/erdos_dsi_sweep.py`
+`examples/erdos/erdos_dsi_sweep.py`
 
 A discovery net that scans integer-sequence error terms (Erdős and
 Erdős-adjacent) for hidden **discrete-scale invariance** — oscillations
 periodic in `ln x`, `f(x) ~ x^c [1 + A cos(omega ln x + phi)]`, geometric
 ratio `lambda = exp(2 pi / omega)` — using the Systrophe DSI framing
-(`systrophe.dsi_observables`, `tipler_fractal`) and the mandated-catcher
+(`systrophe.catchers.dsi_observables`, `tipler_fractal`) and the mandated-catcher
 discipline (controls + significance, no "validated" without numbers).
 
 Motivated by Bloom & Tao's observation that most Erdős problems are about
@@ -101,8 +101,8 @@ that are genuine unknowns**, where a surviving DSI hit would be new.
 ## Reproduce
 
 ```
-python examples/erdos_dsi_sweep.py            # full
-python examples/erdos_dsi_sweep.py --quick    # fast smoke
+python examples/erdos/erdos_dsi_sweep.py            # full
+python examples/erdos/erdos_dsi_sweep.py --quick    # fast smoke
 ```
 
 Writes `examples/erdos_dsi_sweep_results.json`. Requires `numpy`, `scipy`;

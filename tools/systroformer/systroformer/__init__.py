@@ -2,7 +2,7 @@
 algebraic connectivity (λ₂) of the address-space Hamming graph of its
 own attention activations.
 
-Built on the Systrophe address-space catcher (`systrophe.novelty_catcher`).
+Built on the Systrophe address-space catcher (`systrophe.catchers.novelty_catcher`).
 
 The core idea — emergent information-topological structure detected per
 forward pass — comes from the helper file `SystropheLLMhelper.txt`

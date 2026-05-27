@@ -9,7 +9,7 @@ Priority-2 sibling of `tools/implosion-carving/` (priority-3 was the
 photon-pocket carver; priority-1 is the converging-shock CTC-stress
 profile).
 
-## Forward model (from `systrophe.array.SystropheArray.phasor_field`)
+## Forward model (from `systrophe.geometry.array.SystropheArray.phasor_field`)
 
 ```
 z(r) = sum_i  c_i * exp(i α_i ln(r / R_i)),    c_i = A_i e^{i δ_i}.

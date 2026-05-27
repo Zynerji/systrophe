@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 
 from systrophe import SystropheArray
-from systrophe.vanstockum import VanStockumInterior
+from systrophe.geometry.vanstockum import VanStockumInterior
 
 
 @pytest.fixture(scope="module")

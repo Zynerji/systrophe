@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from systrophe.photon_sphere import (
+from systrophe.geometry.photon_sphere import (
     _db_dr_hybrid,
     _d2b_dr2_hybrid,
     effective_b_hybrid,
@@ -24,7 +24,7 @@ from systrophe.photon_sphere import (
     hybrid_photon_sphere_omega,
     hybrid_photon_sphere_stability,
 )
-from systrophe.vanstockum import VanStockumInterior
+from systrophe.geometry.vanstockum import VanStockumInterior
 
 
 @dataclass(frozen=True)

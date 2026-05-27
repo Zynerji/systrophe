@@ -1,0 +1,1 @@
+"""systrophe.geometry -- topical subpackage."""

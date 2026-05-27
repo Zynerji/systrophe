@@ -10,7 +10,7 @@ sphere at r_target** — a closed null geodesic. It then wraps the
 Möbius-Z₃ cover (3-fold monodromy) on the resulting orbit and reports
 closure residuals.
 
-The carver's value-add over `systrophe.photon_sphere` directly:
+The carver's value-add over `systrophe.geometry.photon_sphere` directly:
 * one API object per spacetime (LPAnalyser pattern),
 * records the Schwarzschild reference `M = r_target / 3` so the
   cylinder's distortion is visible at a glance,
@@ -55,7 +55,7 @@ This tool **does not** claim to crack the chronology-protection
 conjecture or derive new physics. It uses two existing analytic
 constructions side-by-side:
 
-1. The hybrid photon-sphere of `systrophe.photon_sphere` — a known
+1. The hybrid photon-sphere of `systrophe.geometry.photon_sphere` — a known
    no-go for bare van Stockum + the known Schwarzschild-perturbation
    route to restore one.
 2. The vendored Dinos Möbius-Z₃ cover — a topological device whose

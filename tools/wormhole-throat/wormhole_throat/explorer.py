@@ -7,7 +7,7 @@ from typing import Any
 
 import numpy as np
 
-from systrophe.wormhole_throat import (
+from systrophe.geometry.wormhole_throat import (
     build_wormhole_report,
     effective_redshift_function,
     effective_shape_function,
@@ -15,7 +15,7 @@ from systrophe.wormhole_throat import (
     flaring_out_check,
     z3_cover_throat_interpretation,
 )
-from systrophe.vanstockum import VanStockumInterior
+from systrophe.geometry.vanstockum import VanStockumInterior
 
 
 @dataclass(frozen=True)
