@@ -437,6 +437,24 @@ The full toroidal Knopp budget is implemented in \texttt{systrophe.knopp.knopp\_
 \item The diffeomorphic isomorphism to Bonnor Case~III is an effective-correspondence claim, not a proven global isometry. The exact composite spacetime is not in closed form.
 \end{itemize}
 
+\subsection{Quantum-gravity probes of the toroidal band}\label{ssec:toroidal_quantum}
+
+Two probes from the broader Systrophe stack become well-defined when the CTC band is the \emph{finite} toroidal region rather than the infinite Tipler cylinder (where both diverge):
+
+\paragraph{LQG area discretization.} The band's inner and outer boundaries are 2-tori of proper area $A=2\pi\rho L_{z}\sqrt{1-2\Phi_{\mathrm{eff}}(\rho)}$. The LQG quantization $A_{j}=8\pi\gamma\ell_{P}^{2}\sqrt{j(j+1)}$ (Immirzi $\gamma\approx 0.2375$) gives a half-integer spin $j$ for each boundary, with a discretization residual that scales as $A_{\mathrm{classical}}^{-1/2}$. For the working configuration ($M=1$, $d=2M$, $\rho\in[0.65,3.57]M$), $j_{\mathrm{inner}}\!\approx\!2.5$, $j_{\mathrm{outer}}\!\approx\!10.5$, with residuals of $3.3\%$ and $1.4\%$ respectively. The band width in Planck units is $\Delta\rho\approx 2.9\,\ell_{P}$ -- well above unity, so the band is resolvable by the spinfoam; the band would be \emph{protected by gravitational discreteness alone} if its width fell below the spin-network coarse-grain scale.
+
+\paragraph{Holographic complexity (CV \& CA).} The toroidal volume $V_{\mathrm{band}}\!=\!\int_{\rho_{\mathrm{in}}}^{\rho_{\mathrm{out}}}\!2\pi\rho\sqrt{1-2\Phi}\,d\rho\cdot L_{z}$ gives a Complexity = Volume proxy
+\begin{equation}
+\mathcal{C}_{V}\;=\;\frac{V_{\mathrm{band}}}{G_{N}\,\ell_{\rm AdS}},\qquad \ell_{\rm AdS}\!\equiv\!d.
+\end{equation}
+A Complexity = Action proxy uses the gravitomagnetic-energy density:
+\begin{equation}
+\mathcal{C}_{A}\;\sim\;\frac{1}{\pi}\int_{V_{\mathrm{band}}}\Omega_{\mathrm{eff}}^{2}\,dV.
+\end{equation}
+The Lloyd bound caps the complexity-growth rate at $d\mathcal{C}/dt \le 2E/(\pi\hbar)$ with $E=2M$. For the working configuration this gives $d\mathcal{C}/dt_{\max}\approx 1.27$ and a CV-traversal time $\tau_{V}=\mathcal{C}_{V}/\dot{\mathcal{C}}_{\max}\approx 49\,M$. Both proxies vanish as $d/M\to 1/k_{\rm crit}$, where the band closes.
+
+The full quantum-probe module is \texttt{systrophe.knopp.knopp\_toroidal\_quantum}, with combined diagnostic \texttt{toroidal\_quantum\_diagnostics(binary)}.
+
 \section{Limitations and falsifiers}\label{sec:limits}
 
 \paragraph{Linearised composition.} The four mechanisms are composed in the linearised (single-Krasnikov-tube perturbation of LP exterior) regime. Cross-products of perturbations are formally $O(G^{2})$ and not modelled.
