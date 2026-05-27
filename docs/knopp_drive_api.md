@@ -1,15 +1,15 @@
 # Knopp Drive API reference
 
-The Knopp Drive lives in `systrophe.knopp_drive` with supporting modules
-in `systrophe.knopp_traversal`, `systrophe.tipler_krasnikov_hybrid`,
-`systrophe.krasnikov_tube`, `systrophe.feedback_amplified_shell`,
-`systrophe.horn_toroidal_warp`, `systrophe.krasnikov_pair`, and
-`systrophe.krasnikov_ring`.
+The Knopp Drive lives in `systrophe.knopp.knopp_drive` with supporting modules
+in `systrophe.knopp.knopp_traversal`, `systrophe.geometry.tipler_krasnikov_hybrid`,
+`systrophe.geometry.krasnikov_tube`, `systrophe.qftcs.feedback_amplified_shell`,
+`systrophe.geometry.horn_toroidal_warp`, `systrophe.geometry.krasnikov_pair`, and
+`systrophe.geometry.krasnikov_ring`.
 
 ## High-level interface — `KnoppDrive`
 
 ```python
-from systrophe.knopp_drive import KnoppDrive
+from systrophe.knopp.knopp_drive import KnoppDrive
 
 drive = KnoppDrive(
     Q=100.0,            # cavity quality factor
@@ -57,7 +57,7 @@ assert report.inside_band_fraction == 1.0
 ## Functional interface
 
 ```python
-from systrophe.knopp_drive import (
+from systrophe.knopp.knopp_drive import (
     knopp_budget,
     KnoppDriveConfig,
     summarise_knopp_budget,
@@ -107,7 +107,7 @@ print(summarise_knopp_budget(b))
 ## Traversal — `knopp_traversal`
 
 ```python
-from systrophe.knopp_traversal import knopp_traversal, knopp_traversal_Q_sweep
+from systrophe.knopp.knopp_traversal import knopp_traversal, knopp_traversal_Q_sweep
 
 # Single-distance traversal
 report = knopp_traversal(cfg, distance=10.0, n_steps=80)
@@ -140,7 +140,7 @@ Every module exposes a `novelty_scan(...)` function that runs the
 address-space novelty catcher on its natural parameter sweep:
 
 ```python
-from systrophe.knopp_drive import novelty_scan
+from systrophe.knopp.knopp_drive import novelty_scan
 
 res = novelty_scan(
     r_orbit_range=(1.05, 12.0), n_r=30,

@@ -6,23 +6,23 @@ API reference
    :recursive:
 
    systrophe
-   systrophe.vanstockum
-   systrophe.lewis_papapetrou
-   systrophe.lp_robust
-   systrophe.sinusoid
-   systrophe.pair
-   systrophe.array
-   systrophe.off_axis
-   systrophe.ctc
-   systrophe.geodesic
-   systrophe.time_machine
-   systrophe.energy_conditions
-   systrophe.photon_orbits
-   systrophe.quantum_diagnostics
-   systrophe.dinos_bridge
-   systrophe.spacetimes
-   systrophe.spacetimes.godel
-   systrophe.spacetimes.gott
-   systrophe.spacetimes.kerr
-   systrophe.spacetimes.line_singularity
-   systrophe.spacetimes.cosmic_string
+   systrophe.geometry.vanstockum
+   systrophe.geometry.lewis_papapetrou
+   systrophe.lp.lp_robust
+   systrophe.geometry.sinusoid
+   systrophe.geometry.pair
+   systrophe.geometry.array
+   systrophe.geometry.off_axis
+   systrophe.ctc.ctc
+   systrophe.geometry.geodesic
+   systrophe.ctc.time_machine
+   systrophe.qftcs.energy_conditions
+   systrophe.geometry.photon_orbits
+   systrophe.qftcs.quantum_diagnostics
+   systrophe.bridges.dinos_bridge
+   systrophe.geometry.spacetimes
+   systrophe.geometry.spacetimes.godel
+   systrophe.geometry.spacetimes.gott
+   systrophe.geometry.spacetimes.kerr
+   systrophe.geometry.spacetimes.line_singularity
+   systrophe.geometry.spacetimes.cosmic_string
