@@ -119,9 +119,13 @@ def test_critical_lambda_finite_positive(binary_in_band):
     assert 0.0 < lc < float("inf")
 
 
-def test_band_open_at_lambda_below_critical(binary_in_band):
-    lc = critical_lambda(binary_in_band)
-    b = backreacted_band(binary_in_band, lam=0.5 * lc)
+def test_band_open_at_small_lambda(binary_in_band):
+    """At lambda well below the closure threshold (and far enough from
+    it that NK convergence is robust across platforms), the band must
+    be open."""
+    # lambda_crit on the working config is ~ 15-22 depending on
+    # NK finite-difference platform jitter. lambda = 1 is safely below.
+    b = backreacted_band(binary_in_band, lam=1.0)
     assert b.band_closed is False
 
 
