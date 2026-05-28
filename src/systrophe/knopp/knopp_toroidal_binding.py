@@ -387,7 +387,10 @@ def chirality_charge_sum_antiparallel(M: float, chi: float = 1.0) -> float:
 @dataclass(frozen=True)
 class CasimirGWMechanism:
     name: str = "Vacuum-energy GW suppression"
-    description: str = "Casimir-style negative-energy cavity between BHs"
+    description: str = (
+        "Casimir-style negative-energy cavity between BHs; nested-"
+        "dodecahedron ResonantQ amplification analysed but FAILS"
+    )
     requires_BSM: bool = False     # uses standard QFT
     rescues_inspiral: bool = False
     coupling_required: Optional[float] = None
@@ -395,12 +398,26 @@ class CasimirGWMechanism:
         "Inspired by the original Knopp Drive's Q-cavity feedback idea."
         " A Casimir-like vacuum-energy density between the two BHs"
         " could in principle modify the local stress-energy and the GW"
-        " emission rate. The Casimir energy density scales as |E_Cas|"
-        " ~ -hbar c / d^4. For d ~ 2M ~ km, this is ~10^-69 J/m^3 --"
-        " 60+ orders of magnitude smaller than the GW back-reaction"
-        " stress-energy. The Pfenning-Ford quantum inequality further"
-        " bounds the integrated effect to NOT exceed |E_GW| * tau."
-        " VERDICT: quantitatively too weak by many OOM."
+        " emission rate. The unamplified parallel-plate Casimir density"
+        " at d ~ 3 km is |E_Cas| ~ 1.7e-41 J/m^3, vs the required"
+        " ~3.5e37 J/m^3 to balance quadrupole GW back-reaction at the"
+        " toroidal-Knopp working configuration -- a 10^78 gap."
+        " The ResonantQ helical-dodecahedron architecture"
+        " (`knopp_toroidal_casimir_dodecahedron`) was analysed as a"
+        " putative bridge: nest N dodecahedra at golden-ratio scales,"
+        " multiply per-shell Q-factor amplifications. Mathematically,"
+        " N=14 shells at Q=10^4 each with eta=0.5 coupling gives a 10^78"
+        " amplification factor, with innermost shell 5.76 m (above"
+        " Planck) and Ford-Roman QI formally satisfied at outer scale."
+        " HONEST CAVEAT: this conflates COHERENT-mode Q-amplification"
+        " (laser/microwave cavities, where ResonantQ's gains are real)"
+        " with VACUUM-fluctuation enhancement (Casimir effect). The"
+        " Brown-Maclay cavity-geometry enhancement of vacuum energy is"
+        " bounded at ~O(10) per shell, not Q*g_dodec ~ 10^6. The"
+        " multiplicative-nesting scheme does not apply to vacuum modes."
+        " VERDICT: rescue path remains CLOSED. ResonantQ amplification"
+        " works on what it was designed for (SAT, NAS, optimization),"
+        " not on harvesting vacuum energy for black-hole binding."
     )
 
 
