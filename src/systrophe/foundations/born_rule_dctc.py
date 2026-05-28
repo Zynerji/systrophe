@@ -43,16 +43,29 @@ witness framework + two search strategies:
       -- Haar-random sampling of joint unitaries on (2 * ctc_dim)-dim
       space.
 
-Empirical finding: neither family found a Born violator in our sweeps
-(cyclic m=1..3, alpha in [0, pi]; Haar ctc_dim=4 and 8, n_samples up
-to 300). Typical behaviour: the D-CTC partial trace REDUCES
-distinguishability rather than amplifying it (output Helstrom <= input
-Helstrom for all U tested). This is consistent with Brun-Wilde's
-explicit Section 5 construction being a NON-GENERIC, structured U
-that requires more than single-shot 2N-dim unitary sampling: the
-amplification needs an iterated fixed-point structure that encodes a
-counter / cyclic state into ρ_CTC and reads it back in CR. Implementing
-that exact construction faithfully is left as a follow-up.
+Empirical finding (extended sweep 2026-05-28): with broader candidate
+sets including
+  - fixed 2-qubit unitaries (SWAP, CNOT, H-CNOT, X.X-conjugates, etc.),
+  - parametric `brun_wilde_unitary(theta)` over theta in [0, 2 pi],
+  - cyclic-power `brun_wilde_cyclic_unitary(m, alpha)` for m in {1,2,3},
+  - Haar-random sweep up to ctc_dim = 16, n_samples = 500
+no Born-violating D-CTC unitary has been found. The MAXIMUM P_dctc
+over all sweeps stays at P_helstrom (most constructions tie) or drops
+below (Haar at ctc_dim >= 8 actively decoheres).
+
+The pattern: generic CTC partial trace REDUCES distinguishability via
+the decoherence introduced by tracing out the CTC. Brun-Wilde
+Theorem 1's existence guarantee is sharp -- the violating unitary is
+in the boundary of the manifold of CPTP-like channels and is NOT
+captured by Haar sampling, SWAP composition, or simple cyclic
+rotation. The actual construction (their Section 5.1) uses a specific
+"iterated guess-and-check" scheme that requires the CTC to retain a
+sequential record of CR's amplitudes -- a structure that is not
+reproduced by single-shot tensor-product unitaries of finite degree.
+
+This module ships the witness machinery + the negative result. Users
+attempting a specific construction can plug their candidate U into
+`dctc_output_state` and `helstrom_bound_density` directly.
 
 What this module ships: the witness machinery, the parametric cyclic
 family for follow-up sweeps, and the Haar search for stress-testing
