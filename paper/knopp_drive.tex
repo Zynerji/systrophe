@@ -467,6 +467,30 @@ The Q-cavity threshold follows from energy balance between the chronology-protec
 \end{equation}
 For the working configuration with $|E_{\rm Krasnikov}|=\omega_{0}=1$, this evaluates to $Q_{\rm thr}\!\approx\!75.3$ -- within $13\%$ of the dimensional estimate ``$Q\!\gtrsim\!86$'' in the Aguilera Katayama framework, and now anchored in an explicit Polyakov vacuum stress rather than a free constant. The full implementation is \texttt{systrophe.knopp.knopp\_toroidal\_backreaction} (\texttt{backreaction\_diagnostic}, \texttt{critical\_lambda}, \texttt{q\_threshold\_from\_balance}).
 
+\subsection{Dynamical stability and gravitational-wave signature}\label{ssec:toroidal_stability}
+
+The framework's most speculative claim is that two near-extremal counter-rotating Kerr black holes hold together long enough to host the toroidal CTC band. We quantify this with the classical-GR (Peters 1964 quadrupole + leading-order Kidder 1995 spin--spin) result.
+
+\paragraph{Spin--spin coupling at the working point.} For maximal antiparallel spins $\bm{S}_{1}=+M^{2}\hat{n}$, $\bm{S}_{2}=-M^{2}\hat{n}$ aligned with the binary axis,
+\begin{equation}
+U_{\rm SS}\;=\;\frac{1}{r^{3}}\!\left[3(\bm{S}_{1}\!\cdot\!\hat{n})(\bm{S}_{2}\!\cdot\!\hat{n})-\bm{S}_{1}\!\cdot\!\bm{S}_{2}\right]
+\;=\;-\frac{2\chi^{2}M^{4}}{r^{3}}.
+\end{equation}
+The ratio to the Newtonian orbital energy $E_{\rm orb}=-M^{2}/(2d)$ is $|U_{\rm SS}/E_{\rm orb}|=4\chi^{2}M^{2}/d^{2}$. For the working configuration ($M\!=\!1$, $d\!=\!2M$, $\chi\!=\!1$) this is $\mathbf{1.00}$ -- the binary is fully non-perturbative for spin--spin.
+
+\paragraph{Inspiral lifetime.} The Peters merger time for a circular equal-mass binary is $t_{\rm merge}=(5/256)\,d^{4}/M^{3}$ (geometric units). For the working configuration this gives $t_{\rm merge}\!=\!0.3125\,M$, while the orbital period is $T_{\rm orb}\!=\!2\pi/\Omega_{\rm orb}\!=\!2\pi\sqrt{2}\,M^{1/2}\!=\!8.886\,M$, so the inspiral lasts only
+\begin{equation}\boxed{\;\;N_{\rm orbits}\;=\;t_{\rm merge}/T_{\rm orb}\;\approx\;0.012\;\;}\end{equation}
+-- the binary merges in about $1\%$ of a single orbit. The toroidal CTC band, which requires the binary to persist, cannot persist either.
+
+\paragraph{GW signature.} The dominant quadrupole emission peaks at $f_{\rm GW}=\Omega_{\rm orb}/\pi\approx 0.159/M$, which in SI units (with $M$ in solar masses) is $f_{\rm GW}\approx 3.23\!\times\!10^{4}/M_{\odot}\,$Hz. For an $M\!=\!10\,M_{\odot}$ stellar binary this lands in the LIGO band ($\sim\!3.2\,$kHz); for $M\!=\!10^{6}\,M_{\odot}$ in the LISA band ($\sim\!3.2\!\times\!10^{-2}\,$Hz). The merger time in seconds for $M\!=\!10\,M_{\odot}$ is $\sim\!7.7\,\mu$s.
+
+\paragraph{Verdict.} The classical-GR analysis falsifies the working configuration of the Toroidal Knopp Drive on dynamical grounds. The two regimes available are:
+\begin{itemize}[leftmargin=*]
+\item $d\!\lesssim\!2.48\,M$ (band exists, $k\!\geq\!k_{\rm crit}$): binary survives $<\!1$ orbit. NOT VIABLE.
+\item $d\!>\!2.48\,M$ (binary survives many orbits): NO toroidal CTC band. ALSO NOT VIABLE.
+\end{itemize}
+Any rescue of the toroidal Knopp Drive must invoke (a) non-gravitational binding (an unmodelled force or composite structure that holds the binary tight against quadrupole decay), or (b) a beyond-leading-order GR effect that strongly suppresses inspiral in the extremal counter-rotating regime, or (c) a different binary topology (e.g., a non-equal-mass or non-aligned configuration). The full classical analysis is implemented in \texttt{systrophe.knopp.knopp\_toroidal\_stability} (\texttt{stability\_report}, \texttt{corrected\_merger\_time}, \texttt{gw\_frequency\_in\_hz}, \texttt{detector\_classification}).
+
 \subsection{Quantum-gravity probes of the toroidal band}\label{ssec:toroidal_quantum}
 
 Two probes from the broader Systrophe stack become well-defined when the CTC band is the \emph{finite} toroidal region rather than the infinite Tipler cylinder (where both diverge):
