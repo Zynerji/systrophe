@@ -142,21 +142,23 @@ def test_lqg_area_gap_decreases_with_M_squared():
 # ----- catalogue + verdict ---------------------------------------------
 
 
-def test_catalogue_has_five_mechanisms():
-    assert len(CATALOGUE) == 5
+def test_catalogue_has_nine_mechanisms():
+    """Extended catalogue: Yukawa, hard core, scalar-tensor, dark photon,
+    LQG, f(R), braneworld, parity-charge, Casimir."""
+    assert len(CATALOGUE) == 9
 
 
-def test_no_mechanism_is_physical_candidate():
-    """All five mechanisms are flagged as not having a physical candidate."""
-    for m in CATALOGUE:
-        # The dataclass field for the bare mechanism object
-        assert m.requires_BSM is True
+def test_most_mechanisms_are_BSM():
+    """Eight of nine catalogued mechanisms require beyond-SM physics
+    (the Casimir-vacuum-energy one is in-SM but quantitatively too weak)."""
+    n_BSM = sum(1 for m in CATALOGUE if m.requires_BSM)
+    assert n_BSM >= 8
 
 
 def test_survey_returns_list_of_verdicts():
     out = survey_binding_mechanisms()
     assert isinstance(out, list)
-    assert len(out) == 5
+    assert len(out) == 9
     for v in out:
         assert isinstance(v, BindingVerdict)
 
@@ -179,3 +181,75 @@ def test_summary_mentions_closed_rescue_path():
     s = summarise_binding_survey(out)
     assert "CLOSED" in s
     assert "NEW physics" in s
+
+
+# ----- new mechanisms (iteration) ----------------------------------------
+
+
+def test_fr_gravity_yukawa_range_scales_with_alpha():
+    from systrophe.knopp.knopp_toroidal_binding import (
+        fr_gravity_yukawa_range,
+    )
+    # range ~ sqrt(6 * alpha), monotone in alpha
+    r1 = fr_gravity_yukawa_range(alpha=1.0)
+    r10 = fr_gravity_yukawa_range(alpha=100.0)
+    assert r10 > r1
+
+
+def test_braneworld_enhancement_negligible_at_BH_scales():
+    from systrophe.knopp.knopp_toroidal_binding import (
+        add_gravity_enhancement_factor,
+    )
+    # At BH-binary scales (d = 2 km in SI), with R_compact = 10^-5 m
+    # in geometric units M=1 -> R_compact = 10^-5/M_solar_km
+    # The factor should be ~ 1 + (negligibly tiny)
+    factor = add_gravity_enhancement_factor(d=2.0)
+    assert factor > 1.0
+    assert factor - 1.0 < 1e-5  # negligible
+
+
+def test_parity_charge_antiparallel_sum_zero():
+    from systrophe.knopp.knopp_toroidal_binding import (
+        chirality_charge_sum_antiparallel,
+    )
+    """For antiparallel maximal spins, the Chern-Simons chirality
+    charges cancel exactly. This is what defeats the parity-violation
+    rescue."""
+    assert chirality_charge_sum_antiparallel(M=1.0) == 0.0
+    assert chirality_charge_sum_antiparallel(M=10.0) == 0.0
+
+
+# ----- rescuability landscape -------------------------------------------
+
+
+def test_landscape_returns_list_of_points():
+    from systrophe.knopp.knopp_toroidal_binding import (
+        rescuability_landscape, RescuabilityPoint,
+    )
+    landscape = rescuability_landscape()
+    assert len(landscape) >= 5
+    for p in landscape:
+        assert isinstance(p, RescuabilityPoint)
+
+
+def test_landscape_only_repulsive_steep_creates_stable_eq():
+    """The classification: ONLY repulsive, steeper-than-1/r^2 force
+    laws create stable equilibria."""
+    from systrophe.knopp.knopp_toroidal_binding import (
+        rescuability_landscape,
+    )
+    landscape = rescuability_landscape()
+    for p in landscape:
+        if p.creates_stable_equilibrium:
+            assert p.sign == "repulsive"
+            assert p.power > 2.0
+
+
+def test_landscape_summary_string():
+    from systrophe.knopp.knopp_toroidal_binding import (
+        rescuability_landscape, summarise_landscape,
+    )
+    landscape = rescuability_landscape()
+    s = summarise_landscape(landscape)
+    assert "REPULSIVE" in s
+    assert "stable" in s.lower()

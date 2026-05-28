@@ -158,6 +158,58 @@ def test_scan_separation_returns_list():
         assert isinstance(r, NRInitialDataReport)
 
 
+# ----- Newton-Kantorovich Hamilton-constraint solver --------------------
+
+
+def test_hamilton_solver_returns_dataclass():
+    from systrophe.knopp.knopp_toroidal_nr_initial_data import (
+        HamiltonSolverResult, solve_hamilton_constraint_radial,
+    )
+    b = BowenYorkBinary(M=1.0, d=2.0, chi=1.0)
+    res = solve_hamilton_constraint_radial(
+        b, r_min=0.5, r_max=20.0, n_grid=80, max_iter=20,
+    )
+    assert isinstance(res, HamiltonSolverResult)
+
+
+def test_hamilton_solver_psi_finite_everywhere():
+    from systrophe.knopp.knopp_toroidal_nr_initial_data import (
+        solve_hamilton_constraint_radial,
+    )
+    b = BowenYorkBinary(M=1.0, d=2.0, chi=1.0)
+    res = solve_hamilton_constraint_radial(
+        b, r_min=0.5, r_max=20.0, n_grid=80, max_iter=20,
+    )
+    assert np.all(np.isfinite(res.psi_total_grid))
+    assert np.all(res.psi_total_grid > 0.0)
+
+
+def test_hamilton_solver_adm_mass_near_sum_of_punctures():
+    from systrophe.knopp.knopp_toroidal_nr_initial_data import (
+        solve_hamilton_constraint_radial, adm_mass_consistency,
+    )
+    b = BowenYorkBinary(M=1.0, d=2.0, chi=1.0)
+    res = solve_hamilton_constraint_radial(
+        b, r_min=0.5, r_max=20.0, n_grid=80, max_iter=20,
+    )
+    # ADM mass should be ~ 2 M (within 5% for the toy 1D solver)
+    assert abs(res.adm_mass - 2.0) < 0.1
+
+
+def test_adm_consistency_check_returns_dict():
+    from systrophe.knopp.knopp_toroidal_nr_initial_data import (
+        solve_hamilton_constraint_radial, adm_mass_consistency,
+    )
+    b = BowenYorkBinary(M=1.0, d=2.0, chi=1.0)
+    res = solve_hamilton_constraint_radial(
+        b, r_min=0.5, r_max=20.0, n_grid=80, max_iter=20,
+    )
+    con = adm_mass_consistency(b, res)
+    for k in ("M_expected_no_binding", "M_expected_with_binding",
+              "M_measured", "consistent", "rel_error"):
+        assert k in con
+
+
 def test_summary_mentions_evolution_bottleneck():
     """The summary should be honest about the framework's failure mode
     being the evolution, not the initial slice."""

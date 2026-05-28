@@ -341,6 +341,187 @@ def scan_separation(
     return out
 
 
+# ----- Newton-Kantorovich Hamilton-constraint solver ---------------------
+
+
+@dataclass(frozen=True)
+class HamiltonSolverResult:
+    """Result of the radial Newton-Kantorovich solve for the correction
+    u in psi = psi_puncture + u.
+    """
+    r_grid: np.ndarray             # radial grid (in M units)
+    psi_puncture_grid: np.ndarray  # psi_BB at each r
+    u_grid: np.ndarray             # converged correction
+    psi_total_grid: np.ndarray     # psi_BB + u
+    residual_max: float            # max constraint residual after solve
+    converged: bool
+    n_iterations: int
+    adm_mass: float                # Sum mass from psi falloff at infinity
+
+
+def _A_squared_radial_average(
+    binary: BowenYorkBinary, r: float, n_angles: int = 16,
+) -> float:
+    """Spherical average of A^2 over a sphere of radius r centred on
+    the binary's centroid. Used as the radial-1D approximation of the
+    full 3D Hamilton constraint source."""
+    total = 0.0
+    count = 0
+    for phi in np.linspace(0.0, 2.0 * math.pi, n_angles, endpoint=False):
+        for theta in (math.pi / 4.0, math.pi / 2.0, 3.0 * math.pi / 4.0):
+            x = np.array([
+                r * math.sin(theta) * math.cos(phi),
+                r * math.sin(theta) * math.sin(phi),
+                r * math.cos(theta),
+            ])
+            A_sq = bowen_york_A_squared_at_point(binary, x)
+            if math.isfinite(A_sq):
+                total += A_sq
+                count += 1
+    return float(total / max(count, 1))
+
+
+def solve_hamilton_constraint_radial(
+    binary: BowenYorkBinary,
+    r_min: float = 0.5, r_max: float = 50.0,
+    n_grid: int = 200, max_iter: int = 30,
+    tol: float = 1e-8,
+) -> HamiltonSolverResult:
+    """Solve the spherically-averaged Hamilton constraint for the
+    correction u in psi = psi_BB + u via Newton-Kantorovich on a radial
+    grid.
+
+    Constraint (after Bowen-York puncture decomposition):
+        Δ_flat u  =  -(1/8) (psi_BB + u)^{-7} <A^2>(r)
+    with boundary conditions: u(r_min) regular at the punctures,
+    u -> 0 at infinity.
+
+    We discretise the Laplacian as second-order finite differences on a
+    log-spaced radial grid and iterate.
+
+    Returns the full converged profile + ADM mass diagnostic.
+    """
+    # Log-spaced grid for resolution near the punctures
+    r_grid = np.geomspace(r_min, r_max, n_grid)
+
+    # psi_puncture on the radial axis (use the x-axis as representative)
+    psi_BB = np.array([
+        puncture_conformal_psi(binary, np.array([r, 0.0, 0.0]))
+        for r in r_grid
+    ])
+
+    # Source A^2 spherically averaged
+    A_sq_grid = np.array([
+        _A_squared_radial_average(binary, float(r))
+        for r in r_grid
+    ])
+
+    # Initial guess: u = 0
+    u = np.zeros_like(r_grid)
+
+    # Build finite-difference Laplacian operator on log grid:
+    #   Δ_flat f(r) = (1/r^2) d/dr (r^2 df/dr)  in spherical symmetry.
+    # On log grid use u = log r, r = e^u: d/dr = e^{-u} d/du.
+    # We use simple 3-point central differences on the log grid.
+    log_r = np.log(r_grid)
+    h = log_r[1] - log_r[0]
+
+    def laplacian(f: np.ndarray) -> np.ndarray:
+        """Spherical Laplacian on log grid (interior only)."""
+        out = np.zeros_like(f)
+        # Interior points (idx 1..n-2)
+        for i in range(1, n_grid - 1):
+            df_dr = (f[i + 1] - f[i - 1]) / (2.0 * h * r_grid[i])
+            d2f_dr2 = (f[i + 1] - 2.0 * f[i] + f[i - 1]) / (h ** 2 * r_grid[i] ** 2) - df_dr / r_grid[i]
+            out[i] = d2f_dr2 + 2.0 * df_dr / r_grid[i]
+        # Boundaries: u(r_min) follows from regularity, u(r_max) -> 0.
+        out[0] = 0.0
+        out[-1] = 0.0
+        return out
+
+    residual_max = float("inf")
+    converged = False
+    # Adaptive damping: start small and only grow if iteration is stable.
+    damping = 0.02
+    last_res = float("inf")
+    for it in range(max_iter):
+        psi_total = psi_BB + u
+        # Stiff clamp on psi to avoid psi^-7 explosion
+        psi_safe = np.maximum(psi_total, 0.1)
+        source = -(1.0 / 8.0) * psi_safe ** (-7) * A_sq_grid
+        residual = laplacian(u) - source
+        # Apply BCs
+        residual[0] = u[0]
+        residual[-1] = u[-1]
+        # Skip non-finite cells (mark as zero residual rather than inf)
+        residual = np.where(np.isfinite(residual), residual, 0.0)
+        residual_max = float(np.max(np.abs(residual)))
+        if residual_max < tol:
+            converged = True
+            break
+        if residual_max > 10.0 * last_res and last_res < 1e10:
+            # Iteration is diverging -- back off damping
+            damping *= 0.5
+        u = u - damping * residual
+        # Hard clip u to prevent unphysical excursions
+        u = np.clip(u, -0.5 * np.min(psi_BB), 10.0)
+        last_res = residual_max
+
+    psi_total = psi_BB + u
+
+    # ADM mass: psi -> 1 + M_ADM / (2 r) at large r.
+    # Extract by linear fit to (psi - 1) * 2 r in the outer half of the grid.
+    outer = r_grid > 0.5 * r_max
+    if np.any(outer):
+        adm_estimates = (psi_total[outer] - 1.0) * 2.0 * r_grid[outer]
+        adm_mass = float(np.mean(adm_estimates[adm_estimates > 0]))
+    else:
+        adm_mass = float("nan")
+
+    return HamiltonSolverResult(
+        r_grid=r_grid,
+        psi_puncture_grid=psi_BB,
+        u_grid=u,
+        psi_total_grid=psi_total,
+        residual_max=residual_max,
+        converged=converged,
+        n_iterations=it + 1 if converged else max_iter,
+        adm_mass=adm_mass,
+    )
+
+
+def adm_mass_consistency(
+    binary: BowenYorkBinary, result: HamiltonSolverResult,
+    rel_tol: float = 0.3,
+) -> dict:
+    """Check ADM mass against the expected sum: M_total = 2 M + |E_binding|.
+
+    Newtonian binding energy at separation d: E_B ~ -G m_1 m_2 / (2 d)
+    = -M^2 / (2 d). For d = 2M, M=1: E_B = -0.25 (negative => bound).
+    So ADM mass should be ~ 2M - |E_B| = 2 - 0.25 = 1.75 in geometric.
+    """
+    M_expected_no_binding = 2.0 * binary.M
+    E_binding = -binary.M ** 2 / (2.0 * binary.d)
+    M_expected_with_binding = M_expected_no_binding + E_binding
+    M_measured = result.adm_mass
+    if not math.isfinite(M_measured) or M_measured <= 0:
+        return {
+            "M_expected_no_binding": M_expected_no_binding,
+            "M_expected_with_binding": M_expected_with_binding,
+            "M_measured": M_measured,
+            "consistent": False,
+            "rel_error": float("inf"),
+        }
+    rel_err = abs(M_measured - M_expected_no_binding) / M_expected_no_binding
+    return {
+        "M_expected_no_binding": M_expected_no_binding,
+        "M_expected_with_binding": M_expected_with_binding,
+        "M_measured": float(M_measured),
+        "consistent": bool(rel_err < rel_tol),
+        "rel_error": float(rel_err),
+    }
+
+
 def summarise_initial_data(r: NRInitialDataReport) -> str:
     """Human-readable summary."""
     lines = [

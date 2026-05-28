@@ -278,12 +278,143 @@ def lqg_area_gap_fractional(M_solar: float, gamma: float = 0.2375) -> float:
 # ----- catalogue + verdict ----------------------------------------------
 
 
+# ----- mechanism 6: f(R) higher-derivative gravity ---------------------
+
+
+@dataclass(frozen=True)
+class FRGravityMechanism:
+    name: str = "f(R) higher-derivative gravity"
+    description: str = "L_grav = R + alpha R^2 -- Ricci-squared correction"
+    requires_BSM: bool = True
+    rescues_inspiral: bool = False
+    coupling_required: Optional[float] = None
+    notes: str = (
+        "f(R) = R + alpha R^2 gravity introduces a propagating scalar"
+        " (the 'scalaron') of mass m_s ~ 1/sqrt(alpha). In the binary"
+        " inspiral, the scalaron emits additional GW dipole radiation"
+        " (ACCELERATING inspiral, wrong sign) plus modifies the static"
+        " Newtonian potential by a Yukawa correction. Neither effect"
+        " creates a stable equilibrium at d = 2M. Stronger constraint:"
+        " Solar-system tests bound alpha < (M_sun)^2 -- way too small"
+        " to affect stellar-mass binary dynamics."
+        " VERDICT: wrong sign and bounded out."
+    )
+
+
+def fr_gravity_yukawa_range(alpha: float) -> float:
+    """Range of the scalaron Yukawa in f(R) = R + alpha R^2:
+        m_scalaron ~ 1/sqrt(6 alpha), range = 1/m = sqrt(6 alpha)."""
+    if alpha <= 0:
+        return float("inf")
+    return float(math.sqrt(6.0 * alpha))
+
+
+# ----- mechanism 7: braneworld extra dimensions ----------------------
+
+
+@dataclass(frozen=True)
+class BraneworldMechanism:
+    name: str = "Braneworld extra dimensions"
+    description: str = "RS/ADD modified gravity at sub-Hubble scales"
+    requires_BSM: bool = True
+    rescues_inspiral: bool = False
+    coupling_required: Optional[float] = None
+    notes: str = (
+        "Randall-Sundrum and ADD braneworld scenarios modify gravity at"
+        " sub-millimetre scales. For TWO black holes in a binary with"
+        " separation d ~ 2M (km-scale for stellar BHs), modifications"
+        " are *negligible* -- braneworld effects appear at scales of"
+        " ~10^-5 m at most (current bounds). Even if the modifications"
+        " were significant, they ENHANCE gravitational attraction at"
+        " short range (ADD: F ~ 1/r^(2+n) for n extra dimensions),"
+        " ACCELERATING inspiral rather than halting it."
+        " VERDICT: irrelevant at BH-binary scales; wrong sign if it"
+        " were."
+    )
+
+
+def add_gravity_enhancement_factor(d: float, R_compact: float = 1e-5,
+                                    n_extra: int = 2) -> float:
+    """Force enhancement at separation d in ADD with R_compact compact
+    radius and n_extra extra dimensions. F_ADD/F_Newton = 1 +
+    (R_compact/d)^n_extra in the asymptotic regime.
+
+    For BH binary at d ~ 2M ~ 3 km and R_compact ~ 10^-5 m:
+        ratio = (10^-5 / 3000)^2 ~ 10^-17 -- negligible.
+    """
+    if d <= 0 or R_compact <= 0:
+        return 1.0
+    return float(1.0 + (R_compact / d) ** n_extra)
+
+
+# ----- mechanism 8: parity-violating BH "chirality charge" ----------
+
+
+@dataclass(frozen=True)
+class ParityChargeMechanism:
+    name: str = "Parity-violating BH chirality charge"
+    description: str = "Chern-Simons coupling: gravitomagnetic + dyon-like"
+    requires_BSM: bool = True
+    rescues_inspiral: bool = False
+    coupling_required: Optional[float] = None
+    notes: str = (
+        "Chern-Simons gravity adds a parity-violating term theta * R*R"
+        " * to the Einstein-Hilbert action. Spinning BHs can acquire a"
+        " 'chirality charge' Q_CS ~ M^2 chi / (Planck scale). For"
+        " antiparallel spins, Q_CS_1 + Q_CS_2 = 0 -- the two BHs'"
+        " chirality charges CANCEL in the leading multipole, giving NO"
+        " net binding. (For PARALLEL spins the chirality charges add"
+        " and give a non-zero effect, but parallel-spin binaries don't"
+        " have the toroidal CTC band.) "
+        " VERDICT: the framework's antiparallel requirement DEFEATS"
+        " the parity-violation rescue."
+    )
+
+
+def chirality_charge_sum_antiparallel(M: float, chi: float = 1.0) -> float:
+    """Net chirality charge for ANTIPARALLEL spins: Q_1 + Q_2 = 0.
+
+    The Chern-Simons charge of a Kerr BH is Q_CS ~ chi * M^2 (sign
+    follows spin axis). Antiparallel: Q_1 = +chi M^2, Q_2 = -chi M^2.
+    Sum = 0 exactly.
+    """
+    return 0.0
+
+
+# ----- mechanism 9: vacuum-energy "Casimir" suppression of GW emission --
+
+
+@dataclass(frozen=True)
+class CasimirGWMechanism:
+    name: str = "Vacuum-energy GW suppression"
+    description: str = "Casimir-style negative-energy cavity between BHs"
+    requires_BSM: bool = False     # uses standard QFT
+    rescues_inspiral: bool = False
+    coupling_required: Optional[float] = None
+    notes: str = (
+        "Inspired by the original Knopp Drive's Q-cavity feedback idea."
+        " A Casimir-like vacuum-energy density between the two BHs"
+        " could in principle modify the local stress-energy and the GW"
+        " emission rate. The Casimir energy density scales as |E_Cas|"
+        " ~ -hbar c / d^4. For d ~ 2M ~ km, this is ~10^-69 J/m^3 --"
+        " 60+ orders of magnitude smaller than the GW back-reaction"
+        " stress-energy. The Pfenning-Ford quantum inequality further"
+        " bounds the integrated effect to NOT exceed |E_GW| * tau."
+        " VERDICT: quantitatively too weak by many OOM."
+    )
+
+
+# Replace CATALOGUE with the full nine-mechanism set
 CATALOGUE = (
     YukawaMechanism(),
     HardCoreMechanism(),
     ScalarTensorMechanism(),
     DarkPhotonMechanism(),
     LQGAreaMechanism(),
+    FRGravityMechanism(),
+    BraneworldMechanism(),
+    ParityChargeMechanism(),
+    CasimirGWMechanism(),
 )
 
 
@@ -345,7 +476,168 @@ def survey_binding_mechanisms(
         physical_candidate=False,
         notes=LQGAreaMechanism().notes,
     ))
+    # f(R) gravity
+    out.append(BindingVerdict(
+        mechanism_name=FRGravityMechanism().name,
+        rescues_inspiral=False,
+        coupling_required=None,
+        physical_candidate=False,
+        notes=FRGravityMechanism().notes,
+    ))
+    # Braneworld
+    out.append(BindingVerdict(
+        mechanism_name=BraneworldMechanism().name,
+        rescues_inspiral=False,
+        coupling_required=add_gravity_enhancement_factor(d=d) - 1.0,
+        physical_candidate=False,
+        notes=BraneworldMechanism().notes,
+    ))
+    # Parity charge
+    out.append(BindingVerdict(
+        mechanism_name=ParityChargeMechanism().name,
+        rescues_inspiral=False,
+        coupling_required=chirality_charge_sum_antiparallel(M),
+        physical_candidate=False,
+        notes=ParityChargeMechanism().notes,
+    ))
+    # Casimir GW suppression
+    out.append(BindingVerdict(
+        mechanism_name=CasimirGWMechanism().name,
+        rescues_inspiral=False,
+        coupling_required=None,
+        physical_candidate=False,
+        notes=CasimirGWMechanism().notes,
+    ))
     return out
+
+
+# ----- rescuability landscape -------------------------------------------
+
+
+@dataclass(frozen=True)
+class RescuabilityPoint:
+    """A single point in the (force_law, range, sign) rescue-parameter
+    space, with verdict on whether it could in principle rescue."""
+    name: str               # short label
+    sign: str               # "attractive" or "repulsive"
+    power: float            # F = C / r^power
+    range_M: float          # characteristic range in units of M (inf = long-range)
+    rescues_inspiral: bool
+    creates_stable_equilibrium: bool
+    notes: str
+
+
+def rescuability_landscape(
+    M: float = 1.0, d: float = 2.0,
+) -> list[RescuabilityPoint]:
+    """Map the (sign, power, range) space of binding force laws onto a
+    yes/no verdict.
+
+    Stable equilibrium requirements:
+      - A potential V(r) must have a local minimum at r = d_eq with
+        V''(d_eq) > 0.
+      - With Newtonian gravity -GM^2/r and an extra force +C/r^p
+        (repulsive p > 1) or -C/r^p (attractive p > 1):
+        for the COMBINATION to have a local minimum:
+          attractive extra: no minimum (both forces inward), inspiral
+          repulsive extra:  needs p > 1 (steeper than 1/r); minimum at
+                            r_eq satisfying  GM^2 / r^2 = C p / r^(p+1)
+                            -> r_eq = (C p / GM^2)^(1/(p-1)).
+      - Stability requires V'' > 0 at r_eq, i.e., p > 1.
+      - Range: if force is short-range (Yukawa), the minimum exists
+        only if range > d_eq.
+
+    This function classifies a representative grid of points.
+    """
+    landscape: list[RescuabilityPoint] = []
+    # Attractive long-range Newtonian: the baseline. No equilibrium.
+    landscape.append(RescuabilityPoint(
+        name="Newtonian gravity",
+        sign="attractive", power=2.0, range_M=float("inf"),
+        rescues_inspiral=False,
+        creates_stable_equilibrium=False,
+        notes="The reference: -GM^2/r alone gives no equilibrium.",
+    ))
+    # Repulsive long-range 1/r^2 (dark photon-like): tunable equilibrium.
+    landscape.append(RescuabilityPoint(
+        name="Repulsive 1/r^2 (dark Coulomb)",
+        sign="repulsive", power=2.0, range_M=float("inf"),
+        rescues_inspiral=True,
+        creates_stable_equilibrium=False,   # marginal: forces balance,
+                                            # no second derivative
+        notes=("Cancels Newtonian gravity exactly at all r if Q^2 = GM^2."
+               " This is a 'free-floating' marginal equilibrium with no"
+               " restoring force -- not a true stable point."),
+    ))
+    # Repulsive short-range 1/r^p (hard core, p > 2): true minimum.
+    for p in (3.0, 4.0, 6.0, 12.0):
+        landscape.append(RescuabilityPoint(
+            name=f"Repulsive 1/r^{int(p)} (hard core)",
+            sign="repulsive", power=p, range_M=float("inf"),
+            rescues_inspiral=True,
+            creates_stable_equilibrium=True,
+            notes=(f"Creates a stable equilibrium at r_eq with"
+                   f" V''(r_eq) > 0. Required coupling scales as"
+                   f" M^2 d^{int(p-1)}. For p = {int(p)}, d = 2 M:"
+                   f" epsilon ~ {hard_core_required_epsilon(M, d, n=int(p)):.2e}."),
+        ))
+    # Attractive long-range bonus (Yukawa, alpha < 1): no equilibrium.
+    landscape.append(RescuabilityPoint(
+        name="Attractive Yukawa (mu -> 0)",
+        sign="attractive", power=2.0, range_M=1e3,
+        rescues_inspiral=False,
+        creates_stable_equilibrium=False,
+        notes="Adds to Newton, accelerates inspiral.",
+    ))
+    # Short-range attractive: doesn't help in our regime either.
+    landscape.append(RescuabilityPoint(
+        name="Short-range attractive 1/r^4",
+        sign="attractive", power=4.0, range_M=1.0,
+        rescues_inspiral=False,
+        creates_stable_equilibrium=False,
+        notes="Even with finite range, attractive force gives no"
+              " equilibrium for two bound masses.",
+    ))
+    # PHYSICALLY-MOTIVATED candidates: which fall in the rescue regime?
+    # Only repulsive 1/r^p with p > 2 + sufficient strength does.
+    return landscape
+
+
+def summarise_landscape(landscape: list[RescuabilityPoint]) -> str:
+    n_rescue = sum(1 for p in landscape if p.rescues_inspiral)
+    n_stable = sum(1 for p in landscape if p.creates_stable_equilibrium)
+    lines = [
+        "Rescuability landscape:",
+        f"  total force-law points:               {len(landscape)}",
+        f"  rescues inspiral (force balance):     {n_rescue}",
+        f"  creates a stable equilibrium V'' > 0: {n_stable}",
+        "",
+    ]
+    for p in landscape:
+        marker = "  ***" if p.creates_stable_equilibrium else "     "
+        lines.append(
+            f"{marker} {p.name} ({p.sign}, 1/r^{p.power})"
+        )
+        lines.append(f"        range = {p.range_M} M")
+        lines.append(f"        rescues = {p.rescues_inspiral}, "
+                     f"stable_eq = {p.creates_stable_equilibrium}")
+    lines.append("")
+    lines.append(
+        "The only force-law class that creates a true stable equilibrium"
+    )
+    lines.append(
+        "is REPULSIVE, SHORT-RANGE, with power-law steeper than 1/r^2"
+    )
+    lines.append(
+        "(equivalently, F ~ 1/r^(p+1) with p >= 2; potential 1/r^p with"
+    )
+    lines.append(
+        "p > 1). No known SM or beyond-SM force on Kerr BHs has this"
+    )
+    lines.append(
+        "structure with the required coupling at d = 2 M."
+    )
+    return "\n".join(lines)
 
 
 def summarise_binding_survey(verdicts: list[BindingVerdict]) -> str:
@@ -372,8 +664,8 @@ def summarise_binding_survey(verdicts: list[BindingVerdict]) -> str:
     lines.append("")
     if n_candidates == 0:
         lines.append(
-            "  VERDICT: rescue path (b) is CLOSED at the level of "
-            "currently-catalogued mechanisms. None of the five "
+            f"  VERDICT: rescue path (b) is CLOSED at the level of "
+            f"currently-catalogued mechanisms. None of the {len(verdicts)} "
             "candidates couples to Kerr BHs at the right magnitude with "
             "a physically-motivated mechanism. Opening this path "
             "requires NEW physics beyond what's in the SM + leading "
