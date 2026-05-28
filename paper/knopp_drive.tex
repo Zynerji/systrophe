@@ -491,6 +491,18 @@ The ratio to the Newtonian orbital energy $E_{\rm orb}=-M^{2}/(2d)$ is $|U_{\rm 
 \end{itemize}
 Any rescue of the toroidal Knopp Drive must invoke (a) non-gravitational binding (an unmodelled force or composite structure that holds the binary tight against quadrupole decay), or (b) a beyond-leading-order GR effect that strongly suppresses inspiral in the extremal counter-rotating regime, or (c) a different binary topology (e.g., a non-equal-mass or non-aligned configuration). The full classical analysis is implemented in \texttt{systrophe.knopp.knopp\_toroidal\_stability} (\texttt{stability\_report}, \texttt{corrected\_merger\_time}, \texttt{gw\_frequency\_in\_hz}, \texttt{detector\_classification}).
 
+\subsection{Rescue paths explored}\label{ssec:toroidal_rescue}
+
+The three rescue paths flagged in \S\ref{ssec:toroidal_stability} -- non-gravitational binding, beyond-leading-order GR, and alternative binary topologies -- are tested concretely in \texttt{systrophe.knopp.knopp\_toroidal\_pn\_rescue}, \texttt{knopp\_toroidal\_asymmetric}, and \texttt{knopp\_necklace}. The standing verdicts:
+
+\paragraph{(a) PN rescue.} At $d=2M$ ($v^{2}=M/r=0.5$), the 1PN luminosity correction coefficient $-3.71-0.73\nu\approx-3.89$ at $\nu=1/4$ flips the sign of the PN factor $1+a_{1}v^{2}\approx-0.95$. The PN series has broken down in the strong-field regime; no reliable PN truncation can be quoted. At larger separations $d\!\gtrsim\!5M$ the PN series is well-behaved but no CTC band exists there (k < k_crit). \textbf{Rescue path \#2 is closed.}
+
+\paragraph{(b) Asymmetric topology.} A scan of $\{q,\alpha,d\}$ at $q\in\{1,0.5,0.1,0.01\}$, $\alpha\in\{\pi,0.9\pi,0.7\pi,0.5\pi\}$, $d\in\{1.5,2,2.5,5,10\}\,M$ (80 configurations) finds zero parameter points where the toroidal CTC band exists \emph{and} the binary survives a single orbit. Unequal-mass binaries gain inspiral lifetime (chirp mass shrinks as $q^{3/5}$) but lose CTC band coverage (kappa-factor degradation under misalignment, plus the band-existence threshold moves). \textbf{Rescue path \#3 is closed.}
+
+\paragraph{(c) Multi-binary necklace.} A ring of $N$ counter-rotating Kerr binaries at angular positions $\phi_{k}=2\pi k/N$ extends the band geometrically: the necklace closes into a continuous CTC band along the ring once $N \geq N_{\rm pack}$, where $N_{\rm pack}$ depends on $R_{\rm ring}/d$. For $R_{\rm ring}=5M$, $d=2M$: $N_{\rm pack}=4$. However, each individual binary inherits the same Peters merger problem ($n_{\rm orbits}\approx 0.025$ per binary). The necklace does \emph{not} fix the inspiral; only mutual angular-momentum exchange or ring-mode tidal coupling could, and neither is in the leading-order construction. \textbf{The necklace extends band coverage geometrically but inherits the falsification.}
+
+\paragraph{Net.} None of the three rescue paths flagged in \S\ref{ssec:toroidal_stability} closes the inspiral-vs-band gap under the classical-GR + leading-order PN analysis. Any rescue must come from a yet-unmodelled effect: non-gravitational binding force, full numerical-relativity extremal-spin suppression, or a fundamentally different binary topology. Each is documented in the corresponding module's docstring but not derived here.
+
 \subsection{Quantum-gravity probes of the toroidal band}\label{ssec:toroidal_quantum}
 
 Two probes from the broader Systrophe stack become well-defined when the CTC band is the \emph{finite} toroidal region rather than the infinite Tipler cylinder (where both diverge):
