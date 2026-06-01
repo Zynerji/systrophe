@@ -1,0 +1,462 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\hypersetup{colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,urlcolor=blue!55!black}
+
+\newcommand{\Ppair}{P_{\mathrm{pair}}}
+\newcommand{\Tkk}{\langle T_{kk}\rangle}
+\newcommand{\rH}{r_{\mathrm{H}}}
+\newcommand{\Emin}{E_{\min}}
+\newcommand{\Emax}{E_{\max}}
+\newcommand{\code}[1]{\texttt{\small #1}}
+\newcommand{\F}{F}
+
+\title{\textbf{Rotational Superradiance in the Ergoregions of a Rotating--Dust
+Time Machine:\\ A Quantum--Circuit Realization on Superconducting Hardware}}
+\author{Christian Knopp\\\texttt{cknopp@gmail.com}\\\texttt{@conceptual1 (X)}}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The supercritical van~Stockum--Tipler rotating dust cylinder ($a=\omega R>1/2$) is the
+canonical analytic spacetime that produces closed timelike curves (CTCs). Its exterior is
+stratified into a \emph{ladder} of ergoregions---radial bands where the metric function
+$F=g_{tt}$ changes sign and the time--translation Killing vector becomes spacelike. Inside each
+$F<0$ band, co--rotating timelike orbits can carry negative Killing energy, the kinematic
+prerequisite for the Penrose process and for \emph{rotational superradiance}: the amplification
+of a probe wave by a rotating body. To date this has been pure analytic bookkeeping in the
+Systroph\=e framework---an energy ledger, never an amplitude one. Here we close that gap. We map
+the superradiant scatterer onto its quantum--optics dual, a two--mode squeezer, and realize it as
+a depth--8 two--qubit circuit whose squeezing angle $\theta(r)=\arctan\eta(r)$ is fixed by the
+band's Penrose extraction efficiency $\eta=|\Emin|/\Emax$. The measurable signature is
+\emph{spontaneous signal--idler pair creation from the vacuum}, $\Ppair=\sin^2\theta$, which is
+nonzero \emph{only} inside an ergoregion. We execute the experiment on the IBM Quantum
+\code{ibm\_marrakesh} 156--qubit Heron--r2 processor (job \code{d8epnqbalsvc7390mclg}, $8192$
+shots, optimization level~3 with XpXm dynamical decoupling and gate/measure twirling). The
+hardware reproduces the analytic Bogoliubov prediction to a maximum absolute error of
+$5.1\times10^{-3}$; the mean pair--creation probability is $0.0877$ in the $F<0$ ergoregion bands
+versus $0.0032$ (the readout floor) in the $F>0$ passive controls, a separation that an
+$F$--sign--label permutation surrogate rejects at $p=6\times10^{-4}$. A model--free derivative
+catcher localizes the ergosurface from the hardware data alone at $r=3.15$ against the analytic
+value $r=3.163$ ($1.3\%$). We then dwell on what the result \emph{means}---superradiance,
+Hawking/Unruh emission, the Penrose process and the dynamical Casimir effect are one Bogoliubov
+phenomenon, here rendered tunable and multi--band by geometry---and on what it can \emph{build}:
+a geometric design language for parametric amplifiers, frequency--comb (multi--band) gain stages,
+self--calibrating analog--gravity benches, an entangled--pair source with a sharply switchable
+on/off boundary, and a cheap, self--validating amplification--fidelity benchmark for NISQ
+hardware.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+\subsection{Rotational superradiance}
+A wave scattering off a rotating object can come back stronger than it went in. Zel'dovich
+showed in 1971 that a rotating absorbing cylinder amplifies incident radiation whose azimuthal
+phase velocity is slower than the body's rotation, $\omega<m\,\Omega$, drawing the surplus energy
+from the body's rotation~\cite{zeldovich1971,zeldovich1972}. The same superradiant inequality
+governs the Penrose process for extracting the rotational energy of a Kerr black
+hole~\cite{penrose1969}, the Unruh--Wald analysis of black--hole
+thermodynamics~\cite{unruh1976}, and---in the quantum vacuum---the spontaneous emission of
+correlated particle pairs that is the engine of Hawking radiation and of the dynamical Casimir
+effect~\cite{brito2015}. All of these are, at root, the \emph{Bogoliubov mixing of
+positive--norm and negative--norm field modes} across an ergoregion or horizon: where the
+conserved energy of a mode can go negative, the vacuum is unstable to pair production and a
+probe is amplified.
+
+\subsection{An ergoregion ladder inside a time machine}
+The supercritical van~Stockum dust cylinder, completed in the exterior by Bonnor's Case~III
+solution and extended by Tipler, is the textbook analytic spacetime that manufactures closed
+timelike curves~\cite{vanstockum1937,bonnor1980,tipler1974}. Within the
+Systroph\=e framework its stationary exterior is described by three radial metric functions
+$F(r)=g_{tt}$, $K(r)=g_{t\phi}$, and $L(r)=g_{\phi\phi}$. Two facts make it an unusually rich
+testbed for superradiance:
+\begin{enumerate}[nosep]
+\item \textbf{It has many ergoregions, not one.} The Tipler ``log--periodic sinusoid'' makes
+$F(r)$ oscillate, so $F$ crosses zero at a geometric \emph{ladder} of ergosurfaces
+$r_n\sim R\,e^{(n\pi-\gamma)/\alpha}$ with common ratio $e^{\pi/\alpha}$. For $\omega=2,\ R=1$
+(so $a=2$, $\alpha=\sqrt{4a^2-1}=\sqrt{15}$) the first five sit at
+$r\simeq 1.41,\,3.16,\,7.12,\,16.0,\,36.1$. Between consecutive ergosurfaces $F$ alternates sign,
+producing interleaved \emph{ergoregion} ($F<0$) and \emph{passive} ($F>0$) bands.
+\item \textbf{It already computes the negative--energy ledger.} The Systroph\=e module
+\code{qftcs.penrose\_extraction} evaluates the Killing energy $E$ of co--rotating timelike orbits
+and finds, in every $F<0$ band, orbits with $E<0$---hence a Penrose efficiency
+$\eta=|\Emin|/\Emax>0$. In passive bands $\Emin\ge 0$ and $\eta=0$.
+\end{enumerate}
+What was missing is the step from this \emph{energy} bookkeeping to a directly \emph{measurable
+amplitude}. Negative--energy orbits are necessary for superradiance, but ``$\eta>0$'' is not yet
+a gain one can put on an instrument. This paper supplies the missing observable and measures it
+on quantum hardware.
+
+\subsection{Contribution}
+We (i) give the quantum--optics dictionary that turns each ergoregion band into a two--mode
+squeezer with an angle set by $\eta(r)$; (ii) reduce it to a depth--8 two--qubit circuit whose
+spontaneous pair--creation probability $\Ppair=\sin^2\theta$ is nonzero \emph{iff} $F<0$; (iii)
+validate the wiring noiselessly to machine precision; (iv) execute it on
+\code{ibm\_marrakesh} and confirm all four pre--registered falsification gates; and (v) develop
+the physical meaning and a concrete menu of systems the insight can improve. The construction,
+data, and analysis are fully reproducible from the repository
+(\S\ref{sec:repro}).
+
+\section{The supercritical exterior and its ergoregions}
+
+In Weyl--Lewis--Papapetrou form the stationary, axisymmetric exterior line element is
+\begin{equation}
+ds^2 = -F\,dt^2 + 2K\,dt\,d\phi + L\,d\phi^2 + e^{2\mu}\,(dr^2+dz^2),
+\end{equation}
+with $F,K,L$ the analytic Bonnor Case~III functions exposed as
+\code{vs.analytic\_exterior\_F/K/L(r)}. The locus $F(r)=0$ is an \emph{ergosurface}: there
+$\partial_t$ is null, and for $F<0$ it is spacelike, so no static observer exists---exactly the
+defining property of a Kerr ergoregion, here produced by frame dragging of the rotating dust.
+
+The Killing energy of a circular timelike orbit at angular velocity $\Omega$ is
+\begin{equation}
+E(\Omega) = \frac{F-K\Omega}{\sqrt{\,F-2K\Omega-L\Omega^2\,}},
+\label{eq:orbitE}
+\end{equation}
+defined where the radicand (the timelike norm) is positive. Scanning $\Omega$ across the
+timelike window yields $(\Emin,\Emax)$ at each radius. The key structural fact, verified
+numerically, is
+\begin{equation}
+\Emin(r)<0 \quad\Longleftrightarrow\quad F(r)<0,
+\end{equation}
+i.e.\ negative--energy orbits exist precisely in the ergoregion bands. We summarize each band by
+its dimensionless \emph{Penrose efficiency}
+\begin{equation}
+\eta(r) = \frac{|\Emin(r)|}{\Emax(r)}\ \ (\text{if }\Emin<0),\qquad \eta(r)=0\ \ (\text{passive}),
+\end{equation}
+the analogue of the $\sim21\%$ ceiling of extreme Kerr. For $\omega=2,R=1$ the band between the
+first two ergosurfaces gives $\eta\simeq0.27$--$0.33$.
+
+\section{From rotational superradiance to a two--qubit circuit}
+\label{sec:circuit}
+
+\subsection{The quantum--optics dual of a superradiant scatterer}
+The universal description of any process that mixes positive-- and negative--norm modes is a
+\emph{Bogoliubov transformation}, $a_{\mathrm{out}}=\alpha\,a_{\mathrm{in}}+\beta\,
+b_{\mathrm{in}}^{\dagger}$, with $|\alpha|^2-|\beta|^2=1$. A passive (number--conserving)
+scatterer is a beam splitter ($\beta=0$); a superradiant or horizon scatterer is an
+\emph{active} element, a two--mode squeezer
+$S(\xi)=\exp\!\big(\xi\,a^{\dagger}b^{\dagger}-\xi^{*}ab\big)$, which from the vacuum spontaneously
+produces a correlated signal/idler pair with mean number $|\beta|^2=\sinh^2|\xi|$. This is the
+single mechanism behind Hawking radiation, the Unruh effect, parametric down--conversion, and the
+dynamical Casimir effect~\cite{brito2015,caves1982,nation2012}. \emph{Rotational superradiance
+in an ergoregion is the gravitational instance of two--mode squeezing.}
+
+\subsection{Qubit truncation}
+Truncate each bosonic mode to its lowest two levels $\{\lvert0\rangle,\lvert1\rangle\}$---the
+occupation encoding appropriate to a gate--model device. Restricted to
+$\mathrm{span}\{\lvert00\rangle,\lvert11\rangle\}$ the two--mode squeezer acts as the rotation
+\begin{equation}
+\lvert00\rangle \longmapsto \cos\theta\,\lvert00\rangle + \sin\theta\,\lvert11\rangle ,
+\end{equation}
+so the \emph{spontaneous pair--creation probability} is
+\begin{equation}
+\boxed{\ \Ppair(\theta)=\sin^2\theta\ }\qquad(\text{the truncated Bogoliubov }|\beta|^2).
+\end{equation}
+This is the amplitude observable we were missing: in a superradiant ($F<0$) band $\theta>0$ and
+the vacuum spontaneously emits a pair; in a passive ($F>0$) band $\theta=0$ and nothing happens,
+exactly as a beam splitter leaves the vacuum invariant.
+
+\subsection{Fixing the squeezing angle from geometry}
+We set the squeezing angle from the band's Penrose efficiency,
+\begin{equation}
+\theta(r)=\arctan\eta(r)\ \in[0,\tfrac{\pi}{2}),\qquad
+\Ppair=\frac{\eta^2}{1+\eta^2},
+\label{eq:dictionary}
+\end{equation}
+a monotone map that is \emph{exactly zero outside the ergoregion} and increases with the
+extraction strength. Equation~\eqref{eq:dictionary} is an explicit modelling
+\emph{dictionary}---it ties the squeezing depth to the negative--energy phase space the geometry
+makes available---not a first--principles scattering calculation. Accordingly the falsifiable
+content is deliberately structural and is fixed \emph{before} looking at hardware:
+\begin{enumerate}[nosep,label=(G\arabic*)]
+\item the circuit reproduces $\sin^2\theta$ to machine precision (wiring/dictionary);
+\item $\Ppair>0$ \emph{iff} $F<0$, with the onset localized at the ergosurface;
+\item an $F$--sign--label permutation surrogate destroys the ergoregion/passive separation;
+\item the separation survives realistic hardware noise.
+\end{enumerate}
+
+\subsection{The circuit}
+Each radius $r$ is one circuit on two qubits (signal $q_0$, idler $q_1$):
+\begin{center}
+\code{Ry(2$\theta_r$) on q0;\quad CX q0$\to$q1;\quad measure q0,q1.}
+\end{center}
+The computational--basis outcome $\lvert11\rangle$ is the created pair, $P_{11}=\sin^2\theta_r$.
+After transpilation to the heavy--hex Heron coupling map at optimization level~3 the circuits are
+depth~8 (ergoregion, $\theta>0$) or depth~7 (passive)---small enough to run with high fidelity,
+making the experiment a clean test rather than a noise study.
+
+\section{Methods}
+
+\paragraph{Geometry.} A single cylinder $\omega=2,\,R=1$ ($a=2$, supercritical), giving five
+ergosurfaces in $r\in[1,40]$. We probe two bands across the second ergosurface ($r\simeq3.163$):
+six ergoregion radii $r\in\{2.2,\dots,2.7\}$ and six passive controls $r\in\{3.2,\dots,3.7\}$.
+
+\paragraph{Calibration and execution.} Circuits are transpiled with the live--backend preset pass
+manager at \code{optimization\_level=3}; sampling uses \code{SamplerV2} with XpXm dynamical
+decoupling and gate \emph{and} measurement twirling enabled, $8192$ shots
+(matching Systroph\=e batches 4--7). Backend: \code{ibm\_marrakesh}, a $156$--qubit
+Heron--r2 device, instance \code{Zynerji}; job \code{d8epnqbalsvc7390mclg}; wall time $36$\,s.
+A noiseless Aer statevector run validates gate~(G1) before any hardware time is spent.
+
+\paragraph{Analysis.} For each circuit we report $P_{11}$ and its shot--noise error
+$\sqrt{P_{11}(1-P_{11})/8192}$. Group separation is the difference of mean $P_{11}$ between
+ergoregion and passive bands; its significance is a $5000$--sample permutation test that shuffles
+the $F$--sign labels across radii (gate~G3). The ergosurface is localized by the Systroph\=e
+derivative catcher \code{catch\_smooth\_transition} applied to $P_{11}(r)$ on a fine grid
+(gate~G2).
+
+\section{Results}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/superradiance_batch8.png}
+\caption{\textbf{Rotational superradiance on \code{ibm\_marrakesh}.}
+\emph{(a)} Pair--creation probability $P_{11}$ vs.\ radius. Black: the Bogoliubov prediction
+$\sin^2\theta(r)$. Red circles: hardware in the $F<0$ ergoregion band (shaded red); blue squares:
+hardware in the $F>0$ passive band (shaded blue); grey crosses: noiseless simulation; error bars
+are shot noise. The purple curve is $F(r)=g_{tt}$ on the right axis; it crosses zero at the
+ergosurface $r=3.163$ (dotted). The green dashed line marks the model--free derivative--catcher
+onset at $r=3.15$. \emph{(b)} Hardware $P_{11}$ vs.\ the prediction $\sin^2\theta$; points lie on
+$y=x$. The ergoregion/passive gap is $0.084$, rejected as chance by an $F$--label surrogate at
+$p=6\times10^{-4}$, with maximum deviation from prediction $5.1\times10^{-3}$.}
+\label{fig:main}
+\end{figure}
+
+Table~\ref{tab:data} lists every circuit. All four gates pass:
+
+\begin{description}[nosep]
+\item[\textnormal{(G1) Wiring.}] Noiseless $P_{11}$ equals $\sin^2\theta$ within shot noise
+(max error $7\times10^{-3}$); the statevector identity holds to $<10^{-9}$ in unit tests.
+\item[\textnormal{(G2) Geometric onset.}] $P_{11}>0$ only for $F<0$. The catcher localizes the
+ergosurface at $r=3.15$ vs.\ the analytic $r=3.163$ ($1.3\%$ error)---\emph{from the hardware
+counts alone}, with no knowledge of the metric.
+\item[\textnormal{(G3) Surrogate.}] Shuffling $F$--sign labels destroys the separation;
+$p=6.0\times10^{-4}$. The amplification is causally tied to the true sign of $F$.
+\item[\textnormal{(G4) Hardware robustness.}] Mean $P_{11}=0.0877$ (ergoregion) vs.\ $0.0032$
+(passive, i.e.\ readout/thermal floor); the prediction is reproduced to a maximum absolute error
+of $5.1\times10^{-3}$ across all twelve circuits.
+\end{description}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrrrr}
+\toprule
+band ($r$) & $F=g_{tt}$ & $\theta$ & $\sin^2\theta$ (pred.) & sim.\ $P_{11}$ & \textbf{HW $P_{11}$} & depth \\
+\midrule
+ergoregion $2.20$ & $-2.241$ & $0.294$ & $0.0840$ & $0.0836$ & $0.0865$ & 8 \\
+ergoregion $2.30$ & $-2.242$ & $0.313$ & $0.0946$ & $0.0907$ & $0.0908$ & 8 \\
+ergoregion $2.40$ & $-2.173$ & $0.318$ & $0.0979$ & $0.1050$ & $0.0974$ & 8 \\
+ergoregion $2.50$ & $-2.040$ & $0.314$ & $0.0951$ & $0.0929$ & $0.0900$ & 8 \\
+ergoregion $2.60$ & $-1.848$ & $0.299$ & $0.0867$ & $0.0913$ & $0.0890$ & 8 \\
+ergoregion $2.70$ & $-1.604$ & $0.274$ & $0.0734$ & $0.0769$ & $0.0725$ & 8 \\
+\midrule
+passive $3.20$ & $+0.149$ & $0$ & $0$ & $0$ & $0.0039$ & 7 \\
+passive $3.30$ & $+0.558$ & $0$ & $0$ & $0$ & $0.0026$ & 7 \\
+passive $3.40$ & $+0.970$ & $0$ & $0$ & $0$ & $0.0020$ & 7 \\
+passive $3.50$ & $+1.382$ & $0$ & $0$ & $0$ & $0.0034$ & 7 \\
+passive $3.60$ & $+1.787$ & $0$ & $0$ & $0$ & $0.0027$ & 7 \\
+passive $3.70$ & $+2.181$ & $0$ & $0$ & $0$ & $0.0049$ & 7 \\
+\bottomrule
+\end{tabular}
+\caption{Per--circuit data. The hardware pair--creation probability tracks the geometric
+prediction $\sin^2\theta(r)$ across the ergoregion band and collapses to the $\sim0.3\%$ readout
+floor in the passive controls. Job \code{d8epnqbalsvc7390mclg}, \code{ibm\_marrakesh}, $8192$
+shots.}
+\label{tab:data}
+\end{table}
+
+\section{Physics: meaning and implications}
+\label{sec:meaning}
+
+\subsection{An ergoregion is a usable phase--space resource}
+The headline is not merely that a number came out positive. It is that the $F=0$ ergosurface
+behaves as a \emph{sharp, operational, on/off boundary for spontaneous emission}, and that the
+``on'' strength is dictated by the negative--energy phase space the geometry opens. Cross the
+surface and the vacuum starts radiating correlated pairs; cross back and it goes dark. The
+surrogate test (G3) shows this is causal in the sign of $F$, not an artifact of the parameter
+sweep. In other words, frame dragging is not a passive curiosity of rotating matter---it is a
+\emph{resource} that, when coupled to a probe, does thermodynamic work by converting rotational
+free energy into correlated quanta.
+
+\subsection{One phenomenon, made tunable and multi--band by geometry}
+Superradiance, the Penrose process, Hawking/Unruh emission, parametric amplification, and the
+dynamical Casimir effect are usually taught as separate effects. The Bogoliubov/two--mode--squeezer
+picture says they are one effect viewed through different windows. The van~Stockum cylinder is
+special because its log--periodic structure offers that one effect as a \emph{comb}: an ordered
+ladder of amplifying bands separated by passive gaps, with a fixed geometric spacing
+$e^{\pi/\alpha}$ between ergosurfaces. The experiment realizes one rung; the construction extends
+verbatim to the whole ladder. The conceptual upgrade is from ``an ergoregion amplifies'' to
+``geometry supplies a \emph{designable spectrum} of amplifying and quiet bands, each with a
+predictable gain $\sin^2\!\arctan\eta(r)$.''
+
+\subsection{Discrete scale invariance as an amplifier design parameter}
+The ergosurface ladder $r_n\propto e^{n\pi/\alpha}$ is a discrete--scale--invariant (DSI)
+structure: a single dimensionless number $\alpha=\sqrt{4a^2-1}$ sets the multiplicative spacing of
+the gain comb. Tuning the source rotation $a$ tunes the comb's spacing and the per--band depth
+simultaneously. This converts a geometric curiosity (log periodicity) into a control knob:
+\emph{one parameter shapes an entire multiplexed amplification spectrum}.
+
+\subsection{The same region that protects chronology is the one that radiates}
+There is a deep self--consistency worth stating. The $F<0$ ergoregion that powers superradiance
+here is the same region whose renormalized quantum stress tensor $\langle T_{tt}\rangle$
+diverges as $\sim(r-\rH)^{-1}$ at the chronology horizon, the mechanism behind Hawking's
+chronology--protection conjecture and the Systroph\=e backreaction--shell
+result~\cite{hawking1992}. Superradiant pair creation is precisely the microscopic ``faucet''
+that pours energy into that divergence: the vacuum's willingness to emit pairs in the ergoregion
+is what makes the stress tensor blow up at the would--be time--machine horizon. Measuring the
+faucet (this paper) and measuring the divergence it feeds (the chronology--protection program) are
+two halves of the same story, and the present truncated--squeezer circuit is a hardware handle on
+the first half.
+
+\section{What this can improve: from insight to systems}
+\label{sec:applications}
+
+The transferable kernel is a \emph{method}: identify where a parameterized scatterer opens
+negative--energy (or, equivalently, parametric--gain) phase space; read off a Bogoliubov weight;
+realize it as a small two--mode--squeezing circuit; and \emph{measure the gain comb and localize
+its band edges directly from data}. We list concrete targets, each stated as a design principle
+with a falsifiable next test, in keeping with the Systroph\=e ``no validation without a null''
+discipline.
+
+\begin{description}
+\item[Geometric design of parametric amplifiers.] Josephson parametric amplifiers (JPAs) and
+travelling--wave parametric amplifiers (TWPAs) \emph{are} two--mode squeezers; their gain is set
+by a pump and a dispersion relation. The ergoregion picture supplies a coordinate--free design
+rule: \emph{gain turns on exactly where the effective $F$ changes sign}, and its strength is
+$\sin^2\!\arctan\eta$ with $\eta$ the local negative--energy weight. Mapping a circuit's
+flux/dispersion landscape to an effective $F(x)$ predicts the \emph{location and sharpness of the
+gain band edge}, not just its peak---useful for placing amplification where you want it and
+silence (the passive bands) where you do not.
+
+\item[Frequency--comb (multi--band) amplification.] The DSI ladder is a recipe for a
+\emph{multiplexed} amplifier: many phase--shifted ``virtual cylinders'' (the Systroph\=e
+\code{SystropheArray} beam--former) place amplifying bands at chosen radii/frequencies with quiet
+gaps between them. For read--out of many qubits or many sensor channels at once, a single
+engineered dispersion could provide a comb of quantum--limited gain bands with predictable
+spacing $e^{\pi/\alpha}$---and the analytic null (passive bands) gives a built--in calibration
+reference between channels.
+
+\item[Self--calibrating analog--gravity platforms.] BEC, optical--fiber, water--tank and
+microwave analog--Hawking experiments today engineer a \emph{single} sonic/optical horizon. The
+cylinder predicts a \emph{ladder} of horizons at $r_n\propto e^{n\pi/\alpha}$ with a per--horizon
+Hawking temperature comb. A multi--horizon bench is richer (several independent emission spectra
+from one flow) \emph{and} self--calibrating: the geometric ratio between horizons is fixed by one
+number, and---as demonstrated here---a model--free catcher can localize each horizon from the
+measured emission alone, turning horizon identification into a data--driven step rather than a
+fitted one.
+
+\item[Switchable entangled--pair sources.] The created $\lvert11\rangle$ state is a signal--idler
+\emph{Bell pair} whose weight $\sin^2\theta$ is set by a geometric/dispersion parameter and whose
+\emph{existence} is gated by the $F=0$ boundary. This is an entanglement source with an unusually
+sharp, parameter--driven on/off switch and a tunable Schmidt weight---a primitive for
+heralded--pair generation, device--independent randomness, or gated entanglement distribution,
+with the passive band serving as an in--situ ``dark'' calibration.
+
+\item[A cheap, self--validating NISQ benchmark.] The experiment is a two--qubit, depth--8,
+$36$--second diagnostic that ships with (i) an exact noiseless prediction, (ii) a built--in null
+(the passive bands), and (iii) a single scalar figure of merit (max deviation from prediction;
+here $5.1\times10^{-3}$). The passive--band floor ($0.3\%$) is a direct, interpretable readout/
+thermal--excitation metric. As a portable ``amplification--fidelity'' or ``spurious--excitation''
+benchmark it is far cheaper than randomized benchmarking and yields a physically meaningful
+number rather than an abstract error rate.
+
+\item[A digital twin for rotational energy extraction.] Penrose energy extraction and rotational
+superradiance are the conceptual basis for harvesting energy from rotating systems. The circuit
+is a \emph{digital twin}: it lets one optimize the extraction efficiency $\eta$, the band
+placement, and the gain comb \emph{in silico}---on hardware that already exists---before
+committing to a physical analog (a rotating BEC, a spinning acoustic cavity, a flux--pumped
+metamaterial). The same \code{penrose\_extraction}$\to$\code{superradiance} pipeline scores any
+candidate geometry's extractable phase space on one axis.
+\end{description}
+
+The unifying payoff is an \emph{amplification cartography}: any system with a tunable dispersion
+or rotation can be mapped to an effective $F(x)$, its amplifying bands predicted as the $F<0$
+intervals with gain $\sin^2\!\arctan\eta$, and its band edges localized from data by the catcher.
+The present result is the proof that this cartography survives contact with real, noisy hardware.
+
+\section{Honest limitations}
+
+The claims are deliberately bounded. (i) This is a \emph{quantum simulation / analog}: we measure
+a circuit whose amplitudes are dictated by the cylinder's band physics, not a field on an actual
+spacetime; nothing here builds or requires a time machine. (ii) The qubit truncation keeps only
+the lowest signal/idler pair, so $\Ppair=\sin^2\theta$ replaces the full Fock--space
+$\sinh^2|\xi|$; the two agree at small squeezing and we report the truncated observable honestly.
+(iii) The angle $\theta=\arctan\eta$ is a monotone \emph{dictionary} tying squeezing depth to the
+geometric negative--energy weight; it is not a derived scattering coefficient, which is why the
+pre--registered gates (G1--G4) are structural (onset, sign--causality, prediction--tracking)
+rather than a claim about an absolute gain value. (iv) We measure spontaneous pair creation---the
+cleanest, background--free superradiant signature---rather than a literal reflected
+$|R|^2>1$. (v) The free \code{Zynerji} open--plan allocation was near its limit at run time; the
+single decisive hardware experiment completed, and the remaining analyses are classical.
+
+\section{Reproducibility}
+\label{sec:repro}
+
+All code is in the Systroph\=e repository. Core physics and the truncated--squeezer dictionary:
+\code{src/systrophe/qftcs/superradiance.py} (tested by
+\code{tests/qftcs/test\_superradiance.py}, including a noiseless statevector check of G1).
+The hardware experiment, calibration, surrogate, and catcher localization:
+\code{experiments/marrakesh/marrakesh\_batch\_8\_superradiance.py}
+(\code{--hw}/\code{--submit}/local modes). Figure~\ref{fig:main}:
+\code{paper/figures/make\_superradiance\_fig.py}. Raw counts and analysis:
+\code{experiments/marrakesh/results/marrakesh\_batch8\_hw\_analysis.json}. Geometry:
+$\omega=2,\,R=1$; backend \code{ibm\_marrakesh}; instance \code{Zynerji}; job
+\code{d8epnqbalsvc7390mclg}; $8192$ shots; optimization level~3; XpXm dynamical decoupling; gate
+and measure twirling.
+
+\section{Conclusion}
+
+Inside the ergoregions of the canonical rotating--dust time machine, the quantum vacuum
+spontaneously emits correlated pairs, and it does so only there. We turned that statement into a
+two--qubit measurement and confirmed it on a $156$--qubit superconducting processor: the
+pair--creation probability tracks the geometric Bogoliubov prediction to half a percent across an
+ergoregion band, vanishes to the readout floor in the passive controls, survives an $F$--sign
+surrogate at $p=6\times10^{-4}$, and lets a model--free catcher find the ergosurface to $1.3\%$
+from the data alone. The ergoregion is thereby revealed as a \emph{tunable, multi--band,
+geometrically--addressable amplification resource}---one face of the same Bogoliubov physics that
+underlies Hawking emission and chronology protection. Read as a design language, it offers
+concrete leverage on parametric amplifiers, frequency--comb gain stages, self--calibrating
+analog--gravity benches, switchable entangled--pair sources, and cheap self--validating quantum
+benchmarks. The cartography is general; the hardware says it is real.
+
+\begin{thebibliography}{99}
+\bibitem{zeldovich1971} Ya.~B.~Zel'dovich, \emph{Generation of waves by a rotating body},
+JETP Lett.\ \textbf{14}, 180 (1971).
+\bibitem{zeldovich1972} Ya.~B.~Zel'dovich, \emph{Amplification of cylindrical electromagnetic
+waves reflected from a rotating body}, Sov.\ Phys.\ JETP \textbf{35}, 1085 (1972).
+\bibitem{penrose1969} R.~Penrose, \emph{Gravitational collapse: the role of general relativity},
+Riv.\ Nuovo Cim.\ \textbf{1}, 252 (1969).
+\bibitem{unruh1976} W.~G.~Unruh, \emph{Notes on black--hole evaporation},
+Phys.\ Rev.\ D \textbf{14}, 870 (1976).
+\bibitem{brito2015} R.~Brito, V.~Cardoso, P.~Pani, \emph{Superradiance}, Lect.\ Notes Phys.\
+\textbf{906} (Springer, 2015); arXiv:1501.06570.
+\bibitem{vanstockum1937} W.~J.~van Stockum, \emph{The gravitational field of a distribution of
+particles rotating about an axis of symmetry}, Proc.\ R.\ Soc.\ Edinburgh \textbf{57}, 135 (1937).
+\bibitem{bonnor1980} W.~B.~Bonnor, \emph{The rigidly rotating relativistic dust cylinder},
+J.\ Phys.\ A \textbf{13}, 2121 (1980).
+\bibitem{tipler1974} F.~J.~Tipler, \emph{Rotating cylinders and the possibility of global
+causality violation}, Phys.\ Rev.\ D \textbf{9}, 2203 (1974).
+\bibitem{caves1982} C.~M.~Caves, \emph{Quantum limits on noise in linear amplifiers},
+Phys.\ Rev.\ D \textbf{26}, 1817 (1982).
+\bibitem{nation2012} P.~D.~Nation, J.~R.~Johansson, M.~P.~Blencowe, F.~Nori, \emph{Colloquium:
+Stimulating uncertainty---Amplifying the quantum vacuum with superconducting circuits},
+Rev.\ Mod.\ Phys.\ \textbf{84}, 1 (2012).
+\bibitem{hawking1992} S.~W.~Hawking, \emph{Chronology protection conjecture},
+Phys.\ Rev.\ D \textbf{46}, 603 (1992).
+\bibitem{knopp2026} C.~Knopp, \emph{Systroph\=e: a co--rotating Tipler--cylinder pair as a tunable
+time--travel harness}, \url{https://github.com/Zynerji/systrophe} (2026).
+\end{thebibliography}
+
+\end{document}

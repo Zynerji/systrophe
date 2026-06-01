@@ -1,0 +1,163 @@
+{
+  "backend_tag": "sim:aer",
+  "per_circuit": [
+    {
+      "label": "ergo_r2.20",
+      "tag": "ergo",
+      "r": 2.2,
+      "F": -2.2413765351573387,
+      "is_ergoregion": true,
+      "theta": 0.2941223522987197,
+      "P11_predicted": 0.08404201177258126,
+      "P11_observed": 0.0836181640625,
+      "abs_error": 0.00042384771008126265,
+      "isa_depth": 3
+    },
+    {
+      "label": "ergo_r2.30",
+      "tag": "ergo",
+      "r": 2.3,
+      "F": -2.241868334119661,
+      "is_ergoregion": true,
+      "theta": 0.31256653744790946,
+      "P11_predicted": 0.09455737471691823,
+      "P11_observed": 0.0906982421875,
+      "abs_error": 0.0038591325294182327,
+      "isa_depth": 3
+    },
+    {
+      "label": "ergo_r2.40",
+      "tag": "ergo",
+      "r": 2.4,
+      "F": -2.1731731157799024,
+      "is_ergoregion": true,
+      "theta": 0.3183180936916567,
+      "P11_predicted": 0.0979499651453552,
+      "P11_observed": 0.10498046875,
+      "abs_error": 0.0070305036046448,
+      "isa_depth": 3
+    },
+    {
+      "label": "ergo_r2.50",
+      "tag": "ergo",
+      "r": 2.5,
+      "F": -2.0399627344085802,
+      "is_ergoregion": true,
+      "theta": 0.3134854892418083,
+      "P11_predicted": 0.09509583454019886,
+      "P11_observed": 0.0928955078125,
+      "abs_error": 0.002200326727698862,
+      "isa_depth": 3
+    },
+    {
+      "label": "ergo_r2.60",
+      "tag": "ergo",
+      "r": 2.6,
+      "F": -1.848047850177525,
+      "is_ergoregion": true,
+      "theta": 0.2988749616320872,
+      "P11_predicted": 0.0866979932706597,
+      "P11_observed": 0.09130859375,
+      "abs_error": 0.004610600479340296,
+      "isa_depth": 3
+    },
+    {
+      "label": "ergo_r2.70",
+      "tag": "ergo",
+      "r": 2.7,
+      "F": -1.60400139156228,
+      "is_ergoregion": true,
+      "theta": 0.27434021956256477,
+      "P11_predicted": 0.07339325137437001,
+      "P11_observed": 0.076904296875,
+      "abs_error": 0.003511045500629986,
+      "isa_depth": 3
+    },
+    {
+      "label": "passive_r3.20",
+      "tag": "passive",
+      "r": 3.2,
+      "F": 0.14918408578971992,
+      "is_ergoregion": false,
+      "theta": 0.0,
+      "P11_predicted": 0.0,
+      "P11_observed": 0.0,
+      "abs_error": 0.0,
+      "isa_depth": 2
+    },
+    {
+      "label": "passive_r3.30",
+      "tag": "passive",
+      "r": 3.3,
+      "F": 0.5575667976565101,
+      "is_ergoregion": false,
+      "theta": 0.0,
+      "P11_predicted": 0.0,
+      "P11_observed": 0.0,
+      "abs_error": 0.0,
+      "isa_depth": 2
+    },
+    {
+      "label": "passive_r3.40",
+      "tag": "passive",
+      "r": 3.4,
+      "F": 0.9702660754695913,
+      "is_ergoregion": false,
+      "theta": 0.0,
+      "P11_predicted": 0.0,
+      "P11_observed": 0.0,
+      "abs_error": 0.0,
+      "isa_depth": 2
+    },
+    {
+      "label": "passive_r3.50",
+      "tag": "passive",
+      "r": 3.5,
+      "F": 1.3817226489122527,
+      "is_ergoregion": false,
+      "theta": 0.0,
+      "P11_predicted": 0.0,
+      "P11_observed": 0.0,
+      "abs_error": 0.0,
+      "isa_depth": 2
+    },
+    {
+      "label": "passive_r3.60",
+      "tag": "passive",
+      "r": 3.6,
+      "F": 1.7868622561071006,
+      "is_ergoregion": false,
+      "theta": 0.0,
+      "P11_predicted": 0.0,
+      "P11_observed": 0.0,
+      "abs_error": 0.0,
+      "isa_depth": 2
+    },
+    {
+      "label": "passive_r3.70",
+      "tag": "passive",
+      "r": 3.7,
+      "F": 2.181105732030881,
+      "is_ergoregion": false,
+      "theta": 0.0,
+      "P11_predicted": 0.0,
+      "P11_observed": 0.0,
+      "abs_error": 0.0,
+      "isa_depth": 2
+    }
+  ],
+  "group_separation": {
+    "mean_P11_ergoregion": 0.09006754557291667,
+    "mean_P11_passive": 0.0,
+    "observed_gap": 0.09006754557291667,
+    "surrogate_p_value": 0.0005998800239952009,
+    "n_permutations": 5000
+  },
+  "ergosurface_localization": {
+    "estimated_transition_centre": 3.1500000000000004,
+    "true_ergosurface_r": 3.162907914040814,
+    "kind": "discontinuous",
+    "abs_error": 0.012907914040813484
+  },
+  "max_abs_error_vs_prediction": 0.0070305036046448
+}
