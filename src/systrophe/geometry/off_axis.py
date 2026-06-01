@@ -53,7 +53,13 @@ def _cartesian_h(F: np.ndarray, K: np.ndarray, L: np.ndarray,
     """
     cos_phi = np.cos(phi)
     sin_phi = np.sin(phi)
-    r_safe = np.where(np.abs(r) > 1e-300, r, 1.0e-300)
+    # Floor |r| away from zero on the cylinder axis. The floor must survive
+    # being squared below (r_safe ** 2): 1e-300 squared underflows to 0.0 in
+    # float64 and reintroduces the divide-by-zero it was meant to prevent
+    # (invalid-value warnings + inf/nan at any grid point on a cylinder axis).
+    # 1e-150 squared is 1e-300, still a normal float, so the spatial block
+    # stays finite.
+    r_safe = np.where(np.abs(r) > 1e-150, r, 1.0e-150)
 
     h_tt = -F + 1.0  # g_tt = -F so h_tt = g_tt - eta_tt = -F - (-1) = 1 - F
     # off-diagonals from g_{t phi} = K -> g_{tx} = -K sin(phi) / r, g_{ty} = K cos(phi) / r

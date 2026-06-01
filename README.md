@@ -8,8 +8,8 @@
 [![PyPI](https://img.shields.io/pypi/v/systrophe.svg)](https://pypi.org/project/systrophe/)
 [![Python ≥ 3.10](https://img.shields.io/badge/python-%E2%89%A5%203.10-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 1350 passing](https://img.shields.io/badge/tests-1350%20passing-brightgreen.svg)](#tests)
-[![Papers: 13](https://img.shields.io/badge/papers-13%20PDFs-informational.svg)](#papers)
+[![Tests: 1786 passing](https://img.shields.io/badge/tests-1786%20passing-brightgreen.svg)](#tests)
+[![Papers: 17](https://img.shields.io/badge/papers-17%20PDFs-informational.svg)](#papers)
 [![IBM Quantum: 7 batches](https://img.shields.io/badge/IBM%20Quantum-7%20batches-purple.svg)](#ibm-marrakesh-hardware-validation)
 [![Knopp Drive: live](https://img.shields.io/badge/Knopp%20Drive-live-red.svg)](#the-knopp-drive-headline-composite-warp-engineering-bound)
 [![Millennium: 4/7 + Goldbach](https://img.shields.io/badge/Millennium-4%2F7%20%2B%20Goldbach-orange.svg)](FINDINGS_MILLENNIUM_PROGRESS.md)
@@ -17,7 +17,7 @@
 [![Cross-chip: 1.94σ](https://img.shields.io/badge/cross--chip-1.94%CF%83%20RMS-purple.svg)](experiments/knopp/knopp_cross_chip_comparison.py)
 [![Version 0.21.0](https://img.shields.io/badge/version-0.21.0-blue.svg)](pyproject.toml)
 [![Phases 2a, 2b, 3a, 3b: shipped](https://img.shields.io/badge/Phases%202a%E2%80%933b-shipped-success.svg)](ROADMAP.md)
-[![Derived tools: 2](https://img.shields.io/badge/derived%20tools-Systroformer%20%2B%20Cyliformer-blueviolet.svg)](tools/)
+[![Derived tools: 17](https://img.shields.io/badge/derived%20tools-17%20in%20tools%2F-blueviolet.svg)](tools/)
 [![QEC: d=9 break-even](https://img.shields.io/badge/QEC-d%3D9%20%2B38.7%CF%83-darkgreen.svg)](paper/surface_code_multidistance_break_even.pdf)
 
 *Systrophē* (Greek **Συστροφή**, "twisting-together"): the joint exterior of two co-rotating, dual-positive-mass van Stockum dust cylinders, whose log-periodic Tipler sinusoids superpose with a tunable relative phase offset.
@@ -28,7 +28,7 @@
 
 ## What this is
 
-A complete numerical and analytic framework spanning **50 phases** of development, from classical general relativity through quantum field theory on the CTC background, Deutsch-CTC channel theory, and IBM quantum-hardware validation. The repository ships with **94 source modules**, **1118 passing tests** across **98 test files**, **11 LaTeX whitepapers**, **40 reproducible example scripts**, and **4 batches of IBM Marrakesh hardware experiments**.
+A complete numerical and analytic framework spanning **50 phases** of development, from classical general relativity through quantum field theory on the CTC background, Deutsch-CTC channel theory, and IBM quantum-hardware validation. The repository ships with **154 source modules**, **1786 passing tests** across **144 test files**, **17 LaTeX whitepapers**, **97 reproducible example scripts**, and **7 batches of IBM Marrakesh hardware experiments**.
 
 The five canonical layers:
 
@@ -36,7 +36,7 @@ The five canonical layers:
 2. **Quantum / QFT layer** (v0.7 – v0.13) — radial Dirac operator and bound-state spectrum, renormalised stress tensor, anomaly inflow on the Z₃ cover, joint Floquet on (time × branch), Newton-Kantorovich back-reaction, cascade-DSI fractal extension, ADM 3+1 export, Deutsch-CTC fixed-point solver on the cover.
 3. **Phase-by-phase extensions** (v0.13 – v0.17, **Phases 11 – 50**) — photon orbits, lensing, Penrose extraction, optical-fibre / synchrotron analogs, Wilson loops, Aharonov-Bohm CTC phase, Berry / twistor / spinor-monodromy on LP, BMS soft hair, ER=EPR pair, monopole on cylinder, anyonic CTC, stochastic LP, BH pair production, vacuum polarization, Casimir-Polder, Unruh, KG scattering, solitons, holographic complexity, holography, page-curve construction, LQG discretisation, modified dispersion, GW emission, ANEC bound, energy-condition survey, exotic-matter accounting, photon sphere structure, tidal-force diagnostics, frame dragging, Hawking budget, dark-matter scalar coupling, geodesic completeness, topology change, cosmological embedding, KK embedding, higher-spin fields, Cauchy-stability, chronology-protection budget, wormhole-throat, dynamical Casimir, dynamical-cylinder back-reaction, multi-cylinder dynamics, NR initial data.
 4. **Deutsch-CTC channel theory** — independent line of empirical investigation of D-CTC fixed-point iteration: spectral oracle (`|λ₂|` predicts iteration count, Pearson r = 0.99 across 2000 Haar samples), power-law scaling, multi-basin attractor structure, Clifford-structured channel amplification, limit-cycle solutions, and an encoding-dependent chronology-protection criterion. Phases A – ZY (26 phase letters + E1, E4, E8 deep cycles).
-5. **IBM Marrakesh hardware validation** — 4 batches on the IBM Quantum `ibm_marrakesh` 156-qubit Heron-r2 device, demonstrating KK escape interference cancellation at the supercritical threshold, Page-curve recovery from the LP cover, and a log-periodic LP quantum walk with phase-by-phase α recovery to <1% relative error at the theoretical α_LP = √3.
+5. **IBM Marrakesh hardware validation** — 7 batches on the IBM Quantum `ibm_marrakesh` 156-qubit Heron-r2 device, demonstrating KK escape interference cancellation at the supercritical threshold, Page-curve recovery from the LP cover, and a log-periodic LP quantum walk with phase-by-phase α recovery to <1% relative error at the theoretical α_LP = √3.
 
 Every phase module ships with a **mandatory novelty catcher** (address-space λ₂ on the Hamming graph of bit-hashed distributions) that flags surprises before any "validated" / "null" verdict is issued.
 
@@ -85,7 +85,7 @@ pip install systrophe          # latest release
 git clone https://github.com/Zynerji/systrophe
 cd systrophe
 pip install -e ".[dev]"        # editable install with dev tools
-pytest                         # 1118 tests, 1 skipped (z3-solver)
+pytest                         # 1786 tests, 0 skipped
 ```
 
 Optional extras:
@@ -217,7 +217,7 @@ The full derivation, with Lewis–Papapetrou Ernst-equation reduction and Bonnor
 
 ## Scope taxonomy
 
-The 94 source modules break into four functional layers. Each module name below is also the import path `systrophe.<name>`.
+The 154 source modules break into four functional layers. Each module name below is also the import path `systrophe.<name>`.
 
 ### Classical core (Paper I)
 
@@ -389,7 +389,7 @@ print(summarise_knopp_budget(b))
 # tipler_gate=0.000, Q=100 -> 1/Q^2=0.0001, |steering|=1.000e-01, P-F_ok=True
 ```
 
-The full derivation, six representative engineering configurations, the complete catcher-validated emergent inventory (**24 entries at v0.19.0+**), and the Pfenning–Ford compatibility analysis are in [`paper/knopp_drive.pdf`](paper/knopp_drive.pdf). The end-to-end walkthrough is `examples/knopp/knopp_drive_walkthrough.py`.
+The full derivation, six representative engineering configurations, the complete catcher-validated emergent inventory (**28 entries at v0.21.0+**), and the Pfenning–Ford compatibility analysis are in [`paper/knopp_drive.pdf`](paper/knopp_drive.pdf). The end-to-end walkthrough is `examples/knopp/knopp_drive_walkthrough.py`.
 
 Implementation: `src/systrophe/knopp/knopp_drive.py`. Supporting modules: `alcubierre.py`, `lentz_soliton.py`, `bobrick_martire.py`, `krasnikov_tube.py`, `tipler_krasnikov_hybrid.py`, `feedback_amplified_shell.py`, `horn_toroidal_warp.py`.
 
@@ -551,12 +551,12 @@ The DCTC spectral oracle is now hardware-grade validated against a real QEC deco
 ## Tests
 
 ```bash
-pytest                 # 1118 passed, 1 skipped
+pytest                 # 1786 passed, 0 skipped
 pytest -v              # verbose
 pytest --cov=systrophe # with coverage (requires pytest-cov)
 ```
 
-**Test count: 1118 passing, 1 skipped (Dinos bridge under missing z3-solver), 0 failing, across 98 test modules.**
+**Test count: 1786 passing, 0 skipped, 0 failing, across 144 test modules.**
 
 Coverage spans:
 
@@ -618,11 +618,11 @@ cd paper && pdflatex <name>.tex && pdflatex <name>.tex
   title  = {{Systroph\=e}: A co-rotating Tipler-cylinder pair as a tunable
             time-travel harness, with quantum and Deutsch-CTC extensions},
   year   = {2026},
-  note   = {v0.17.0. Python implementation: van Stockum interior, Lewis--Papapetrou
+  note   = {v0.21.0. Python implementation: van Stockum interior, Lewis--Papapetrou
             exterior, off-set Tipler sinusoid, Z\_3 M\"obius cover correspondence,
             quantum / QFT layer on the CTC background, Phase 11--50 extensions,
             Deutsch-CTC channel theory with spectral oracle, and IBM Marrakesh
-            hardware validation. 1118 passing tests; 11 LaTeX whitepapers.},
+            hardware validation. 1786 passing tests; 17 LaTeX whitepapers.},
   url    = {https://github.com/Zynerji/systrophe}
 }
 ```

@@ -5,8 +5,8 @@ authors:
   - family-names: "Knopp"
     given-names: "Christian"
     email: "cknopp@gmail.com"
-version: "0.14.0"
-date-released: "2026-05-10"
+version: "0.21.0"
+date-released: "2026-05-13"
 license: MIT
 repository-code: "https://github.com/Zynerji/systrophe"
 url: "https://github.com/Zynerji/systrophe"
