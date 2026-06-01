@@ -1,0 +1,106 @@
+{
+  "V1_causal_speed": [
+    {
+      "r": 2.0,
+      "t_arrival": 3.9760000000000035,
+      "predicted": 4.0
+    },
+    {
+      "r": 5.0,
+      "t_arrival": 6.9599999999996776,
+      "predicted": 7.0
+    },
+    {
+      "r": 9.0,
+      "t_arrival": 10.955999999999237,
+      "predicted": 11.0
+    },
+    {
+      "r": 13.0,
+      "t_arrival": 14.955999999998797,
+      "predicted": 15.0
+    }
+  ],
+  "V2_energy_conservation": {
+    "energy_rel_drift": 6.056534143880723e-05
+  },
+  "V3_adiabaticity": {
+    "r_star_minus_R": 5.0,
+    "rows": [
+      {
+        "Omega": 0.1,
+        "period": 62.83185307179586,
+        "lag": 0.0,
+        "adiabatic_phase_error": 0.0
+      },
+      {
+        "Omega": 0.3,
+        "period": 20.943951023931955,
+        "lag": 3.452800000001389,
+        "adiabatic_phase_error": 1.0358400000004166
+      },
+      {
+        "Omega": 0.6,
+        "period": 10.471975511965978,
+        "lag": 4.342000000001747,
+        "adiabatic_phase_error": 2.605200000001048
+      }
+    ]
+  },
+  "CTC_exact_vs_adiabatic": {
+    "rows": [
+      {
+        "r_obs": 2.0,
+        "retardation_travel_time": 1.0,
+        "measured_lag": 14.110240000000067,
+        "ctc_state_disagreement_fraction": 0.0,
+        "rms_diff_over_adiab_std": 1.0592301146720724
+      },
+      {
+        "r_obs": 4.0,
+        "retardation_travel_time": 3.0,
+        "measured_lag": 2.997440000000014,
+        "ctc_state_disagreement_fraction": 0.0,
+        "rms_diff_over_adiab_std": 1.053216091468428
+      },
+      {
+        "r_obs": 7.0,
+        "retardation_travel_time": 6.0,
+        "measured_lag": 5.990240000000028,
+        "ctc_state_disagreement_fraction": 0.21394910461828465,
+        "rms_diff_over_adiab_std": 1.0086117708194056
+      },
+      {
+        "r_obs": 10.0,
+        "retardation_travel_time": 9.0,
+        "measured_lag": 8.996960000000042,
+        "ctc_state_disagreement_fraction": 0.0,
+        "rms_diff_over_adiab_std": 1.0122149117016364
+      }
+    ],
+    "da_amplitude": 0.1674362224201742,
+    "energy_drift": 9.285249623000588,
+    "catcher_verdict": "novel_structure",
+    "catcher_sharp": [
+      {
+        "between_indices": [
+          0,
+          1
+        ],
+        "parameter_value": 4.0,
+        "hamming_step": 32,
+        "median_step": 16.0,
+        "mad": 0.0,
+        "excess_over_median": 16.0
+      }
+    ]
+  },
+  "INST_instability": {
+    "a0": 1.5,
+    "most_negative_V": -8.982026964079143,
+    "tachyonic_rate_estimate": 2.997002997008702,
+    "energy_drift": 3.986811513305147e+32,
+    "diverged": true
+  },
+  "runtime_seconds": 62.7
+}

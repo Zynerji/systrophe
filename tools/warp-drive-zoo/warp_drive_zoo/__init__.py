@@ -29,6 +29,32 @@ from .drives import (
 from .compare import (
     WarpDriveComparison,
     compare_drives,
+    WarpDriveQIComparison,
+    compare_drives_with_qi,
+)
+from .qi_scorer import (
+    C_FORD_ROMAN,
+    QIScore,
+    QILambda2Separation,
+    AlcubierreJupiterFloor,
+    ford_roman_qi_bound,
+    qi_normalized_score,
+    score_member,
+    t_kk_dust_min,
+    t_kk_vacuum_min,
+    t_kk_alcubierre_min,
+    t_kk_morris_thorne_min,
+    alcubierre_jupiter_floor,
+    qi_lambda2_separation,
+)
+from .qi_registry import (
+    score_van_stockum,
+    score_godel,
+    score_gott,
+    score_kerr,
+    score_alcubierre,
+    score_wormhole_throat,
+    score_full_registry,
 )
 
 __all__ = [
@@ -38,4 +64,28 @@ __all__ = [
     "LentzDrive",
     "WarpDriveComparison",
     "compare_drives",
+    "WarpDriveQIComparison",
+    "compare_drives_with_qi",
+    # QI scorer
+    "C_FORD_ROMAN",
+    "QIScore",
+    "QILambda2Separation",
+    "AlcubierreJupiterFloor",
+    "ford_roman_qi_bound",
+    "qi_normalized_score",
+    "score_member",
+    "t_kk_dust_min",
+    "t_kk_vacuum_min",
+    "t_kk_alcubierre_min",
+    "t_kk_morris_thorne_min",
+    "alcubierre_jupiter_floor",
+    "qi_lambda2_separation",
+    # registry adapters
+    "score_van_stockum",
+    "score_godel",
+    "score_gott",
+    "score_kerr",
+    "score_alcubierre",
+    "score_wormhole_throat",
+    "score_full_registry",
 ]

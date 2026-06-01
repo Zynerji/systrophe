@@ -1,0 +1,48 @@
+{
+  "A_attractor": {
+    "drive_amplitude": 0.13429276721393446,
+    "D2_radiated_omega": 2.215840134783796,
+    "D2_radiated_psi": 1.2989188167113408,
+    "max_omega_det": 0.560196206211831,
+    "max_psi_det": 0.04428013668119884,
+    "n_samples": 9661
+  },
+  "B_cross_polarization": {
+    "rows": [
+      {
+        "eps": 0.02,
+        "max_omega": 0.25144263119905474,
+        "max_psi": 0.006709276857829541,
+        "ratio_psi_over_omega": 0.026683131757868607
+      },
+      {
+        "eps": 0.04,
+        "max_omega": 0.5050668974392305,
+        "max_psi": 0.02965543185916279,
+        "ratio_psi_over_omega": 0.05871584934494924
+      },
+      {
+        "eps": 0.08,
+        "max_omega": 1.5280540334090533,
+        "max_psi": 0.25193235636781125,
+        "ratio_psi_over_omega": 0.16487136636507282
+      }
+    ],
+    "ratio_growth": [
+      2.2004856805324016,
+      2.807953358495616
+    ]
+  },
+  "C_energy_chaos": {
+    "c_energy_mean": 4.932177079707408,
+    "c_energy_std": 0.9605013243006435,
+    "c_energy_min": 2.7163442303723837,
+    "c_energy_max": 6.062191602240594,
+    "D2_c_energy": 1.1464023307879863
+  },
+  "catcher": {
+    "verdict": "smooth",
+    "sharp": []
+  },
+  "runtime_seconds": 369.9
+}

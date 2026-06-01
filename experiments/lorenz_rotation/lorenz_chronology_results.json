@@ -1,0 +1,187 @@
+{
+  "approach": {
+    "sequence": [
+      {
+        "a": 0.45,
+        "supercritical": false,
+        "r_horizon": null,
+        "kappa": null,
+        "T_div_power": null,
+        "kretschmann_at_rH": null,
+        "kretschmann_bounded": true,
+        "ctc_radius": null,
+        "protected": false
+      },
+      {
+        "a": 0.5,
+        "supercritical": false,
+        "r_horizon": null,
+        "kappa": null,
+        "T_div_power": null,
+        "kretschmann_at_rH": null,
+        "kretschmann_bounded": true,
+        "ctc_radius": null,
+        "protected": false
+      },
+      {
+        "a": 0.52,
+        "supercritical": true,
+        "r_horizon": 2.6486728700491833,
+        "kappa": 0.5200000001363968,
+        "T_div_power": -1.0051122054485402,
+        "T_diverges": true,
+        "kretschmann_at_rH": 0.017298692540396607,
+        "kretschmann_bounded": true,
+        "ctc_radius": null,
+        "protected": true
+      },
+      {
+        "a": 0.6,
+        "supercritical": true,
+        "r_horizon": 2.4180324651201976,
+        "kappa": 0.5999999999337656,
+        "T_div_power": -1.0056278640645444,
+        "T_diverges": true,
+        "kretschmann_at_rH": 0.04401779888823641,
+        "kretschmann_bounded": true,
+        "ctc_radius": 8.064123780945236,
+        "protected": true
+      },
+      {
+        "a": 0.8,
+        "supercritical": true,
+        "r_horizon": 2.048495762351465,
+        "kappa": 0.79999999989878,
+        "T_div_power": -1.006751493249507,
+        "T_diverges": true,
+        "kretschmann_at_rH": 0.26848661455360634,
+        "kretschmann_bounded": true,
+        "ctc_radius": 1.441070017504376,
+        "protected": true
+      },
+      {
+        "a": 1.0,
+        "supercritical": true,
+        "r_horizon": 1.8305194665556095,
+        "kappa": 0.9999999998922763,
+        "T_div_power": -1.0077215363963865,
+        "T_diverges": true,
+        "kretschmann_at_rH": 1.0233084511209563,
+        "kretschmann_bounded": true,
+        "ctc_radius": 1.001,
+        "protected": true
+      },
+      {
+        "a": 1.2,
+        "supercritical": true,
+        "r_horizon": 1.68705780844616,
+        "kappa": 1.1999999997678155,
+        "T_div_power": -1.0086103969119724,
+        "T_diverges": true,
+        "kretschmann_at_rH": 2.9303075683483284,
+        "kretschmann_bounded": true,
+        "ctc_radius": 1.001,
+        "protected": true
+      },
+      {
+        "a": 1.5,
+        "supercritical": true,
+        "r_horizon": 1.5452873431578922,
+        "kappa": 1.4999999997611246,
+        "T_div_power": -1.009892440120829,
+        "T_diverges": true,
+        "kretschmann_at_rH": 10.11974940574197,
+        "kretschmann_bounded": true,
+        "ctc_radius": 1.001,
+        "protected": true
+      }
+    ],
+    "protection_power_mean": -1.0072859893652966,
+    "protection_power_std": 0.001658199034823403,
+    "kretschmann_all_bounded": true,
+    "protected_iff_supercritical": true
+  },
+  "threshold_scaling": {
+    "rows": [
+      {
+        "a": 0.7,
+        "da": 0.19999999999999996,
+        "r_horizon": 2.2059944910752862,
+        "kappa": 0.6999999998880935,
+        "T_power": -1.006214708712376
+      },
+      {
+        "a": 0.6,
+        "da": 0.09999999999999998,
+        "r_horizon": 2.4180324651201976,
+        "kappa": 0.5999999999337656,
+        "T_power": -1.0056278640645444
+      },
+      {
+        "a": 0.55,
+        "da": 0.050000000000000044,
+        "r_horizon": 2.5540530936565276,
+        "kappa": 0.5500000001220704,
+        "T_power": -1.0053110348812908
+      },
+      {
+        "a": 0.52,
+        "da": 0.020000000000000018,
+        "r_horizon": 2.6486728700491833,
+        "kappa": 0.5200000001363968,
+        "T_power": -1.0051122054485402
+      },
+      {
+        "a": 0.51,
+        "da": 0.010000000000000009,
+        "r_horizon": 2.682772117075489,
+        "kappa": 0.5099999995047769,
+        "T_power": -1.0050443594307643
+      },
+      {
+        "a": 0.505,
+        "da": 0.0050000000000000044,
+        "r_horizon": 2.70034531629604,
+        "kappa": 0.5050000006973985,
+        "T_power": -1.0050101307041526
+      }
+    ],
+    "r_horizon_limit_Re": 2.718281828459045
+  },
+  "chaotic_barrier": {
+    "fraction_supercritical": 0.736754415194935,
+    "n_threshold_crossings": 83,
+    "a_min": 0.22775451269094973,
+    "a_max": 1.020139235387087,
+    "barrier_max": 1.0201392354818373
+  },
+  "catcher": {
+    "verdict": "novel_structure",
+    "sharp_features": [
+      {
+        "between_indices": [
+          8,
+          9
+        ],
+        "parameter_value": 0.8235294117647058,
+        "hamming_step": 16,
+        "median_step": 0.0,
+        "mad": 0.0,
+        "excess_over_median": 16.0
+      },
+      {
+        "between_indices": [
+          16,
+          17
+        ],
+        "parameter_value": 1.2,
+        "hamming_step": 16,
+        "median_step": 0.0,
+        "mad": 0.0,
+        "excess_over_median": 16.0
+      }
+    ],
+    "threshold_a_crit": 0.5
+  },
+  "runtime_seconds": 1.1
+}

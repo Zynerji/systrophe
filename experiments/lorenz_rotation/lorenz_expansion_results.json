@@ -1,0 +1,174 @@
+{
+  "attractor_suite": [
+    {
+      "flow": "Lorenz (rotating-dust)",
+      "physical": true,
+      "lyapunov": [
+        0.904,
+        -0.0025,
+        -14.5681
+      ],
+      "lyapunov_sum": -13.6667,
+      "mean_divergence": -13.6667,
+      "kaplan_yorke_dim": 2.0619,
+      "correlation_dim_D2": 2.011,
+      "ctc_band_count_min": 1,
+      "ctc_band_count_max": 3,
+      "ctc_log_measure_std": 0.1641
+    },
+    {
+      "flow": "Rossler",
+      "physical": false,
+      "lyapunov": [
+        0.0729,
+        0.0061,
+        -5.3694
+      ],
+      "lyapunov_sum": -5.2904,
+      "mean_divergence": -5.3434,
+      "kaplan_yorke_dim": 2.0147,
+      "correlation_dim_D2": 1.8569,
+      "ctc_band_count_min": 1,
+      "ctc_band_count_max": 3,
+      "ctc_log_measure_std": 0.1468
+    },
+    {
+      "flow": "Chen",
+      "physical": false,
+      "lyapunov": [
+        2.0611,
+        -0.0015,
+        -12.0596
+      ],
+      "lyapunov_sum": -10.0,
+      "mean_divergence": -10.0,
+      "kaplan_yorke_dim": 2.1708,
+      "correlation_dim_D2": 2.1343,
+      "ctc_band_count_min": 1,
+      "ctc_band_count_max": 3,
+      "ctc_log_measure_std": 0.172
+    },
+    {
+      "flow": "Halvorsen",
+      "physical": false,
+      "lyapunov": [
+        0.6641,
+        0.0034,
+        -4.8675
+      ],
+      "lyapunov_sum": -4.2,
+      "mean_divergence": -4.2,
+      "kaplan_yorke_dim": 2.1371,
+      "correlation_dim_D2": 2.0687,
+      "ctc_band_count_min": 1,
+      "ctc_band_count_max": 2,
+      "ctc_log_measure_std": 0.175
+    }
+  ],
+  "faithfulness": [
+    {
+      "flow": "Lorenz (rotating-dust)",
+      "D2_state_space": 2.0004,
+      "D2_ctc_observable": 2.3287,
+      "embed_tau": 3,
+      "relative_diff": 0.1642,
+      "n_ctc_samples": 24501
+    },
+    {
+      "flow": "Rossler",
+      "D2_state_space": 1.8574,
+      "D2_ctc_observable": 2.3603,
+      "embed_tau": 13,
+      "relative_diff": 0.2707,
+      "n_ctc_samples": 22501
+    },
+    {
+      "flow": "Chen",
+      "D2_state_space": 2.1229,
+      "D2_ctc_observable": 3.0483,
+      "embed_tau": 2,
+      "relative_diff": 0.4359,
+      "n_ctc_samples": 24251
+    },
+    {
+      "flow": "Halvorsen",
+      "D2_state_space": 2.0701,
+      "D2_ctc_observable": 3.1005,
+      "embed_tau": 3,
+      "relative_diff": 0.4977,
+      "n_ctc_samples": 24251
+    }
+  ],
+  "synchronization": {
+    "x": {
+      "conditional_lyapunov_max": -1.6265,
+      "tail_mean_error": 0.0,
+      "locked": true
+    },
+    "z": {
+      "conditional_lyapunov_max": -0.0646,
+      "tail_mean_error": 0.004853309947399812,
+      "locked": false
+    }
+  },
+  "onset_universality": [
+    {
+      "flow": "Lorenz (rotating-dust)",
+      "physical": true,
+      "param": "r",
+      "scan_min": 0.5,
+      "scan_max": 40.0,
+      "lyapunov_onset": 24.543478260869566,
+      "catcher_verdict": "novel_structure",
+      "catcher_features": [
+        24.543,
+        40.0
+      ],
+      "catcher_nearest_to_le_onset": 24.543478260869566,
+      "onset_agreement": 0.0
+    },
+    {
+      "flow": "Rossler",
+      "physical": false,
+      "param": "c",
+      "scan_min": 2.5,
+      "scan_max": 6.0,
+      "lyapunov_onset": 4.326086956521739,
+      "catcher_verdict": "smooth",
+      "catcher_features": [],
+      "catcher_nearest_to_le_onset": null,
+      "onset_agreement": null
+    },
+    {
+      "flow": "Chen",
+      "physical": false,
+      "param": "c",
+      "scan_min": 18.0,
+      "scan_max": 30.0,
+      "lyapunov_onset": 20.08695652173913,
+      "catcher_verdict": "novel_structure",
+      "catcher_features": [
+        24.261,
+        30.0
+      ],
+      "catcher_nearest_to_le_onset": 24.26086956521739,
+      "onset_agreement": 4.173913043478262
+    },
+    {
+      "flow": "Halvorsen",
+      "physical": false,
+      "param": "a",
+      "scan_min": 1.1,
+      "scan_max": 1.7,
+      "lyapunov_onset": 1.1,
+      "catcher_verdict": "novel_structure",
+      "catcher_features": [
+        1.204,
+        1.23
+      ],
+      "catcher_nearest_to_le_onset": 1.2043478260869567,
+      "onset_agreement": 0.10434782608695659
+    }
+  ],
+  "runtime_seconds": 826.6
+}

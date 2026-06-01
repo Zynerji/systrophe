@@ -1,0 +1,62 @@
+{
+  "V1_static": {
+    "interior_drift": 7.723326235775652e-07,
+    "constraint_max": 0.00011346339038128767
+  },
+  "V2_speed": {
+    "rows": [
+      {
+        "r": 4.0,
+        "arrival": 5.963999999999787,
+        "predicted": 6.0
+      },
+      {
+        "r": 9.0,
+        "arrival": 10.955999999999237,
+        "predicted": 11.0
+      },
+      {
+        "r": 14.0,
+        "arrival": 15.955999999998687,
+        "predicted": 16.0
+      }
+    ]
+  },
+  "V3_energy_convergence": {
+    "c_energy_drift": 8.520397745788764e-05,
+    "convergence_ratio": 4.017036723851297,
+    "constraint_max": 1.08770904236907e-06
+  },
+  "V4_nonlinear_coupling": {
+    "psi_sourced_by_twist": 0.009953858062268334
+  },
+  "V5_constraint_damping": {
+    "constraint_undamped": 2.4139282343416842e-06,
+    "constraint_damped": 3.0626990310151607e-07
+  },
+  "CHAOS_driven": {
+    "twist_drive_amplitude": 0.033579502887870795,
+    "max_omega": 0.08171868401355978,
+    "max_psi_sourced": 0.0011888536302957146,
+    "c_energy_final": 0.10412080188760536,
+    "constraint_max": 0.007796930443235515,
+    "bounded_stable": true
+  },
+  "catcher": {
+    "verdict": "novel_structure",
+    "sharp": [
+      {
+        "between_indices": [
+          6,
+          7
+        ],
+        "parameter_value": 7.615384615384615,
+        "hamming_step": 14,
+        "median_step": 3.0,
+        "mad": 1.0,
+        "excess_over_median": 11.0
+      }
+    ]
+  },
+  "runtime_seconds": 86.9
+}
