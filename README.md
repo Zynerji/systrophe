@@ -8,7 +8,7 @@
 [![PyPI](https://img.shields.io/pypi/v/systrophe.svg)](https://pypi.org/project/systrophe/)
 [![Python ≥ 3.10](https://img.shields.io/badge/python-%E2%89%A5%203.10-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 1786 passing](https://img.shields.io/badge/tests-1786%20passing-brightgreen.svg)](#tests)
+[![Tests: 2007 passing](https://img.shields.io/badge/tests-2007%20passing-brightgreen.svg)](#tests)
 [![Papers: 17](https://img.shields.io/badge/papers-17%20PDFs-informational.svg)](#papers)
 [![IBM Quantum: 7 batches](https://img.shields.io/badge/IBM%20Quantum-7%20batches-purple.svg)](#ibm-marrakesh-hardware-validation)
 [![Knopp Drive: live](https://img.shields.io/badge/Knopp%20Drive-live-red.svg)](#the-knopp-drive-headline-composite-warp-engineering-bound)
@@ -28,7 +28,7 @@
 
 ## What this is
 
-A complete numerical and analytic framework spanning **50 phases** of development, from classical general relativity through quantum field theory on the CTC background, Deutsch-CTC channel theory, and IBM quantum-hardware validation. The repository ships with **154 source modules**, **1786 passing tests** across **144 test files**, **17 LaTeX whitepapers**, **97 reproducible example scripts**, and **7 batches of IBM Marrakesh hardware experiments**.
+A complete numerical and analytic framework spanning **50 phases** of development, from classical general relativity through quantum field theory on the CTC background, Deutsch-CTC channel theory, and IBM quantum-hardware validation. The repository ships with **160 source modules**, **2007 passing tests** across **160 test files**, **17 LaTeX whitepapers**, **97 reproducible example scripts**, and **7 batches of IBM Marrakesh hardware experiments**.
 
 The five canonical layers:
 
@@ -85,7 +85,7 @@ pip install systrophe          # latest release
 git clone https://github.com/Zynerji/systrophe
 cd systrophe
 pip install -e ".[dev]"        # editable install with dev tools
-pytest                         # 1786 tests, 0 skipped
+pytest                         # 2007 tests, 0 skipped
 ```
 
 Optional extras:
@@ -217,7 +217,7 @@ The full derivation, with Lewis–Papapetrou Ernst-equation reduction and Bonnor
 
 ## Scope taxonomy
 
-The 154 source modules break into four functional layers. Each module name below is also the import path `systrophe.<name>`.
+The 160 source modules break into four functional layers. Each module name below is also the import path `systrophe.<name>`.
 
 ### Classical core (Paper I)
 
@@ -551,12 +551,12 @@ The DCTC spectral oracle is now hardware-grade validated against a real QEC deco
 ## Tests
 
 ```bash
-pytest                 # 1786 passed, 0 skipped
+pytest                 # 2007 passed, 0 skipped
 pytest -v              # verbose
 pytest --cov=systrophe # with coverage (requires pytest-cov)
 ```
 
-**Test count: 1786 passing, 0 skipped, 0 failing, across 144 test modules.**
+**Test count: 2007 passing, 0 skipped, 0 failing, across 160 test modules.**
 
 Coverage spans:
 
@@ -622,7 +622,7 @@ cd paper && pdflatex <name>.tex && pdflatex <name>.tex
             exterior, off-set Tipler sinusoid, Z\_3 M\"obius cover correspondence,
             quantum / QFT layer on the CTC background, Phase 11--50 extensions,
             Deutsch-CTC channel theory with spectral oracle, and IBM Marrakesh
-            hardware validation. 1786 passing tests; 17 LaTeX whitepapers.},
+            hardware validation. 2007 passing tests; 17 LaTeX whitepapers.},
   url    = {https://github.com/Zynerji/systrophe}
 }
 ```
