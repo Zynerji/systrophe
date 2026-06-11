@@ -1,0 +1,768 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KNOPP DRIVE II — dodecahedral Casimir resonator in the horn-torus throat</title>
+<style>
+  html,body{margin:0;height:100%;background:#000;overflow:hidden;cursor:crosshair;
+    font-family:"Courier New",monospace;color:#9fe}
+  #gl{position:fixed;inset:0;width:100%;height:100%;display:block}
+  #hud{position:fixed;top:10px;left:12px;font-size:12px;line-height:1.55;opacity:.78;
+    text-shadow:0 0 6px #0ff;pointer-events:none;white-space:pre}
+  #gauge{position:fixed;bottom:12px;right:12px;background:rgba(2,8,14,.55);
+    border:1px solid #094;border-radius:6px}
+  #ctl{position:fixed;bottom:12px;left:12px;font-size:12px;background:rgba(2,8,14,.55);
+    border:1px solid #094;border-radius:6px;padding:8px 10px;line-height:1.9}
+  #ctl label{display:block;opacity:.85} #ctl input[type=range]{vertical-align:middle;width:130px}
+  #panel{position:fixed;top:10px;right:12px;display:flex;flex-direction:column;gap:6px;
+    background:rgba(2,8,14,.55);border:1px solid #094;border-radius:6px;padding:8px}
+  #panel b{font-size:11px;color:#7fd;letter-spacing:1px;text-align:center;opacity:.8}
+  #panel button{font-family:"Courier New",monospace;font-size:12px;color:#9fe;
+    background:rgba(0,40,40,.5);border:1px solid #0a6;border-radius:4px;
+    padding:4px 9px;cursor:pointer;text-align:left;white-space:nowrap}
+  #panel button:hover{background:rgba(0,90,80,.6);box-shadow:0 0 8px #0fa}
+  #panel button.hot{border-color:#f80;color:#fda}
+  #boot{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+    flex-direction:column;background:radial-gradient(#0a1016,#000);z-index:9;text-align:center}
+  #boot h1{font-size:26px;letter-spacing:6px;margin:0 0 8px;color:#cfe;
+    text-shadow:0 0 16px #0ff,0 0 34px #60f}
+  #boot p{opacity:.78;font-size:13px;max-width:600px;line-height:1.8}
+  #boot b{color:#8fd;animation:blink 1.1s steps(2) infinite}
+  @keyframes blink{50%{opacity:.25}}
+</style></head>
+<body>
+<canvas id="gl"></canvas>
+<div id="hud"></div>
+<canvas id="gauge" width="300" height="358"></canvas>
+<div id="ctl">
+  <label>interior &nbsp;<input id="opac" type="range" min="6" max="100" value="30"></label>
+  <label>pawl floor&nbsp;<input id="floor" type="range" min="0" max="99" value="85"></label>
+  <label>cavity&nbsp;Q&nbsp;&nbsp;<input id="qq" type="range" min="1" max="1000" value="60"></label>
+  <label>horn&nbsp;ε&nbsp;&nbsp;&nbsp;&nbsp;<input id="eps" type="range" min="0" max="140" value="22"></label>
+  <label>dodeca&nbsp;&nbsp;&nbsp;<input id="dscale" type="range" min="5" max="92" step="0.1" value="21.2"></label>
+  <label>orient&nbsp;&nbsp;&nbsp;&nbsp;<input id="orient" type="range" min="0" max="180" step="0.1" value="37.4"></label>
+  <label>spin&nbsp;Ω&nbsp;&nbsp;&nbsp;&nbsp;<input id="spin" type="range" min="0" max="300" value="0"></label>
+  <label>tilt&nbsp;δ°&nbsp;&nbsp;&nbsp;<input id="tilt" type="range" min="0" max="12" step="0.5" value="0"></label>
+  <label><input id="cpair" type="checkbox"> ⇄ counter-rotating pair</label>
+  <label><input id="auto" type="checkbox"> auto orientation sweep</label>
+</div>
+<div id="panel"><b>PHENOMENA</b></div>
+<div id="boot">
+  <h1>K N O P P &nbsp; D R I V E &nbsp; I I</h1>
+  <p>The ratchet-biased horn-toroidal warp bubble, now with a golden-ratio
+  dodecahedron seated in the throat — its 20 points reaching toward the inner
+  horns. The Casimir gap between horn and polyhedron pumps harmonics that
+  radiate from the 12 pentagonal faces into the torus volume. Sweep the
+  orientation: when a point gives way to a <i>flat face</i>, the horn stretches
+  down and tiles the pentagon as a five-armed spiral — far more facing area,
+  more vacuum noise, stronger standing waves, a rising-frequency feedback loop —
+  until the interior is fully saturated and the bubble collapses
+  directionally along the heading.<br><br>
+  ◄ ► steer heading &nbsp;·&nbsp; ▲ ▼ tilt view &nbsp;·&nbsp; sliders tune drive + dodecahedron.<br><br>
+  <b>[ click anywhere — sound on ]</b></p>
+</div>
+
+<script>
+// ===========================================================================
+//  KNOPP DRIVE II — dodecahedral Casimir resonator inside the Systrophe
+//  ratchet-biased horn-toroidal warp bubble.
+//  Geometry: horn torus (major == tube radius -> pinched throat) + a regular
+//            dodecahedron centred on the pinch, points toward the inner horns.
+//  Mechanism (hypothesis under live sweep, see knopp_dodeca_alignment.py):
+//    gap Casimir (PFA ~ A/g^3) between horn surface and dodeca points/faces
+//    -> harmonic emission from the 12 faces -> 24-mode standing-wave comb in
+//    the torus volume -> saturation -> directional collapse of the bubble.
+//    Face alignment flattens the horn into a 5-arm spiral tiling the pentagon
+//    (area factor up to ~7x) -> broadband pumping -> full-spectrum saturation.
+//  source: ~/.local/bin/Systrophe/src/systrophe/knopp/  (FINDINGS_KNOPP_RATCHET,
+//          knopp_toroidal_casimir_dodecahedron, knopp_dodeca_alignment)
+//  No libraries. WebGL1 + WebAudio.
+// ===========================================================================
+const cv=document.getElementById('gl');
+window.addEventListener('error',e=>{const b=document.getElementById('boot');
+  if(b)b.innerHTML='<pre style="color:#f88;padding:2em;white-space:pre-wrap">'+
+    (e.error&&e.error.stack||e.message)+'</pre>';});
+const gl=cv.getContext('webgl',{antialias:true,alpha:false})||cv.getContext('experimental-webgl');
+if(!gl) throw new Error('WebGL unavailable.');
+
+// ------------------------------- shaders ----------------------------------
+const VS=`attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
+const FS=`precision highp float;
+uniform vec2  R;
+uniform float T;
+uniform vec2  ROT;       // yaw (= heading), pitch
+uniform float OPACITY;   // surface opacity (low -> monitor interior)
+uniform float THETA0;    // horn-twist steering axis (heading)
+uniform float EPS;       // horn epsilon (steering bias amplitude)
+uniform float RING;      // 0..1 Casimir shell charge (rings up the cavity)
+uniform float SPEED;     // drive velocity -> warp starfield streak
+uniform float QGLOW;     // cavity Q -> shell brightness
+uniform mat3  DINV;      // world -> dodeca body frame (rotation transpose)
+uniform float DSCALE;    // dodeca circumradius
+uniform float DRIVE;     // 0..1 Casimir gap drive (PFA proxy, normalised)
+uniform float SPIRAL;    // 0..1 horn-flattening / spiral face-tiling engaged
+uniform float SAT;       // 0..1 standing-wave spectrum saturation
+uniform float COLLAPSE;  // 0..1 directional bubble collapse along heading
+uniform vec3  ALIGNAX;   // world axis of the best-aligned face (toward horn)
+uniform float SUPER;     // 0..1 Tipler-analog supercritical (CTC band on)
+uniform float RCTC;      // CTC band inner radius 1/Omega
+uniform mat3  DINV2;     // counter-rotating partner frame (-psi spin)
+uniform float CPAIR;     // 1 = counter-pair mode: standing flash, no drag
+
+const float PHI=1.618033988749895;
+const float RIN=0.7946544723;              // dodeca inradius / circumradius
+
+vec3 pal(float t){return .5+.5*cos(6.2831*(vec3(1.,1.,1.)*t+vec3(.0,.33,.66)));}
+vec3 hash33(vec3 p){p=fract(p*vec3(.1031,.1030,.0973));p+=dot(p,p.yxz+33.33);
+  return fract((p.xxy+p.yxx)*p.zyx);}
+mat3 rotY(float a){float c=cos(a),s=sin(a);return mat3(c,0.,-s, 0.,1.,0., s,0.,c);}
+mat3 rotX(float a){float c=cos(a),s=sin(a);return mat3(1.,0.,0., 0.,c,-s, 0.,s,c);}
+
+// horn torus (major == tube radius) -- warp shell.  Directional collapse
+// squeezes the tube on the heading side; the engaged spiral pulls the inner
+// horn down toward the aligned pentagon as 5-arm corrugations.
+float mapT(vec3 p){
+  float Rr=0.66*(1.0+0.03*RING);
+  float phi=atan(p.x,p.z);
+  float lobe=max(0.0,cos(phi-THETA0));
+  vec2 q=vec2(length(p.xz)-Rr, p.y);
+  float d=length(q)-Rr*(1.0-0.22*COLLAPSE*lobe);
+  float rr=dot(p.xz,p.xz);
+  float horn=exp(-rr/0.10)*exp(-pow(p.y*sign(ALIGNAX.y+1e-6)-0.30,2.0)/0.06);
+  float spir=0.5+0.5*sin(5.0*phi+10.0*sqrt(rr)-T*2.2);
+  d-=SPIRAL*0.05*horn*spir;
+  return d;
+}
+// dodecahedron: abs-fold + 3 axes covers all 12 faces
+const vec3 DN1=vec3(0.,0.5257311,0.8506508);
+float mapD(vec3 p){
+  vec3 q=abs(DINV*p);
+  float d=max(dot(q,DN1),max(dot(q,DN1.zxy),dot(q,DN1.yzx)));
+  return d-RIN*DSCALE;
+}
+vec3 calcNT(vec3 p){vec2 e=vec2(0.0016,0.0);
+  return normalize(vec3(mapT(p+e.xyy)-mapT(p-e.xyy),
+                        mapT(p+e.yxy)-mapT(p-e.yxy),
+                        mapT(p+e.yyx)-mapT(p-e.yyx)));}
+vec3 calcND(vec3 p){vec2 e=vec2(0.0016,0.0);
+  return normalize(vec3(mapD(p+e.xyy)-mapD(p-e.xyy),
+                        mapD(p+e.yxy)-mapD(p-e.yxy),
+                        mapD(p+e.yyx)-mapD(p-e.yyx)));}
+
+// shade one torus-shell crossing; fres returned for the layer alpha
+vec3 surfT(vec3 p, vec3 rd, out float fres){
+  vec3 n=calcNT(p);
+  vec3 V=-rd; if(dot(n,V)<0.0) n=-n;
+  vec3 L=normalize(vec3(0.4,0.8,0.5));
+  float diff=max(dot(n,L),0.0);
+  fres=pow(1.0-max(dot(n,V),0.0),2.5);
+  vec3 H=normalize(L+V); float spec=pow(max(dot(n,H),0.0),80.0);
+  float phi=atan(p.x,p.z);
+  float bias=EPS*pow(max(0.0,cos(phi-THETA0)),1.4);
+  float irid=fres*2.2 + 0.4*dot(n,V) + 0.06*T + 0.55*RING;
+  vec3 sheen=pal(irid);
+  float glow=0.30+1.10*QGLOW;
+  vec3 c = sheen*(0.18+0.5*diff)*glow
+         + sheen*fres*1.5*glow
+         + spec*vec3(1.0)*1.4
+         + vec3(0.80,0.28,1.30)*bias*(0.7+1.6*RING)
+         + vec3(0.3,0.6,1.0)*0.22*pow(diff,3.0);
+  return c;
+}
+
+// shade the dodecahedron: brass body, faces hum with the drive, and the
+// face aligned to the horn carries the engaged 5-arm spiral tiling
+vec3 surfD(vec3 p, vec3 rd){
+  vec3 n=calcND(p);
+  vec3 V=-rd; if(dot(n,V)<0.0) n=-n;
+  vec3 L=normalize(vec3(0.4,0.8,0.5));
+  float diff=max(dot(n,L),0.0);
+  float fres=pow(1.0-max(dot(n,V),0.0),3.0);
+  vec3 H=normalize(L+V); float spec=pow(max(dot(n,H),0.0),60.0);
+  vec3 qb=DINV*p; vec3 qa=abs(qb);
+  float d1=dot(qa,DN1), d2=dot(qa,DN1.zxy), d3=dot(qa,DN1.yzx);
+  vec3 ax=DN1; if(d2>d1&&d2>d3) ax=DN1.zxy; else if(d3>d1) ax=DN1.yzx;
+  vec3 nb=ax*sign(qb);                       // body-frame face normal
+  vec3 nw=nb*DINV;                           // world face normal (v*M = M^T v)
+  float alignw=pow(max(0.0,dot(nw,ALIGNAX)),10.0)*SPIRAL;
+  vec3 t1=normalize(cross(nb,vec3(0.577,0.577,0.577)));
+  vec3 t2=cross(nb,t1);
+  vec3 loc=qb-nb*dot(qb,nb);
+  float u=dot(loc,t1)/DSCALE, v=dot(loc,t2)/DSCALE;
+  float r=length(vec2(u,v)), a=atan(v,u);
+  float spir=0.5+0.5*sin(5.0*a+8.0*log(r+0.03)-T*2.5);
+  float facehum=0.5+0.5*sin(T*3.0+dot(nb,vec3(7.0,5.0,3.0)));
+  vec3 c = vec3(0.62,0.48,0.22)*(0.22+0.78*diff)
+         + spec*vec3(1.0,0.9,0.7)*1.2
+         + vec3(0.75,0.30,1.25)*fres*(0.4+1.8*DRIVE)
+         + pal(0.07+0.12*facehum+0.3*SAT)*0.30*DRIVE*facehum
+         + vec3(1.0,0.74,0.30)*alignw*(0.5+2.4*smoothstep(0.55,0.95,spir));
+  return c;
+}
+
+// background: warp starfield streaking past as the drive translates
+vec3 warp(vec2 uv){
+  vec2 dir=vec2(cos(THETA0),sin(THETA0));
+  vec3 c=vec3(0.012,0.015,0.025)*(1.0-0.5*length(uv));
+  for(int i=0;i<3;i++){
+    float fi=float(i);
+    vec2 q=uv*(18.0+fi*10.0) - dir*T*SPEED*(3.0+fi*4.0);
+    vec2 cell=floor(q); vec2 f=fract(q)-0.5;
+    vec3 h=hash33(vec3(cell,fi));
+    float st=step(0.90,h.z)*smoothstep(0.12,0.0,length(f+(h.xy-0.5)*0.6));
+    c+=pal(0.55+h.x*0.3)*st*(0.4+0.6*SPEED);
+  }
+  return c;
+}
+
+void main(){
+  vec2 uv=(gl_FragCoord.xy-.5*R)/R.y;
+  vec3 ro=vec3(0.,0.,3.0);
+  vec3 rd=normalize(vec3(uv,-1.7));
+  mat3 M=rotX(ROT.y)*rotY(ROT.x);
+  ro=M*ro; rd=M*rd;
+  vec3 bg=warp(uv);
+
+  // translucent march: torus shell crossings accumulate front-to-back, the
+  // dodecahedron is near-opaque, and two volumetric terms ride every step:
+  //   - violet Casimir glow where the horn-dodeca gap pinches shut
+  //   - the icosahedral standing-wave field filling the tube as SAT rises
+  float kw=14.0+24.0*SAT;
+  vec3 acc=vec3(0.0); float trans=1.0;
+  float t=0.0;
+  float pdT=mapT(ro), pdD=mapD(ro);
+  for(int i=0;i<150;i++){
+    vec3 p=ro+rd*t;
+    float dT=mapT(p), dD=mapD(p);
+    if(pdD*dD<0.0){
+      vec3 c=surfD(p,rd);
+      float a=0.92;
+      acc+=trans*a*c; trans*=(1.0-a);
+    } else if(pdT*dT<0.0){
+      float fres; vec3 c=surfT(p,rd,fres);
+      float a=clamp(OPACITY*OPACITY*(0.35+1.10*fres)*1.5,0.0,1.0);
+      acc+=trans*a*c; trans*=(1.0-a);
+    }
+    if(trans<0.02) break;
+    float stepLen=max(min(abs(dT),abs(dD))*0.6,0.012);
+    // Casimir gap glow: bright where both surfaces are simultaneously close
+    float gsum=abs(dT)+abs(dD);
+    acc+=trans*vec3(0.62,0.26,1.30)*DRIVE*exp(-34.0*gsum)*stepLen*5.0;
+    // Tipler-analog CTC band: where g_phiphi < 0 (rho > 1/Omega) inside the
+    // tube, when the spin sits in the supercritical window
+    if(dT<0.0 && SUPER>0.0){
+      float rho=length(p.xz);
+      float w=smoothstep(RCTC-0.03,RCTC+0.03,rho);
+      acc+=trans*vec3(1.0,0.22,0.10)*SUPER*w*(0.55+0.45*sin(T*6.0))*stepLen*0.9;
+    }
+    // standing-wave saturation of the torus interior; counter-pair mode
+    // superposes the +-psi patterns: the lattice stops rotating and flashes
+    if(dT<0.0 && SAT>0.003){
+      vec3 qb=DINV*p;
+      float f=cos(kw*dot(qb,DN1)+T*1.7)*cos(kw*dot(qb,DN1.zxy)-T*1.3)
+             +cos(kw*dot(qb,DN1.yzx)+T*1.1)*cos(kw*qb.x*0.93-T*0.7);
+      float ff=f*f;
+      if(CPAIR>0.5){
+        vec3 q2=DINV2*p;
+        float f2=cos(kw*dot(q2,DN1)+T*1.7)*cos(kw*dot(q2,DN1.zxy)-T*1.3)
+                +cos(kw*dot(q2,DN1.yzx)+T*1.1)*cos(kw*q2.x*0.93-T*0.7);
+        ff=0.5*(ff+f2*f2);
+      }
+      float em=SAT*(0.10+0.50*ff*0.25);
+      acc+=trans*pal(0.52+0.10*f+0.25*SAT)*em*stepLen*1.6;
+    }
+    pdT=dT; pdD=dD;
+    t+=stepLen;
+    if(t>7.0) break;
+  }
+  vec3 col=acc+trans*bg;
+  col=col/(1.+col);
+  col=pow(col,vec3(0.85));
+  col+=(hash33(vec3(gl_FragCoord.xy,T)).x-0.5)*0.022;
+  gl_FragColor=vec4(col,1.);
+}`;
+
+function sh(t,src){const s=gl.createShader(t);gl.shaderSource(s,src);gl.compileShader(s);
+  if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s;}
+const prog=gl.createProgram();
+gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS));
+gl.linkProgram(prog);
+if(!gl.getProgramParameter(prog,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(prog));
+gl.useProgram(prog);
+const quad=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,quad);
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+const aP=gl.getAttribLocation(prog,'p');
+gl.enableVertexAttribArray(aP);gl.vertexAttribPointer(aP,2,gl.FLOAT,false,0,0);
+const U={};
+['R','T','ROT','OPACITY','THETA0','EPS','RING','SPEED','QGLOW',
+ 'DINV','DSCALE','DRIVE','SPIRAL','SAT','COLLAPSE','ALIGNAX','SUPER','RCTC',
+ 'DINV2','CPAIR']
+ .forEach(k=>U[k]=gl.getUniformLocation(prog,k));
+
+// ------------------------- dodecahedron (CPU side) ------------------------
+const PHI=1.618033988749895, R0=0.66, IP=1/PHI;
+function nrm(v){const l=Math.hypot(v[0],v[1],v[2]);return [v[0]/l,v[1]/l,v[2]/l];}
+function cross(a,b){return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];}
+function dot(a,b){return a[0]*b[0]+a[1]*b[1]+a[2]*b[2];}
+const VERTS=[];
+[[1,1,1],[1,1,-1],[1,-1,1],[1,-1,-1],[-1,1,1],[-1,1,-1],[-1,-1,1],[-1,-1,-1],
+ [0,IP,PHI],[0,IP,-PHI],[0,-IP,PHI],[0,-IP,-PHI],
+ [IP,PHI,0],[IP,-PHI,0],[-IP,PHI,0],[-IP,-PHI,0],
+ [PHI,0,IP],[PHI,0,-IP],[-PHI,0,IP],[-PHI,0,-IP]].forEach(v=>VERTS.push(nrm(v)));
+const FAXES=[[0,1,PHI],[0,1,-PHI],[1,PHI,0],[1,-PHI,0],[PHI,0,1],[-PHI,0,1]].map(nrm);
+const RIN=0.7946544723;                       // inradius / circumradius
+
+// base rotation: vertex (1,1,1)/sqrt3 -> +y ("vertex-up", point into the horn)
+const v0=nrm([1,1,1]);
+const b1=nrm(cross(v0,[0,0,1])), b2=cross(b1,v0);
+const BROT=[b1[0],b1[1],b1[2], v0[0],v0[1],v0[2], b2[0],b2[1],b2[2]]; // row-major
+function m3v(m,v){return [m[0]*v[0]+m[1]*v[1]+m[2]*v[2],
+                          m[3]*v[0]+m[4]*v[1]+m[5]*v[2],
+                          m[6]*v[0]+m[7]*v[1]+m[8]*v[2]];}
+function m3mul(a,b){const r=new Array(9);
+  for(let i=0;i<3;i++)for(let j=0;j<3;j++){let s=0;
+    for(let k=0;k<3;k++)s+=a[3*i+k]*b[3*k+j]; r[3*i+j]=s;} return r;}
+function axisRot(ax,ang){const c=Math.cos(ang),s=Math.sin(ang),t=1-c,
+  [x,y,z]=ax;
+  return [t*x*x+c,t*x*y-s*z,t*x*z+s*y,
+          t*x*y+s*z,t*y*y+c,t*y*z-s*x,
+          t*x*z-s*y,t*y*z+s*x,t*z*z+c];}
+// sweep axis = f x y: +beta carries the face axis toward +y (face-lock 37.377 deg)
+const fw0=m3v(BROT, nrm([0,1,PHI]));
+const SWAX=nrm(cross(fw0,[0,1,0]));
+const VF_DEG=Math.acos(RIN)*180/Math.PI;      // vertex->face alignment angle
+
+function gapT(p){const rho=Math.hypot(p[0],p[2]);
+  return Math.hypot(rho-R0,p[1])-R0;}          // signed horn-torus SDF
+function gradT(p){const h=1e-3,g=[0,0,0];
+  for(let i=0;i<3;i++){const q=p.slice(),r=p.slice();q[i]+=h;r[i]-=h;
+    g[i]=(gapT(q)-gapT(r))/(2*h);} return nrm(g);}
+
+// ------------------------------- controls ---------------------------------
+const $=id=>document.getElementById(id);
+let theta0=0.0, pitch=-0.12, vth=0, vp=0;
+
+// phenomena panel: snap to the derived states (knopp_dodeca_* series)
+const PRESETS=[
+ ['◆ crystal lock','quasicrystal approximant lock: s=0.212, β=37.377° (X 0.72)',
+   {dscale:21.2,orient:37.4,spin:0,eps:22,auto:false},false],
+ ['◆◆ master hybrid','everything co-achievable at once: lock + saturation + collapse + conveyor + comb FSK at Ω=1.75 (just above the Tipler window — comms and CTCs are provably disjoint)',
+   {dscale:21.2,orient:37.4,spin:175,eps:22,auto:false,tilt:1.5},false],
+ ['pentagonal comb','point-lock: sparse 5/24 comb, interior dark',
+   {dscale:21.2,orient:0,spin:0,eps:22,auto:false},false],
+ ['band ignition','Ω just past 0.76: the CTC band ignites at the tube rim',
+   {dscale:21.2,orient:37.4,spin:85,eps:22,auto:false},true],
+ ['⚠ tipler band','supercritical Ω=1.2, r_CTC=0.83 — Hawking CP applies',
+   {dscale:21.2,orient:37.4,spin:120,eps:22,auto:false},true],
+ ['cargo carousel','Ω=3: max conveyor spin, ABOVE the window — drag, no CTCs',
+   {dscale:21.2,orient:37.4,spin:300,eps:22,auto:false},false],
+ ['saturated, unsteered','D5: ε=0 kills the m=1 dipole — full sat, zero collapse',
+   {dscale:21.2,orient:37.4,spin:0,eps:0,auto:false},false],
+ ['second rung','pump-ring commensuration peak at s≈0.32 (partial registry)',
+   {dscale:32,orient:37.4,spin:0,eps:22,auto:false},false],
+ ['past the pinch','horn ε>1: traversal rollbacks, pawl restores the floor',
+   {dscale:21.2,orient:37.4,spin:0,eps:120,auto:false},true],
+ ['5Ω comb','aligned spin: rotational comb lines at exact 5Ω multiples (C5 time selection)',
+   {dscale:21.2,orient:37.4,spin:100,eps:22,auto:false,tilt:0},false],
+ ['comb demultiply','tilt 4°: C5 broken, sidebands restore Ω spacing — 5× spacing collapse',
+   {dscale:21.2,orient:37.4,spin:100,eps:22,auto:false,tilt:4},false],
+ ['⇄ standing flasher','counter-rotating pair: drag cancels (no CTCs ever), lattice flashes in place at 5Ω, cargo Mathieu-stable',
+   {dscale:21.2,orient:37.4,spin:100,eps:22,auto:false,tilt:0,cpair:true},false],
+ ['free sweep','auto orientation sweep with the crystal-lock detent, slow spin',
+   {dscale:26,orient:0,spin:60,eps:22,auto:true},false],
+];
+PRESETS.forEach(([label,tip,set,hot])=>{
+  const b=document.createElement('button');
+  b.textContent=label; b.title=tip; if(hot)b.className='hot';
+  b.addEventListener('click',()=>{
+    $('dscale').value=set.dscale; $('orient').value=set.orient;
+    $('spin').value=set.spin; $('eps').value=set.eps;
+    $('tilt').value=set.tilt||0;
+    $('cpair').checked=!!set.cpair;
+    $('auto').checked=set.auto;
+  });
+  $('panel').appendChild(b);
+});
+const keys={};
+addEventListener('keydown',e=>{ if(e.key.indexOf('Arrow')===0){keys[e.key]=true;e.preventDefault();} });
+addEventListener('keyup',  e=>{ keys[e.key]=false; });
+
+// ------------------------------- the drive (sim) --------------------------
+// ratchet faithful to FINDINGS_KNOPP_RATCHET: asymmetry = 1.66 + floor/(1-floor)
+// dodeca physics per knopp_dodeca_alignment: PFA gap-Casimir drive, spiral
+// area factor when face-locked, 24-mode comb, saturation, directional collapse.
+let disp=0.0, locked=0.0, floorRise=0.0, ring=0.0, pend=0, lastP=0;
+let rollbacks=0, strokes=0;
+let beta=0, sweepDir=1, spiral=0, collapse=0, sat=0, driveN=0;
+let minGap=1, faceAlign=0, vertAlign=0, areaFactor=1, alignAx=[0,1,0];
+let crystalX=0, crysLam=0, crysP=0, crysUc=0;   // quasicrystal registry
+// conveyor spin + van Stockum/Tipler analog (knopp_dodeca_rotation R1/R2)
+const TIPLO=1/(2*R0);
+let psiSpin=0, omSpin=0, tipHi=0, tipSuper=0, rCtc=99, cpair=0, DROT2=null;
+// rotational comb (knopp_dodeca_emergent S2): C5 time-domain selection
+let tiltDeg=0, combAxes=null, combA2=null, combKw=14, combSpc=0;
+const COMB_N=512, COMB_M=120, combMag=new Float64Array(COMB_M);
+const COMB_R0=[0.31,0.14,0.05]; let combTick=0;
+const NMODES=24, amps=new Float64Array(NMODES);
+const sweepCurve=new Float64Array(181).fill(NaN);
+let driveCal=-1, calScale=-1;
+
+function dodecaState(dt){
+  const s=+$('dscale').value/100;
+  const auto=$('auto').checked;
+  // crystal-lock detent: the auto sweep lingers where the registry locks
+  const lockProx=Math.min(1,Math.max(0,(crystalX-0.5)/0.2));
+  if(auto){ beta+=sweepDir*dt*6*(1-0.8*lockProx);
+            if(beta>180){beta=180;sweepDir=-1;}
+            if(beta<0){beta=0;sweepDir=1;} $('orient').value=beta; }
+  else beta=+$('orient').value;
+  // conveyor: spin about the throat axis carries the whole trap lattice;
+  // tilt before the spin demultiplies the rotational comb (5Ω -> Ω)
+  omSpin=+$('spin').value/100;
+  tiltDeg=+$('tilt').value;
+  psiSpin+=omSpin*dt;
+  const DTILT=m3mul(axisRot([1,0,0],tiltDeg*Math.PI/180),
+                    m3mul(axisRot(SWAX,beta*Math.PI/180),BROT));
+  const DROT=m3mul(axisRot([0,1,0],psiSpin),DTILT);
+  cpair=$('cpair').checked?1:0;
+  DROT2=m3mul(axisRot([0,1,0],-psiSpin),DTILT);   // counter-rotating partner
+  combAxes=FAXES.map(a=>m3v(DTILT,a));   // axes before the (virtual) spin
+
+  // gap-Casimir PFA proxy: faces (area 2.5, parallelism-weighted) + points (0.4)
+  let raw=0; minGap=1e9; vertAlign=0; faceAlign=0;
+  let bestF=-1,bestW=-1;
+  for(let i=0;i<20;i++){
+    const vw=m3v(DROT,VERTS[i]);
+    const p=[vw[0]*s,vw[1]*s,vw[2]*s];
+    const g=Math.abs(gapT(p));
+    if(g<minGap)minGap=g;
+    raw+=0.4/Math.pow(g+0.02,3);
+    const va=Math.pow(Math.abs(vw[1]),8)*Math.exp(-g/0.25);
+    if(va>vertAlign)vertAlign=va;
+  }
+  for(let f=0;f<6;f++)for(const sg of[1,-1]){
+    const nw=m3v(DROT,FAXES[f]).map(x=>x*sg);
+    const c=[nw[0]*RIN*s,nw[1]*RIN*s,nw[2]*RIN*s];
+    const d=gapT(c), g=Math.abs(d);
+    if(g<minGap)minGap=g;
+    const toSurf=gradT(c).map(x=>x*(d<0?1:-1));
+    const af=Math.max(0,dot(nw,toSurf));            // parallel-plate factor
+    raw+=2.5*(0.2+0.8*af*af)/Math.pow(g+0.02,3);
+    const fa=Math.pow(Math.abs(nw[1]),8)*Math.exp(-g/0.25);
+    if(fa>faceAlign){faceAlign=fa;bestF=f;bestW=sg;alignAx=nw;}
+  }
+  faceAlign=Math.min(1,faceAlign); vertAlign=Math.min(1,vertAlign);
+
+  // horn flattening -> spiral tiling of the pentagon (engages on face-lock)
+  const spTarget=Math.min(1,Math.max(0,(faceAlign-0.25)/0.3));
+  spiral+=dt*1.2*(spTarget-spiral);
+  areaFactor=1+6*spiral;                            // tiled spiral facing area
+  raw*=areaFactor;
+  if(driveCal<0||calScale!==s){                     // self-calibrate per scale
+    calScale=s; driveCal=raw*2/areaFactor; }
+  driveN=raw/(raw+driveCal);
+
+  // 24-mode standing-wave comb: point alignment pumps a sparse pentagonal
+  // comb; face-lock + spiral pumps broadband (the full-spectrum requirement)
+  const Q=+$('qq').value;
+  let nsat=0;
+  for(let k=0;k<NMODES;k++){
+    const combv=(k%5===0)?1:0.15;
+    const coup=vertAlign*combv*0.6+faceAlign*(0.3+0.7*spiral);
+    amps[k]+=dt*(driveN*coup*2.2*(1-amps[k])-amps[k]*1.5/Math.sqrt(Q));
+    amps[k]=Math.max(0,Math.min(1,amps[k]));
+    if(amps[k]>0.5)nsat++;
+  }
+  sat=nsat/NMODES;
+  // m=1 gate (first-principles D5): the C5 field has no dipole moment, so
+  // directional collapse needs the horn-twist steering lobe eps
+  const m1=Math.min(1,(+$('eps').value/100)*4);
+  collapse+=dt*3*(sat*spiral*m1-collapse);
+  // quasicrystal registry (knopp_dodeca_crystal): X = Lambda * P * Uc
+  //   Lambda = source registry (sqrt5-incommensurate, approximant ladder)
+  //   P, Uc  = pump-ring registry + coherence on the facing funnel ring
+  const kw=14+24*sat, xc=kw*RIN*s;
+  crysLam=(Math.cos(xc)**2 + 5*Math.cos(xc/Math.sqrt(5))**2)/6;
+  const axW=FAXES.map(a=>m3v(DROT,a));
+  const a2=[];
+  for(let j=0;j<6;j++){let m=0;
+    for(let q=0;q<4;q++)m+=amps[4*j+q]*amps[4*j+q]; a2.push(m/4);}
+  const ceil2=a2.reduce((p,c)=>p+c,0)/2;
+  const hR=RIN*s, rhoW=R0-Math.sqrt(Math.max(R0*R0-hR*hR,1e-12));
+  let sum=0,sum2=0; const NR=24;
+  for(let q=0;q<NR;q++){const ph=2*Math.PI*q/NR;
+    const p=[rhoW*Math.sin(ph),hR,rhoW*Math.cos(ph)];
+    let I=0;
+    for(let j=0;j<6;j++){const c=Math.cos(kw*dot(axW[j],p));I+=a2[j]/2*c*c;}
+    sum+=I; sum2+=I*I;}
+  const mI=sum/NR, vI=Math.max(0,sum2/NR-mI*mI);
+  crysP=ceil2>1e-9?mI/ceil2:0;
+  crysUc=mI>1e-9?Math.max(0,1-Math.sqrt(vI)/mI):0;
+  crystalX=crysLam*crysP*crysUc*(nsat===NMODES?1:0.2);
+  // Tipler window from the LIVE field energy: u = ceiling/2; window only
+  // opens when the interior is saturated (closed-form, knopp_dodeca_rotation)
+  const uMean=ceil2/2;
+  tipHi=Math.sqrt(2*Math.PI*uMean/Math.E);
+  tipSuper=(omSpin>TIPLO&&omSpin<tipHi&&tipHi>TIPLO)?1:0;
+  if(cpair)tipSuper=0;             // counter-pair: net drag cancels, no CTCs
+  rCtc=omSpin>1e-6?1/omSpin:99;
+  combA2=a2; combKw=kw;
+  // synthetic I(t) at the monitor point over 8 spin periods; the DFT phase
+  // 4*pi*m*n/N is Omega-free, so the comb is sampled in spin phase exactly
+  if(omSpin>0.05 && (combTick++%5===0)){
+    const I=new Float64Array(COMB_N); let mean=0;
+    for(let n0=0;n0<COMB_N;n0++){
+      const th=-(8*2*Math.PI)*n0/COMB_N, c=Math.cos(th), s2=Math.sin(th);
+      const r=[c*COMB_R0[0]+s2*COMB_R0[2],COMB_R0[1],-s2*COMB_R0[0]+c*COMB_R0[2]];
+      let v=0;
+      for(let j=0;j<6;j++){const cj=Math.cos(kw*dot(combAxes[j],r));v+=a2[j]/2*cj*cj;}
+      if(cpair){                       // superpose the -Omega partner
+        const r2=[c*COMB_R0[0]-s2*COMB_R0[2],COMB_R0[1],s2*COMB_R0[0]+c*COMB_R0[2]];
+        let v2=0;
+        for(let j=0;j<6;j++){const cj=Math.cos(kw*dot(combAxes[j],r2));v2+=a2[j]/2*cj*cj;}
+        v=0.5*(v+v2);
+      }
+      I[n0]=v; mean+=v;
+    }
+    mean/=COMB_N;
+    let mx=1e-12, lowest=0;
+    for(let m=1;m<=COMB_M;m++){
+      let re=0,im=0;
+      for(let n0=0;n0<COMB_N;n0++){
+        const ph=4*Math.PI*m*n0/COMB_N;
+        re+=(I[n0]-mean)*Math.cos(ph); im+=(I[n0]-mean)*Math.sin(ph);
+      }
+      combMag[m-1]=Math.hypot(re,im); if(combMag[m-1]>mx)mx=combMag[m-1];
+    }
+    for(let m=0;m<COMB_M;m++){combMag[m]/=mx;
+      if(!lowest&&combMag[m]>0.05)lowest=(m+1)/4;}
+    combSpc=lowest;
+  } else if(omSpin<=0.05) combSpc=0;
+  const b=Math.round(beta);
+  if(b>=0&&b<=180&&(!(sweepCurve[b]>=0)||driveN>sweepCurve[b]))sweepCurve[b]=driveN;
+  return {s,DROT,nsat};
+}
+
+function physics(t,dt){
+  const floorPct=+$('floor').value/100;
+  const Q=+$('qq').value, eps=+$('eps').value/100;
+  const asym=1.66 + floorPct/(1.0-Math.min(floorPct,0.999));
+  const qglow=Math.max(0.05,Math.min(1,Math.log(Q)/Math.log(1000)));
+  pend=Math.sin(t*1.6);
+  const dP=pend-lastP; lastP=pend;
+  const heading=theta0;
+  if(dP>0){ disp += dP*0.5*asym*0.12*(1+collapse); } // collapse boosts the stroke
+  else    { disp += dP*0.5*0.12; locked=Math.max(locked,disp); }
+  floorRise=Math.max(floorRise, disp);
+  if(disp<floorRise){ disp=floorRise; }
+  strokes++;
+  if(eps>1.0 && Math.sin(t*0.7)>0.985){ disp=floorRise; rollbacks++; }
+  // gap drive feeds the cavity ring-up on top of the bare pump
+  ring += (1.0-ring)*Math.min(1, dt*(0.5+8.0/Q+2.5*driveN));
+  const speed=Math.min(1,(asym-1.0)*0.5*(1+0.8*collapse));
+  return {floorPct,Q,eps,asym,heading,qglow,speed};
+}
+
+// ------------------------------- audio ------------------------------------
+// cavity hum + Casimir noise band (gap drive) + golden comb phi^k partials
+// whose pitch climbs with saturation (the rising-frequency feedback loop)
+let actx=null, master=null, lp=null;
+let noiseGain=null, noiseBP=null; const combOsc=[];
+function startAudio(){
+  if(actx){ actx.resume&&actx.resume(); return; }
+  actx=new (window.AudioContext||window.webkitAudioContext)();
+  actx.resume&&actx.resume();
+  master=actx.createGain(); master.gain.value=0.0;
+  lp=actx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=600; lp.Q.value=0.6;
+  const delay=actx.createDelay(); delay.delayTime.value=0.22;
+  const fb=actx.createGain(); fb.gain.value=0.34;
+  master.connect(lp); lp.connect(actx.destination);
+  lp.connect(delay); delay.connect(fb); fb.connect(delay); delay.connect(actx.destination);
+  const f0=92.0;
+  [[f0,0.5,'sine'],[f0*1.5,0.22,'sine'],[f0*2.0,0.16,'sine'],[f0*3.0,0.07,'triangle']]
+    .forEach(([f,a,ty])=>{ [-3,3].forEach(det=>{
+      const o=actx.createOscillator(); o.type=ty; o.frequency.value=f; o.detune.value=det;
+      const g=actx.createGain(); g.gain.value=a*0.14; o.connect(g); g.connect(master); o.start();
+    });});
+  // Casimir noise: broadband vacuum hiss gated by the gap drive
+  const nb=actx.createBuffer(1,actx.sampleRate*2,actx.sampleRate);
+  const ch=nb.getChannelData(0);
+  for(let i=0;i<ch.length;i++)ch[i]=Math.random()*2-1;
+  const ns=actx.createBufferSource(); ns.buffer=nb; ns.loop=true;
+  noiseBP=actx.createBiquadFilter(); noiseBP.type='bandpass';
+  noiseBP.frequency.value=300; noiseBP.Q.value=6;
+  noiseGain=actx.createGain(); noiseGain.gain.value=0;
+  ns.connect(noiseBP); noiseBP.connect(noiseGain); noiseGain.connect(master);
+  ns.start();
+  // golden comb: phi^k partials of the cavity tone
+  for(let k=1;k<=6;k++){
+    const o=actx.createOscillator(); o.type='sine';
+    const fk=f0*Math.pow(PHI,k); o.frequency.value=fk;
+    const g=actx.createGain(); g.gain.value=0;
+    o.connect(g); g.connect(master); o.start();
+    combOsc.push({o,g,fk});
+  }
+  const breath=actx.createOscillator(); breath.frequency.value=0.13;
+  const bg=actx.createGain(); bg.gain.value=0.14; breath.connect(bg); bg.connect(master.gain); breath.start();
+  master.gain.setValueAtTime(0.0,actx.currentTime);
+  master.gain.linearRampToValueAtTime(0.36,actx.currentTime+3.0);
+}
+
+// ------------------------------- gauge ------------------------------------
+const gx=$('gauge').getContext('2d');
+function drawGauge(st){
+  const w=300,h=358; gx.clearRect(0,0,w,h);
+  gx.font='10px Courier New';
+  gx.fillStyle='#7fd'; gx.fillText('ParetoRatchet',8,14);
+  gx.fillStyle='#6f9'; gx.fillText('floor '+(st.floorPct*100|0)+'%   asym '+st.asym.toFixed(1)+'×',92,14);
+  const baseY=116, floorY=baseY-Math.min(1,floorRise*0.5)*60, tooth=2+st.floorPct*13;
+  gx.strokeStyle='#0c8'; gx.beginPath();
+  for(let i=0;i<=12;i++){ const x=8+i*23, up=(i%2)?tooth:0; gx[i?'lineTo':'moveTo'](x,floorY-up); }
+  gx.stroke();
+  gx.fillStyle='rgba(0,180,120,.16)'; gx.fillRect(8,floorY,276,baseY-floorY+2);
+  const px=58,py=40,len=44, ang=pend*0.9;
+  const bx=px+Math.sin(ang)*len, by=py+Math.cos(ang)*len;
+  gx.strokeStyle='#9cf'; gx.beginPath(); gx.moveTo(px,py); gx.lineTo(bx,by); gx.stroke();
+  gx.fillStyle=(pend-lastP>=0)?'#3fe':'#f86'; gx.beginPath(); gx.arc(bx,by,6,0,7); gx.fill();
+  gx.fillStyle='#9cf'; gx.fillText('horn swing',84,34);
+  gx.save(); gx.translate(256,44); gx.strokeStyle='#0a6'; gx.beginPath(); gx.arc(0,0,20,0,7); gx.stroke();
+  gx.strokeStyle='#b6f'; gx.lineWidth=1.5+st.eps*4; gx.beginPath(); gx.moveTo(0,0);
+  gx.lineTo(Math.cos(st.heading)*18,Math.sin(st.heading)*18); gx.stroke(); gx.lineWidth=1; gx.restore();
+  gx.fillStyle='#b6f'; gx.fillText('heading/ε',224,76);
+  gx.fillStyle='#7fd'; gx.fillText('drive velocity',8,138);
+  gx.strokeStyle='#094'; gx.strokeRect(8,144,276,11);
+  gx.fillStyle='#2fe'; gx.fillRect(9,145,st.speed*274,9);
+  gx.fillStyle='#a8f'; gx.fillText('Q-cavity',8,166);
+  gx.strokeStyle='#418'; gx.strokeRect(70,158,214,9);
+  gx.fillStyle='#a6f'; gx.fillRect(71,159,ring*st.qglow*212,7);
+  // orientation sweep curve: Casimir drive vs dodeca angle (recorded live)
+  gx.fillStyle='#fc8'; gx.fillText('Casimir drive vs orientation  (face-lock '+VF_DEG.toFixed(1)+'°)',8,182);
+  gx.strokeStyle='#640'; gx.strokeRect(8,186,276,40);
+  gx.strokeStyle='#530'; gx.beginPath();
+  const fx=8+276*VF_DEG/180; gx.moveTo(fx,186); gx.lineTo(fx,226); gx.stroke();
+  gx.strokeStyle='#fc8'; gx.beginPath(); let pen=false;
+  for(let b=0;b<=180;b++){ const v=sweepCurve[b];
+    if(!(v>=0)){pen=false;continue;}
+    const x=8+276*b/180, y=225-38*v;
+    if(pen)gx.lineTo(x,y); else {gx.moveTo(x,y);pen=true;} }
+  gx.stroke();
+  const cx=8+276*beta/180;
+  gx.fillStyle='#ff5'; gx.fillRect(cx-1,186,2,40);
+  // standing-wave spectrum: 24-mode comb occupancy
+  gx.fillStyle='#8fe'; gx.fillText('standing-wave spectrum  '+st.nsat+'/'+NMODES+
+    (sat>=0.95?'  ◆ SATURATED':''),8,240);
+  for(let k=0;k<NMODES;k++){
+    const x=8+k*11.6, a=amps[k];
+    gx.fillStyle=a>0.5?'#4fe':'#177';
+    gx.fillRect(x,272-a*28,9,a*28+1);
+  }
+  // Tipler window: spin axis 0..3, supercritical band shaded, marker at Omega
+  gx.fillStyle='#f96'; gx.fillText('Tipler window  Ω'+
+    (tipSuper?'  ⚠ SUPERCRITICAL':''),8,286);
+  gx.strokeStyle='#742'; gx.strokeRect(8,290,276,12);
+  if(tipHi>TIPLO){
+    const x0=8+276*Math.min(TIPLO/3,1), x1=8+276*Math.min(tipHi/3,1);
+    gx.fillStyle=tipSuper?'rgba(255,90,40,.55)':'rgba(255,140,60,.22)';
+    gx.fillRect(x0,291,Math.max(x1-x0,1),10);
+  }
+  gx.fillStyle='#ff5'; gx.fillRect(8+276*Math.min(omSpin/3,1)-1,290,2,12);
+  // rotational comb: spectrum of I(r0,t) in units of Omega; C5 selection
+  // puts lines only at 5Omega multiples until the tilt breaks alignment
+  gx.fillStyle='#9f9'; gx.fillText('rotational comb (×Ω)'+
+    (combSpc>0?('   Δ='+(combSpc>=4?'5Ω  ◆ C5-SELECTED':'Ω')):'   spin off'),8,318);
+  gx.strokeStyle='#274'; gx.strokeRect(8,322,276,30);
+  for(const m5 of [20,40,60,80,100]){
+    const x=8+276*m5/COMB_M; gx.strokeStyle='#253';
+    gx.beginPath(); gx.moveTo(x,322); gx.lineTo(x,352); gx.stroke();
+    gx.fillStyle='#475'; gx.fillText(String(m5/4),x-4,332);
+  }
+  if(combSpc>0){
+    for(let m=0;m<COMB_M;m++){
+      const h=combMag[m]*27; if(h<0.8)continue;
+      const x=8+276*(m+1)/COMB_M;
+      gx.fillStyle=((m+1)%20===0)?'#5f8':'#fa6';
+      gx.fillRect(x-1,352-h,2,h);
+    }
+  }
+}
+
+// ------------------------------- render loop ------------------------------
+function resize(){const d=Math.min(devicePixelRatio||1,2);
+  cv.width=innerWidth*d|0; cv.height=innerHeight*d|0;}
+addEventListener('resize',resize); resize();
+const hud=$('hud'), boot=$('boot');
+let t0=performance.now(), last=t0;
+function frame(now){
+  const t=(now-t0)/1000, dt=Math.min(0.05,(now-last)/1000); last=now;
+  if(keys.ArrowLeft)  vth-=0.010;
+  if(keys.ArrowRight) vth+=0.010;
+  if(keys.ArrowUp)    vp-=0.010;
+  if(keys.ArrowDown)  vp+=0.010;
+  vth*=0.90; vp*=0.90;
+  theta0+=vth; pitch+=vp; pitch=Math.max(-1.2,Math.min(1.2,pitch));
+  const ds=dodecaState(dt);
+  const st=physics(t,dt);
+  const ringHz=2.4-st.qglow*2.0;
+  const ringPulse=ring*(0.45+0.55*Math.sin(t*2*Math.PI*ringHz))*(0.4+0.8*st.qglow);
+  if(lp) lp.frequency.value=420 + st.speed*1100 + st.qglow*400 + sat*600;
+  if(noiseGain){ noiseGain.gain.value=0.12*driveN;
+    noiseBP.frequency.value=240+driveN*900+sat*800; }
+  combOsc.forEach(({o,g,fk},i)=>{ g.gain.value=sat*0.045*amps[Math.min(NMODES-1,(i+1)*4)];
+    o.frequency.value=fk*(1+0.5*sat); });
+
+  gl.viewport(0,0,cv.width,cv.height);
+  gl.uniform2f(U.R,cv.width,cv.height);
+  gl.uniform1f(U.T,t);
+  gl.uniform2f(U.ROT,theta0,pitch);
+  gl.uniform1f(U.OPACITY,+$('opac').value/100);
+  gl.uniform1f(U.THETA0,st.heading);
+  gl.uniform1f(U.EPS,st.eps);
+  gl.uniform1f(U.RING,ringPulse);
+  gl.uniform1f(U.SPEED,st.speed);
+  gl.uniform1f(U.QGLOW,st.qglow);
+  // GLSL wants DINV = DROT^T; uploading row-major DROT with transpose=false
+  // hands the GPU exactly that transpose (column-major read), so pass as-is.
+  gl.uniformMatrix3fv(U.DINV,false,new Float32Array(ds.DROT));
+  gl.uniform1f(U.DSCALE,ds.s);
+  gl.uniform1f(U.DRIVE,driveN);
+  gl.uniform1f(U.SPIRAL,spiral);
+  gl.uniform1f(U.SAT,sat);
+  gl.uniform1f(U.COLLAPSE,collapse);
+  gl.uniform3f(U.ALIGNAX,alignAx[0],alignAx[1],alignAx[2]);
+  gl.uniform1f(U.SUPER,tipSuper);
+  gl.uniform1f(U.RCTC,rCtc);
+  if(DROT2)gl.uniformMatrix3fv(U.DINV2,false,new Float32Array(DROT2));
+  gl.uniform1f(U.CPAIR,cpair);
+  gl.drawArrays(gl.TRIANGLES,0,3);
+
+  drawGauge({...st,nsat:ds.nsat});
+  const peakOverBare=1/st.Q, interest=Math.pow(st.Q,1)-1;
+  const mode=faceAlign>0.30?'FACE-LOCK':(vertAlign>0.30?'POINT-LOCK':'free');
+  hud.textContent=
+    `KNOPP DRIVE II — dodecahedral Casimir resonator / horn-torus throat\n`+
+    `heading θ₀ ${st.heading.toFixed(2)}   horn ε ${st.eps.toFixed(2)}`+(st.eps>1?'  ⚠ past pinch':'')+`\n`+
+    `pawl floor ${(st.floorPct*100|0)}%   asymmetry rev/fwd ${st.asym.toFixed(2)}×   cavity Q ${st.Q}\n`+
+    `dodeca β ${beta.toFixed(1)}°  [${mode}]   min gap ${minGap.toFixed(3)}   spiral area ×${areaFactor.toFixed(1)}\n`+
+    `Casimir drive ${driveN.toFixed(2)}   spectrum ${ds.nsat}/${NMODES} modes   saturation ${(sat*100|0)}%`+
+    (sat>=0.95?'  ◆ INTERIOR SATURATED':'')+`\n`+
+    `crystal X ${crystalX.toFixed(2)} [Λ${crysLam.toFixed(2)}·ring${crysP.toFixed(2)}·coh${crysUc.toFixed(2)}]`+
+    (crystalX>0.65?'  ◆ CRYSTAL LOCK':'')+`\n`+
+    `spin Ω ${omSpin.toFixed(2)}  tilt δ ${tiltDeg.toFixed(1)}°`+
+    (cpair?'  ⇄PAIR standing flash':'')+
+    (combSpc>0?`  comb Δ=${combSpc>=4?'5Ω':'Ω'}`:'')+`   Tipler `+
+    (cpair?'closed (drag cancels)':
+      (tipHi>TIPLO?`${TIPLO.toFixed(2)}–${tipHi.toFixed(2)}`:'closed (needs lock)'))+
+    (tipSuper?`   ⚠ SUPERCRITICAL r_CTC ${rCtc.toFixed(2)} — Hawking CP`:'')+`\n`+
+    `directional collapse ${(collapse*100|0)}% → bubble contracts along θ₀\n`+
+    `peak/bare 1/Q ${peakOverBare.toExponential(2)}   Ford–Roman r=Q−1 ${interest.toFixed(1)}\n`+
+    `net displacement ${disp.toFixed(2)}   rollbacks ${rollbacks}\n`+
+    `feasibility: 1 m bubble ⇒ 3.8 Jupiter mass-energies (speculative)`;
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+// ------------------------------- start ------------------------------------
+function go(){ startAudio(); boot.style.transition='opacity 1.1s'; boot.style.opacity=0;
+  setTimeout(()=>boot.remove(),1200); removeEventListener('pointerdown',go); }
+addEventListener('pointerdown',go);
+addEventListener('keydown',e=>{ if(boot && e.key.indexOf('Arrow')===0) go(); });
+</script>
+</body></html>
