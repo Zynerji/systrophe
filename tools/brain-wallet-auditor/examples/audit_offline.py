@@ -73,6 +73,9 @@ def _load_candidates(which: str) -> list[str]:
     if which == "round7":
         from _dictionary_round7 import build_round7_candidates
         return build_round7_candidates()
+    if which == "round8":
+        from _dictionary_round8 import build_round8_candidates
+        return build_round8_candidates()
     raise ValueError(f"unknown candidate set {which!r}")
 
 

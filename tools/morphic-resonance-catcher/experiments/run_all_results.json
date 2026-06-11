@@ -1,0 +1,115 @@
+{
+  "concept_a_power_specificity": {
+    "independent": {
+      "expected": "no_structure",
+      "modal_verdict": "no_structure",
+      "distribution": {
+        "no_structure": 8
+      },
+      "correct": true
+    },
+    "secular_trend": {
+      "expected": "conventional_trend",
+      "modal_verdict": "conventional_trend",
+      "distribution": {
+        "conventional_trend": 8
+      },
+      "correct": true
+    },
+    "morphic_field": {
+      "expected": "morphic_signature",
+      "modal_verdict": "morphic_signature",
+      "distribution": {
+        "morphic_signature": 8
+      },
+      "correct": true
+    },
+    "ctc_causal": {
+      "expected": "morphic_signature",
+      "modal_verdict": "morphic_signature",
+      "distribution": {
+        "morphic_signature": 8
+      },
+      "correct": true
+    }
+  },
+  "concept_b_ctc_acausal_fingerprint": {
+    "causal_a0.0": {
+      "expected": "no_acausality",
+      "modal_verdict": "no_acausality",
+      "distribution": {
+        "no_acausality": 8
+      },
+      "mean_eventual_t": -0.2778512334684766,
+      "correct": true
+    },
+    "ctc_a0.3": {
+      "expected": "acausal_signature",
+      "modal_verdict": "acausal_signature",
+      "distribution": {
+        "acausal_signature": 8
+      },
+      "mean_eventual_t": -9.661934155756068,
+      "correct": true
+    },
+    "ctc_a0.6": {
+      "expected": "acausal_signature",
+      "modal_verdict": "acausal_signature",
+      "distribution": {
+        "acausal_signature": 8
+      },
+      "mean_eventual_t": -19.04601707804366,
+      "correct": true
+    },
+    "ctc_a0.9": {
+      "expected": "acausal_signature",
+      "modal_verdict": "acausal_signature",
+      "distribution": {
+        "acausal_signature": 8
+      },
+      "mean_eventual_t": -28.430100000331258,
+      "correct": true
+    }
+  },
+  "concept_c_nonlocality_identifiability": {
+    "morphic_modal": "morphic_signature",
+    "morphic_distribution": {
+      "morphic_signature": 8
+    },
+    "diffusion_modal": "morphic_signature",
+    "diffusion_distribution": {
+      "morphic_signature": 8
+    },
+    "distinguishable_by_counts": false,
+    "finding": "INDISTINGUISHABLE: conventional local diffusion produces the same count-coupling signature as morphic resonance. Counts alone cannot establish non-locality; the morphic claim requires ruling out every conventional channel, which the data structure here cannot do."
+  },
+  "concept_d_count_time_confound": {
+    "uniform": {
+      "modal_verdict": "unidentifiable",
+      "distribution": {
+        "unidentifiable": 8
+      },
+      "median_vif": 1000022122209.5028
+    },
+    "bursty_3": {
+      "modal_verdict": "morphic_signature",
+      "distribution": {
+        "morphic_signature": 8
+      },
+      "median_vif": 1.7975704064671119
+    },
+    "bursty_8": {
+      "modal_verdict": "morphic_signature",
+      "distribution": {
+        "morphic_signature": 7,
+        "unidentifiable": 1
+      },
+      "median_vif": 5.150740621948094
+    },
+    "finding": "A genuine morphic count-effect is recovered as 'morphic_signature' ONLY when the instantiation rate is unequal enough to drop count<->time VIF below 10. Under uniform instantiation the SAME true effect is 'unidentifiable' -- it cannot be separated from a secular time-trend. This is the rat-maze confound, made precise."
+  },
+  "config": {
+    "n_surrogates": 200,
+    "n_seeds": 8
+  }
+}

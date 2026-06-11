@@ -1,0 +1,72 @@
+{
+  "concept_e_power_curve": {
+    "grid": {
+      "40": {
+        "0.0": 0.0,
+        "0.1": 0.16666666666666666,
+        "0.2": 0.3333333333333333,
+        "0.4": 0.8333333333333334,
+        "0.6": 0.9166666666666666,
+        "0.8": 1.0
+      },
+      "80": {
+        "0.0": 0.08333333333333333,
+        "0.1": 0.25,
+        "0.2": 0.5833333333333334,
+        "0.4": 0.75,
+        "0.6": 0.9166666666666666,
+        "0.8": 0.9166666666666666
+      },
+      "160": {
+        "0.0": 0.0,
+        "0.1": 0.75,
+        "0.2": 0.8333333333333334,
+        "0.4": 1.0,
+        "0.6": 1.0,
+        "0.8": 1.0
+      },
+      "320": {
+        "0.0": 0.0,
+        "0.1": 0.5833333333333334,
+        "0.2": 0.9166666666666666,
+        "0.4": 1.0,
+        "0.6": 1.0,
+        "0.8": 1.0
+      }
+    },
+    "false_positive_rate": {
+      "40": 0.0,
+      "80": 0.08333333333333333,
+      "160": 0.0,
+      "320": 0.0
+    },
+    "min_detectable_coupling_at_80pct": {
+      "40": 0.4,
+      "80": 0.6,
+      "160": 0.2,
+      "320": 0.2
+    },
+    "finding": "Detection requires both a real effect AND enough instances; below ~n=80 even a large count-coupling is missed, and the false-positive rate at zero effect stays within the 0.05 surrogate budget. A real morphic experiment must pre-register effect size and N to avoid an underpowered null being mistaken for absence."
+  },
+  "concept_f_real_vs_fake": {
+    "causal": {
+      "modal_verdict": "no_acausality",
+      "distribution": {
+        "no_acausality": 12
+      },
+      "mean_real_minus_fake_early_cost": 0.03150387439836783
+    },
+    "ctc": {
+      "modal_verdict": "acausal_signature",
+      "distribution": {
+        "acausal_signature": 12
+      },
+      "mean_real_minus_fake_early_cost": -0.806883535717863
+    },
+    "finding": "Under the causal mechanism, 'real' and 'fake' forms have identical early cost (real-minus-fake ~ 0) and the harness returns no_acausality. Only the acausal/CTC mechanism makes real forms cheaper EARLY (negative real-minus-fake) and triggers acausal_signature. This is precisely Sheldrake's real-vs-fake-word prediction; the harness shows what a positive result would have to look like, and that the effect must be ACAUSAL to count as morphic rather than mere familiarity."
+  },
+  "config": {
+    "n_surrogates": 150,
+    "n_seeds": 12
+  }
+}

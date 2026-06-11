@@ -1,0 +1,7 @@
+# The morphic-resonance catcher imports the Systrophe core (numpy+scipy only).
+# Install Systrophe in editable mode from the repo root first:
+#     pip install -e .
+# then this tool needs nothing beyond:
+numpy>=1.24
+scipy>=1.10
+pytest>=7.0   # tests only

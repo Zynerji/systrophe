@@ -1,0 +1,12 @@
+{
+  "url": "https://gz.blockchair.com/bitcoin/addresses/blockchair_bitcoin_addresses_latest.tsv.gz",
+  "fetched_at": "2026-05-14T17:45:54Z",
+  "total_rows": 58876945,
+  "n_currently_funded": 58876945,
+  "total_balance_sat": 2002894604496766,
+  "total_balance_btc": 20028946.04496766,
+  "fetch_elapsed_seconds": 17135.594707012177,
+  "bloom_m_bits": 958505840,
+  "bloom_k_hashes": 13,
+  "bloom_size_bytes": 119813230
+}

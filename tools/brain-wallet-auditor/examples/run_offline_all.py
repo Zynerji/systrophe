@@ -42,10 +42,10 @@ def main():
     print(f"Loaded Bloom: claims {len(funded):,} funded addresses")
     print()
 
-    # Round 7 already includes rounds 1-6 inline (chained build_*)
-    from _dictionary_round7 import build_round7_candidates
-    pps = build_round7_candidates()
-    print(f"Combined candidate count (rounds 1-7): {len(pps):,}")
+    # Round 8 chains 1-7 + 7-digit numerics
+    from _dictionary_round8 import build_round8_candidates
+    pps = build_round8_candidates()
+    print(f"Combined candidate count (rounds 1-8): {len(pps):,}")
     print(f"Addresses to derive: {2 * len(pps):,}")
     print()
 

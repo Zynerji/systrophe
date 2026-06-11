@@ -30,3 +30,6 @@ NOTES_PRIVATE.md
 
 # OEIS b-file cache (re-fetchable; not committed)
 examples/oeis_cache/
+
+# brain-wallet-auditor: 115MB regeneratable artifact (build via fetch_snapshot.py)
+tools/brain-wallet-auditor/examples/snapshot_funded.bloom
