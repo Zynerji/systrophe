@@ -33,3 +33,6 @@ examples/oeis_cache/
 
 # brain-wallet-auditor: 115MB regeneratable artifact (build via fetch_snapshot.py)
 tools/brain-wallet-auditor/examples/snapshot_funded.bloom
+
+# Sierra Nevada ELF raw sensor data (re-fetchable via tools/schumann-elf-catcher/pull_one_hour.py)
+data/sierra_nevada_elf/

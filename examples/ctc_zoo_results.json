@@ -1,0 +1,28 @@
+{
+  "tipler": {
+    "a": 1.0,
+    "alpha": 1.7320508075688772,
+    "log_period": 3.6275987284684357,
+    "n_bands_in_1_200": 2,
+    "first_band": [
+      1.001,
+      6.13370740623298
+    ],
+    "exterior_regime": "supercritical",
+    "interior_regime": "critical"
+  },
+  "godel": {
+    "a": 1.0,
+    "ctc_threshold_radius": 0.881373587019543,
+    "dust_density": 0.039788735772973836,
+    "cosmological_constant": -0.5,
+    "angular_velocity": 1.0
+  },
+  "gott": {
+    "sample_mu": 0.05,
+    "critical_velocity": 0.5877852522924731,
+    "critical_gamma": 1.2360679774997896,
+    "below_threshold_has_ctc": false,
+    "above_threshold_has_ctc": true
+  }
+}
